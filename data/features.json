@@ -147,7 +147,7 @@
       "title": "SHIFT + pads: edit the focused clip",
       "summary": "Acts on the selected notes, or on all notes when nothing is selected. A pad only lights when its action can do something.",
       "grid": [
-        ["Semitone -", "Semitone +", "Octave -", "Octave +"],
+        ["Step -", "Step +", "Octave -", "Octave +"],
         ["Clear notes", "Clear envelopes", "Copy", "Paste"],
         ["Quantize", "Quantize 50%", "Nudge <", "Nudge >"],
         ["Undo", "Redo", "Velocity 100", "Select all / none"]

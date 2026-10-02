@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MASCHINE for Live: Manual</title>
+  <meta name="description" content="Interactive user manual for MASCHINE MIKRO MK3 / MK3 with Ableton Live (v2): click any button to see what it does.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect x='1' y='1' width='6' height='6' rx='1.5' fill='%23ff7a1a'/%3E%3Crect x='9' y='1' width='6' height='6' rx='1.5' fill='%23888'/%3E%3Crect x='1' y='9' width='6' height='6' rx='1.5' fill='%23888'/%3E%3Crect x='9' y='9' width='6' height='6' rx='1.5' fill='%23ff7a1a'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo" aria-hidden="true"></span>
+      <div>
+        <h1>MASCHINE for Ableton Live</h1>
+        <p class="subtitle">Interactive manual <span id="version"></span></p>
+      </div>
+    </div>
+    <div class="toolbar">
+      <div class="segmented" role="radiogroup" aria-label="Controller">
+        <button type="button" role="radio" data-device="mikro">MIKRO MK3</button>
+        <button type="button" role="radio" data-device="mk3">MK3 / MASCHINE+</button>
+      </div>
+      <button type="button" id="theme" class="icon-button" aria-label="Switch light / dark theme" title="Light / dark">◐</button>
+    </div>
+  </header>
+
+  <main class="layout">
+    <section class="hardware" aria-label="Controller">
+      <div class="hardware-card">
+        <svg id="device" role="img" aria-label="Controller layout: click a control"></svg>
+        <p class="hint">Click a control to see what it does. Hover or tap a combination in the list to see it on the controller (numbers show the order).</p>
+        <p id="unverified" class="note" hidden>MK3 / MASCHINE+ support is built from the hardware protocol and not yet tested on a real unit.</p>
+      </div>
+    </section>
+
+    <section class="reference" aria-label="Reference">
+      <div class="search">
+        <input id="search" type="search" placeholder="Search: tempo, chords, arm, undo..." autocomplete="off" aria-label="Search">
+      </div>
+      <div id="selection" class="selection" hidden>
+        <div class="selection-head">
+          <h2 id="selection-title"></h2>
+          <button type="button" id="clear-selection" class="link-button">Show everything</button>
+        </div>
+        <ul id="selection-items" class="items"></ul>
+      </div>
+      <nav id="toc" class="toc" aria-label="Modes"></nav>
+      <div id="sections"></div>
+      <section id="changes" class="card">
+        <h2>What changed since v1</h2>
+        <div class="table-wrap"><table id="changes-table"><thead><tr><th></th><th>v1.6</th><th>v2</th></tr></thead><tbody></tbody></table></div>
+      </section>
+      <footer class="footer">
+        <p>Elton47 · <a href="https://github.com/Elton47/MMMk3-MIDI-Script-For-Live">Script repository</a> · Not affiliated with Native Instruments or Ableton.</p>
+      </footer>
+    </section>
+  </main>
+
+  <script src="js/layouts.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

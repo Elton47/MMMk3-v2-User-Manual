@@ -1,0 +1,305 @@
+{
+  "product": "MASCHINE for Ableton Live",
+  "version": "2.0.0",
+  "devices": {
+    "mikro": {"name": "MASCHINE MIKRO MK3", "verified": true},
+    "mk3": {"name": "MASCHINE MK3 / MASCHINE+", "verified": false}
+  },
+  "notation": {
+    "+": "hold the first control(s) and press the last one",
+    "PAD": "any of the 16 pads",
+    "TURN": "turn the encoder (MK3: the 4-D encoder)",
+    "PUSH": "push the encoder",
+    "STRIP": "touch / slide on the touch strip"
+  },
+  "sections": [
+    {
+      "id": "start",
+      "title": "Getting started",
+      "summary": "Plug in the controller, copy the Remote Scripts folder into your Live User Library, start Live. The script starts the Maschine Bridge, which takes over the hardware: no Controller Editor, no MIDI mode, a real SHIFT key.",
+      "items": [
+        {"combo": ["SHIFT"], "does": "The real SHIFT button: hold it for the second function printed on a button, and for the SHIFT + pad edit matrix."},
+        {"combo": ["PATTERN"], "does": "Clips on the pads (the default mode)."},
+        {"combo": ["PAD MODE"], "does": "Drum pads (or the keyboard when the track has no Drum Rack)."},
+        {"combo": ["KEYBOARD"], "does": "Play notes in Live's current scale."},
+        {"combo": ["SHIFT", "MASCHINE"], "does": "NI's own MIDI mode toggle. The screen warns when it happens; press it again to get back.", "devices": ["mikro"]}
+      ]
+    },
+    {
+      "id": "clip",
+      "title": "PATTERN: clips",
+      "summary": "A 4x4 view of Live's Session clips (4 tracks x 4 scenes). Pad colours follow the clip colours; playing clips are bright.",
+      "items": [
+        {"combo": ["PATTERN"], "does": "Tap: switch to clip mode. Hold + PAD: launch a clip, then return to the previous mode."},
+        {"combo": ["PAD"], "does": "Launch the clip. On an empty slot of a MIDI track: arm that track and record a new clip."},
+        {"combo": ["DUPLICATE", "PAD"], "does": "Duplicate that clip into the next slot."},
+        {"combo": ["ERASE", "PAD"], "does": "Delete that clip."},
+        {"combo": ["TURN"], "does": "Move the clip view left / right by one track."},
+        {"combo": ["SHIFT", "TURN"], "does": "Move the clip view up / down by one scene."},
+        {"combo": ["◀", "▶"], "does": "Move the clip view by four tracks."},
+        {"combo": ["SHIFT", "PATTERN"], "does": "New: stop recording and select the next empty slot (ready to record)."}
+      ]
+    },
+    {
+      "id": "scene",
+      "title": "SCENE: scenes",
+      "summary": "16 scenes on the pads, in their colours. Playing scenes are bright, triggered scenes flash.",
+      "items": [
+        {"combo": ["SCENE"], "does": "Tap: switch to scene mode. Hold + PAD: launch a scene and return."},
+        {"combo": ["PAD"], "does": "Launch the scene. An unlit pad creates a new scene."},
+        {"combo": ["DUPLICATE", "PAD"], "does": "Duplicate the scene."},
+        {"combo": ["ERASE", "PAD"], "does": "Delete the scene (the last scene can't be deleted)."},
+        {"combo": ["TURN"], "does": "Scroll the scenes by one (SHIFT: by 16)."},
+        {"combo": ["SHIFT", "SCENE"], "does": "Capture and insert scene (copies what is playing into a new scene)."}
+      ]
+    },
+    {
+      "id": "track",
+      "title": "TRACK: tracks on the pads",
+      "summary": "Pads 1-15 are your tracks (then return tracks), pad 16 is the Master. Colours follow the tracks; muted tracks are white.",
+      "items": [
+        {"combo": ["GROUP"], "does": "Tap: show tracks on the pads (latched). Hold + PAD: act on a track and return.", "devices": ["mikro"]},
+        {"combo": ["SELECT"], "does": "Tap: show tracks on the pads (latched). Hold + PAD: act on a track and return.", "devices": ["mk3"]},
+        {"combo": ["PAD"], "does": "Select the track. A group track folds / unfolds."},
+        {"combo": ["PAD"], "context": "unlit pad", "does": "Create a new MIDI track (with SHIFT: an audio track)."},
+        {"combo": ["SELECT", "PAD"], "does": "Arm / disarm that track.", "devices": ["mikro"]},
+        {"combo": ["SOLO", "PAD"], "does": "Solo / unsolo that track (works from any mode: the pads show tracks while SOLO is held)."},
+        {"combo": ["MUTE", "PAD"], "does": "Mute / unmute that track (from any mode)."},
+        {"combo": ["STOP", "PAD"], "does": "Stop that track's clips (from any mode)."},
+        {"combo": ["DUPLICATE", "PAD"], "does": "Duplicate the track."},
+        {"combo": ["ERASE", "PAD"], "does": "Delete the track (not the Master, not the last track)."},
+        {"combo": ["TURN"], "does": "Scroll the tracks by one (SHIFT: by four)."}
+      ]
+    },
+    {
+      "id": "drum",
+      "title": "PAD MODE: drums",
+      "summary": "The 16 visible pads of the track's Drum Rack. Hitting a pad plays it and focuses it in Live (like MASCHINE focusing a sound). Pads are coloured by chain colour or by name (Kick red, Snare blue, ...).",
+      "items": [
+        {"combo": ["PAD MODE"], "does": "Switch to drum mode. Press again: switch between chain colours and name colours."},
+        {"combo": ["PAD"], "does": "Play and select the drum pad. Velocity and pressure (aftertouch) are sent."},
+        {"combo": ["SELECT", "PAD"], "does": "Select the drum pad without playing it.", "devices": ["mikro"]},
+        {"combo": ["MUTE", "PAD"], "does": "Mute / unmute the drum pad."},
+        {"combo": ["SOLO", "PAD"], "does": "Solo / unsolo the drum pad."},
+        {"combo": ["ERASE", "PAD"], "does": "Erase that pad's notes in the focused clip (no clip: empty the pad)."},
+        {"combo": ["DUPLICATE", "PAD", "PAD"], "does": "Copy the first pad onto the second."},
+        {"combo": ["TURN"], "does": "Scroll by one row (SHIFT or PUSH + TURN: by 16 pads)."},
+        {"combo": ["◀", "▶"], "does": "Scroll by 16 pads."},
+        {"combo": ["SHIFT", "PAD MODE"], "does": "Velocity curve: Linear / Soft / Hard."}
+      ]
+    },
+    {
+      "id": "keyboard",
+      "title": "KEYBOARD: notes in key",
+      "summary": "The pads walk up Live's current scale (root note bright). Root and scale are Live's own, so changing them here changes Live's Scale settings and vice versa, including per-clip scales.",
+      "items": [
+        {"combo": ["KEYBOARD"], "does": "Switch to keyboard mode."},
+        {"combo": ["PAD"], "does": "Play the note."},
+        {"combo": ["TURN"], "does": "Octave down / up (◀ ▶ too)."},
+        {"combo": ["SHIFT", "TURN"], "does": "Change the scale (Live's scale list)."},
+        {"combo": ["PUSH", "TURN"], "does": "Change the root note."},
+        {"combo": ["SHIFT", "KEYBOARD"], "does": "In key / chromatic layout (Live's Scale Mode)."},
+        {"combo": ["ERASE", "PAD"], "does": "Erase that note's events in the focused clip."}
+      ]
+    },
+    {
+      "id": "chords",
+      "title": "CHORDS: chord sets",
+      "summary": "Every pad plays a chord built from Live's scale, starting on successive scale degrees, so every chord is in key.",
+      "items": [
+        {"combo": ["CHORDS"], "does": "Switch to chord mode. Press again: next chord type (Triad, 7th, 9th, Sus2, Sus4, 6th, Power)."},
+        {"combo": ["SHIFT", "CHORDS"], "does": "Next voicing (Close, Inversion 1, Inversion 2, Spread)."},
+        {"combo": ["PAD"], "does": "Play the chord (works with note repeat and the arpeggiator)."},
+        {"combo": ["TURN"], "does": "Octave down / up; SHIFT + TURN: scale; PUSH + TURN: root note."}
+      ]
+    },
+    {
+      "id": "step",
+      "title": "STEP: step sequencer",
+      "summary": "The pads are 16 steps of the focused sound (the focused drum pad, or the last keyboard note) in the focused clip. The playhead runs across the pads while the clip plays.",
+      "items": [
+        {"combo": ["STEP"], "does": "Switch to step mode."},
+        {"combo": ["PAD"], "does": "Add / remove a note on that step. On an empty slot, the first step creates a one-bar clip."},
+        {"combo": ["TURN"], "does": "Next / previous page of 16 steps (◀ ▶ too)."},
+        {"combo": ["SHIFT", "TURN"], "does": "Step size: 1/32, 1/16, 1/8, 1/4."},
+        {"combo": ["PUSH", "TURN"], "does": "Choose a different sound (pitch) to edit."}
+      ]
+    },
+    {
+      "id": "playing",
+      "title": "Playing: velocity, repeat, arp, touch strip",
+      "summary": "The bridge plays the notes itself, next to the hardware, so the pads can do things one-note-per-pad MIDI can't: chords, arpeggios, note repeat that follows pressure, 16 velocities.",
+      "items": [
+        {"combo": ["FIXED VEL"], "does": "Fixed velocity on / off (velocity 100)."},
+        {"combo": ["SHIFT", "FIXED VEL"], "does": "16 Velocities: all pads play the focused note, pad 1 softest to pad 16 hardest."},
+        {"combo": ["NOTE REPEAT"], "does": "Hold: note repeat while held. Tap: latch on / off. From clip or scene mode it brings up the drum pads or keyboard until repeat stops."},
+        {"combo": ["SHIFT", "NOTE REPEAT"], "does": "Switch the NOTE REPEAT button between Note Repeat and Arpeggiator."},
+        {"combo": ["NOTE REPEAT", "TURN"], "does": "Repeat / arp rate (1/2 to 1/64, triplets included)."},
+        {"combo": ["NOTE REPEAT", "◀", "▶"], "does": "Arp: choose the parameter the encoder edits (Rate, Type, Octaves, Gate)."},
+        {"combo": ["STRIP"], "does": "Note repeat rate; touching the strip starts note repeat while you touch it."},
+        {"combo": ["PITCH"], "does": "Touch strip becomes a pitch bend (springs back when released). Press again: back to rate."},
+        {"combo": ["MOD"], "does": "Touch strip becomes the mod wheel. Press again: back to rate."},
+        {"combo": ["SWING", "TURN"], "does": "Live's swing amount; note repeat and the arpeggiator follow it."}
+      ]
+    },
+    {
+      "id": "shift-pads",
+      "title": "SHIFT + pads: edit the focused clip",
+      "summary": "Acts on the selected notes, or on all notes when nothing is selected. A pad only lights when its action can do something.",
+      "grid": [
+        ["Semitone -", "Semitone +", "Octave -", "Octave +"],
+        ["Clear notes", "Clear envelopes", "Copy", "Paste"],
+        ["Quantize", "Quantize 50%", "Nudge <", "Nudge >"],
+        ["Undo", "Redo", "Velocity 100", "Select all / none"]
+      ],
+      "items": [
+        {"combo": ["SHIFT", "PAD 1"], "does": "Undo."},
+        {"combo": ["SHIFT", "PAD 2"], "does": "Redo."},
+        {"combo": ["SHIFT", "PAD 3"], "does": "Set note velocities to 100."},
+        {"combo": ["SHIFT", "PAD 4"], "does": "Select all notes / select none."},
+        {"combo": ["SHIFT", "PAD 5"], "does": "Quantize to the clip grid."},
+        {"combo": ["SHIFT", "PAD 6"], "does": "Quantize 50% (half way to the grid)."},
+        {"combo": ["SHIFT", "PAD 7"], "does": "Nudge notes one grid step earlier."},
+        {"combo": ["SHIFT", "PAD 8"], "does": "Nudge notes one grid step later."},
+        {"combo": ["SHIFT", "PAD 9"], "does": "Clear notes."},
+        {"combo": ["SHIFT", "PAD 10"], "does": "Clear the clip's automation envelopes (red when it has some)."},
+        {"combo": ["SHIFT", "PAD 11"], "does": "Copy notes."},
+        {"combo": ["SHIFT", "PAD 12"], "does": "Paste the copied notes after the copied range (again: further on)."},
+        {"combo": ["SHIFT", "PAD 13"], "does": "Transpose down one scale step (semitone in chromatic)."},
+        {"combo": ["SHIFT", "PAD 14"], "does": "Transpose up one scale step."},
+        {"combo": ["SHIFT", "PAD 15"], "does": "Transpose down an octave."},
+        {"combo": ["SHIFT", "PAD 16"], "does": "Transpose up an octave."}
+      ]
+    },
+    {
+      "id": "events",
+      "title": "EVENTS: select notes",
+      "summary": "Hold EVENTS: the pads show the drum pads or keyboard of the mode underneath; lit pads have notes in the focused clip.",
+      "items": [
+        {"combo": ["EVENTS", "PAD"], "does": "Select that pad's notes (again: deselect)."},
+        {"combo": ["EVENTS"], "does": "Tap: select all notes / none."},
+        {"combo": ["EVENTS", "TURN"], "does": "Scroll the layout underneath (octave, drum rows; SHIFT: scale; PUSH: root)."},
+        {"combo": ["VARIATION"], "does": "Humanize: small random changes to timing and velocity."},
+        {"combo": ["SHIFT", "VARIATION"], "does": "Randomize velocities (60-127)."}
+      ]
+    },
+    {
+      "id": "transport",
+      "title": "Transport",
+      "summary": "MASCHINE's transport, in Live.",
+      "items": [
+        {"combo": ["PLAY"], "does": "Start / stop."},
+        {"combo": ["SHIFT", "PLAY"], "does": "Restart from the start marker."},
+        {"combo": ["RESTART"], "does": "Restart from the start marker."},
+        {"combo": ["SHIFT", "RESTART"], "does": "Loop on / off."},
+        {"combo": ["REC"], "does": "Session record on / off (also ends Arrangement recording)."},
+        {"combo": ["SHIFT", "REC"], "does": "Arrangement record on / off."},
+        {"combo": ["STOP"], "does": "Stop. Hold + PAD: stop that track's clips."},
+        {"combo": ["SHIFT", "STOP"], "does": "Stop all clips (transport keeps running)."},
+        {"combo": ["TAP"], "does": "Tap tempo."},
+        {"combo": ["SHIFT", "TAP"], "does": "Metronome on / off."},
+        {"combo": ["FOLLOW"], "does": "Follow on / off."},
+        {"combo": ["SHIFT", "FOLLOW"], "does": "Grid: cycle the focused clip's grid (1/4, 1/8, 1/16, 1/32)."},
+        {"combo": ["AUTO"], "does": "Automation arm on / off."},
+        {"combo": ["SHIFT", "AUTO"], "does": "Re-enable automation."},
+        {"combo": ["NOTES"], "does": "Capture MIDI (lit when there is something to capture)."}
+      ]
+    },
+    {
+      "id": "master",
+      "title": "Tempo, swing, volume",
+      "summary": "Hold the button and turn the encoder; the value pops up on the screen.",
+      "items": [
+        {"combo": ["TEMPO", "TURN"], "does": "Tempo ±1 BPM (SHIFT: ±0.1). Tap TEMPO: show the tempo."},
+        {"combo": ["SWING", "TURN"], "does": "Swing ±1 % (SHIFT: ±10 %). Tap SWING: show the swing."},
+        {"combo": ["VOLUME", "TURN"], "does": "Selected track volume ±1 dB (SHIFT: ±0.1 dB)."},
+        {"combo": ["VOLUME"], "does": "Tap: level meters of 4 tracks on the pads (TURN scrolls, PAD selects the track). Hold: meters while held."}
+      ]
+    },
+    {
+      "id": "edit",
+      "title": "Clip, track and device actions",
+      "summary": "ERASE and DUPLICATE work with pads in every mode; with SHIFT they act on what is focused.",
+      "items": [
+        {"combo": ["DUPLICATE"], "does": "Tap: duplicate the focused clip (TRACK mode: the track; SCENE mode: the scene)."},
+        {"combo": ["SHIFT", "DUPLICATE"], "does": "Double the focused MIDI clip's loop."},
+        {"combo": ["ERASE"], "does": "Hold + PAD to erase. On its own it does nothing, so a stray press never deletes your work."},
+        {"combo": ["SHIFT", "ERASE"], "does": "Delete the focused clip (TRACK mode: the track; SCENE mode: the scene)."},
+        {"combo": ["SOLO"], "does": "Tap: solo the selected track (SHIFT: add to the solo)."},
+        {"combo": ["MUTE"], "does": "Tap: mute the selected track."},
+        {"combo": ["SHIFT", "MUTE"], "does": "Unmute and unsolo every track."},
+        {"combo": ["SELECT"], "does": "Tap: arm the selected track (SHIFT: without disarming others).", "devices": ["mikro"]},
+        {"combo": ["LOCK"], "does": "Lock the controller to the current track."},
+        {"combo": ["SHIFT", "LOCK"], "does": "Lock to the selected device."}
+      ]
+    },
+    {
+      "id": "views",
+      "title": "Views and navigation",
+      "items": [
+        {"combo": ["PERFORM"], "does": "Session / Arrangement view.", "devices": ["mikro"]},
+        {"combo": ["ARRANGER"], "does": "Session / Arrangement view.", "devices": ["mk3"]},
+        {"combo": ["BROWSER"], "does": "Show / hide Live's browser."},
+        {"combo": ["SHIFT", "BROWSER"], "does": "Hot-Swap the selected device (opens the browser on it)."},
+        {"combo": ["SHIFT", "PLUG-IN"], "does": "Toggle the Clip / Device detail view."},
+        {"combo": ["SAMPLING"], "does": "Show the clip / sample editor."},
+        {"combo": ["SHIFT", "STAR"], "does": "Show / hide the detail view.", "devices": ["mikro"]},
+        {"combo": ["SHIFT", "◀", "▶"], "does": "Select the previous / next track."},
+        {"combo": ["MASCHINE"], "does": "Show Live and bridge versions and the current mode.", "devices": ["mikro"]},
+        {"combo": ["ENCODER TOUCH"], "does": "Show the current mode's details (octave, scale, drum pad...)."}
+      ]
+    },
+    {
+      "id": "plugin",
+      "title": "PLUG-IN: device parameters (MIKRO)",
+      "summary": "The encoder controls one parameter of the selected device at a time, in the order of Ableton's own parameter banks. The screen shows its name and value.",
+      "devices": ["mikro"],
+      "items": [
+        {"combo": ["PLUG-IN"], "does": "Parameter mode on / off."},
+        {"combo": ["TURN"], "does": "Change the parameter (SHIFT: fine)."},
+        {"combo": ["◀", "▶"], "does": "Previous / next parameter."},
+        {"combo": ["SHIFT", "◀", "▶"], "does": "Previous / next device on the track."},
+        {"combo": ["PUSH"], "does": "Reset the parameter to its default."}
+      ]
+    },
+    {
+      "id": "browser",
+      "title": "STAR: browse and load (MIKRO)",
+      "summary": "Live's browser on the hardware screen.",
+      "devices": ["mikro"],
+      "items": [
+        {"combo": ["STAR"], "does": "Browser on / off."},
+        {"combo": ["TURN"], "does": "Scroll (SHIFT: by 10)."},
+        {"combo": ["PUSH"], "does": "Open the folder, or load the item onto the selected track (with Hot-Swap: replace the device)."},
+        {"combo": ["◀"], "does": "Back up one level."},
+        {"combo": ["▶"], "does": "Open / load, like PUSH."}
+      ]
+    },
+    {
+      "id": "mk3",
+      "title": "MK3: knobs, screens, group buttons",
+      "summary": "Built from the hardware protocol; not yet tested on a real MK3.",
+      "devices": ["mk3"],
+      "items": [
+        {"combo": ["MIXER"], "does": "Knobs 1-8: volumes of the 8 tracks in view."},
+        {"combo": ["PLUG-IN"], "does": "Knobs 1-8: the selected device's parameters; ◀ ▶ change the bank."},
+        {"combo": ["GROUP A-H"], "does": "Select the 8 tracks in view (lit in track colours)."},
+        {"combo": ["SHIFT", "KNOB"], "does": "Fine adjustment."}
+      ]
+    }
+  ],
+  "changes": [
+    {"what": "Setup", "v1": "Controller Editor template, MIDI mode (SHIFT + MASCHINE), choose ports in Live", "v2": "Copy one folder; the bridge starts with Live and the script loads itself"},
+    {"what": "SHIFT", "v1": "RESTART acted as SHIFT", "v2": "The real SHIFT button; RESTART restarts playback"},
+    {"what": "PLAY", "v1": "Start (SHIFT: restart)", "v2": "Start / stop like MASCHINE (SHIFT or RESTART: restart)"},
+    {"what": "ERASE alone", "v1": "Deleted the focused clip / track / scene", "v2": "Does nothing (safety); SHIFT + ERASE deletes the focused item"},
+    {"what": "Hot-Swap", "v1": "SHIFT + ERASE", "v2": "SHIFT + BROWSER"},
+    {"what": "Pinned note repeat", "v1": "SHIFT + NOTE REPEAT", "v2": "Tap NOTE REPEAT (SHIFT + NOTE REPEAT now switches to the arpeggiator)"},
+    {"what": "Velocity 100 for notes", "v1": "SHIFT + FIXED VEL", "v2": "SHIFT + pad 3 (SHIFT + FIXED VEL is now 16 Velocities, as on MASCHINE)"},
+    {"what": "FIXED VEL", "v1": "No function", "v2": "Fixed velocity on / off"},
+    {"what": "Previous / next track", "v1": "CHORDS / STEP", "v2": "SHIFT + ◀ ▶ (CHORDS and STEP are now chord and step modes)"},
+    {"what": "Device / Clip detail view", "v1": "PLUG-IN", "v2": "SHIFT + PLUG-IN (PLUG-IN now controls device parameters)"},
+    {"what": "Track mode pin", "v1": "SHIFT + GROUP", "v2": "Tap GROUP (hold: temporary)"},
+    {"what": "New", "v1": "", "v2": "Chords, arpeggiator, 16 Velocities, step sequencer, hardware browser, parameter control, pitch / mod strip, humanize, screen feedback, pads light instantly when played"}
+  ]
+}

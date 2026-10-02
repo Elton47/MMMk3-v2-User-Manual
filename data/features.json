@@ -246,7 +246,7 @@
         {"combo": ["SHIFT", "STAR"], "does": "Show / hide the detail view.", "devices": ["mikro"]},
         {"combo": ["SHIFT", "◀", "▶"], "does": "Select the previous / next track."},
         {"combo": ["MASCHINE"], "does": "Show Live and bridge versions and the current mode.", "devices": ["mikro"]},
-        {"combo": ["ENCODER TOUCH"], "does": "Show the current mode's details (octave, scale, drum pad...)."}
+        {"combo": ["ENCODER TOUCH"], "does": "Rest a finger on the encoder without turning: show the current mode's details (octave, scale, drum pad...). Turning never shows it, and takes it away."}
       ]
     },
     {

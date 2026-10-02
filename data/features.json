@@ -252,14 +252,15 @@
     {
       "id": "plugin",
       "title": "PLUG-IN: device parameters (MIKRO)",
-      "summary": "The encoder controls one parameter of the selected device at a time, in the order of Ableton's own parameter banks. The screen shows its name and value.",
+      "summary": "The encoder controls one parameter of the selected device at a time. Parameters come in pages: Ableton's own banks for Live's devices (Filter, Envelope...), the visible macros of a rack, or groups of 8 for plug-ins. The screen shows the device, the page, and the parameter's name and value. Each device remembers where you were.",
       "devices": ["mikro"],
       "items": [
         {"combo": ["PLUG-IN"], "does": "Parameter mode on / off."},
         {"combo": ["TURN"], "does": "Change the parameter (SHIFT: fine)."},
         {"combo": ["◀", "▶"], "does": "Previous / next parameter."},
+        {"combo": ["PUSH", "TURN"], "does": "Previous / next page (a rack: Macros 1-8, 9-16)."},
         {"combo": ["SHIFT", "◀", "▶"], "does": "Previous / next device on the track."},
-        {"combo": ["PUSH"], "does": "Reset the parameter to its default."}
+        {"combo": ["PUSH"], "does": "Tap: reset the parameter to its default."}
       ]
     },
     {

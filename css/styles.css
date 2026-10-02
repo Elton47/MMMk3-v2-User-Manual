@@ -203,6 +203,12 @@ a { color: var(--accent); }
 }
 
 .table-wrap { overflow-x: auto; }
+.swatches { margin: 4px 0 12px; }
+.swatch {
+  display: inline-block; width: 14px; height: 14px; border-radius: 50%; margin-right: 8px;
+  vertical-align: -2px; border: 1px solid var(--line);
+}
+.swatches code { font-size: 12px; padding: 1px 5px; border-radius: 5px; background: var(--panel-2); }
 table { border-collapse: collapse; width: 100%; font-size: 14px; }
 th, td { text-align: left; padding: 8px; border-top: 1px solid var(--line); vertical-align: top; }
 th { color: var(--muted); font-weight: 600; border-top: 0; }

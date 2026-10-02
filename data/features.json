@@ -74,7 +74,26 @@
     {
       "id": "drum",
       "title": "PAD MODE: drums",
-      "summary": "The 16 visible pads of the track's Drum Rack. Hitting a pad plays it and focuses it in Live (like MASCHINE focusing a sound). Pads are coloured by chain colour or by name (Kick red, Snare blue, ...).",
+      "summary": "The 16 visible pads of the track's Drum Rack. Hitting a pad plays it and focuses it in Live (like MASCHINE focusing a sound). Pads are coloured by chain colour or by name (see the colour table). While a clip plays, the pads of the notes it plays light up.",
+      "swatches_note": "Name colours: pads use their chain colour by default; press PAD MODE again to colour them by name instead (it is remembered). A chain without a colour also gets its name colour. The pad name is searched for these words, ignoring case, anywhere in the name; the first rule that matches wins.",
+      "swatches": [
+        {"name": "Red", "rgb": "#ff1414", "keywords": ["kick", "bd", "bassdrum", "808", "sub", "bass"]},
+        {"name": "Blue", "rgb": "#1e46ff", "keywords": ["snare", "sn", "sd", "snr"]},
+        {"name": "Orange", "rgb": "#ff5a00", "keywords": ["tom", "tm"]},
+        {"name": "Violet", "rgb": "#9628ff", "keywords": ["crash", "crsh", "cymbal"]},
+        {"name": "Magenta", "rgb": "#ff1ec8", "keywords": ["ride", "rd"]},
+        {"name": "Pink", "rgb": "#ff1e6e", "keywords": ["hit", "strike", "metal"]},
+        {"name": "Light orange", "rgb": "#ff911e", "keywords": ["shaker", "tamb"]},
+        {"name": "Green", "rgb": "#00dc28", "keywords": ["Closed Hat", "HH Cl", "CH"], "note": "closed hi-hat: hat or hh together with cl, or CH as a word"},
+        {"name": "Lime", "rgb": "#96f000", "keywords": ["Open Hat", "HH Op", "OH"], "note": "open hi-hat: hat or hh together with op, or OH as a word"},
+        {"name": "Purple", "rgb": "#c81eff", "keywords": ["hh", "hat", "click"], "note": "any other hi-hat"},
+        {"name": "Lime", "rgb": "#96f000", "keywords": ["clap", "clp", "hand", "slap"]},
+        {"name": "Lime", "rgb": "#96f000", "keywords": ["rim", "rm", "stick"]},
+        {"name": "Mint", "rgb": "#00e68c", "keywords": ["bell", "tri", "gong", "clav", "tubular"]},
+        {"name": "Turquoise", "rgb": "#00a0ff", "keywords": ["perc", "cong", "bong", "agogo"]},
+        {"name": "White", "rgb": "#ebebeb", "keywords": ["glitch", "fx", "noise", "sfx"]},
+        {"name": "Yellow", "rgb": "#ffeb00", "keywords": [], "note": "anything else"}
+      ],
       "items": [
         {"combo": ["PAD MODE"], "does": "Switch to drum mode. Press again: switch between chain colours and name colours."},
         {"combo": ["PAD"], "does": "Play and select the drum pad. Velocity and pressure (aftertouch) are sent."},
@@ -91,7 +110,7 @@
     {
       "id": "keyboard",
       "title": "KEYBOARD: notes in key",
-      "summary": "The pads walk up Live's current scale (root note bright). Root and scale are Live's own, so changing them here changes Live's Scale settings and vice versa, including per-clip scales.",
+      "summary": "The pads walk up Live's current scale (root note bright). Root and scale are Live's own, so changing them here changes Live's Scale settings and vice versa, including per-clip scales. While a clip plays, the pads of the notes it plays light up.",
       "items": [
         {"combo": ["KEYBOARD"], "does": "Switch to keyboard mode."},
         {"combo": ["PAD"], "does": "Play the note."},

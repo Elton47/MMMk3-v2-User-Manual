@@ -149,6 +149,53 @@
     return li;
   }
 
+  function swatchTable(section, swatches) {
+    // Drum pad name colours: a colour dot, its name, and the words that give it.
+    var wrap = document.createElement('div');
+    wrap.className = 'swatches';
+    if (section.swatches_note) {
+      var note = document.createElement('p');
+      note.className = 'summary';
+      note.textContent = section.swatches_note;
+      wrap.appendChild(note);
+    }
+    var table = document.createElement('table');
+    var head = table.createTHead().insertRow();
+    ['Colour', 'Pad name contains'].forEach(function (title) {
+      var th = document.createElement('th');
+      th.textContent = title;
+      head.appendChild(th);
+    });
+    var body = table.createTBody();
+    swatches.forEach(function (swatch) {
+      var row = body.insertRow();
+      var name = row.insertCell();
+      var dot = document.createElement('span');
+      dot.className = 'swatch';
+      dot.style.background = swatch.rgb;
+      name.appendChild(dot);
+      name.appendChild(document.createTextNode(swatch.name));
+      var words = row.insertCell();
+      swatch.keywords.forEach(function (keyword) {
+        var code = document.createElement('code');
+        code.textContent = keyword;
+        words.appendChild(code);
+        words.appendChild(document.createTextNode(' '));
+      });
+      if (swatch.note) {
+        var small = document.createElement('span');
+        small.className = 'context';
+        small.textContent = '(' + swatch.note + ')';
+        words.appendChild(small);
+      }
+    });
+    var scroll = document.createElement('div');
+    scroll.className = 'table-wrap';
+    scroll.appendChild(table);
+    wrap.appendChild(scroll);
+    return wrap;
+  }
+
   function renderSections() {
     var container = el('sections');
     var toc = el('toc');
@@ -158,7 +205,10 @@
     visibleSections().forEach(function (entry) {
       var section = entry.section;
       var items = entry.items.filter(function (item) { return !query || itemText(section, item).indexOf(query) >= 0; });
-      if (query && !items.length) return;
+      var swatches = (section.swatches || []).filter(function (swatch) {
+        return !query || (swatch.name + ' ' + swatch.keywords.join(' ') + ' ' + (swatch.note || '')).toLowerCase().indexOf(query) >= 0;
+      });
+      if (query && !items.length && !swatches.length) return;
       var card = document.createElement('section');
       card.className = 'card';
       card.id = section.id;
@@ -189,6 +239,7 @@
         });
         card.appendChild(grid);
       }
+      if (swatches.length) card.appendChild(swatchTable(section, swatches));
       var list = document.createElement('ul');
       list.className = 'items';
       items.forEach(function (item) { list.appendChild(itemElement(item)); });

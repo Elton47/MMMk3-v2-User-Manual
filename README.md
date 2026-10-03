@@ -1,16 +1,19 @@
 # MASCHINE for Ableton Live: interactive manual (v2)
 
-Click any control on a schematic MASCHINE MIKRO MK3 or MK3 to see everything it does, hover a
-combination to see it on the controller, search, light / dark themes, deep links
-(`#mikro/SHIFT`, `#mk3/PLUG-IN`).
+A step-by-step setup guide (`#setup`: choose your computer, controller and Live version, then
+follow the steps), and an interactive manual: click any control on a schematic MASCHINE MIKRO
+MK3 or MK3 to see everything it does, hover a combination to see it on the controller, search,
+light / dark / system theme, deep links (`#mikro/SHIFT`, `#mk3/PLUG-IN`,
+`#setup/win11/mikro/live12/3`).
 
-It is a static site (no build step): `index.html`, `css/`, `js/` and `data/features.json`.
+It is a static site (no build step): `index.html`, `css/`, `js/` and `data/` (`features.json`
+for the manual, `install.json` for the setup guide).
 
 ## Updating the content
 
-All content comes from `data/features.json`, a copy of `docs/features.json` from the script
-repository ([MMMk3-MIDI-Script-For-Live](https://github.com/Elton47/MMMk3-MIDI-Script-For-Live), private),
-which also generates the Markdown user guide. Edit it there, then copy it here.
+All content comes from `data/features.json` and `data/install.json`, copies of the files in the
+script repository's `docs/` folder (private), which also generate its Markdown user guide and
+install guide. Edit them there, then copy them here.
 
 ## Running locally
 

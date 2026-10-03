@@ -195,7 +195,7 @@
       "title": "EVENTS: select notes",
       "summary": "Hold EVENTS: the pads show the drum pads or keyboard of the mode underneath; lit pads have notes in the focused clip.",
       "items": [
-        {"combo": ["EVENTS", "PAD"], "does": "Select that pad's notes (again: deselect)."},
+        {"combo": ["EVENTS", "PAD"], "does": "Select that pad's notes (again: deselect). While EVENTS is held, the pads with notes light in their own colours, selected ones brightest."},
         {"combo": ["EVENTS"], "does": "Tap: select all notes / none."},
         {"combo": ["EVENTS", "TURN"], "does": "Scroll the layout underneath (octave, drum rows; SHIFT: scale; PUSH: root)."},
         {"combo": ["VARIATION"], "does": "Humanize: small random changes to timing and velocity."},

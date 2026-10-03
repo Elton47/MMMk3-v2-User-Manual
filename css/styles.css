@@ -282,19 +282,9 @@ button { font: inherit; color: inherit; }
   display: flex; align-items: center; gap: 12px; min-width: 0;
   color: inherit; text-decoration: none; border-radius: var(--md-sys-shape-sm);
 }
-.logo {
-  display: grid; grid-template-columns: 1fr 1fr; gap: 3px; flex: none;
-  width: 32px; height: 32px; padding: 3px; border-radius: 9px;
-  background: var(--hw-body);
-}
-/* The four corner pads of the 16-pad grid in MASCHINE's sound colours (PAD_COLORS, layouts.js):
-   pad 13 Purple, pad 16 Red / pad 1 Orange, pad 4 Yellow. */
-.logo i { border-radius: 3px; }
-.logo i:nth-child(1) { --pad: #d24dff; }
-.logo i:nth-child(2) { --pad: #ff2030; }
-.logo i:nth-child(3) { --pad: #ff692d; }
-.logo i:nth-child(4) { --pad: #ffdb00; }
-.logo i { background: color-mix(in srgb, var(--pad) 50%, var(--hw-pad)); } /* muted, like .pad-art-pad */
+/* Logo: the four corner pads of the grid in MASCHINE's sound colours (PAD_COLORS, layouts.js), with
+   Live's playhead passing: the pads it has passed glow. Drawn in index.html (same as the favicon). */
+.logo { display: block; flex: none; width: 32px; height: 32px; }
 .brand-text { display: flex; flex-direction: column; min-width: 0; }
 .brand-title { font-size: 16px; line-height: 22px; font-weight: 600; letter-spacing: .01em; white-space: nowrap; }
 .brand-for { font-weight: 400; color: var(--md-sys-color-on-surface-variant); }

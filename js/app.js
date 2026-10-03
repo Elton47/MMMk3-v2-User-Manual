@@ -57,6 +57,7 @@
       var id = c[0], label = c[1], x = c[2], y = c[3], w = c[4], h = c[5], kind = c[6];
       var g = node('g', { 'class': 'hw-control ' + kind, 'data-id': id, tabindex: kind === 'screen' ? -1 : 0,
         role: 'button', 'aria-label': id }, svg);
+      if (kind === 'pad') g.style.setProperty('--pad-color', PAD_COLORS[Number(label) - 1]);
       if (kind === 'encoder' || kind === 'knob') {
         var r = Math.min(w, h) / 2;
         node('circle', { cx: x + w / 2, cy: y + h / 2, r: r, 'class': 'ring' }, g);

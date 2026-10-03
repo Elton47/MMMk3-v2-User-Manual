@@ -21,6 +21,28 @@ function pads(x, y, size, gap) {
   return out;
 }
 
+// A selected pad lights in MASCHINE's 16 sound colours, in the software's order (sound 1 Red ...
+// sound 16 Fuchsia). Values marked "sampled" were taken from NI's MASCHINE software screenshots
+// on native-instruments.com; the rest sit between their sampled neighbours.
+var PAD_COLORS = [
+  '#ff2030', // 1 Red (sampled)
+  '#ff692d', // 2 Orange (sampled)
+  '#ff9429', // 3 Light Orange
+  '#ffb514', // 4 Warm Yellow
+  '#ffdb00', // 5 Yellow (sampled)
+  '#9fff19', // 6 Lime
+  '#26ff38', // 7 Green
+  '#19ffab', // 8 Mint
+  '#00f0ef', // 9 Cyan (sampled)
+  '#00d2ff', // 10 Turquoise (sampled)
+  '#2b96ff', // 11 Blue (sampled)
+  '#8871ff', // 12 Plum (sampled)
+  '#ab61ff', // 13 Violet
+  '#d24dff', // 14 Purple
+  '#ff38d7', // 15 Magenta
+  '#ff2c7f'  // 16 Fuchsia (sampled)
+];
+
 var LAYOUTS = {
   mikro: {
     title: 'MASCHINE MIKRO MK3',

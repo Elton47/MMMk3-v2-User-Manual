@@ -151,6 +151,10 @@ a { color: var(--accent); }
 .hw-control.related rect, .hw-control.related circle { fill: color-mix(in srgb, var(--hw-related) 35%, var(--hw-button)); stroke: var(--hw-related); }
 .hw-control.selected rect, .hw-control.selected circle { fill: var(--hw-active); stroke: #ffd1ad; }
 .hw-control.selected text, .hw-control.related text { fill: #fff; }
+/* pads light in their MASCHINE sound colour (PAD_COLORS in layouts.js) */
+.hw-control.pad.related rect { fill: color-mix(in srgb, var(--pad-color) 45%, var(--hw-pad)); stroke: var(--pad-color); }
+.hw-control.pad.selected rect { fill: var(--pad-color); stroke: #fff; }
+.hw-control.pad.selected text { fill: #1c1d21; }
 .hw-control:focus { outline: none; }
 .badge circle { fill: var(--hw-active); stroke: #fff; stroke-width: 2; }
 .badge text { fill: #fff; font: 700 12px system-ui, sans-serif; text-anchor: middle; dominant-baseline: central; }

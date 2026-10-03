@@ -95,6 +95,10 @@ MM.manual = (function () {
     gradient(defs, 'radialGradient', 'hw-pad-fill', { cx: '50%', cy: '45%', r: '70%' }, [[0, '#4a4a4e'], [1, '#353538']]);
     gradient(defs, 'radialGradient', 'hw-pad-sheen', { cx: '50%', cy: '45%', r: '60%' }, [[0, '#ffffff', 0.45], [1, '#ffffff', 0]]);
     gradient(defs, 'radialGradient', 'hw-knob-fill', { cx: '38%', cy: '32%', r: '75%' }, [[0, '#47474b'], [0.55, '#1c1c1f'], [1, '#0b0b0c']]);
+    gradient(defs, 'radialGradient', 'hw-knob-top', { cx: '40%', cy: '34%', r: '72%' }, [[0, '#6b6b70'], [0.6, '#404044'], [1, '#2a2a2d']]);
+    gradient(defs, 'linearGradient', 'hw-light-fill', { x1: 0, y1: 0, x2: 0, y2: 1 }, [[0, '#e9edf0'], [1, '#c4cbd0']]);
+    gradient(defs, 'linearGradient', 'hw-glass-fill', { x1: 0, y1: 0, x2: 0.35, y2: 1 }, [[0, '#121214'], [0.45, '#08080a'], [1, '#040405']]);
+    return defs;
   }
 
   function drawIcon(g, icon, x, y, w, hgt) {
@@ -138,8 +142,65 @@ MM.manual = (function () {
     }
   }
 
-  // The OLED: 2 lines (big + small) or 3 small lines, like the script's screens.
+  function svgText(parent, x, y, cls, text) {
+    var t = node('text', { x: x, y: y, 'class': cls }, parent);
+    t.textContent = text;
+    return t;
+  }
+
+  // One colour screen (480 x 272 units, like the MK3's displays), in the layout of the script's
+  // screens: labels for the display buttons, a header with an accent bar, a big value or a list,
+  // and 4 knob cells at the bottom.
+  function drawLcd(g, side) {
+    g.innerHTML = '';
+    var accent = side.accent || '#ff8000';
+    var top = 6;
+    if (side.buttons) {
+      side.buttons.forEach(function (label, i) {
+        if (label) svgText(g, 60 + i * 120, 18, 'lcd-button', label.toUpperCase());
+      });
+      node('rect', { x: 0, y: 34, width: 480, height: 1.5, 'class': 'lcd-rule' }, g);
+      top = 42;
+    }
+    node('rect', { x: 0, y: top, width: 6, height: 54, fill: accent }, g);
+    svgText(g, 18, top + 17, 'lcd-title', side.title || '');
+    if (side.sub) svgText(g, 18, top + 43, 'lcd-sub', side.sub);
+    var knobs = side.knobs || [];
+    if (side.center) {
+      svgText(g, 240, knobs.length ? 140 : 156, 'lcd-center', side.center);
+      if (side.small) svgText(g, 240, knobs.length ? 176 : 200, 'lcd-small', side.small);
+    }
+    (side.list || []).forEach(function (item, i) {
+      var y = top + 68 + i * 28, chosen = i === side.selected;
+      if (chosen) node('rect', { x: 8, y: y, width: 464, height: 26, rx: 2, fill: accent }, g);
+      if (item[1]) node('rect', { x: 16, y: y + 6, width: 9, height: 14, fill: item[1], 'class': 'lcd-chip' }, g);
+      svgText(g, item[1] ? 34 : 18, y + 13, 'lcd-list' + (chosen ? ' chosen' : ''), item[0]);
+    });
+    if (!knobs.length) return;
+    node('rect', { x: 0, y: 194, width: 480, height: 1.5, 'class': 'lcd-rule' }, g);
+    knobs.forEach(function (knob, i) {
+      var x0 = i * 120, touched = i === side.touched;
+      if (touched) node('rect', { x: x0 + 2, y: 197, width: 116, height: 75, 'class': 'lcd-touched' }, g);
+      svgText(g, x0 + 60, 213, 'lcd-knob-name', knob[0]);
+      if (knob[1] !== null && knob[1] !== undefined) {
+        node('rect', { x: x0 + 12, y: 226, width: 96, height: 7, 'class': 'lcd-track' }, g);
+        node('rect', { x: x0 + 12, y: 226, width: 96 * knob[1], height: 7, fill: knob[3] || accent }, g);
+      }
+      svgText(g, x0 + 60, 254, 'lcd-knob-value' + (touched ? ' touched' : ''), knob[2] || '');
+    });
+  }
+
+  // The screens show `lines`: the OLED takes text lines, the colour screens { left, right } (a
+  // side that is left out shows the layout's default).
   function showScreen(lines) {
+    var lcd = state.lcd;
+    if (lcd && lines && lcd.content !== lines) {
+      lcd.content = lines;
+      Object.keys(lcd.sides).forEach(function (name) {
+        drawLcd(lcd.sides[name], lines[name] || layout().screen[name]);
+      });
+    }
+    // The OLED: 2 lines (big + small) or 3 small lines, like the script's screens.
     var oled = state.oled;
     if (!oled || !lines || oled.lines === lines) return;
     oled.lines = lines;
@@ -164,6 +225,7 @@ MM.manual = (function () {
 
   function drawDevice() {
     state.oled = null;
+    state.lcd = null;
     var svg = el('device');
     var spec = layout();
     svg.innerHTML = '';
@@ -171,9 +233,14 @@ MM.manual = (function () {
     svg.setAttribute('aria-label', spec.title + ' layout: choose a control to see what it does');
     var real = !!spec.real;  // measured from a photo: drawn with the printed look
     svg.classList.toggle('real', real);
-    if (real) drawDefs(svg);
+    var defs = real ? drawDefs(svg) : null;
     node('rect', { x: 1, y: 1, width: spec.width - 2, height: spec.height - 2, rx: spec.radius || 26, 'class': 'hw-body' }, svg);
+    (spec.panels || []).forEach(function (p) {
+      node('rect', { x: Math.max(p[0], 1), y: Math.max(p[1], 1), width: Math.min(p[2], spec.width - 1 - Math.max(p[0], 1)),
+        height: Math.min(p[3], spec.height - 1 - Math.max(p[1], 1)), 'class': p[4] }, svg);
+    });
     (spec.stripDots || []).forEach(function (dot) { node('circle', { cx: dot[0], cy: dot[1], r: 2.2, 'class': 'hw-dot' }, svg); });
+    (spec.marks || []).forEach(function (dot) { node('circle', { cx: dot[0], cy: dot[1], r: dot[2], 'class': 'hw-mark' }, svg); });
     spec.controls.forEach(function (c) {
       var id = c[0], label = c[1], x = c[2], y = c[3], w = c[4], hgt = c[5], kind = c[6], opts = c[7] || {};
       var interactive = kind !== 'screen';
@@ -189,16 +256,37 @@ MM.manual = (function () {
         });
       }
       if (kind === 'pad') g.style.setProperty('--pad-color', PAD_COLORS[Number(label) - 1]);
+      if (opts.lit) {
+        g.classList.add('lit');
+        g.style.setProperty('--lit-color', opts.lit);
+      }
+      if (opts.light) g.classList.add('light');
       if (kind === 'encoder' || kind === 'knob') {
         var r = Math.min(w, hgt) / 2, cx = x + w / 2, cy = y + hgt / 2;
         node('circle', { cx: cx, cy: cy, r: r, 'class': 'ring' }, g);
-        if (kind === 'encoder' && real) {
+        if (real && opts.face) {
+          // a dark skirt with a lighter top; the encoder has a ridged band between them
+          if (kind === 'encoder') node('circle', { cx: cx, cy: cy, r: r * (opts.face + 1) / 2, 'class': 'knurl' }, g);
+          node('circle', { cx: cx, cy: cy, r: r * opts.face, 'class': 'knob-top' }, g);
+        } else if (kind === 'encoder' && real) {
           node('circle', { cx: cx, cy: cy, r: r * 0.8, 'class': 'knurl' }, g);
           node('circle', { cx: cx, cy: cy, r: r * 0.66, 'class': 'knob-cap' }, g);
         } else if (kind === 'encoder') {
           node('circle', { cx: cx, cy: cy, r: r * 0.62 }, g);
         }
         if (!real) node('text', { x: cx, y: cy }, g).textContent = label;
+        return;
+      }
+      if (kind === 'screen' && real && opts.lcd) {
+        // a colour screen flush in the glass; content drawn in its own 480 x 272 units
+        node('rect', { x: x, y: y, width: w, height: hgt, 'class': 'lcd' }, g);
+        var clipId = 'lcd-clip-' + opts.lcd;
+        node('rect', { x: x, y: y, width: w, height: hgt }, node('clipPath', { id: clipId }, defs));
+        var s = Math.min(w / 480, hgt / 272);
+        var content = node('g', { transform: 'translate(' + (x + (w - 480 * s) / 2).toFixed(2) + ' ' +
+          (y + (hgt - 272 * s) / 2).toFixed(2) + ') scale(' + s.toFixed(4) + ')' }, node('g', { 'clip-path': 'url(#' + clipId + ')' }, g));
+        state.lcd = state.lcd || { sides: {}, content: null };
+        state.lcd.sides[opts.lcd] = content;
         return;
       }
       if (kind === 'screen' && real) {
@@ -222,7 +310,7 @@ MM.manual = (function () {
         node('rect', { x: x + 3, y: y + 3, width: w - 6, height: hgt - 6, rx: 1.5, 'class': 'strip-inner' }, g);
       } else if (opts.icon) {
         drawIcon(g, opts.icon, x, y, w, hgt);
-      } else {
+      } else if (!opts.light) {
         drawLabel(g, label, opts, x, y, w, hgt);
       }
     });

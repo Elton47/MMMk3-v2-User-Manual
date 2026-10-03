@@ -73,6 +73,7 @@
 
   --focus-ring: 3px solid var(--md-sys-color-secondary);
   --bar-height: 64px;
+  --page-max: 1840px; /* widest page container (app bar, toolbar, manual, footer) */
 }
 
 /* dark: same roles, dark tones */
@@ -275,7 +276,7 @@ button { font: inherit; color: inherit; }
 .top-app-bar.scrolled { box-shadow: var(--md-sys-elevation-2); }
 .top-app-bar-inner {
   display: flex; align-items: center; gap: 16px;
-  max-width: 1480px; margin: 0 auto; padding: 0 16px; min-height: var(--bar-height);
+  max-width: var(--page-max); margin: 0 auto; padding: 0 16px; min-height: var(--bar-height);
 }
 
 .brand {
@@ -345,7 +346,7 @@ button { font: inherit; color: inherit; }
 .banner[hidden] { display: none; }
 
 .footer {
-  max-width: 1480px; width: 100%; margin: 32px auto 0; padding: 20px 16px 28px;
+  max-width: var(--page-max); width: 100%; margin: 32px auto 0; padding: 20px 16px 28px;
   border-top: 1px solid var(--md-sys-color-outline-variant);
   color: var(--md-sys-color-on-surface-variant); font-size: 12px; line-height: 18px;
 }
@@ -377,7 +378,7 @@ button { font: inherit; color: inherit; }
 
 .manual-toolbar {
   display: flex; flex-wrap: wrap; gap: 12px; align-items: center;
-  max-width: 1480px; margin: 0 auto; padding: 16px 16px 0;
+  max-width: var(--page-max); margin: 0 auto; padding: 16px 16px 0;
 }
 
 .segmented {
@@ -417,13 +418,18 @@ button { font: inherit; color: inherit; }
 @media (hover: none) { .search-hint { display: none; } }
 
 .manual-layout {
-  display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 16px;
-  max-width: 1480px; margin: 0 auto; padding: 16px;
+  display: grid; grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr); gap: 16px;
+  max-width: var(--page-max); margin: 0 auto; padding: 16px;
 }
 .manual-layout > * { min-width: 0; }
 .hardware { position: sticky; top: calc(var(--bar-height) + 16px); align-self: start; }
-.hardware-card { padding: 12px; }
-#device { display: block; width: 100%; height: auto; }
+/* the drawing is a control surface: clicks and drags never select its printed text */
+.hardware-card { padding: 12px; -webkit-user-select: none; user-select: none; }
+#device { display: block; width: 100%; height: auto; -webkit-user-select: none; user-select: none; }
+/* side by side, the sticky drawing stays within the window height (a tall layout is centred) */
+@media (min-width: 1101px) {
+  #device { max-height: calc(100vh - var(--bar-height) - 56px); }
+}
 .hint { margin: 12px 4px 0; color: var(--md-sys-color-on-surface-variant); font-size: 12px; line-height: 16px; }
 
 /* hardware drawing: flat schematic (layouts without real: true) */
@@ -477,12 +483,46 @@ button { font: inherit; color: inherit; }
 #device.real .screen .bezel { fill: #0b0b0c; stroke: #2a2a2d; stroke-width: 1.2; }
 #device.real .screen .oled { fill: #000; }
 #device.real .screen .pixels { fill: #eaf1ff; }
+/* MK3: the glossy display panel, the darker edge band, plain light display buttons, knobs with a
+   dark skirt and lighter top, the dots around the encoder, and the colour screens */
+#device.real .hw-glass { fill: url(#hw-glass-fill); stroke: #000; stroke-width: 1; }
+#device.real .hw-edge { fill: #0b0b0c; opacity: .55; }
+#device.real .hw-mark { fill: #6a6a6e; }
+#device.real .button.light .cap { fill: url(#hw-light-fill); stroke: #9aa3a9; stroke-width: 1; }
+#device.real .knob .ring { fill: #0b0b0c; stroke: #2a2a2d; stroke-width: 1.4; transition: stroke .12s; }
+#device.real .knob-top { fill: url(#hw-knob-top); stroke: #050506; stroke-width: .8; pointer-events: none; }
+#device.real .encoder .knurl, #device.real .encoder .knob-cap { pointer-events: none; }
+#device.real .screen .lcd { fill: #0c0c0e; stroke: #232327; stroke-width: 1; }
+#device.real .screen text { dominant-baseline: middle; font-family: var(--md-ref-typeface); }
+#device.real .lcd-rule { fill: #1e1f23; }
+#device.real .lcd-touched { fill: #1e1f23; }
+#device.real .lcd-track { fill: #3c3e44; }
+#device.real .lcd-chip { stroke: #0c0c0e; stroke-width: 1.5; }
+#device.real .lcd-button { fill: #e2e2e6; font-size: 19px; font-weight: 600; text-anchor: middle; }
+#device.real .lcd-title { fill: #e2e2e6; font-size: 30px; font-weight: 600; }
+#device.real .lcd-sub { fill: #8f9199; font-size: 22px; font-weight: 500; }
+#device.real .lcd-center { fill: #e2e2e6; font-size: 50px; font-weight: 600; text-anchor: middle; }
+#device.real .lcd-small { fill: #8f9199; font-size: 23px; font-weight: 500; text-anchor: middle; }
+#device.real .lcd-list { fill: #e2e2e6; font-size: 21px; font-weight: 500; }
+#device.real .lcd-list.chosen { fill: #0c0c0e; font-weight: 700; }
+#device.real .lcd-knob-name { fill: #e2e2e6; font-size: 20px; font-weight: 600; text-anchor: middle; }
+#device.real .lcd-knob-value { fill: #8f9199; font-size: 23px; font-weight: 500; text-anchor: middle; }
+#device.real .lcd-knob-value.touched { fill: #fff; }
 /* states: hover / a combo's controls (related) / the selected control, lit like the hardware */
 #device.real .hw-control:hover .cap, #device.real .hw-control:hover .ring { stroke: var(--hw-related); }
 #device.real .hw-control:focus-visible .cap, #device.real .hw-control:focus-visible .ring { stroke: #fff; stroke-width: 2.4; }
 #device.real .button.related .cap { fill: color-mix(in srgb, var(--hw-related) 22%, #2c2c2f); stroke: var(--hw-related); }
 #device.real .button.selected .cap { fill: #4b4b50; stroke: var(--hw-active); stroke-width: 2.4; }
 #device.real .button.selected .label, #device.real .button.related .label { fill: #fff; }
+#device.real .button.selected .label.inverse, #device.real .button.related .label.inverse { fill: #121214; }
+/* PLAY and REC keep their colour and light up brighter, like the backlit buttons */
+#device.real .button.selected .label.green, #device.real .button.related .label.green {
+  fill: #6dff7f; filter: drop-shadow(0 0 2px rgb(109 255 127 / .65));
+}
+#device.real .button.selected .label.red, #device.real .button.related .label.red,
+#device.real .button.selected .sublabel.red, #device.real .button.related .sublabel.red {
+  fill: #ff6a5c; filter: drop-shadow(0 0 2px rgb(255 106 92 / .6));
+}
 #device.real .button.selected .icon-fill { fill: #fff; }
 #device.real .button.selected .icon-line { stroke: #fff; }
 #device.real .pad.related .cap { fill: color-mix(in srgb, var(--pad-color) 55%, #2a2a2d); stroke: var(--pad-color); }
@@ -490,8 +530,14 @@ button { font: inherit; color: inherit; }
 #device.real .pad.selected .cap { fill: var(--pad-color); stroke: #fff; stroke-width: 2; }
 #device.real .pad.selected .sheen { opacity: .9; }
 #device.real .pad.selected .pad-print, #device.real .pad.related .pad-print { fill: #141416; }
-#device.real .encoder.related .ring, #device.real .strip.related .cap { stroke: var(--hw-related); stroke-width: 2.2; }
-#device.real .encoder.selected .ring, #device.real .strip.selected .cap { stroke: var(--hw-active); stroke-width: 2.6; }
+#device.real .encoder.related .ring, #device.real .knob.related .ring, #device.real .strip.related .cap { stroke: var(--hw-related); stroke-width: 2.2; }
+#device.real .encoder.selected .ring, #device.real .knob.selected .ring, #device.real .strip.selected .cap { stroke: var(--hw-active); stroke-width: 2.6; }
+/* light caps and buttons with a lit colour (MK3 group buttons) light up like the hardware */
+#device.real .button.light.related .cap { fill: color-mix(in srgb, var(--hw-related) 45%, #e9edf0); }
+#device.real .button.light.selected .cap { fill: #fff; }
+#device.real .button.lit.related .cap { fill: color-mix(in srgb, var(--lit-color) 50%, #2a2a2d); stroke: var(--lit-color); }
+#device.real .button.lit.selected .cap { fill: var(--lit-color); stroke: #fff; stroke-width: 2; }
+#device.real .button.lit.selected .label, #device.real .button.lit.related .label { fill: #141416; }
 #device.real .strip.selected .strip-inner, #device.real .strip.related .strip-inner { fill: color-mix(in srgb, var(--hw-related) 25%, #151517); }
 .badge circle { fill: var(--hw-active); stroke: #fff; stroke-width: 2; }
 .badge text { fill: #fff; font: 700 12px var(--md-ref-typeface); text-anchor: middle; dominant-baseline: central; }

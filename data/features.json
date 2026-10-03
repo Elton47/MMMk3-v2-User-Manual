@@ -232,7 +232,7 @@
         {"combo": ["TEMPO", "TURN"], "does": "Tempo ±1 BPM (SHIFT: ±0.1). Tap TEMPO: show the tempo."},
         {"combo": ["SWING", "TURN"], "does": "Swing ±1 % (SHIFT: ±10 %). Tap SWING: show the swing."},
         {"combo": ["VOLUME", "TURN"], "does": "Selected track volume ±1 dB (SHIFT: ±0.1 dB)."},
-        {"combo": ["VOLUME"], "does": "Tap: level meters of 4 tracks on the pads (TURN scrolls, PAD selects the track). Hold: meters while held."}
+        {"combo": ["VOLUME"], "does": "Tap: level meters of 4 tracks on the pads (TURN scrolls, PAD selects the track). The top pad lights in a lighter track colour near 0 dB and red when the track clips. Hold: meters while held."}
       ]
     },
     {
@@ -264,7 +264,7 @@
         {"combo": ["SAMPLING"], "does": "Show the clip / sample editor."},
         {"combo": ["SHIFT", "STAR"], "does": "Show / hide the detail view.", "devices": ["mikro"]},
         {"combo": ["SHIFT", "◀", "▶"], "does": "Select the previous / next track."},
-        {"combo": ["MASCHINE"], "does": "Show Live and bridge versions and the current mode.", "devices": ["mikro"]},
+        {"combo": ["MASCHINE"], "does": "Show the script version, its author and your Live version.", "devices": ["mikro"]},
         {"combo": ["ENCODER TOUCH"], "does": "Rest a finger on the encoder without turning: show the current mode's details (octave, scale, drum pad...). Turning never shows it, and takes it away."}
       ]
     },

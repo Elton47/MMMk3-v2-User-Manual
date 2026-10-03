@@ -426,28 +426,73 @@ button { font: inherit; color: inherit; }
 #device { display: block; width: 100%; height: auto; }
 .hint { margin: 12px 4px 0; color: var(--md-sys-color-on-surface-variant); font-size: 12px; line-height: 16px; }
 
-/* hardware drawing */
+/* hardware drawing: flat schematic (layouts without real: true) */
 .hw-body { fill: var(--hw-body); }
 .hw-control { cursor: pointer; outline: none; }
-.hw-control rect, .hw-control circle { fill: var(--hw-button); stroke: transparent; stroke-width: 2.5; transition: fill .12s, stroke .12s; }
-.hw-control.pad rect { fill: var(--hw-pad); }
+#device:not(.real) .hw-control rect, #device:not(.real) .hw-control circle { fill: var(--hw-button); stroke: transparent; stroke-width: 2.5; transition: fill .12s, stroke .12s; }
+#device:not(.real) .hw-control.pad rect { fill: var(--hw-pad); }
 .hw-control.screen { cursor: default; }
-.hw-control.screen rect { fill: var(--hw-screen); stroke: #2b2a2e; stroke-width: 1.5; }
-.hw-control.strip rect { fill: #1b1a1d; stroke: #3d3c40; stroke-width: 1; }
-.hw-control.encoder circle.ring { fill: #1f1e21; stroke: #4a494d; stroke-width: 3; }
-.hw-control.knob circle { fill: #2c2b2e; stroke: #4a494d; stroke-width: 2; }
-.hw-control text { fill: var(--hw-button-text); font: 600 11px var(--md-ref-typeface); pointer-events: none; text-anchor: middle; dominant-baseline: central; }
-.hw-control.pad text { fill: #8f8c92; font-size: 13px; }
-.hw-control.screen text { fill: #5e5c62; font-size: 12px; letter-spacing: .1em; }
-.hw-control:hover rect, .hw-control:hover circle { stroke: var(--hw-related); }
-.hw-control:focus-visible rect, .hw-control:focus-visible circle { stroke: #ffffff; stroke-width: 3.5; }
-.hw-control.related rect, .hw-control.related circle { fill: color-mix(in srgb, var(--hw-related) 35%, var(--hw-button)); stroke: var(--hw-related); }
-.hw-control.selected rect, .hw-control.selected circle { fill: var(--hw-active); stroke: #ffd1ad; }
-.hw-control.selected text, .hw-control.related text { fill: #fff; }
+#device:not(.real) .hw-control.screen rect { fill: var(--hw-screen); stroke: #2b2a2e; stroke-width: 1.5; }
+#device:not(.real) .hw-control.strip rect { fill: #1b1a1d; stroke: #3d3c40; stroke-width: 1; }
+#device:not(.real) .hw-control.encoder circle.ring { fill: #1f1e21; stroke: #4a494d; stroke-width: 3; }
+#device:not(.real) .hw-control.knob circle { fill: #2c2b2e; stroke: #4a494d; stroke-width: 2; }
+#device:not(.real) .hw-control text { fill: var(--hw-button-text); font: 600 11px var(--md-ref-typeface); pointer-events: none; text-anchor: middle; dominant-baseline: central; }
+#device:not(.real) .hw-control.pad text { fill: #8f8c92; font-size: 13px; }
+#device:not(.real) .hw-control.screen text { fill: #5e5c62; font-size: 12px; letter-spacing: .1em; }
+#device:not(.real) .hw-control:hover rect, #device:not(.real) .hw-control:hover circle { stroke: var(--hw-related); }
+#device:not(.real) .hw-control:focus-visible rect, #device:not(.real) .hw-control:focus-visible circle { stroke: #ffffff; stroke-width: 3.5; }
+#device:not(.real) .hw-control.related rect, #device:not(.real) .hw-control.related circle { fill: color-mix(in srgb, var(--hw-related) 35%, var(--hw-button)); stroke: var(--hw-related); }
+#device:not(.real) .hw-control.selected rect, #device:not(.real) .hw-control.selected circle { fill: var(--hw-active); stroke: #ffd1ad; }
+#device:not(.real) .hw-control.selected text, #device:not(.real) .hw-control.related text { fill: #fff; }
 /* pads light in their MASCHINE sound colour (PAD_COLORS in layouts.js) */
-.hw-control.pad.related rect { fill: color-mix(in srgb, var(--pad-color) 45%, var(--hw-pad)); stroke: var(--pad-color); }
-.hw-control.pad.selected rect { fill: var(--pad-color); stroke: #fff; }
-.hw-control.pad.selected text { fill: #1c1b1d; }
+#device:not(.real) .hw-control.pad.related rect { fill: color-mix(in srgb, var(--pad-color) 45%, var(--hw-pad)); stroke: var(--pad-color); }
+#device:not(.real) .hw-control.pad.selected rect { fill: var(--pad-color); stroke: #fff; }
+#device:not(.real) .hw-control.pad.selected text { fill: #1c1b1d; }
+
+/* hardware drawing: measured layouts (real: true) in the hardware's own colours. Labels are printed
+   light grey, SHIFT labels darker grey, PLAY green, REC red, SHIFT boxed; pads are unlit rubber. */
+#device.real .hw-body { fill: url(#hw-body-fill); stroke: #2f2f32; stroke-width: 1.5; }
+#device.real .hw-dot { fill: #7d8ae6; opacity: .5; }
+#device.real text { pointer-events: none; }
+#device.real .cap { stroke: #08080a; stroke-width: 1.6; transition: fill .12s, stroke .12s; }
+#device.real .button .cap { fill: url(#hw-cap-fill); }
+#device.real .label { fill: #d4d4d8; font: 700 8.4px var(--md-ref-typeface); letter-spacing: .03em; dominant-baseline: middle; }
+#device.real .sublabel { fill: #707075; font: 500 7.4px var(--md-ref-typeface); letter-spacing: .02em; dominant-baseline: middle; }
+#device.real .label.green { fill: #45d35d; }
+#device.real .label.red, #device.real .sublabel.red { fill: #ff4033; }
+#device.real .label-box { fill: #e6e6ea; }
+#device.real .label.inverse { fill: #121214; }
+#device.real .icon-line { fill: none; stroke: #d4d4d8; stroke-width: 1.4; stroke-linecap: round; }
+#device.real .icon-fill { fill: #d4d4d8; }
+#device.real .pad .cap { fill: url(#hw-pad-fill); }
+#device.real .pad .sheen { fill: url(#hw-pad-sheen); opacity: 0; pointer-events: none; transition: opacity .12s; }
+#device.real .pad-print { fill: #8d8d92; font: 500 8.4px var(--md-ref-typeface); dominant-baseline: middle; }
+#device.real .pad-number { font-weight: 800; }
+#device.real .pad-letter { font-weight: 700; text-anchor: end; }
+#device.real .strip .cap { fill: #0c0c0d; stroke: #2c2c2f; stroke-width: 1.2; }
+#device.real .strip-inner { fill: #151517; pointer-events: none; }
+#device.real .encoder .ring { fill: #0d0d0e; stroke: #2e2e31; stroke-width: 1.5; transition: stroke .12s; }
+#device.real .encoder .knurl { fill: #19191b; stroke: #3c3c40; stroke-width: 3.2; stroke-dasharray: 1.3 1.5; }
+#device.real .encoder .knob-cap { fill: url(#hw-knob-fill); stroke: #050506; stroke-width: 1; }
+#device.real .screen .bezel { fill: #0b0b0c; stroke: #2a2a2d; stroke-width: 1.2; }
+#device.real .screen .oled { fill: #000; }
+#device.real .screen .pixels { fill: #eaf1ff; }
+/* states: hover / a combo's controls (related) / the selected control, lit like the hardware */
+#device.real .hw-control:hover .cap, #device.real .hw-control:hover .ring { stroke: var(--hw-related); }
+#device.real .hw-control:focus-visible .cap, #device.real .hw-control:focus-visible .ring { stroke: #fff; stroke-width: 2.4; }
+#device.real .button.related .cap { fill: color-mix(in srgb, var(--hw-related) 22%, #2c2c2f); stroke: var(--hw-related); }
+#device.real .button.selected .cap { fill: #4b4b50; stroke: var(--hw-active); stroke-width: 2.4; }
+#device.real .button.selected .label, #device.real .button.related .label { fill: #fff; }
+#device.real .button.selected .icon-fill { fill: #fff; }
+#device.real .button.selected .icon-line { stroke: #fff; }
+#device.real .pad.related .cap { fill: color-mix(in srgb, var(--pad-color) 55%, #2a2a2d); stroke: var(--pad-color); }
+#device.real .pad.related .sheen { opacity: .35; }
+#device.real .pad.selected .cap { fill: var(--pad-color); stroke: #fff; stroke-width: 2; }
+#device.real .pad.selected .sheen { opacity: .9; }
+#device.real .pad.selected .pad-print, #device.real .pad.related .pad-print { fill: #141416; }
+#device.real .encoder.related .ring, #device.real .strip.related .cap { stroke: var(--hw-related); stroke-width: 2.2; }
+#device.real .encoder.selected .ring, #device.real .strip.selected .cap { stroke: var(--hw-active); stroke-width: 2.6; }
+#device.real .strip.selected .strip-inner, #device.real .strip.related .strip-inner { fill: color-mix(in srgb, var(--hw-related) 25%, #151517); }
 .badge circle { fill: var(--hw-active); stroke: #fff; stroke-width: 2; }
 .badge text { fill: #fff; font: 700 12px var(--md-ref-typeface); text-anchor: middle; dominant-baseline: central; }
 

@@ -41,15 +41,141 @@ MM.manual = (function () {
     return id;
   }
 
+  // A 5 x 7 pixel font for the OLED screen (our own glyphs). Each glyph: 7 rows of 5 bits.
+  var PIXEL_FONT = {
+    'A': '01110100011000111111100011000110001', 'B': '11110100011000111110100011000111110',
+    'C': '01110100011000010000100001000101110', 'D': '11110100011000110001100011000111110',
+    'E': '11111100001000011110100001000011111', 'F': '11111100001000011110100001000010000',
+    'G': '01110100011000010111100011000101111', 'H': '10001100011000111111100011000110001',
+    'I': '01110001000010000100001000010001110', 'J': '00111000100001000010000101001001100',
+    'K': '10001100101010011000101001001010001', 'L': '10000100001000010000100001000011111',
+    'M': '10001110111010110101100011000110001', 'N': '10001100011100110101100111000110001',
+    'O': '01110100011000110001100011000101110', 'P': '11110100011000111110100001000010000',
+    'Q': '01110100011000110001101011001001101', 'R': '11110100011000111110101001001010001',
+    'S': '01111100001000001110000010000111110', 'T': '11111001000010000100001000010000100',
+    'U': '10001100011000110001100011000101110', 'V': '10001100011000110001100010101000100',
+    'W': '10001100011000110101101011010101010', 'X': '10001100010101000100010101000110001',
+    'Y': '10001100010101000100001000010000100', 'Z': '11111000010001000100010001000011111',
+    '0': '01110100011001110101110011000101110', '1': '00100011000010000100001000010001110',
+    '2': '01110100010000100010001000100011111', '3': '11111000100010000010000011000101110',
+    '4': '00010001100101010010111110001000010', '5': '11111100001111000001000011000101110',
+    '6': '00110010001000011110100011000101110', '7': '11111000010001000100010000100001000',
+    '8': '01110100011000101110100011000101110', '9': '01110100011000101111000010001001100',
+    '-': '00000000000000011111000000000000000', '.': '00000000000000000000000000110001100',
+    ':': '00000011000110000000011000110000000', ' ': '00000000000000000000000000000000000',
+    '/': '00001000100001000100010000100010000', '%': '11001110100001000100010000101110011',
+    '+': '00000001000010011111001000010000000'
+  };
+
+  // Path data for text in the pixel font: top-left at (x, y), one font pixel = px units.
+  function pixelText(text, x, y, px) {
+    var d = '';
+    String(text).toUpperCase().split('').forEach(function (ch, i) {
+      var glyph = PIXEL_FONT[ch] || PIXEL_FONT[' '];
+      for (var bit = 0; bit < 35; bit++) {
+        if (glyph.charAt(bit) !== '1') continue;
+        var gx = x + (i * 6 + bit % 5) * px, gy = y + Math.floor(bit / 5) * px;
+        d += 'M' + gx.toFixed(2) + ' ' + gy.toFixed(2) + 'h' + px.toFixed(2) + 'v' + px.toFixed(2) + 'h-' + px.toFixed(2) + 'z';
+      }
+    });
+    return d;
+  }
+
+  function gradient(defs, type, id, attrs, stops) {
+    var g = node(type, Object.assign({ id: id }, attrs), defs);
+    stops.forEach(function (st) {
+      node('stop', { offset: st[0], 'stop-color': st[1], 'stop-opacity': st[2] === undefined ? 1 : st[2] }, g);
+    });
+  }
+
+  function drawDefs(svg) {
+    var defs = node('defs', {}, svg);
+    gradient(defs, 'linearGradient', 'hw-body-fill', { x1: 0, y1: 0, x2: 0, y2: 1 }, [[0, '#202022'], [1, '#141415']]);
+    gradient(defs, 'linearGradient', 'hw-cap-fill', { x1: 0, y1: 0, x2: 0, y2: 1 }, [[0, '#353538'], [1, '#27272a']]);
+    gradient(defs, 'radialGradient', 'hw-pad-fill', { cx: '50%', cy: '45%', r: '70%' }, [[0, '#4a4a4e'], [1, '#353538']]);
+    gradient(defs, 'radialGradient', 'hw-pad-sheen', { cx: '50%', cy: '45%', r: '60%' }, [[0, '#ffffff', 0.45], [1, '#ffffff', 0]]);
+    gradient(defs, 'radialGradient', 'hw-knob-fill', { cx: '38%', cy: '32%', r: '75%' }, [[0, '#47474b'], [0.55, '#1c1c1f'], [1, '#0b0b0c']]);
+  }
+
+  function drawIcon(g, icon, x, y, w, hgt) {
+    var cx = x + w / 2, cy = y + hgt / 2, r = Math.min(w, hgt) * 0.24;
+    if (icon === 'maschine') {
+      node('circle', { cx: cx, cy: cy, r: r, 'class': 'icon-line' }, g);
+      node('circle', { cx: cx, cy: cy, r: r * 0.45, 'class': 'icon-fill' }, g);
+    } else if (icon === 'star') {
+      var pts = [];
+      for (var i = 0; i < 10; i++) {
+        var a = -Math.PI / 2 + i * Math.PI / 5, rr = i % 2 ? r * 0.45 : r * 1.1;
+        pts.push((cx + rr * Math.cos(a)).toFixed(2) + ',' + (cy + rr * Math.sin(a)).toFixed(2));
+      }
+      node('polygon', { points: pts.join(' '), 'class': 'icon-fill' }, g);
+    } else if (icon === 'search') {
+      node('circle', { cx: cx + r * 0.25, cy: cy - r * 0.15, r: r * 0.7, 'class': 'icon-line' }, g);
+      node('path', { d: 'M' + (cx + r * 0.75) + ' ' + (cy + r * 0.4) + 'l' + r * 0.6 + ' ' + r * 0.6 +
+        'M' + (cx - r * 1.4) + ' ' + (cy - r * 0.6) + 'h' + r * 0.6 +
+        'M' + (cx - r * 1.4) + ' ' + cy + 'h' + r * 0.6 +
+        'M' + (cx - r * 1.4) + ' ' + (cy + r * 0.6) + 'h' + r * 0.6, 'class': 'icon-line' }, g);
+    } else if (icon === 'left' || icon === 'right') {
+      var s = icon === 'left' ? -1 : 1;
+      node('path', { d: 'M' + (cx + s * r * 0.7) + ' ' + cy + 'L' + (cx - s * r * 0.6) + ' ' + (cy - r * 0.8) +
+        'V' + (cy + r * 0.8) + 'Z', 'class': 'icon-fill' }, g);
+    }
+  }
+
+  // Printed button text: the label top left, the grey SHIFT label under it (when there is room).
+  function drawLabel(g, label, opts, x, y, w, hgt) {
+    var pad = Math.min(7, w * 0.08);
+    if (opts.inverse) {
+      var tw = label.length * 6.4 + 8;
+      node('rect', { x: x + pad, y: y + 5, width: tw, height: 12, rx: 1.5, 'class': 'label-box' }, g);
+      node('text', { x: x + pad + 4, y: y + 11.5, 'class': 'label inverse' }, g).textContent = label;
+      return;
+    }
+    var main = node('text', { x: x + pad, y: y + 10.5, 'class': 'label' + (opts.tone ? ' ' + opts.tone : '') }, g);
+    main.textContent = (opts.prefix ? opts.prefix + ' ' : '') + label;
+    if (opts.sub && hgt > 22) {
+      node('text', { x: x + pad, y: y + 21, 'class': 'sublabel' + (opts.tone ? ' ' + opts.tone : '') }, g).textContent = opts.sub;
+    }
+  }
+
+  // The OLED: 2 lines (big + small) or 3 small lines, like the script's screens.
+  function showScreen(lines) {
+    var oled = state.oled;
+    if (!oled || !lines || oled.lines === lines) return;
+    oled.lines = lines;
+    var px = oled.px, d = '';
+    if (lines.length > 2) {
+      lines.forEach(function (line, i) { d += pixelText(line, oled.x + 2 * px, oled.y + (2 + i * 11) * px, px); });
+    } else {
+      d = pixelText(lines[0] || '', oled.x + 2 * px, oled.y + 2 * px, px * 2) +
+        pixelText(lines[1] || '', oled.x + 2 * px, oled.y + 21 * px, px);
+    }
+    oled.path.setAttribute('d', d);
+  }
+
+  function updateScreen(combo) {
+    var spec = layout();
+    if (!spec.screens) return;
+    var lines = null;
+    (combo || []).some(function (token) { return (lines = spec.screens[token] || null); });
+    if (!lines && state.selected) lines = spec.screens[state.selected] || null;
+    showScreen(lines || spec.screen);
+  }
+
   function drawDevice() {
+    state.oled = null;
     var svg = el('device');
     var spec = layout();
     svg.innerHTML = '';
     svg.setAttribute('viewBox', '0 0 ' + spec.width + ' ' + spec.height);
     svg.setAttribute('aria-label', spec.title + ' layout: choose a control to see what it does');
-    node('rect', { x: 4, y: 4, width: spec.width - 8, height: spec.height - 8, rx: 26, 'class': 'hw-body' }, svg);
+    var real = !!spec.real;  // measured from a photo: drawn with the printed look
+    svg.classList.toggle('real', real);
+    if (real) drawDefs(svg);
+    node('rect', { x: 1, y: 1, width: spec.width - 2, height: spec.height - 2, rx: spec.radius || 26, 'class': 'hw-body' }, svg);
+    (spec.stripDots || []).forEach(function (dot) { node('circle', { cx: dot[0], cy: dot[1], r: 2.2, 'class': 'hw-dot' }, svg); });
     spec.controls.forEach(function (c) {
-      var id = c[0], label = c[1], x = c[2], y = c[3], w = c[4], hgt = c[5], kind = c[6];
+      var id = c[0], label = c[1], x = c[2], y = c[3], w = c[4], hgt = c[5], kind = c[6], opts = c[7] || {};
       var interactive = kind !== 'screen';
       var g = node('g', { 'class': 'hw-control ' + kind, 'data-id': id }, svg);
       if (interactive) {
@@ -57,22 +183,47 @@ MM.manual = (function () {
         g.setAttribute('role', 'button');
         g.setAttribute('aria-label', controlName(id, label));
         g.setAttribute('aria-pressed', 'false');
-      }
-      if (kind === 'pad') g.style.setProperty('--pad-color', PAD_COLORS[Number(label) - 1]);
-      if (kind === 'encoder' || kind === 'knob') {
-        var r = Math.min(w, hgt) / 2;
-        node('circle', { cx: x + w / 2, cy: y + hgt / 2, r: r, 'class': 'ring' }, g);
-        if (kind === 'encoder') node('circle', { cx: x + w / 2, cy: y + hgt / 2, r: r * 0.62 }, g);
-      } else {
-        node('rect', { x: x, y: y, width: w, height: hgt, rx: kind === 'pad' ? 10 : 6 }, g);
-      }
-      var text = node('text', { x: x + w / 2, y: y + hgt / 2 }, g);
-      text.textContent = kind === 'screen' ? spec.title.replace('MASCHINE ', '') : label;
-      if (interactive) {
         g.addEventListener('click', function () { select(id); });
         g.addEventListener('keydown', function (e) {
           if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); select(id); }
         });
+      }
+      if (kind === 'pad') g.style.setProperty('--pad-color', PAD_COLORS[Number(label) - 1]);
+      if (kind === 'encoder' || kind === 'knob') {
+        var r = Math.min(w, hgt) / 2, cx = x + w / 2, cy = y + hgt / 2;
+        node('circle', { cx: cx, cy: cy, r: r, 'class': 'ring' }, g);
+        if (kind === 'encoder' && real) {
+          node('circle', { cx: cx, cy: cy, r: r * 0.8, 'class': 'knurl' }, g);
+          node('circle', { cx: cx, cy: cy, r: r * 0.66, 'class': 'knob-cap' }, g);
+        } else if (kind === 'encoder') {
+          node('circle', { cx: cx, cy: cy, r: r * 0.62 }, g);
+        }
+        if (!real) node('text', { x: cx, y: cy }, g).textContent = label;
+        return;
+      }
+      if (kind === 'screen' && real) {
+        node('rect', { x: x, y: y, width: w, height: hgt, rx: 2, 'class': 'bezel' }, g);
+        var inset = hgt * 0.12, ow = w - inset * 2, oh = hgt - inset * 2;
+        node('rect', { x: x + inset, y: y + inset, width: ow, height: oh, 'class': 'oled' }, g);
+        // the MIKRO's OLED is 128 x 32 pixels
+        state.oled = { x: x + inset, y: y + inset, px: ow / 128, path: node('path', { 'class': 'pixels' }, g), lines: null };
+        return;
+      }
+      node('rect', { x: x, y: y, width: w, height: hgt, rx: real ? (kind === 'pad' ? 4 : 2.5) : (kind === 'pad' ? 10 : 6), 'class': 'cap' }, g);
+      if (!real) {
+        node('text', { x: x + w / 2, y: y + hgt / 2 }, g).textContent = kind === 'screen' ? spec.title.replace('MASCHINE ', '') : label;
+      } else if (kind === 'pad') {
+        node('rect', { x: x, y: y, width: w, height: hgt, rx: 4, 'class': 'sheen' }, g);
+        var printed = node('text', { x: x + 7, y: y + 12, 'class': 'pad-print' }, g);
+        node('tspan', { 'class': 'pad-number' }, printed).textContent = label;
+        if (opts.sub) node('tspan', { 'class': 'pad-label', dx: 4 }, printed).textContent = opts.sub;
+        if (opts.letter) node('text', { x: x + w - 7, y: y + 12, 'class': 'pad-print pad-letter' }, g).textContent = opts.letter;
+      } else if (kind === 'strip') {
+        node('rect', { x: x + 3, y: y + 3, width: w - 6, height: hgt - 6, rx: 1.5, 'class': 'strip-inner' }, g);
+      } else if (opts.icon) {
+        drawIcon(g, opts.icon, x, y, w, hgt);
+      } else {
+        drawLabel(g, label, opts, x, y, w, hgt);
       }
     });
     node('g', { id: 'badges' }, svg);
@@ -91,6 +242,7 @@ MM.manual = (function () {
       g.classList.remove('related');
       if (g.hasAttribute('aria-pressed')) g.setAttribute('aria-pressed', String(id === state.selected));
     });
+    updateScreen(combo);
     var badges = el('badges');
     if (!badges) return;
     badges.innerHTML = '';

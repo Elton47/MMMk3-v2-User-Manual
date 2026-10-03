@@ -1,7 +1,7 @@
 # MASCHINE for Ableton Live: interactive manual (v2)
 
 A step-by-step setup guide (`#setup`: choose your computer, controller and Live version, then
-follow the steps), and an interactive manual: click any control on a schematic MASCHINE MIKRO
+follow the steps), and an interactive manual: click any control on a drawing of the MASCHINE MIKRO
 MK3 or MK3 to see everything it does, hover a combination to see it on the controller, search,
 light / dark / system theme, deep links (`#mikro/SHIFT`, `#mk3/PLUG-IN`,
 `#setup/win11/mikro/live12/3`).

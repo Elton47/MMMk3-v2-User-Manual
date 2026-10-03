@@ -16,7 +16,7 @@
     {
       "id": "start",
       "title": "Getting started",
-      "summary": "Plug in the controller, copy the Remote Scripts folder into your Live User Library, start Live. The script starts the Maschine Bridge, which takes over the hardware: no Controller Editor, no MIDI mode, a real SHIFT key. Your note repeat rate, arp settings, chord type and voicing, drum colours and velocity curve are remembered between Live sessions.",
+      "summary": "New here? The Set up guide walks you through it (macOS is automatic; Windows needs a one-time loopMIDI setup). After that: connect the controller and start Live. The script starts the Maschine Bridge, which takes over the hardware: no Controller Editor, no MIDI mode, a real SHIFT key. Your note repeat rate, arp settings, chord type and voicing, drum colours and velocity curve are remembered between Live sessions.",
       "items": [
         {"combo": ["SHIFT"], "does": "The real SHIFT button: hold it for the second function printed on a button, and for the SHIFT + pad edit matrix."},
         {"combo": ["PATTERN"], "does": "Clips on the pads (the default mode)."},

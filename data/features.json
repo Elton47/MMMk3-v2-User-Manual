@@ -43,7 +43,7 @@
     {
       "id": "scene",
       "title": "SCENE: scenes",
-      "summary": "16 scenes on the pads, in their colours. Playing scenes are bright, triggered scenes flash.",
+      "summary": "16 scenes on the pads, in their colours, in the order of Live's scene list: scene 1 top left (pad 13), then to the right and down. Playing scenes are bright, triggered scenes flash.",
       "items": [
         {"combo": ["SCENE"], "does": "Tap: switch to scene mode. Hold + PAD: launch a scene and return."},
         {"combo": ["PAD"], "does": "Launch the scene. An unlit pad creates a new scene."},
@@ -56,7 +56,7 @@
     {
       "id": "track",
       "title": "TRACK: tracks on the pads",
-      "summary": "Pads 1-15 are your tracks (then return tracks), pad 16 is the Master. Colours follow the tracks; muted tracks are white.",
+      "summary": "Your tracks read like text: track 1 on pad 13 (marked A), track 2 on pad 14 (B), then to the right and down. The return tracks and the Master always sit on the last pads (two returns: pads 2 and 3, Master on pad 4); TURN scrolls the other tracks. Colours follow the tracks; muted tracks are white.",
       "items": [
         {"combo": ["GROUP"], "does": "Tap: show tracks on the pads (latched). Hold + PAD: act on a track and return.", "devices": ["mikro"]},
         {"combo": ["SELECT"], "does": "Tap: show tracks on the pads (latched). Hold + PAD: act on a track and return.", "devices": ["mk3"]},
@@ -135,7 +135,7 @@
     {
       "id": "step",
       "title": "STEP: step sequencer",
-      "summary": "The pads are 16 steps of the focused sound (the focused drum pad, or the last keyboard note) in the focused clip. The playhead runs across the pads while the clip plays.",
+      "summary": "The pads are 16 steps of the focused sound (the focused drum pad, or the last keyboard note) in the focused clip, read like text as in MASCHINE: step 1 top left (pad 13), step 16 bottom right (pad 4). The playhead runs across the pads while the clip plays.",
       "items": [
         {"combo": ["STEP"], "does": "Switch to step mode."},
         {"combo": ["PAD"], "does": "Add / remove a note on that step. On an empty slot, the first step creates a one-bar clip."},
@@ -311,6 +311,7 @@
   "changes": [
     {"what": "Setup", "v1": "Controller Editor template, MIDI mode (SHIFT + MASCHINE), choose ports in Live", "v2": "Copy one folder; the bridge starts with Live and the script loads itself"},
     {"what": "SHIFT", "v1": "RESTART acted as SHIFT", "v2": "The real SHIFT button; RESTART restarts playback"},
+    {"what": "Tracks, scenes and steps on the pads", "v1": "Pad 1 (bottom left) first", "v2": "Read like text from pad 13 (A), as printed and as in MASCHINE; return tracks and Master stay on the last pads"},
     {"what": "PLAY", "v1": "Start (SHIFT: restart)", "v2": "Start / stop like MASCHINE (SHIFT or RESTART: restart)"},
     {"what": "ERASE alone", "v1": "Deleted the focused clip / track / scene", "v2": "Does nothing (safety); SHIFT + ERASE deletes the focused item"},
     {"what": "Hot-Swap", "v1": "SHIFT + ERASE", "v2": "SHIFT + BROWSER"},

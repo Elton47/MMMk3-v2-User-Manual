@@ -3,62 +3,166 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>MASCHINE for Live: Manual</title>
-  <meta name="description" content="Interactive user manual for MASCHINE MIKRO MK3 / MK3 with Ableton Live (v2): click any button to see what it does.">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect x='1' y='1' width='6' height='6' rx='1.5' fill='%23ff7a1a'/%3E%3Crect x='9' y='1' width='6' height='6' rx='1.5' fill='%23888'/%3E%3Crect x='1' y='9' width='6' height='6' rx='1.5' fill='%23888'/%3E%3Crect x='9' y='9' width='6' height='6' rx='1.5' fill='%23ff7a1a'/%3E%3C/svg%3E">
+  <title>MASCHINE for Ableton Live: Manual and setup</title>
+  <meta name="description" content="Set up MASCHINE MIKRO MK3, MK3 and MASCHINE+ with Ableton Live 12 step by step, then click any button on the controller to see what it does.">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#fff8f6" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#171211" media="(prefers-color-scheme: dark)">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect x='1' y='1' width='6' height='6' rx='1.5' fill='%23ef6712'/%3E%3Crect x='9' y='1' width='6' height='6' rx='1.5' fill='%23888'/%3E%3Crect x='1' y='9' width='6' height='6' rx='1.5' fill='%23888'/%3E%3Crect x='9' y='9' width='6' height='6' rx='1.5' fill='%23ef6712'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,400..700&display=swap">
   <link rel="stylesheet" href="css/styles.css">
+  <script>
+    // Apply the remembered theme before the first paint (no flash).
+    try {
+      var t = localStorage.getItem('theme');
+      if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
+    } catch (e) {}
+  </script>
 </head>
 <body>
-  <header class="topbar">
-    <div class="brand">
-      <span class="logo" aria-hidden="true"></span>
-      <div>
-        <h1>MASCHINE for Ableton Live</h1>
-        <p class="subtitle">Interactive manual <span id="version"></span></p>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="top-app-bar">
+    <div class="top-app-bar-inner">
+      <a class="brand" href="#manual" aria-label="MASCHINE for Ableton Live: manual">
+        <span class="logo" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+        <span class="brand-text">
+          <span class="brand-title">MASCHINE <span class="brand-for">for Ableton Live</span></span>
+          <span class="brand-sub" id="version">Manual</span>
+        </span>
+      </a>
+      <nav class="nav-tabs" aria-label="Sections">
+        <a href="#setup" data-view="setup" class="nav-tab">
+          <svg class="icon" aria-hidden="true"><use href="#i-setup"/></svg><span>Set up</span>
+        </a>
+        <a href="#manual" data-view="manual" class="nav-tab">
+          <svg class="icon" aria-hidden="true"><use href="#i-book"/></svg><span>Manual</span>
+        </a>
+      </nav>
+      <div class="theme-menu">
+        <button type="button" id="theme-button" class="icon-button" aria-haspopup="menu" aria-expanded="false" aria-controls="theme-list" title="Theme">
+          <svg class="icon" aria-hidden="true"><use id="theme-icon" href="#i-auto"/></svg>
+          <span class="visually-hidden">Theme</span>
+        </button>
+        <div id="theme-list" class="menu" role="menu" aria-label="Theme" hidden>
+          <button type="button" role="menuitemradio" data-theme-choice="system"><svg class="icon" aria-hidden="true"><use href="#i-auto"/></svg>System</button>
+          <button type="button" role="menuitemradio" data-theme-choice="light"><svg class="icon" aria-hidden="true"><use href="#i-sun"/></svg>Light</button>
+          <button type="button" role="menuitemradio" data-theme-choice="dark"><svg class="icon" aria-hidden="true"><use href="#i-moon"/></svg>Dark</button>
+        </div>
       </div>
-    </div>
-    <div class="toolbar">
-      <div class="segmented" role="radiogroup" aria-label="Controller">
-        <button type="button" role="radio" data-device="mikro">MIKRO MK3</button>
-        <button type="button" role="radio" data-device="mk3">MK3 / MASCHINE+</button>
-      </div>
-      <button type="button" id="theme" class="icon-button" aria-label="Switch light / dark theme" title="Light / dark">◐</button>
     </div>
   </header>
 
-  <main class="layout">
-    <section class="hardware" aria-label="Controller">
-      <div class="hardware-card">
-        <svg id="device" role="img" aria-label="Controller layout: click a control"></svg>
-        <p class="hint">Click a control to see what it does. Hover or tap a combination in the list to see it on the controller (numbers show the order).</p>
-        <p id="unverified" class="note" hidden>MK3 / MASCHINE+ support is built from the hardware protocol and not yet tested on a real unit.</p>
+  <main id="main" tabindex="-1">
+    <!-- Setup wizard (js/setup.js), content from data/install.json -->
+    <section id="view-setup" class="view" aria-labelledby="setup-title" hidden>
+      <div class="setup">
+        <header class="setup-hero">
+          <p class="eyebrow">Step by step</p>
+          <h1 id="setup-title" class="setup-title">Install and set up</h1>
+          <p id="setup-intro" class="setup-intro"></p>
+        </header>
+        <div id="setup-root"></div>
       </div>
     </section>
 
-    <section class="reference" aria-label="Reference">
-      <div class="search">
-        <input id="search" type="search" placeholder="Search: tempo, chords, arm, undo..." autocomplete="off" aria-label="Search">
-      </div>
-      <div id="selection" class="selection" hidden>
-        <div class="selection-head">
-          <h2 id="selection-title"></h2>
-          <button type="button" id="clear-selection" class="link-button">Show everything</button>
+    <!-- Interactive manual (js/manual.js), content from data/features.json -->
+    <section id="view-manual" class="view" aria-label="Manual" hidden>
+      <h1 class="visually-hidden">Manual</h1>
+      <div class="manual-toolbar">
+        <div class="segmented" role="radiogroup" aria-label="Controller">
+          <button type="button" role="radio" data-device="mikro"><svg class="icon check" aria-hidden="true"><use href="#i-check"/></svg>MIKRO MK3</button>
+          <button type="button" role="radio" data-device="mk3"><svg class="icon check" aria-hidden="true"><use href="#i-check"/></svg>MK3 / MASCHINE+</button>
         </div>
-        <ul id="selection-items" class="items"></ul>
+        <label class="search-bar">
+          <svg class="icon" aria-hidden="true"><use href="#i-search"/></svg>
+          <span class="visually-hidden">Search the manual</span>
+          <input id="search" type="search" placeholder="Search: tempo, chords, arm, undo…" autocomplete="off" enterkeyhint="search">
+          <kbd class="search-hint" aria-hidden="true">/</kbd>
+        </label>
       </div>
-      <nav id="toc" class="toc" aria-label="Modes"></nav>
-      <div id="sections"></div>
-      <section id="changes" class="card">
-        <h2>What changed since v1</h2>
-        <div class="table-wrap"><table id="changes-table"><thead><tr><th></th><th>v1.6</th><th>v2</th></tr></thead><tbody></tbody></table></div>
-      </section>
-      <footer class="footer">
-        <p>Elton47 · <a href="https://payhip.com/b/h4tva">Get the script</a> · Not affiliated with Native Instruments or Ableton.</p>
-      </footer>
+
+      <div class="manual-layout">
+        <section class="hardware" aria-label="Controller">
+          <div class="hardware-card">
+            <svg id="device" role="group" aria-label="Controller layout: choose a control to see what it does"></svg>
+            <p class="hint">Click a control to see what it does. Hover or tap a combination in the list to see it on the controller (numbers show the order).</p>
+            <p id="unverified" class="banner" hidden>
+              <svg class="icon" aria-hidden="true"><use href="#i-info"/></svg>
+              <span>MK3 / MASCHINE+ support is built from the hardware protocol and not yet tested on a real unit.</span>
+            </p>
+          </div>
+        </section>
+
+        <section class="reference" aria-label="Reference">
+          <div id="welcome" class="welcome-card" hidden>
+            <div>
+              <h2>New here?</h2>
+              <p>Set up your controller with Live in a few minutes, step by step.</p>
+            </div>
+            <div class="welcome-actions">
+              <a class="btn btn-filled" href="#setup"><svg class="icon" aria-hidden="true"><use href="#i-setup"/></svg>Start setup</a>
+              <button type="button" class="btn btn-text" id="welcome-dismiss">Not now</button>
+            </div>
+          </div>
+          <div id="selection" class="selection" hidden aria-live="polite">
+            <div class="selection-head">
+              <h2 id="selection-title"></h2>
+              <button type="button" id="clear-selection" class="btn btn-text">Show everything</button>
+            </div>
+            <ul id="selection-items" class="items"></ul>
+          </div>
+          <nav id="toc" class="toc" aria-label="Modes"></nav>
+          <div id="sections"></div>
+          <section id="changes" class="card">
+            <h2>What changed since v1</h2>
+            <div class="table-wrap"><table id="changes-table"><thead><tr><th scope="col"><span class="visually-hidden">What</span></th><th scope="col">v1.6</th><th scope="col">v2</th></tr></thead><tbody></tbody></table></div>
+          </section>
+        </section>
+      </div>
     </section>
+
+    <noscript><p class="noscript">This manual needs JavaScript. The product page: <a href="https://payhip.com/b/h4tva">payhip.com/b/h4tva</a>.</p></noscript>
   </main>
 
+  <footer class="footer">
+    <p>Elton47 · <a href="https://payhip.com/b/h4tva">Get the script</a> · <a href="#setup">Set up</a> · <a href="https://elton47.github.io/MMMk3-User-Manual/">v1.6.1 manual (Live 11)</a></p>
+    <p>Not affiliated with Native Instruments or Ableton.</p>
+  </footer>
+
+  <div id="snackbar" class="snackbar" role="status" aria-live="polite"></div>
+
+  <!-- Icons: simple strokes, drawn for this site. -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <defs>
+      <symbol id="i-setup" viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></symbol>
+      <symbol id="i-book" viewBox="0 0 24 24"><path d="M4 5.5C4 4.7 4.7 4 5.5 4H11v16H5.5c-.8 0-1.5-.7-1.5-1.5zM20 5.5c0-.8-.7-1.5-1.5-1.5H13v16h5.5c.8 0 1.5-.7 1.5-1.5z"/></symbol>
+      <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4"/></symbol>
+      <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></symbol>
+      <symbol id="i-auto" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 3.5v17a8.5 8.5 0 0 0 0-17z" fill="currentColor" stroke="none"/></symbol>
+      <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+      <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8.5" y="8.5" width="11" height="11" rx="2"/><path d="M15.5 8.5V6a1.5 1.5 0 0 0-1.5-1.5H6A1.5 1.5 0 0 0 4.5 6v8A1.5 1.5 0 0 0 6 15.5h2.5"/></symbol>
+      <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6"/><path d="M15 15l5 5"/></symbol>
+      <symbol id="i-left" viewBox="0 0 24 24"><path d="M14.5 6l-6 6 6 6"/></symbol>
+      <symbol id="i-right" viewBox="0 0 24 24"><path d="M9.5 6l6 6-6 6"/></symbol>
+      <symbol id="i-down" viewBox="0 0 24 24"><path d="M6 9.5l6 6 6-6"/></symbol>
+      <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 11v5.5M12 7.5v.5"/></symbol>
+      <symbol id="i-alert" viewBox="0 0 24 24"><path d="M12 3.5l9 16H3z"/><path d="M12 10v4.5M12 17v.5"/></symbol>
+      <symbol id="i-soon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></symbol>
+      <symbol id="i-external" viewBox="0 0 24 24"><path d="M14 4.5h5.5V10M19.5 4.5L11 13M17 14v4.5a1 1 0 0 1-1 1H5.5a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1H10"/></symbol>
+      <symbol id="i-edit" viewBox="0 0 24 24"><path d="M4.5 19.5l1-4L15.5 5.5l3 3-10 10z"/></symbol>
+      <symbol id="i-computer" viewBox="0 0 24 24"><rect x="3.5" y="4.5" width="17" height="11.5" rx="1.5"/><path d="M9 20h6M12 16v4"/></symbol>
+      <symbol id="i-pads" viewBox="0 0 24 24"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></symbol>
+      <symbol id="i-live" viewBox="0 0 24 24"><path d="M5 5v14M9 5v14M13 5v14M15.5 19L19 5"/></symbol>
+    </defs>
+  </svg>
+
   <script src="js/layouts.js"></script>
+  <script src="js/site.js"></script>
+  <script src="js/manual.js"></script>
+  <script src="js/setup.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>

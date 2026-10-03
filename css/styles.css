@@ -287,8 +287,13 @@ button { font: inherit; color: inherit; }
   width: 32px; height: 32px; padding: 3px; border-radius: 9px;
   background: var(--hw-body);
 }
-.logo i { border-radius: 3px; background: #6d6a6e; }
-.logo i:nth-child(1), .logo i:nth-child(4) { background: var(--hw-active); }
+/* The four corner pads of the 16-pad grid in MASCHINE's sound colours (PAD_COLORS, layouts.js):
+   pad 13 Purple, pad 16 Red / pad 1 Orange, pad 4 Yellow. */
+.logo i { border-radius: 3px; }
+.logo i:nth-child(1) { background: #d24dff; }
+.logo i:nth-child(2) { background: #ff2030; }
+.logo i:nth-child(3) { background: #ff692d; }
+.logo i:nth-child(4) { background: #ffdb00; }
 .brand-text { display: flex; flex-direction: column; min-width: 0; }
 .brand-title { font-size: 16px; line-height: 22px; font-weight: 600; letter-spacing: .01em; white-space: nowrap; }
 .brand-for { font-weight: 400; color: var(--md-sys-color-on-surface-variant); }

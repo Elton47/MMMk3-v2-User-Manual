@@ -21,26 +21,27 @@ function pads(x, y, size, gap) {
   return out;
 }
 
-// A selected pad lights in MASCHINE's 16 sound colours, in the software's order (sound 1 Red ...
-// sound 16 Fuchsia). Values marked "sampled" were taken from NI's MASCHINE software screenshots
-// on native-instruments.com; the rest sit between their sampled neighbours.
+// A selected pad lights in MASCHINE's 16 sound colours, in the software's order: sound 1 Orange
+// ... sound 15 Fuchsia, sound 16 Red (as in MASCHINE). Values marked "sampled" were
+// taken from NI's MASCHINE software screenshots on native-instruments.com; the rest sit between
+// their sampled neighbours.
 var PAD_COLORS = [
-  '#ff2030', // 1 Red (sampled)
-  '#ff692d', // 2 Orange (sampled)
-  '#ff9429', // 3 Light Orange
-  '#ffb514', // 4 Warm Yellow
-  '#ffdb00', // 5 Yellow (sampled)
-  '#9fff19', // 6 Lime
-  '#26ff38', // 7 Green
-  '#19ffab', // 8 Mint
-  '#00f0ef', // 9 Cyan (sampled)
-  '#00d2ff', // 10 Turquoise (sampled)
-  '#2b96ff', // 11 Blue (sampled)
-  '#8871ff', // 12 Plum (sampled)
-  '#ab61ff', // 13 Violet
-  '#d24dff', // 14 Purple
-  '#ff38d7', // 15 Magenta
-  '#ff2c7f'  // 16 Fuchsia (sampled)
+  '#ff692d', // 1 Orange (sampled)
+  '#ff9429', // 2 Light Orange
+  '#ffb514', // 3 Warm Yellow
+  '#ffdb00', // 4 Yellow (sampled)
+  '#9fff19', // 5 Lime
+  '#26ff38', // 6 Green
+  '#19ffab', // 7 Mint
+  '#00f0ef', // 8 Cyan (sampled)
+  '#00d2ff', // 9 Turquoise (sampled)
+  '#2b96ff', // 10 Blue (sampled)
+  '#8871ff', // 11 Plum (sampled)
+  '#ab61ff', // 12 Violet
+  '#d24dff', // 13 Purple
+  '#ff38d7', // 14 Magenta
+  '#ff2c7f', // 15 Fuchsia (sampled)
+  '#ff2030'  // 16 Red (sampled)
 ];
 
 var LAYOUTS = {

@@ -427,6 +427,9 @@ MM.setup = (function () {
     remember();
     state.steps = stepsFor();
     var n = parseInt(parts[3], 10);
+    if (isNaN(n) && parts[3]) {  // a step by its id, e.g. .../troubleshooting
+      state.steps.forEach(function (s, i) { if (s.id === parts[3]) n = i + 1; });
+    }
     state.index = isNaN(n) ? 0 : Math.max(0, Math.min(state.steps.length - 1, n - 1));
     var canonical = routeHash(state.index);
     if (location.hash !== canonical) history.replaceState(null, '', canonical);
@@ -472,5 +475,17 @@ MM.setup = (function () {
     });
   }
 
-  return { init: init, show: show };
+  // #help: the troubleshooting step for the visitor's answers (remembered, else detected, else the
+  // first option), or the first step where there is none (Live 11).
+  function help() {
+    var stored = MM.storeJSON('setupChoices') || {};
+    var parts = choiceDefs().map(function (c) {
+      return findOption(c, stored[c.id]) || state.detected[c.id] || c.options[0].id;
+    });
+    parts.push('troubleshooting');
+    history.replaceState(null, '', '#setup/' + parts.join('/'));
+    show(parts);
+  }
+
+  return { init: init, show: show, help: help };
 })();

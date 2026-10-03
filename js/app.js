@@ -29,6 +29,12 @@
   function route() {
     var hash = location.hash.replace(/^#/, '');
     var parts = hash.split('/');
+    if (parts[0] === 'help') {
+      // The header's help button: the troubleshooting step for this visitor's setup.
+      showView('setup');
+      if (ready.setup) MM.setup.help();
+      return;
+    }
     var setup = parts[0] === 'setup' ||
       (!hash && !MM.store('setupDone') && !MM.store('manualSeen'));
     if (setup) {

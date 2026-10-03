@@ -1,0 +1,240 @@
+{
+  "$comment": [
+    "Single source of the installation steps: the setup wizard on the manual site (data/install.json there) and docs/INSTALLATION.generated.md (python tools/gen_install_guide.py).",
+    "choices: the questions asked first. Each option id can appear in a step's or block's 'when'.",
+    "when: {choice id: [option ids]}. Every listed choice must match (AND); any option in a list matches (OR). No 'when' = always.",
+    "vars: {{name}} in any text. Each var depends on one choice: 'values' per option, 'generic' when the choice is open (the Markdown guide).",
+    "steps: {id, title, nav (short title for the step list, optional), when, body: [blocks]}. Step order is the order here.",
+    "blocks (one type key each, plus an optional 'when'): p, h (sub-heading), ol / ul (list of strings), note + optional kind (info | important | coming), copy (list of {label, value}: exact strings with a copy button), table (list of [label, value]), faq (list of {q, a: [strings], when}), actions (list of {label, href, primary}).",
+    "Inline markup in any string: **bold**, `code`, [text](href), [[BUTTON]] (a hardware button), {{var}}. An href starting with # points into the manual site.",
+    "guide: the sections of the Markdown guide, one per route, each with the 'when' that picks its steps."
+  ],
+  "version": 1,
+  "product": "MASCHINE for Ableton Live",
+  "site": "https://elton47.github.io/MMMk3-v2-User-Manual/",
+  "title": "Install and set up",
+  "intro": "Three quick questions, then a few short steps. It takes about five minutes, and Live remembers everything afterwards.",
+  "choices": [
+    {
+      "id": "os",
+      "label": "Your computer",
+      "options": [
+        {"id": "win11", "label": "Windows 11", "aliases": ["windows"]},
+        {"id": "win10", "label": "Windows 10"},
+        {"id": "macos", "label": "macOS", "aliases": ["mac"]}
+      ]
+    },
+    {
+      "id": "device",
+      "label": "Your controller",
+      "options": [
+        {"id": "mikro", "label": "MASCHINE MIKRO MK3"},
+        {"id": "mk3", "label": "MASCHINE MK3", "hint": "Not yet tested on a real unit"},
+        {"id": "plus", "label": "MASCHINE+", "hint": "In controller mode. Not yet tested on a real unit"}
+      ]
+    },
+    {
+      "id": "live",
+      "label": "Your Ableton Live",
+      "options": [
+        {"id": "live12", "label": "Live 12", "hint": "12.0 or newer"},
+        {"id": "live11", "label": "Live 11", "hint": "Uses v1.6.1, in the same download"}
+      ]
+    }
+  ],
+  "vars": {
+    "device_name": {"choice": "device", "generic": "controller",
+      "values": {"mikro": "MASCHINE MIKRO MK3", "mk3": "MASCHINE MK3", "plus": "MASCHINE+"}},
+    "manual": {"choice": "device", "generic": "mikro",
+      "values": {"mikro": "mikro", "mk3": "mk3", "plus": "mk3"}},
+    "surface": {"choice": "device", "generic": "Maschine_Mikro_MK3 (MIKRO MK3) or Maschine_MK3 (MK3, MASCHINE+)",
+      "values": {"mikro": "Maschine_Mikro_MK3", "mk3": "Maschine_MK3", "plus": "Maschine_MK3"}},
+    "in_port": {"choice": "device", "generic": "… Live In",
+      "values": {"mikro": "Mikro MK3 Live In", "mk3": "MK3 Live In", "plus": "Plus Live In"}},
+    "out_port": {"choice": "device", "generic": "… Live Out",
+      "values": {"mikro": "Mikro MK3 Live Out", "mk3": "MK3 Live Out", "plus": "Plus Live Out"}},
+    "midi_mode": {"choice": "device", "generic": "[[SHIFT]] + [[MASCHINE]] (MIKRO MK3) or [[SHIFT]] + [[CHANNEL]] (MK3, MASCHINE+)",
+      "values": {"mikro": "[[SHIFT]] + [[MASCHINE]]", "mk3": "[[SHIFT]] + [[CHANNEL]]", "plus": "[[SHIFT]] + [[CHANNEL]]"}},
+    "scripts_path": {"choice": "os", "generic": "Documents\\Ableton\\User Library\\Remote Scripts (Windows) or ~/Music/Ableton/User Library/Remote Scripts (macOS)",
+      "values": {"win11": "Documents\\Ableton\\User Library\\Remote Scripts", "win10": "Documents\\Ableton\\User Library\\Remote Scripts",
+                 "macos": "~/Music/Ableton/User Library/Remote Scripts"}},
+    "log_path": {"choice": "os", "generic": "%LOCALAPPDATA%\\Maschine Bridge\\bridge.log (Windows) or ~/Library/Logs/Maschine Bridge/bridge.log (macOS)",
+      "values": {"win11": "%LOCALAPPDATA%\\Maschine Bridge\\bridge.log", "win10": "%LOCALAPPDATA%\\Maschine Bridge\\bridge.log",
+                 "macos": "~/Library/Logs/Maschine Bridge/bridge.log"}}
+  },
+  "steps": [
+    {
+      "id": "live11",
+      "title": "Live 11: use v1.6.1",
+      "when": {"live": ["live11"]},
+      "body": [
+        {"p": "This version (v2) is made for **Live 12**. For **Live 11**, use **v1.6.1**: it is included in the same download, and it has its own manual."},
+        {"actions": [{"label": "Open the v1.6.1 manual", "href": "https://elton47.github.io/MMMk3-User-Manual/", "primary": true}]},
+        {"note": "Moving to Live 12 later? Come back here and choose Live 12: v2 is part of the same purchase."}
+      ]
+    },
+    {
+      "id": "before",
+      "title": "Before you start",
+      "when": {"live": ["live12"]},
+      "body": [
+        {"p": "You need:"},
+        {"ul": [
+          "**Ableton Live 12** (12.0 or newer: Suite, Standard or Intro).",
+          "**NI's MASCHINE software**, installed (from Native Access). It installs the drivers and NI's background service that the controller needs. You don't have to open it.",
+          "Your **{{device_name}}**, connected to the computer by USB.",
+          "The zip file from your purchase."
+        ]},
+        {"note": "Use MASCHINE+ in controller mode, connected to the computer by USB.", "when": {"device": ["plus"]}},
+        {"note": "Support for the {{device_name}} is built from the hardware protocol and has not been tested on a real unit yet. If something doesn't behave as described, please get in touch through the [product page](https://payhip.com/b/h4tva).", "when": {"device": ["mk3", "plus"]}},
+        {"note": "**Close Live** before you install.", "kind": "important"}
+      ]
+    },
+    {
+      "id": "copy",
+      "title": "Copy the script into Live's User Library",
+      "nav": "Copy the script",
+      "when": {"live": ["live12"]},
+      "body": [
+        {"ol": [
+          "Unzip the download.",
+          "Open the **Remote Scripts** folder inside it. It holds three folders: `_MaschineCore`, `Maschine_Mikro_MK3` and `Maschine_MK3`.",
+          "Copy **all three** into the **Remote Scripts** folder of Live's User Library, below. If that folder doesn't exist yet, create it."
+        ]},
+        {"copy": [{"label": "Live's Remote Scripts folder", "value": "{{scripts_path}}"}]},
+        {"note": "Copy all three folders, whichever controller you have: `_MaschineCore` is shared. They go directly inside **Remote Scripts**, not into a sub-folder."},
+        {"note": "Moved your User Library? Live shows where it is in **Settings → Library**."},
+        {"note": "Upgrading from v1.6? v1 and v2 shouldn't run at the same time: in Live's settings, set v1's control surface to **None**."}
+      ]
+    },
+    {
+      "id": "start-mac",
+      "title": "Start Live",
+      "when": {"os": ["macos"], "live": ["live12"]},
+      "body": [
+        {"ol": [
+          "Connect your controller and start Live.",
+          "That's it: Live selects the control surface by itself, and the controller's screen and pads light up."
+        ]},
+        {"note": "If macOS asks for permission for **MaschineBridge** (Input Monitoring), allow it."}
+      ]
+    },
+    {
+      "id": "loopmidi",
+      "title": "Install loopMIDI",
+      "when": {"os": ["win11", "win10"], "live": ["live12"]},
+      "body": [
+        {"p": "On Windows, Live and your controller talk through two virtual MIDI ports. Today they come from **loopMIDI**, a free tool by Tobias Erichsen."},
+        {"ol": [
+          "Download loopMIDI from [its website](https://www.tobias-erichsen.de/software/loopmidi.html) and install it.",
+          "Keep loopMIDI starting with Windows, so the ports are there whenever you start Live."
+        ]},
+        {"note": "loopMIDI is third-party software with its own licence terms (free for personal use: see its website)."},
+        {"note": "**Coming:** on an up-to-date Windows 11, a free update will set this up automatically, without loopMIDI, once Microsoft releases its new MIDI support (expected late 2026). If you already use loopMIDI, you can keep it.", "kind": "coming", "when": {"os": ["win11"]}}
+      ]
+    },
+    {
+      "id": "ports",
+      "title": "Create the two ports",
+      "when": {"os": ["win11", "win10"], "live": ["live12"]},
+      "body": [
+        {"ol": [
+          "Open loopMIDI.",
+          "Copy the first name below, paste it into **New port-name** and click **+**.",
+          "Do the same with the second name."
+        ]},
+        {"copy": [{"label": "Port 1", "value": "{{in_port}}"}, {"label": "Port 2", "value": "{{out_port}}"}]},
+        {"note": "The names must match exactly. The bridge finds the ports by itself, even if you create them while Live is running."}
+      ]
+    },
+    {
+      "id": "live-settings",
+      "title": "Choose the ports in Live (once)",
+      "nav": "Set up Live",
+      "when": {"os": ["win11", "win10"], "live": ["live12"]},
+      "body": [
+        {"ol": [
+          "Connect your controller and start Live.",
+          "Open **Settings → Link, Tempo & MIDI**.",
+          "In an empty **Control Surface** row, choose **{{surface}}**.",
+          "Set its **Input** to **{{in_port}}** and its **Output** to **{{out_port}}**."
+        ]},
+        {"table": [["Control Surface", "{{surface}}"], ["Input", "{{in_port}}"], ["Output", "{{out_port}}"]]},
+        {"note": "On Windows with Microsoft's new MIDI system, Live may list the Out port as **{{in_port}} (Port 2)**. If you see that name, pick it for **Output**.", "kind": "important"},
+        {"p": "Then, under **MIDI Ports**:"},
+        {"ul": [
+          "**In: {{in_port}}**: turn **Track** on. Your pads play into Live through it.",
+          "**In: {{out_port}}** (or **{{in_port}} (Port 2)**): turn **Track** off."
+        ]},
+        {"note": "If Live added more rows with the same control surface, set them to **None**. Live remembers all of this."}
+      ]
+    },
+    {
+      "id": "check",
+      "title": "Check that it works",
+      "nav": "Check it works",
+      "when": {"os": ["win11", "win10"], "live": ["live12"]},
+      "body": [
+        {"p": "While it waits for Live, the controller's screen walks you through these settings by itself: **Create port …**, **Input …**, **Output …**."},
+        {"p": "When everything is connected, the controller shows Live's screen and the pads light up. Press [[PLAY]] or hit a pad to try it."},
+        {"note": "Pads flashing in odd colours? The controller is in NI's MIDI mode: press {{midi_mode}} to leave it. You don't need MIDI mode with this setup."}
+      ]
+    },
+    {
+      "id": "troubleshooting",
+      "title": "If something isn't right",
+      "nav": "Troubleshooting",
+      "when": {"live": ["live12"]},
+      "body": [
+        {"faq": [
+          {"q": "The screen stays on “Waiting for Live”", "when": {"os": ["win11", "win10"]}, "a": [
+            "Check the Control Surface, Input and Output in **Settings → Link, Tempo & MIDI**.",
+            "Output may be listed as **{{in_port}} (Port 2)**: pick that one.",
+            "Make sure loopMIDI is running and shows both ports."
+          ]},
+          {"q": "Live shows the control surface twice", "a": [
+            "Live may have added a second row with the same control surface. Set the extra rows to **None**."
+          ]},
+          {"q": "The pads flash in odd colours", "a": [
+            "The controller is in NI's MIDI mode. Press {{midi_mode}} to leave it."
+          ]},
+          {"q": "Nothing happens at all", "a": [
+            "Is NI's MASCHINE software installed? It installs the drivers.",
+            "Is the controller connected by USB?",
+            "Are the three folders directly inside **Remote Scripts**?",
+            "Restart Live."
+          ]}
+        ]},
+        {"h": "Still stuck?"},
+        {"p": "Get in touch through the [product page](https://payhip.com/b/h4tva), and attach the bridge's log file:"},
+        {"copy": [{"label": "Bridge log file", "value": "{{log_path}}"}]}
+      ]
+    },
+    {
+      "id": "done",
+      "title": "You're set: how to use it",
+      "nav": "You're set",
+      "when": {"live": ["live12"]},
+      "body": [
+        {"p": "Live remembers the setup. From now on: connect the controller, start Live, play."},
+        {"h": "First things to try"},
+        {"ul": [
+          "[[PATTERN]]: your clips on the pads. Hit a pad to launch a clip.",
+          "[[PAD MODE]]: the track's Drum Rack on the pads. [[KEYBOARD]]: notes in Live's scale. [[CHORDS]]: chords in key.",
+          "Hold [[SHIFT]] for the second function printed on a button, and for the edit functions on the pads.",
+          "[[PLAY]] starts and stops Live. Hold [[NOTE REPEAT]] and a pad for note repeat."
+        ]},
+        {"note": "Close the MASCHINE app and plug-in while you use the controller with Live: both would try to drive it."},
+        {"actions": [
+          {"label": "Open the manual", "href": "#{{manual}}", "primary": true},
+          {"label": "What SHIFT does", "href": "#{{manual}}/SHIFT"}
+        ]}
+      ]
+    }
+  ],
+  "guide": [
+    {"title": "Windows 11 and Windows 10", "when": {"os": ["win11", "win10"], "live": ["live12"]}},
+    {"title": "macOS", "when": {"os": ["macos"], "live": ["live12"]}},
+    {"title": "Live 11", "when": {"live": ["live11"]}}
+  ]
+}

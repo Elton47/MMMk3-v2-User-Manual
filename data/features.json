@@ -62,7 +62,7 @@
         {"combo": ["SELECT"], "does": "Tap: show tracks on the pads (latched). Hold + PAD: act on a track and return.", "devices": ["mk3"]},
         {"combo": ["PAD"], "does": "Select the track. A group track folds / unfolds."},
         {"combo": ["PAD"], "context": "unlit pad", "does": "Create a new MIDI track (with SHIFT: an audio track)."},
-        {"combo": ["SELECT", "PAD"], "does": "Arm / disarm that track.", "devices": ["mikro"]},
+        {"combo": ["SELECT", "PAD"], "does": "Arm that track and disarm the others, like Live's mixer (again: disarm). SHIFT + SELECT + PAD adds a track, to record several at once.", "devices": ["mikro"]},
         {"combo": ["SOLO", "PAD"], "does": "Solo / unsolo that track (works from any mode: the pads show tracks while SOLO is held)."},
         {"combo": ["MUTE", "PAD"], "does": "Mute / unmute that track (from any mode)."},
         {"combo": ["STOP", "PAD"], "does": "Stop that track's clips (from any mode)."},

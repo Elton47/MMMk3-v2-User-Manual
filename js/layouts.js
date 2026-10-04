@@ -104,6 +104,12 @@ function mixHex(a, b, t) {
 // position 3 = pad 16, position 4 = pad 9, ... position 15 = pad 4 (bottom right).
 function listPad(position) { return (3 - Math.floor(position / 4)) * 4 + position % 4 + 1; }
 
+// Buttons that show the track view on the pads while held, so a pad acts on a track (the
+// MIKRO's SELECT is its arm modifier; the MK3's SELECT is its track mode). In the modes in
+// TRACK_VIEW_KEEPS (drum mode) they act on that mode's pads instead and the pads stay as they are.
+var TRACK_VIEW_MODIFIERS = ['STOP', 'SOLO', 'MUTE', 'SELECT'];
+var TRACK_VIEW_KEEPS = ['PAD MODE'];
+
 // What the pads show in each mode, as the script lights them, for the sample set above. Per mode
 // (keyed by the control id of the mode button): 16 entries in pad order (index 0 = pad 1), each
 // null (unlit) or { color, level, drum }. level: 'dim' | 'mid' | 'bright' (the script's DIM,
@@ -134,16 +140,29 @@ function padDemos(trackMode) {
   demos.SCENE = pads();
   for (var s = 0; s < 4; s++) demos.SCENE[listPad(s) - 1] = lit(SAMPLE_SCENE_COLOR, s === 0 ? 'bright' : 'dim');
 
-  // Track mode: tracks in list order (selected brightest, armed bright), empty pads create a
-  // track, the returns and the Master on the last pads (2, 3 and 4).
-  var tracks = pads();
-  SAMPLE_TRACKS.forEach(function (track, i) {
-    tracks[listPad(i) - 1] = lit(track.color, i === SAMPLE_SELECTED ? 'bright' : i === SAMPLE_ARMED ? 'mid' : 'dim');
-  });
-  SAMPLE_RETURNS.concat([SAMPLE_MASTER]).forEach(function (track, i) {
-    tracks[listPad(16 - SAMPLE_RETURNS.length - 1 + i) - 1] = lit(track.color, 'dim');
-  });
-  demos[trackMode] = tracks;
+  // Track mode: tracks in list order, empty pads create a track, the returns and the Master on
+  // the last pads (2, 3 and 4). Colours as the script picks them: a muted track, or one silenced
+  // by another track's solo, white dim; the selected track its colour at full brightness; an
+  // armed or soloed track 'mid'; the rest dim. The Master is never muted. muted / soloed: indices
+  // into SAMPLE_TRACKS. Returns stay audible under a solo (Live's Solo in Place, the default).
+  function trackView(muted, soloed) {
+    var view = pads();
+    SAMPLE_TRACKS.forEach(function (track, i) {
+      var silenced = muted.indexOf(i) >= 0 || (soloed.length > 0 && soloed.indexOf(i) < 0);
+      var level = i === SAMPLE_SELECTED ? 'bright' : i === SAMPLE_ARMED || soloed.indexOf(i) >= 0 ? 'mid' : 'dim';
+      view[listPad(i) - 1] = silenced ? lit(SAMPLE_MASTER.color, 'dim') : lit(track.color, level);
+    });
+    SAMPLE_RETURNS.concat([SAMPLE_MASTER]).forEach(function (track, i) {
+      view[listPad(16 - SAMPLE_RETURNS.length - 1 + i) - 1] = lit(track.color, 'dim');
+    });
+    return view;
+  }
+  demos[trackMode] = trackView([], []);
+  // While held, these show the track view and their pads act on tracks (TRACK_VIEW_MODIFIERS);
+  // the sample states: track 1 soloed, track 3 muted. STOP and the MIKRO's SELECT (its arm
+  // modifier; track 2 is armed) show the plain view.
+  var held = { SOLO: trackView([], [SAMPLE_SELECTED]), MUTE: trackView([2], []), STOP: demos[trackMode], SELECT: demos[trackMode] };
+  TRACK_VIEW_MODIFIERS.forEach(function (id) { if (id !== trackMode) demos[id] = held[id]; });
 
   // PAD MODE: the Drum Rack, the focused drum (pad 1) bright.
   demos['PAD MODE'] = SAMPLE_DRUMS.map(function (name, i) { return lit(drums, i === 0 ? 'bright' : 'dim', name); });

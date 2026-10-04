@@ -245,11 +245,32 @@ MM.manual = (function () {
     showScreen(lines || spec.screen);
   }
 
+  // The mode a section is about: its first single-button item (for this device) that has a pad
+  // demo, e.g. PAD MODE for the drum section; null if none.
+  function sectionMode(section) {
+    var demos = layout().padDemos || {}, mode = null;
+    (section ? section.items.filter(forDevice) : []).some(function (item) {
+      return item.combo.length === 1 && demos[item.combo[0]] && (mode = item.combo[0]);
+    });
+    return mode;
+  }
+
   // The pads as the mode lights them: the first token of a hovered combo that has a pad demo,
   // else the selected control's (layout().padDemos, built in layouts.js); none lights nothing.
-  function paintPads(combo) {
+  // In a section about a mode where the track view modifiers act on that mode's own pads
+  // (TRACK_VIEW_KEEPS), those modifiers don't switch to the track view: the pads show the mode.
+  // A demo that comes from the combo itself (SOLO + PAD: the track view) also shows on the
+  // combo's pads (class combo-demo on the drawing), instead of their plain highlight.
+  function paintPads(combo, section) {
     var demos = layout().padDemos || {}, demo = null;
-    (combo || []).some(function (token) { return (demo = demos[token] || null); });
+    var mode = sectionMode(section);
+    var keep = mode && TRACK_VIEW_KEEPS.indexOf(mode) >= 0 ? mode : null, kept = false;
+    (combo || []).some(function (token) {
+      if (keep && TRACK_VIEW_MODIFIERS.indexOf(token) >= 0) { kept = true; return false; }
+      return (demo = demos[token] || null);
+    });
+    if (!demo && kept) demo = demos[keep];
+    el('device').classList.toggle('combo-demo', !!demo);
     if (!demo && state.selected) demo = demos[state.selected] || null;
     for (var n = 1; n <= 16; n++) {
       var g = controlNode('PAD ' + n);
@@ -363,7 +384,7 @@ MM.manual = (function () {
     return el('device').querySelector('[data-id="' + id.replace(/"/g, '\\"') + '"]');
   }
 
-  function paintHardware(combo) {
+  function paintHardware(combo, section) {
     controlIds().forEach(function (id) {
       var g = controlNode(id);
       if (!g) return;
@@ -372,7 +393,7 @@ MM.manual = (function () {
       if (g.hasAttribute('aria-pressed')) g.setAttribute('aria-pressed', String(id === state.selected));
     });
     updateScreen(combo);
-    paintPads(combo);
+    paintPads(combo, section);
     var badges = el('badges');
     if (!badges) return;
     badges.innerHTML = '';
@@ -401,17 +422,17 @@ MM.manual = (function () {
     return wrap;
   }
 
-  function itemElement(item, sectionTitle) {
+  function itemElement(item, section, withTitle) {
     var does = h('span', { className: 'does', text: item.does });
     if (item.context) does.appendChild(h('span', { className: 'context', text: ' (' + item.context + ')' }));
     var li = h('li', {}, [
-      sectionTitle ? h('div', { className: 'section-label', text: sectionTitle }) : null,
+      withTitle ? h('div', { className: 'section-label', text: section.title }) : null,
       comboElement(item.combo),
       does
     ]);
-    li.addEventListener('mouseenter', function () { paintHardware(item.combo); });
+    li.addEventListener('mouseenter', function () { paintHardware(item.combo, section); });
     li.addEventListener('mouseleave', function () { paintHardware(); });
-    li.addEventListener('click', function () { paintHardware(item.combo); });
+    li.addEventListener('click', function () { paintHardware(item.combo, section); });
     return li;
   }
 
@@ -478,7 +499,7 @@ MM.manual = (function () {
           text: state.data.devices[section.devices[0]].name.replace('MASCHINE ', '').split(' /')[0] + ' only' }));
       }
       var list = h('ul', { className: 'items' });
-      items.forEach(function (item) { list.appendChild(itemElement(item)); });
+      items.forEach(function (item) { list.appendChild(itemElement(item, section)); });
       container.appendChild(h('section', { className: 'card', id: section.id, 'aria-labelledby': 'h-' + section.id }, [
         heading,
         section.summary ? h('p', { className: 'summary', text: section.summary }) : null,
@@ -509,7 +530,7 @@ MM.manual = (function () {
     visibleSections().forEach(function (entry) {
       entry.items.forEach(function (item) {
         if (itemUsesControl(item, id)) {
-          list.appendChild(itemElement(item, entry.section.title));
+          list.appendChild(itemElement(item, entry.section, true));
           found++;
         }
       });

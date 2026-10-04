@@ -546,6 +546,19 @@ button { font: inherit; color: inherit; }
 #device.real .pad.selected .cap { fill: var(--pad-color); stroke: #fff; stroke-width: 2; }
 #device.real .pad.selected .sheen { opacity: .9; }
 #device.real .pad.selected .pad-print, #device.real .pad.related .pad-print { fill: #141416; }
+/* a combo whose own token has a pad demo (SOLO + PAD: the track view): its pads show that demo,
+   outlined as the combo's pads; pads the demo leaves unlit stay unlit */
+#device.real.combo-demo .pad.related:not(.selected) .cap { fill: url(#hw-pad-fill); stroke: var(--hw-related); }
+#device.real.combo-demo .pad.related:not(.selected) .sheen { opacity: 0; }
+#device.real.combo-demo .pad.related:not(.selected) .pad-print { fill: #8d8d92; }
+#device.real.combo-demo .pad.related.demo-dim:not(.selected) .cap { fill: color-mix(in srgb, var(--demo-color) 40%, #353538); }
+#device.real.combo-demo .pad.related.demo-mid:not(.selected) .cap { fill: color-mix(in srgb, var(--demo-color) 80%, #353538); }
+#device.real.combo-demo .pad.related.demo-mid:not(.selected) .sheen { opacity: .45; }
+#device.real.combo-demo .pad.related.demo-bright:not(.selected) .cap { fill: var(--demo-color); }
+#device.real.combo-demo .pad.related.demo-bright:not(.selected) .sheen { opacity: .9; }
+#device.real.combo-demo .pad.related.demo-dim:not(.selected) .pad-print { fill: #c4c4c8; }
+#device.real.combo-demo .pad.related.demo-mid:not(.selected) .pad-print,
+#device.real.combo-demo .pad.related.demo-bright:not(.selected) .pad-print { fill: #141416; }
 #device.real .encoder.related .ring, #device.real .knob.related .ring, #device.real .strip.related .cap { stroke: var(--hw-related); stroke-width: 2.2; }
 #device.real .encoder.selected .ring, #device.real .knob.selected .ring, #device.real .strip.selected .cap { stroke: var(--hw-active); stroke-width: 2.6; }
 /* light caps and buttons with a lit colour (MK3 group buttons) light up like the hardware */

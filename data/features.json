@@ -34,12 +34,12 @@
         {"combo": ["PAD"], "does": "Launch the clip. On an empty slot of a MIDI track: select that track (Live's auto-arm arms it) and record a new clip there; the pads switch to the drum pads or the keyboard so you can play right away."},
         {"combo": ["DUPLICATE", "PAD"], "does": "Duplicate that clip into the next slot."},
         {"combo": ["ERASE", "PAD"], "does": "Delete that clip."},
-        {"combo": ["VARIATION", "PAD"], "does": "Record a variation: while VARIATION is held, the free slot below each clip on the MIDI tracks lights red. Press one (or the clip): the clip is copied there, its track selected (auto-armed), and the copy launched and focused; recording overdubs the copy once it plays, and the original stays as it was. A full column gets a new scene. The pads switch to the drum pads or the keyboard to play."},
+        {"combo": ["VARIATION", "PAD"], "does": "Record a variation: while VARIATION is held, the free slot below each clip on the MIDI tracks lights red. Press one (or the clip): the clip is copied there, its track selected (auto-armed), and the copy launched and focused; recording overdubs the copy once it plays, and the original stays as it was. A full column gets a new scene. The pads switch to the drum pads or the keyboard to play. The copy is named after the original with the next number (Bass → Bass_1, a variation of Bass_1 → Bass_2; an unnamed clip → 1, 2 ...)."},
         {"combo": ["TURN"], "does": "Move the clip view left / right by one track."},
         {"combo": ["SHIFT", "TURN"], "does": "Move the clip view up / down by one scene."},
         {"combo": ["◀", "▶"], "does": "Move the clip view by four tracks."},
         {"combo": ["SHIFT", "PATTERN"], "does": "New: stop recording and select the next empty slot (ready to record)."},
-        {"combo": ["STRIP"], "does": "The strip lights show how far the selected track's playing clip is through its loop, in the clip's colour. Touch the strip to jump within the loop (on Live's launch quantization)."}
+        {"combo": ["STRIP"], "does": "The strip lights show how far the selected track's playing clip is through its loop, in the clip's colour; while it records, the bar flashes red on every metronome click (a silent metronome). Touch the strip to jump within the loop (on Live's launch quantization)."}
       ]
     },
     {
@@ -159,7 +159,7 @@
         {"combo": ["SHIFT", "NOTE REPEAT"], "does": "Switch the NOTE REPEAT button between Note Repeat and Arpeggiator."},
         {"combo": ["NOTE REPEAT", "TURN"], "does": "Repeat / arp rate (1/2 to 1/64, triplets included)."},
         {"combo": ["NOTE REPEAT", "◀", "▶"], "does": "Arp: choose the parameter the encoder edits (Rate, Type, Octaves, Gate, Latch). Latch on: the arp keeps playing the last notes after you let go of the pads; new pads replace them."},
-        {"combo": ["STRIP"], "does": "Note repeat rate; touching the strip starts note repeat while you touch it, also for pads you are already holding (hold a pad, then touch the strip). In PATTERN, SCENE and PLUG-IN mode the strip has its own job (see there)."},
+        {"combo": ["STRIP"], "does": "Note repeat rate; touching the strip starts note repeat while you touch it, also for pads you are already holding (hold a pad, then touch the strip), and shows the rate. Otherwise the strip lights show the selected track's playing clip, like in PATTERN mode, flashing red on every metronome click while it records (a silent metronome). In PATTERN, SCENE and PLUG-IN mode touching the strip has its own job (see there)."},
         {"combo": ["PITCH"], "does": "Touch strip becomes a pitch bend (springs back when released). Press again: back to rate."},
         {"combo": ["MOD"], "does": "Touch strip becomes the mod wheel. Press again: back to rate."},
         {"combo": ["SWING", "TURN"], "does": "Live's swing amount; note repeat and the arpeggiator follow it."}
@@ -176,7 +176,7 @@
         ["Undo", "Redo", "Velocity 100", "Select all / none"]
       ],
       "items": [
-        {"combo": ["SHIFT", "PAD 1"], "does": "Undo."},
+        {"combo": ["SHIFT", "PAD 1"], "does": "Undo. A recording started from the controller (an empty slot in PATTERN, or VARIATION + pad) is undone as one take, not note by note; pressed while it still records, the take is removed and recording goes on, to play it again. A variation's copy goes with the next undo."},
         {"combo": ["SHIFT", "PAD 2"], "does": "Redo."},
         {"combo": ["SHIFT", "PAD 3"], "does": "Set note velocities to 100."},
         {"combo": ["SHIFT", "PAD 4"], "does": "Select all notes / select none."},
@@ -326,6 +326,6 @@
     {"what": "Previous / next track", "v1": "CHORDS / STEP", "v2": "SHIFT + ◀ ▶ (CHORDS and STEP are now chord and step modes)"},
     {"what": "Device / Clip detail view", "v1": "PLUG-IN", "v2": "SHIFT + PLUG-IN (PLUG-IN now controls device parameters)"},
     {"what": "Track mode pin", "v1": "SHIFT + GROUP", "v2": "Tap GROUP (hold: temporary)"},
-    {"what": "New", "v1": "", "v2": "Chords, arpeggiator, 16 Velocities, step sequencer, hardware browser, parameter control, pitch / mod strip, record variations (VARIATION + pad), clip progress and parameter value on the strip (touch to jump / set), humanize, screen feedback, pads light instantly when played"}
+    {"what": "New", "v1": "", "v2": "Chords, arpeggiator, 16 Velocities, step sequencer, hardware browser, parameter control, pitch / mod strip, record variations (VARIATION + pad), take undo, clip progress and parameter value on the strip (touch to jump / set), a silent metronome on the strip while recording, humanize, screen feedback, pads light instantly when played"}
   ]
 }

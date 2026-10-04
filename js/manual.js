@@ -15,6 +15,27 @@ MM.manual = (function () {
   function controlsForToken(token) { return controlIds().filter(function (id) { return tokenMatches(token, id); }); }
   function itemUsesControl(item, id) { return item.combo.some(function (token) { return tokenMatches(token, id); }); }
 
+  // The colour of a drum pad name, from the drum name colour table in features.json (first
+  // matching row wins, like the script's rules). A keyword matches anywhere in the name ignoring
+  // case; a keyword of several words needs all of them; a short capitalised keyword (CH, OH) must
+  // be a whole word. Names no row matches keep `fallback`.
+  function drumColor(name, fallback) {
+    var words = name.toLowerCase().split(/[^a-z0-9]+/);
+    var lower = name.toLowerCase();
+    function matches(keyword) {
+      if (/^[A-Z]{1,2}$/.test(keyword)) return words.indexOf(keyword.toLowerCase()) >= 0;
+      return keyword.toLowerCase().split(' ').every(function (part) { return lower.indexOf(part) >= 0; });
+    }
+    var hit = null;
+    (state.data ? state.data.sections : []).some(function (section) {
+      return (section.swatches || []).some(function (swatch) {
+        if (swatch.keywords.some(matches)) hit = swatch.rgb;
+        return !!hit;
+      });
+    });
+    return hit || fallback;
+  }
+
   function itemText(section, item) {
     return (section.title + ' ' + item.combo.join(' ') + ' ' + item.does + ' ' + (item.context || '')).toLowerCase();
   }
@@ -173,7 +194,8 @@ MM.manual = (function () {
     (side.list || []).forEach(function (item, i) {
       var y = top + 68 + i * 28, chosen = i === side.selected;
       if (chosen) node('rect', { x: 8, y: y, width: 464, height: 26, rx: 2, fill: accent }, g);
-      if (item[1]) node('rect', { x: 16, y: y + 6, width: 9, height: 14, fill: item[1], 'class': 'lcd-chip' }, g);
+      var chip = item[2] ? drumColor(item[2], item[1]) : item[1];
+      if (chip) node('rect', { x: 16, y: y + 6, width: 9, height: 14, fill: chip, 'class': 'lcd-chip' }, g);
       svgText(g, item[1] ? 34 : 18, y + 13, 'lcd-list' + (chosen ? ' chosen' : ''), item[0]);
     });
     if (!knobs.length) return;
@@ -223,6 +245,24 @@ MM.manual = (function () {
     showScreen(lines || spec.screen);
   }
 
+  // The pads as the mode lights them: the first token of a hovered combo that has a pad demo,
+  // else the selected control's (layout().padDemos, built in layouts.js); none lights nothing.
+  function paintPads(combo) {
+    var demos = layout().padDemos || {}, demo = null;
+    (combo || []).some(function (token) { return (demo = demos[token] || null); });
+    if (!demo && state.selected) demo = demos[state.selected] || null;
+    for (var n = 1; n <= 16; n++) {
+      var g = controlNode('PAD ' + n);
+      if (!g) continue;
+      var entry = demo && demo[n - 1];
+      ['dim', 'mid', 'bright'].forEach(function (level) {
+        g.classList.toggle('demo-' + level, !!entry && entry.level === level);
+      });
+      if (entry) g.style.setProperty('--demo-color', entry.drum ? drumColor(entry.drum, entry.color) : entry.color);
+      else g.style.removeProperty('--demo-color');
+    }
+  }
+
   function drawDevice() {
     state.oled = null;
     state.lcd = null;
@@ -258,6 +298,7 @@ MM.manual = (function () {
       if (kind === 'pad') g.style.setProperty('--pad-color', PAD_COLORS[Number(label) - 1]);
       if (opts.lit) {
         g.classList.add('lit');
+        g.classList.toggle('lit-bright', !!opts.litBright);
         g.style.setProperty('--lit-color', opts.lit);
       }
       if (opts.light) g.classList.add('light');
@@ -331,6 +372,7 @@ MM.manual = (function () {
       if (g.hasAttribute('aria-pressed')) g.setAttribute('aria-pressed', String(id === state.selected));
     });
     updateScreen(combo);
+    paintPads(combo);
     var badges = el('badges');
     if (!badges) return;
     badges.innerHTML = '';

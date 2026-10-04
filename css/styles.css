@@ -508,6 +508,22 @@ button { font: inherit; color: inherit; }
 #device.real .lcd-knob-name { fill: #e2e2e6; font-size: 20px; font-weight: 600; text-anchor: middle; }
 #device.real .lcd-knob-value { fill: #8f9199; font-size: 23px; font-weight: 500; text-anchor: middle; }
 #device.real .lcd-knob-value.touched { fill: #fff; }
+/* MK3 group buttons are always lit dimly in their track colour, the selected track brighter */
+#device.real .button.lit .cap { fill: color-mix(in srgb, var(--lit-color) 30%, #2a2a2d); }
+#device.real .button.lit.lit-bright .cap { fill: color-mix(in srgb, var(--lit-color) 78%, #2a2a2d); }
+#device.real .button.lit.lit-bright .label { fill: #141416; }
+/* choosing another group button makes that one the selected track: the first one dims again */
+#device.real:has(.button.lit.selected) .button.lit.lit-bright:not(.selected):not(.related) .cap { fill: color-mix(in srgb, var(--lit-color) 30%, #2a2a2d); }
+#device.real:has(.button.lit.selected) .button.lit.lit-bright:not(.selected):not(.related) .label { fill: #d4d4d8; }
+/* pad demos: the pads as the selected mode lights them (dim / mid / bright, like the hardware);
+   a pad of a combo (related) or the selected pad keeps its own highlight */
+#device.real .pad.demo-dim:not(.selected):not(.related) .cap { fill: color-mix(in srgb, var(--demo-color) 40%, #353538); }
+#device.real .pad.demo-mid:not(.selected):not(.related) .cap { fill: color-mix(in srgb, var(--demo-color) 80%, #353538); }
+#device.real .pad.demo-mid:not(.selected):not(.related) .sheen { opacity: .45; }
+#device.real .pad.demo-bright:not(.selected):not(.related) .cap { fill: var(--demo-color); }
+#device.real .pad.demo-bright:not(.selected):not(.related) .sheen { opacity: .9; }
+#device.real .pad.demo-dim .pad-print { fill: #c4c4c8; }
+#device.real .pad.demo-mid .pad-print, #device.real .pad.demo-bright .pad-print { fill: #141416; }
 /* states: hover / a combo's controls (related) / the selected control, lit like the hardware */
 #device.real .hw-control:hover .cap, #device.real .hw-control:hover .ring { stroke: var(--hw-related); }
 #device.real .hw-control:focus-visible .cap, #device.real .hw-control:focus-visible .ring { stroke: #fff; stroke-width: 2.4; }
@@ -535,7 +551,7 @@ button { font: inherit; color: inherit; }
 /* light caps and buttons with a lit colour (MK3 group buttons) light up like the hardware */
 #device.real .button.light.related .cap { fill: color-mix(in srgb, var(--hw-related) 45%, #e9edf0); }
 #device.real .button.light.selected .cap { fill: #fff; }
-#device.real .button.lit.related .cap { fill: color-mix(in srgb, var(--lit-color) 50%, #2a2a2d); stroke: var(--lit-color); }
+#device.real .button.lit.related .cap { fill: color-mix(in srgb, var(--lit-color) 88%, #2a2a2d); stroke: var(--hw-related); stroke-width: 2.2; }
 #device.real .button.lit.selected .cap { fill: var(--lit-color); stroke: #fff; stroke-width: 2; }
 #device.real .button.lit.selected .label, #device.real .button.lit.related .label { fill: #141416; }
 #device.real .strip.selected .strip-inner, #device.real .strip.related .strip-inner { fill: color-mix(in srgb, var(--hw-related) 25%, #151517); }

@@ -120,7 +120,7 @@
         {"combo": ["ERASE", "PAD"], "does": "Erase that pad's notes in the focused clip (no clip: empty the pad)."},
         {"combo": ["DUPLICATE", "PAD", "PAD"], "does": "Copy the first pad onto the second."},
         {"combo": ["TURN"], "does": "Scroll by one row (SHIFT or PUSH + TURN: by 16 pads)."},
-        {"combo": ["◀", "▶"], "does": "Scroll by 16 pads."},
+        {"combo": ["◀", "▶"], "does": "Previous / next drum pad: focuses that sound (named on the screen; the one STEP sequences)."},
         {"combo": ["SHIFT", "PAD MODE"], "does": "Velocity curve: Linear / Soft / Hard."}
       ]
     },
@@ -131,7 +131,8 @@
       "items": [
         {"combo": ["KEYBOARD"], "does": "Switch to keyboard mode."},
         {"combo": ["PAD"], "does": "Play the note."},
-        {"combo": ["TURN"], "does": "Octave down / up (◀ ▶ too)."},
+        {"combo": ["◀", "▶"], "does": "Choose the setting TURN changes: Octave, Root or Scale. The screen shows the setting and its value."},
+        {"combo": ["TURN"], "does": "Change the chosen setting (Octave to start with)."},
         {"combo": ["SHIFT", "TURN"], "does": "Change the scale (Live's scale list)."},
         {"combo": ["PUSH", "TURN"], "does": "Change the root note."},
         {"combo": ["SHIFT", "KEYBOARD"], "does": "In key / chromatic layout (Live's Scale Mode)."},
@@ -146,7 +147,8 @@
         {"combo": ["CHORDS"], "does": "Switch to chord mode. Press again: next chord type (Triad, 7th, 9th, Sus2, Sus4, 6th, Power)."},
         {"combo": ["SHIFT", "CHORDS"], "does": "Next voicing (Close, Inversion 1, Inversion 2, Spread)."},
         {"combo": ["PAD"], "does": "Play the chord (works with note repeat and the arpeggiator)."},
-        {"combo": ["TURN"], "does": "Octave down / up; SHIFT + TURN: scale; PUSH + TURN: root note."}
+        {"combo": ["◀", "▶"], "does": "Choose the setting TURN changes: Octave, Root, Scale, Chord or Voicing. The screen shows the chord and key, and the chosen setting with its value."},
+        {"combo": ["TURN"], "does": "Change the chosen setting (Octave to start with); SHIFT + TURN: scale; PUSH + TURN: root note."}
       ]
     },
     {

@@ -33,7 +33,7 @@
         {"combo": ["SHIFT"], "does": "A real controller, not a template: a real SHIFT key and Live's colours on the pads. No Controller Editor, no MIDI mode."},
         {"combo": ["TURN"], "does": "The screen shows almost anything: the mode and track, tempo, swing and volume as you change them, and device parameters with their names and values."},
         {"combo": ["CHORDS"], "does": "A chord on every pad, always in Live's key: triads to 9ths, with voicings."},
-        {"combo": ["NOTE REPEAT"], "does": "Note repeat that follows pad pressure, an arpeggiator and 16 velocities, recorded exactly on Live's grid: things a plain MIDI controller can't do."},
+        {"combo": ["NOTE REPEAT"], "does": "Note repeat that follows pad pressure: slide the touch strip to set its rate, or touch it while holding pads to repeat them on the spot. Plus an arpeggiator and 16 velocities, all recorded exactly on Live's grid."},
         {"combo": ["STEP"], "does": "A step sequencer on the pads, read like MASCHINE, with the playhead running across them."},
         {"combo": ["STAR"], "does": "Live's browser on the hardware screen: find a sound and load it without touching the mouse.", "devices": ["mikro"]},
         {"combo": ["VARIATION", "PAD"], "does": "Record a variation in one press: the clip is copied below, named Bass_1, Bass_2 ..., and recorded into; the original stays untouched."},

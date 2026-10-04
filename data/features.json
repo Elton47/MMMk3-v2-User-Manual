@@ -28,12 +28,13 @@
     {
       "id": "clip",
       "title": "PATTERN: clips",
-      "summary": "A 4x4 view of Live's Session clips (4 tracks x 4 scenes). Pad colours follow the clip colours; playing clips are bright.",
+      "summary": "A 4x4 view of Live's Session clips (4 tracks x 4 scenes). Pad colours follow the clip colours; playing clips are bright. Recording a new clip (an empty slot, or VARIATION + pad) selects its track, so Live's auto-arm arms it (the dimmed arm, which follows the track you select; tracks armed for real are disarmed), and the pads switch to the drum pads or the keyboard so you can play into it right away.",
       "items": [
         {"combo": ["PATTERN"], "does": "Tap: switch to clip mode. Hold + PAD: launch a clip, then return to the previous mode."},
-        {"combo": ["PAD"], "does": "Launch the clip. On an empty slot of a MIDI track: arm that track and record a new clip."},
+        {"combo": ["PAD"], "does": "Launch the clip. On an empty slot of a MIDI track: select that track (Live's auto-arm arms it) and record a new clip there; the pads switch to the drum pads or the keyboard so you can play right away."},
         {"combo": ["DUPLICATE", "PAD"], "does": "Duplicate that clip into the next slot."},
         {"combo": ["ERASE", "PAD"], "does": "Delete that clip."},
+        {"combo": ["VARIATION", "PAD"], "does": "Record a variation: while VARIATION is held, the free slot below each clip on the MIDI tracks lights red. Press one (or the clip): the clip is copied there, its track selected (auto-armed), and the copy launched and focused; recording overdubs the copy once it plays, and the original stays as it was. A full column gets a new scene. The pads switch to the drum pads or the keyboard to play."},
         {"combo": ["TURN"], "does": "Move the clip view left / right by one track."},
         {"combo": ["SHIFT", "TURN"], "does": "Move the clip view up / down by one scene."},
         {"combo": ["◀", "▶"], "does": "Move the clip view by four tracks."},
@@ -201,7 +202,7 @@
         {"combo": ["EVENTS", "PAD"], "does": "Select that pad's notes (again: deselect). While EVENTS is held, the pads with notes light in their own colours, selected ones brightest."},
         {"combo": ["EVENTS"], "does": "Tap: select all notes / none."},
         {"combo": ["EVENTS", "TURN"], "does": "Scroll the layout underneath (octave, drum rows; SHIFT: scale; PUSH: root)."},
-        {"combo": ["VARIATION"], "does": "Humanize: small random changes to timing and velocity."},
+        {"combo": ["VARIATION"], "does": "Tap: humanize, small random changes to timing and velocity. Hold in PATTERN mode: record a variation (see PATTERN)."},
         {"combo": ["SHIFT", "VARIATION"], "does": "Randomize velocities (60-127)."}
       ]
     },
@@ -283,7 +284,7 @@
         {"combo": ["PUSH", "TURN"], "does": "Previous / next page (a rack: Macros 1-8, 9-16)."},
         {"combo": ["SHIFT", "◀", "▶"], "does": "Previous / next device on the track."},
         {"combo": ["PUSH"], "does": "Tap: reset the parameter to its default."},
-        {"combo": ["STRIP"], "does": "The strip lights show the parameter's value as a bar; touch the strip to set it. PITCH / MOD take the strip over while they are lit."}
+        {"combo": ["STRIP"], "does": "The strip lights show the parameter's value as a bar, in the track or rack chain colour; a rack's macros each have their own colour (macro 1 orange ... macro 16 red, like MASCHINE's sounds). Touch the strip to set the value. PITCH / MOD take the strip over while they are lit."}
       ]
     },
     {
@@ -325,6 +326,6 @@
     {"what": "Previous / next track", "v1": "CHORDS / STEP", "v2": "SHIFT + ◀ ▶ (CHORDS and STEP are now chord and step modes)"},
     {"what": "Device / Clip detail view", "v1": "PLUG-IN", "v2": "SHIFT + PLUG-IN (PLUG-IN now controls device parameters)"},
     {"what": "Track mode pin", "v1": "SHIFT + GROUP", "v2": "Tap GROUP (hold: temporary)"},
-    {"what": "New", "v1": "", "v2": "Chords, arpeggiator, 16 Velocities, step sequencer, hardware browser, parameter control, pitch / mod strip, clip progress and parameter value on the strip (touch to jump / set), humanize, screen feedback, pads light instantly when played"}
+    {"what": "New", "v1": "", "v2": "Chords, arpeggiator, 16 Velocities, step sequencer, hardware browser, parameter control, pitch / mod strip, record variations (VARIATION + pad), clip progress and parameter value on the strip (touch to jump / set), humanize, screen feedback, pads light instantly when played"}
   ]
 }

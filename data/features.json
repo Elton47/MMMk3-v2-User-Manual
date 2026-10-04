@@ -49,7 +49,6 @@
         {"combo": ["PAD"], "does": "Launch the clip. On an empty slot of a MIDI track: select that track (Live's auto-arm arms it) and record a new clip there; the pads switch to the drum pads or the keyboard so you can play right away."},
         {"combo": ["DUPLICATE", "PAD"], "does": "Duplicate that clip into the next slot."},
         {"combo": ["ERASE", "PAD"], "does": "Delete that clip."},
-        {"combo": ["VARIATION", "PAD"], "does": "Record a variation: while VARIATION is held, the free slot below each clip on the MIDI tracks lights red. Press one (or the clip): the clip is copied there, its track selected (auto-armed), and the copy launched and focused; recording overdubs the copy once it plays, and the original stays as it was. A full column gets a new scene. The pads switch to the drum pads or the keyboard to play. The copy is named after the original with the next number (Bass → Bass_1, a variation of Bass_1 → Bass_2; an unnamed clip → 1, 2 ...)."},
         {"combo": ["TURN"], "does": "Move the clip view left / right by one track."},
         {"combo": ["SHIFT", "TURN"], "does": "Move the clip view up / down by one scene."},
         {"combo": ["◀", "▶"], "does": "Move the clip view by four tracks."},
@@ -142,7 +141,7 @@
     {
       "id": "chords",
       "title": "CHORDS: chord sets",
-      "summary": "Every pad plays a chord built from Live's scale, starting on successive scale degrees, so every chord is in key.",
+      "summary": "Every pad plays a chord built from Live's scale, starting on successive scale degrees, so every chord is in key. A chord you play, or one the clip plays back, lights its own pad bright and the pads of its other notes softer (the C chord: the E and G pads), so you see its shape.",
       "items": [
         {"combo": ["CHORDS"], "does": "Switch to chord mode. Press again: next chord type (Triad, 7th, 9th, Sus2, Sus4, 6th, Power)."},
         {"combo": ["SHIFT", "CHORDS"], "does": "Next voicing (Close, Inversion 1, Inversion 2, Spread)."},
@@ -159,7 +158,8 @@
         {"combo": ["PAD"], "does": "Add / remove a note on that step. On an empty slot, the first step creates a one-bar clip."},
         {"combo": ["TURN"], "does": "Next / previous page of 16 steps (◀ ▶ too)."},
         {"combo": ["SHIFT", "TURN"], "does": "Step size: 1/32, 1/16, 1/8, 1/4."},
-        {"combo": ["PUSH", "TURN"], "does": "Choose a different sound (pitch) to edit."}
+        {"combo": ["SELECT", "PAD"], "does": "Choose the sound to sequence: while SELECT is held the pads show the sounds (the drum pads, or the keyboard), brighter where the clip has notes and brightest for the current one. Press one to pick it (you hear it); let go and the pads are its steps. The screen names the sound.", "devices": ["mikro"]},
+        {"combo": ["PUSH", "TURN"], "does": "Next / previous sound: the next drum pad (named on the screen), or the next note of the scale."}
       ]
     },
     {
@@ -171,9 +171,10 @@
         {"combo": ["FIXED VEL", "TURN"], "does": "Set the fixed velocity (1-127), shown on the screen. Remembered next time."},
         {"combo": ["SHIFT", "FIXED VEL"], "does": "16 Velocities: all pads play the focused note, pad 1 softest to pad 16 hardest."},
         {"combo": ["NOTE REPEAT"], "does": "Hold: note repeat while held. Tap: latch on / off. From clip or scene mode it brings up the drum pads or keyboard until repeat stops. With note repeat or the arpeggiator, the pads flash with their notes (a latched arp keeps them flashing). Repeats and arp notes follow Live's beat and land exactly on its grid when you record (Live's Record Quantization is set to the rate while they run, then put back); each note lasts the whole step (100 % gate), like MASCHINE."},
-        {"combo": ["SHIFT", "NOTE REPEAT"], "does": "Switch the NOTE REPEAT button between Note Repeat and Arpeggiator."},
-        {"combo": ["NOTE REPEAT", "TURN"], "does": "Repeat / arp rate (1/2 to 1/64, triplets included)."},
-        {"combo": ["NOTE REPEAT", "◀", "▶"], "does": "Arp: choose the parameter the encoder edits (Rate, Type, Octaves, Gate, Latch). Latch on: the arp keeps playing the last notes after you let go of the pads; new pads replace them."},
+        {"combo": ["SHIFT", "NOTE REPEAT"], "does": "Turn the NOTE REPEAT button into the Arpeggiator (the screen says which); again: back to Note Repeat. Holding or tapping NOTE REPEAT then works the same way for both."},
+        {"combo": ["NOTE REPEAT", "TURN"], "does": "While NOTE REPEAT is held, the screen shows its setting and value until you let go. Note Repeat: the rate (1/2 to 1/64, triplets too). Arpeggiator: the setting chosen with ◀ ▶. Turn to change it."},
+        {"combo": ["NOTE REPEAT", "◀", "▶"], "does": "Arpeggiator: choose the setting TURN changes: Rate; Type (Up, Down, Up/Down, Down/Up, As Played, Random, Chord); Octaves (1-4); Gate (note length; 100 % fills the step); Latch (On: the arp keeps playing your last notes after you let go of the pads, and new pads replace them)."},
+        {"combo": ["NOTE REPEAT", "PAD"], "does": "The arpeggiator, step by step: 1. SHIFT + NOTE REPEAT once (the screen says Arpeggiator). 2. Hold NOTE REPEAT and hold a chord on the pads: it arpeggiates. 3. Still holding NOTE REPEAT, use ◀ ▶ to pick Rate, Type, Octaves, Gate or Latch, and TURN to change it; the screen shows it. 4. Tap NOTE REPEAT instead of holding it to keep the arp on hands-free; tap again to stop."},
         {"combo": ["STRIP"], "does": "Note repeat rate; touching the strip starts note repeat while you touch it, also for pads you are already holding (hold a pad, then touch the strip), and shows the rate. Otherwise the strip lights show the selected track's playing clip, like in PATTERN mode, flashing red on every metronome click while it records (a silent metronome). A new recording fills the strip over 4 bars; after that every new bar starts at 3/4 and fills to the end, like on MASCHINE. In PATTERN, SCENE and PLUG-IN mode touching the strip has its own job (see there)."},
         {"combo": ["PITCH"], "does": "Touch strip becomes a pitch bend (springs back when released). Press again: back to rate."},
         {"combo": ["MOD"], "does": "Touch strip becomes the mod wheel. Press again: back to rate."},
@@ -217,7 +218,8 @@
         {"combo": ["EVENTS", "PAD"], "does": "Select that pad's notes (again: deselect). While EVENTS is held, the pads with notes light in their own colours, selected ones brightest."},
         {"combo": ["EVENTS"], "does": "Tap: select all notes / none."},
         {"combo": ["EVENTS", "TURN"], "does": "Scroll the layout underneath (octave, drum rows; SHIFT: scale; PUSH: root)."},
-        {"combo": ["VARIATION"], "does": "Tap: humanize, small random changes to timing and velocity. Hold in PATTERN mode: record a variation (see PATTERN)."},
+        {"combo": ["VARIATION"], "does": "Tap: humanize, small random changes to timing and velocity. Holding it and letting go without a pad changes nothing."},
+        {"combo": ["VARIATION", "PAD"], "does": "Record a variation, in any mode: while VARIATION is held the pads show the clips, and the free slot below each clip on the MIDI tracks lights red. Press one (or the clip): the clip is copied there, its track selected (auto-armed), and the copy focused and recorded into, while the original stays as it was. While Live plays, the copy launches and recording overdubs it once it plays; when Live is stopped, Live counts in first (Session Record), then plays and overdubs the copy. A full column gets a new scene. From PATTERN, SCENE or TRACK the pads switch to the drum pads or the keyboard to play; in the play modes and STEP you stay where you are. The copy is named after the original with the next number (Bass → Bass_1, a variation of Bass_1 → Bass_2; an unnamed clip → 1, 2 ...)."},
         {"combo": ["SHIFT", "VARIATION"], "does": "Randomize velocities (60-127)."}
       ]
     },
@@ -305,7 +307,7 @@
     {
       "id": "browser",
       "title": "STAR: browse and load (MIKRO)",
-      "summary": "Live's browser on the hardware screen.",
+      "summary": "Live's browser on the hardware screen, in the order of Live's sidebar: Collections first (Favorites and your coloured collections), then the library (Sounds, Drums, Instruments ...), then the folders you added to Places.",
       "devices": ["mikro"],
       "items": [
         {"combo": ["STAR"], "does": "Browser on / off."},

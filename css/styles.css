@@ -493,21 +493,32 @@ mark.hit {
 .hw-drawing:not(.real) .hw-control.pad.selected rect { fill: var(--pad-color); stroke: #fff; }
 .hw-drawing:not(.real) .hw-control.pad.selected text { fill: #1c1b1d; }
 
-/* hardware drawing: measured layouts (real: true) in the hardware's own colours. Labels are printed
-   light grey, SHIFT labels darker grey, PLAY green, REC red, SHIFT boxed; pads are unlit rubber. */
-.hw-drawing.real .hw-body { fill: url(#hw-body-fill); stroke: #2f2f32; stroke-width: 1.5; }
+/* hardware drawing: measured layouts (real: true) in the hardware's own look: a matte charcoal
+   panel, soft-touch rubber caps with matte grey print (PLAY green, REC red, SHIFT boxed), a black
+   knurled encoder, the OLED behind black glass; pads are unlit rubber. */
+.hw-drawing.real .hw-body { fill: url(#hw-body-fill); stroke: #161618; stroke-width: 1.5; }
+.hw-drawing.real .hw-rim { fill: none; stroke: #ffffff; stroke-opacity: .13; stroke-width: 1.2; }
 .hw-drawing.real .hw-dot { fill: #7d8ae6; opacity: .5; }
 .hw-drawing.real text { pointer-events: none; }
 .hw-drawing.real .cap { stroke: #08080a; stroke-width: 1.6; transition: fill .12s, stroke .12s; }
-.hw-drawing.real .button .cap { fill: url(#hw-cap-fill); }
-.hw-drawing.real .label { fill: #d4d4d8; font: 700 8.4px var(--md-ref-typeface); letter-spacing: .03em; dominant-baseline: middle; }
-.hw-drawing.real .sublabel { fill: #707075; font: 500 7.4px var(--md-ref-typeface); letter-spacing: .02em; dominant-baseline: middle; }
-.hw-drawing.real .label.green { fill: #45d35d; }
-.hw-drawing.real .label.red, .hw-drawing.real .sublabel.red { fill: #ff4033; }
-.hw-drawing.real .label-box { fill: #e6e6ea; }
-.hw-drawing.real .label.inverse { fill: #121214; }
-.hw-drawing.real .icon-line { fill: none; stroke: #d4d4d8; stroke-width: 1.4; stroke-linecap: round; }
-.hw-drawing.real .icon-fill { fill: #d4d4d8; }
+/* rubber caps (drawCap() in manual.js): shadow, cap (the sides) with a dark gap, top face, rim */
+.hw-drawing.real .button .cap { fill: url(#hw-cap-fill); stroke: #111113; stroke-width: 1; }
+.hw-drawing.real .cap-shadow { fill: #000; opacity: .4; pointer-events: none; }
+.hw-drawing.real .cap-shadow.soft { opacity: .2; }
+.hw-drawing.real .cap-face { fill: url(#hw-face-fill); pointer-events: none; }
+.hw-drawing.real .cap-rim { fill: none; stroke: #fff; stroke-opacity: .13; stroke-width: .8; stroke-linecap: round; pointer-events: none; }
+/* printed labels: a bold condensed capital line and the SHIFT function under it, matte grey */
+.hw-drawing.real .label { fill: #9a9a9e; font: 700 9px var(--md-ref-typeface); letter-spacing: .025em; }
+.hw-drawing.real .sublabel { fill: #8e8e92; font: 400 7.9px var(--md-ref-typeface); letter-spacing: .01em; }
+/* condensed like the printed face: narrowed from the label's left edge */
+.hw-drawing.real .label, .hw-drawing.real .sublabel { transform-box: fill-box; transform-origin: 0 50%; transform: scaleX(.88); }
+.hw-drawing.real .label.green { fill: #45c95a; }
+.hw-drawing.real .label.red, .hw-drawing.real .sublabel.red { fill: #f2453a; }
+.hw-drawing.real .label-box { fill: #a4a4a8; }
+.hw-drawing.real .label.inverse { fill: #232325; }
+.hw-drawing.real .icon-line { fill: none; stroke: #bdbdc1; stroke-width: 1.4; stroke-linecap: round; }
+.hw-drawing.real .icon-fill { fill: #bdbdc1; }
+.hw-drawing.real .icon-fill.arrow { fill: #85858a; }
 .hw-drawing.real .pad .cap { fill: url(#hw-pad-fill); }
 .hw-drawing.real .pad .sheen { fill: url(#hw-pad-sheen); opacity: 0; pointer-events: none; transition: opacity .12s; }
 .hw-drawing.real .pad-print { fill: #8d8d92; font: 500 8.4px var(--md-ref-typeface); dominant-baseline: middle; }
@@ -515,22 +526,29 @@ mark.hit {
 .hw-drawing.real .pad-letter { font-weight: 700; text-anchor: end; }
 .hw-drawing.real .strip .cap { fill: #0c0c0d; stroke: #2c2c2f; stroke-width: 1.2; }
 .hw-drawing.real .strip-inner { fill: #151517; pointer-events: none; }
-.hw-drawing.real .encoder .ring { fill: #0d0d0e; stroke: #2e2e31; stroke-width: 1.5; transition: stroke .12s; }
-.hw-drawing.real .encoder .knurl { fill: #19191b; stroke: #3c3c40; stroke-width: 3.2; stroke-dasharray: 1.3 1.5; }
-.hw-drawing.real .encoder .knob-cap { fill: url(#hw-knob-fill); stroke: #050506; stroke-width: 1; }
-.hw-drawing.real .screen .bezel { fill: #0b0b0c; stroke: #2a2a2d; stroke-width: 1.2; }
+/* the encoder and knobs (drawKnob()): shadow, dark side, knurled ridges with their light, satin top */
+.hw-drawing.real .knob-shadow { fill: url(#hw-knob-shadow); pointer-events: none; }
+.hw-drawing.real .encoder .ring { fill: url(#hw-skirt-fill); stroke: #050506; stroke-width: 1.2; transition: stroke .12s; }
+.hw-drawing.real .encoder .knurl { fill: none; stroke: #3a3a3f; }
+.hw-drawing.real .encoder .knurl-light { fill: none; stroke: url(#hw-knurl-light); }
+.hw-drawing.real .encoder .knob-cap { fill: url(#hw-dish-fill); stroke: url(#hw-lip); stroke-width: 1.3; }
+.hw-drawing.real .encoder .knob-sheen { fill: url(#hw-dish-sheen); }
+.hw-drawing.real .screen .screen-lip { fill: #fff; opacity: .07; }
+.hw-drawing.real .screen .bezel { fill: #0d0d0f; stroke: #050506; stroke-width: 1; }
 .hw-drawing.real .screen .oled { fill: #000; }
 .hw-drawing.real .screen .pixels { fill: #eaf1ff; }
 .hw-drawing.real .screen .pixels-inverse { fill: #000; }
+.hw-drawing.real .screen .glass-sheen { fill: url(#hw-glass-sheen); pointer-events: none; }
 /* MK3: the glossy display panel, the darker edge band, plain light display buttons, knobs with a
    dark skirt and lighter top, the dots around the encoder, and the colour screens */
 .hw-drawing.real .hw-glass { fill: url(#hw-glass-fill); stroke: #000; stroke-width: 1; }
 .hw-drawing.real .hw-edge { fill: #0b0b0c; opacity: .55; }
 .hw-drawing.real .hw-mark { fill: #6a6a6e; }
-.hw-drawing.real .button.light .cap { fill: url(#hw-light-fill); stroke: #9aa3a9; stroke-width: 1; }
-.hw-drawing.real .knob .ring { fill: #0b0b0c; stroke: #2a2a2d; stroke-width: 1.4; transition: stroke .12s; }
+.hw-drawing.real .button.light .cap { fill: url(#hw-light-fill); stroke: #6f777c; stroke-width: 1; }
+.hw-drawing.real .knob .ring { fill: url(#hw-skirt-fill); stroke: #050506; stroke-width: 1.2; transition: stroke .12s; }
 .hw-drawing.real .knob-top { fill: url(#hw-knob-top); stroke: #050506; stroke-width: .8; pointer-events: none; }
-.hw-drawing.real .encoder .knurl, .hw-drawing.real .encoder .knob-cap { pointer-events: none; }
+.hw-drawing.real .encoder .knurl, .hw-drawing.real .encoder .knurl-light, .hw-drawing.real .encoder .knob-cap,
+.hw-drawing.real .encoder .knob-sheen { pointer-events: none; }
 .hw-drawing.real .screen .lcd { fill: #0c0c0e; stroke: #232327; stroke-width: 1; }
 .hw-drawing.real .screen text { dominant-baseline: middle; font-family: var(--md-ref-typeface); }
 .hw-drawing.real .lcd-rule { fill: #1e1f23; }
@@ -569,6 +587,7 @@ mark.hit {
 .hw-drawing.real .button.related .cap { fill: color-mix(in srgb, var(--hw-related) 22%, #2c2c2f); stroke: var(--hw-related); }
 .hw-drawing.real .button.selected .cap { fill: #4b4b50; stroke: var(--hw-active); stroke-width: 2.4; }
 .hw-drawing.real .button.selected .label, .hw-drawing.real .button.related .label { fill: #fff; }
+.hw-drawing.real .button.selected .sublabel, .hw-drawing.real .button.related .sublabel { fill: #d0d0d4; }
 .hw-drawing.real .button.selected .label.inverse, .hw-drawing.real .button.related .label.inverse { fill: #121214; }
 /* PLAY and REC keep their colour and light up brighter, like the backlit buttons */
 .hw-drawing.real .button.selected .label.green, .hw-drawing.real .button.related .label.green {
@@ -1087,7 +1106,9 @@ td:first-child { font-weight: 500; }
   fill: #fff !important; stroke: #9a9a9a !important; stroke-width: 1.1 !important; stroke-dasharray: none !important; filter: none !important;
 }
 .cs-drawing .knurl { stroke: #c4c4c4 !important; }
-.cs-drawing .sheen { display: none; }
+.cs-drawing .sheen, .cs-drawing .cap-shadow, .cs-drawing .cap-face, .cs-drawing .cap-rim, .cs-drawing .hw-rim,
+.cs-drawing .knob-shadow, .cs-drawing .knurl-light, .cs-drawing .knob-sheen, .cs-drawing .screen-lip,
+.cs-drawing .glass-sheen { display: none; }
 .cs-drawing .oled, .cs-drawing .lcd { fill: #ececec !important; stroke: #9a9a9a !important; stroke-width: 1 !important; }
 .cs-drawing .label, .cs-drawing .label.green, .cs-drawing .label.red { fill: #000 !important; filter: none !important; }
 .cs-drawing .sublabel, .cs-drawing .sublabel.red { fill: #777 !important; filter: none !important; }

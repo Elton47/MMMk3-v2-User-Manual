@@ -1,6 +1,7 @@
 // Hardware layouts, drawn by manual.js. Units: SVG user units; a layout's view box is width x height.
 // Each control: [id, label, x, y, w, h, kind, options]. kind: button | pad | encoder | strip | screen | knob
-// options (optional): sub (the grey SHIFT label printed under the label), tone ('green' | 'red'),
+// options (optional): sub (the grey SHIFT label printed under the label), bracket (sub printed in
+// square brackets, like [Velocity]), tone ('green' | 'red'),
 // prefix (a printed symbol before the label), icon ('maschine' | 'star' | 'search' | 'left' |
 // 'right'), inverse (label printed in a white box, like SHIFT), letter (a pad's group letter),
 // light (a plain light cap, like the MK3's display buttons), lit (the colour a button is always
@@ -253,11 +254,11 @@ var LAYOUTS = {
         c('BROWSER', 'BROWSER', 33.75, 206, 17.5, 14.5, 'button', { icon: 'search' }),
         c('SCREEN', 'SCREEN', 67.5, 164, 50.5, 15, 'screen'),
         c('ENCODER', 'ENCODER', 72.5, 183.75, 40, 40, 'encoder'),
-        c('VOLUME', 'VOLUME', 133.75, 163.5, 43.25, 15.5, 'button', { sub: 'Velocity' }),
+        c('VOLUME', 'VOLUME', 133.75, 163.5, 43.25, 15.5, 'button', { sub: 'Velocity', bracket: true }),
         c('PLUG-IN', 'PLUG-IN', 183.75, 163.5, 43.25, 15.5, 'button', { sub: 'Macro' }),
-        c('SWING', 'SWING', 133.75, 185, 43.25, 14.5, 'button', { sub: 'Position' }),
+        c('SWING', 'SWING', 133.75, 185, 43.25, 14.5, 'button', { sub: 'Position', bracket: true }),
         c('SAMPLING', 'SAMPLING', 183.75, 185, 43.25, 14.5),
-        c('TEMPO', 'TEMPO', 133.75, 206, 43.25, 15, 'button', { sub: 'Tune' }),
+        c('TEMPO', 'TEMPO', 133.75, 206, 43.25, 15, 'button', { sub: 'Tune', bracket: true }),
         c('◀', '◀', 183.75, 206, 18.25, 15, 'button', { icon: 'left' }),
         c('▶', '▶', 208.75, 206, 18.25, 15, 'button', { icon: 'right' }),
         c('PITCH', 'PITCH', 33.25, 266, 44.25, 15.25),
@@ -420,9 +421,9 @@ var LAYOUTS = {
         c('SCREEN', 'SCREEN', 167.75, 67.5, 178.25, 100.5, 'screen', { lcd: 'left' }),
         c('SCREEN 2', 'SCREEN', 375.5, 67.5, 177, 100.5, 'screen', { lcd: 'right' }),
         round('ENCODER', 'ENCODER', 75, 271, 25, 'encoder', { face: 0.76 }),
-        c('VOLUME', 'VOLUME', 129, 240.5, 45, 16, 'button', { sub: 'Velocity' }),
-        c('SWING', 'SWING', 129, 262.5, 45, 16, 'button', { sub: 'Position' }),
-        c('TEMPO', 'TEMPO', 129, 284.5, 45, 16, 'button', { sub: 'Tune' }),
+        c('VOLUME', 'VOLUME', 129, 240.5, 45, 16, 'button', { sub: 'Velocity', bracket: true }),
+        c('SWING', 'SWING', 129, 262.5, 45, 16, 'button', { sub: 'Position', bracket: true }),
+        c('TEMPO', 'TEMPO', 129, 284.5, 45, 16, 'button', { sub: 'Tune', bracket: true }),
         c('NOTE REPEAT', 'NOTE REPEAT', 180.5, 240.5, 45, 38, 'button', { sub: 'Arp' }),
         c('LOCK', 'LOCK', 180.5, 284.5, 45, 16, 'button', { sub: 'Ext Lock' }),
         c('PITCH', 'PITCH', 26.5, 320.5, 45, 16.5),

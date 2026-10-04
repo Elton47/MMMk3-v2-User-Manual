@@ -114,8 +114,24 @@ MM.manual = (function () {
     var holder = node('svg', { id: 'hw-defs', width: 0, height: 0, 'aria-hidden': 'true', focusable: 'false' });
     holder.style.position = 'absolute';
     var defs = node('defs', {}, holder);
-    gradient(defs, 'linearGradient', 'hw-body-fill', { x1: 0, y1: 0, x2: 0, y2: 1 }, [[0, '#202022'], [1, '#141415']]);
-    gradient(defs, 'linearGradient', 'hw-cap-fill', { x1: 0, y1: 0, x2: 0, y2: 1 }, [[0, '#353538'], [1, '#27272a']]);
+    // the panel: matte charcoal, nearly even
+    gradient(defs, 'linearGradient', 'hw-body-fill', { x1: 0, y1: 0, x2: 0, y2: 1 }, [[0, '#2c2c2e'], [1, '#272729']]);
+    // rubber caps: the sides (the cap itself) and a lighter flat top face laid over it, which
+    // also lightens a lit or highlighted cap
+    gradient(defs, 'linearGradient', 'hw-cap-fill', { x1: 0, y1: 0, x2: 0, y2: 1 }, [[0, '#2f2f32'], [1, '#28282b']]);
+    gradient(defs, 'linearGradient', 'hw-face-fill', { x1: 0, y1: 0, x2: 0, y2: 1 }, [[0, '#ffffff', 0.07], [1, '#ffffff', 0.04]]);
+    // the encoder: a soft shadow on the panel, the knurled side lit from the upper left, a satin
+    // top that dips a little (darker towards the light) with a lip that catches it
+    gradient(defs, 'radialGradient', 'hw-knob-shadow', { cx: '50%', cy: '50%', r: '50%' }, [[0, '#000000', 0.6], [0.78, '#000000', 0.4], [1, '#000000', 0]]);
+    gradient(defs, 'radialGradient', 'hw-skirt-fill', { cx: '38%', cy: '34%', r: '70%' }, [[0, '#1d1d20'], [1, '#08080a']]);
+    gradient(defs, 'linearGradient', 'hw-knurl-light', { x1: 0.1, y1: 0, x2: 0.9, y2: 1 },
+      [[0, '#ffffff', 0.34], [0.38, '#ffffff', 0.06], [0.55, '#000000', 0], [1, '#000000', 0.55]]);
+    gradient(defs, 'linearGradient', 'hw-dish-fill', { x1: 0.15, y1: 0, x2: 0.85, y2: 1 }, [[0, '#0f0f11'], [0.55, '#18181b'], [1, '#232326']]);
+    gradient(defs, 'radialGradient', 'hw-dish-sheen', { cx: '62%', cy: '68%', r: '55%' }, [[0, '#ffffff', 0.07], [1, '#ffffff', 0]]);
+    gradient(defs, 'linearGradient', 'hw-lip', { x1: 0.15, y1: 0, x2: 0.85, y2: 1 }, [[0, '#76767c'], [0.45, '#2c2c30'], [1, '#060607']]);
+    // a faint reflection on the screen glass
+    gradient(defs, 'linearGradient', 'hw-glass-sheen', { x1: 0, y1: 0, x2: 0.55, y2: 1 },
+      [[0, '#ffffff', 0.09], [0.48, '#ffffff', 0.025], [0.5, '#ffffff', 0], [1, '#ffffff', 0]]);
     gradient(defs, 'radialGradient', 'hw-pad-fill', { cx: '50%', cy: '45%', r: '70%' }, [[0, '#4a4a4e'], [1, '#353538']]);
     gradient(defs, 'radialGradient', 'hw-pad-sheen', { cx: '50%', cy: '45%', r: '60%' }, [[0, '#ffffff', 0.45], [1, '#ffffff', 0]]);
     gradient(defs, 'radialGradient', 'hw-knob-fill', { cx: '38%', cy: '32%', r: '75%' }, [[0, '#47474b'], [0.55, '#1c1c1f'], [1, '#0b0b0c']]);
@@ -146,24 +162,58 @@ MM.manual = (function () {
     } else if (icon === 'left' || icon === 'right') {
       var s = icon === 'left' ? -1 : 1;
       node('path', { d: 'M' + (cx + s * r * 0.7) + ' ' + cy + 'L' + (cx - s * r * 0.6) + ' ' + (cy - r * 0.8) +
-        'V' + (cy + r * 0.8) + 'Z', 'class': 'icon-fill' }, g);
+        'V' + (cy + r * 0.8) + 'Z', 'class': 'icon-fill arrow' }, g);
     }
   }
 
-  // Printed button text: the label top left, the grey SHIFT label under it (when there is room).
+  // Printed button text: the label top left (inset by about a tenth of the cap height), the SHIFT
+  // label under it (when there is room; in square brackets with `bracket`). Baselines are
+  // alphabetic: the label's capitals start `pad` below the cap's top.
   function drawLabel(g, label, opts, x, y, w, hgt) {
-    var pad = Math.min(7, w * 0.08);
+    var pad = Math.max(3, hgt * 0.1) + 0.9;
     if (opts.inverse) {
-      var tw = label.length * 6.4 + 8;
-      node('rect', { x: x + pad, y: y + 5, width: tw, height: 12, rx: 1.5, 'class': 'label-box' }, g);
-      node('text', { x: x + pad + 4, y: y + 11.5, 'class': 'label inverse' }, g).textContent = label;
+      var tw = label.length * 5.3 + 6;
+      node('rect', { x: x + pad, y: y + pad - 1.6, width: tw, height: 9.6, rx: 1, 'class': 'label-box' }, g);
+      node('text', { x: x + pad + 3, y: y + pad + 6.1, 'class': 'label inverse' }, g).textContent = label;
       return;
     }
-    var main = node('text', { x: x + pad, y: y + 10.5, 'class': 'label' + (opts.tone ? ' ' + opts.tone : '') }, g);
+    var main = node('text', { x: x + pad, y: y + pad + 6.1, 'class': 'label' + (opts.tone ? ' ' + opts.tone : '') }, g);
     main.textContent = (opts.prefix ? opts.prefix + ' ' : '') + label;
     if (opts.sub && hgt > 22) {
-      node('text', { x: x + pad, y: y + 21, 'class': 'sublabel' + (opts.tone ? ' ' + opts.tone : '') }, g).textContent = opts.sub;
+      node('text', { x: x + pad, y: y + pad + 15.6, 'class': 'sublabel' + (opts.tone ? ' ' + opts.tone : '') }, g)
+        .textContent = opts.bracket ? '[' + opts.sub + ']' : opts.sub;
     }
+  }
+
+  // A rubber cap (buttons): a soft shadow under the bottom and right edges, the cap with a thin
+  // dark gap round it (its fill is the sides), a lighter flat top face and a faint highlight
+  // along the top edge.
+  function drawCap(g, x, y, w, hgt) {
+    var rx = Math.max(1.6, hgt * 0.07);
+    node('rect', { x: x + 0.9, y: y + 1.7, width: w, height: hgt, rx: rx + 0.6, 'class': 'cap-shadow soft' }, g);
+    node('rect', { x: x + 0.35, y: y + 0.8, width: w, height: hgt, rx: rx, 'class': 'cap-shadow' }, g);
+    node('rect', { x: x, y: y, width: w, height: hgt, rx: rx, 'class': 'cap' }, g);
+    node('rect', { x: x + 1.2, y: y + 0.9, width: w - 2.4, height: hgt - 2.7, rx: Math.max(0.8, rx - 0.7), 'class': 'cap-face' }, g);
+    node('path', { d: 'M' + (x + rx).toFixed(2) + ' ' + (y + 0.75).toFixed(2) + 'H' + (x + w - rx).toFixed(2), 'class': 'cap-rim' }, g);
+  }
+
+  // A knob seen from above (the encoder, the MK3's knobs): a soft shadow on the panel, the dark
+  // side; the encoder's side is knurled (fine ridges, lit from the upper left; only the ridges
+  // turn with it), with a smooth satin top that dips a little; a knob has a lighter top.
+  function drawKnob(g, kind, cx, cy, r, face) {
+    node('circle', { cx: cx + r * 0.07, cy: cy + r * 0.14, r: r * 1.13, 'class': 'knob-shadow' }, g);
+    node('circle', { cx: cx, cy: cy, r: r, 'class': 'ring' }, g);
+    if (kind === 'knob') {
+      node('circle', { cx: cx, cy: cy, r: r * face, 'class': 'knob-top' }, g);
+      return;
+    }
+    var inner = r * (face + 0.02), outer = r * 0.965, mid = (inner + outer) / 2, band = outer - inner;
+    var period = 2 * Math.PI * mid / Math.max(48, Math.round(2 * Math.PI * mid / 2));  // a ridge every ~2 units
+    node('circle', { cx: cx, cy: cy, r: mid, 'stroke-width': band.toFixed(2),
+      'stroke-dasharray': (period * 0.42).toFixed(3) + ' ' + (period * 0.58).toFixed(3), 'class': 'knurl' }, g);
+    node('circle', { cx: cx, cy: cy, r: mid, 'stroke-width': band.toFixed(2), 'class': 'knurl-light' }, g);
+    node('circle', { cx: cx, cy: cy, r: r * face, 'class': 'knob-cap' }, g);
+    node('circle', { cx: cx, cy: cy, r: r * face - 0.6, 'class': 'knob-sheen' }, g);
   }
 
   function svgText(parent, x, y, cls, text) {
@@ -295,6 +345,8 @@ MM.manual = (function () {
       if (real) sharedDefs();
       var defs = node('defs', {}, svg);  // this drawing's own: the colour screens' clip paths
       node('rect', { x: 1, y: 1, width: spec.width - 2, height: spec.height - 2, rx: spec.radius || 26, 'class': 'hw-body' }, svg);
+      // a faint lighter rim along the panel's top edge
+      if (real) node('path', { d: 'M' + (1 + (spec.radius || 0)) + ' 2.2H' + (spec.width - 1 - (spec.radius || 0)), 'class': 'hw-rim' }, svg);
       (spec.panels || []).forEach(function (p) {
         node('rect', { x: Math.max(p[0], 1), y: Math.max(p[1], 1), width: Math.min(p[2], spec.width - 1 - Math.max(p[0], 1)),
           height: Math.min(p[3], spec.height - 1 - Math.max(p[1], 1)), 'class': p[4] }, svg);
@@ -325,18 +377,13 @@ MM.manual = (function () {
         if (opts.light) g.classList.add('light');
         if (kind === 'encoder' || kind === 'knob') {
           var r = Math.min(w, hgt) / 2, cx = x + w / 2, cy = y + hgt / 2;
-          node('circle', { cx: cx, cy: cy, r: r, 'class': 'ring' }, g);
-          if (real && opts.face) {
-            // a dark skirt with a lighter top; the encoder has a ridged band between them
-            if (kind === 'encoder') node('circle', { cx: cx, cy: cy, r: r * (opts.face + 1) / 2, 'class': 'knurl' }, g);
-            node('circle', { cx: cx, cy: cy, r: r * opts.face, 'class': 'knob-top' }, g);
-          } else if (kind === 'encoder' && real) {
-            node('circle', { cx: cx, cy: cy, r: r * 0.8, 'class': 'knurl' }, g);
-            node('circle', { cx: cx, cy: cy, r: r * 0.66, 'class': 'knob-cap' }, g);
-          } else if (kind === 'encoder') {
-            node('circle', { cx: cx, cy: cy, r: r * 0.62 }, g);
+          if (real) {
+            drawKnob(g, kind, cx, cy, r, opts.face || 0.64);
+            return;
           }
-          if (!real) node('text', { x: cx, y: cy }, g).textContent = label;
+          node('circle', { cx: cx, cy: cy, r: r, 'class': 'ring' }, g);
+          if (kind === 'encoder') node('circle', { cx: cx, cy: cy, r: r * 0.62 }, g);
+          node('text', { x: cx, y: cy }, g).textContent = label;
           return;
         }
         if (kind === 'screen' && real && opts.lcd) {
@@ -352,15 +399,20 @@ MM.manual = (function () {
           return;
         }
         if (kind === 'screen' && real) {
-          node('rect', { x: x, y: y, width: w, height: hgt, rx: 2, 'class': 'bezel' }, g);
+          // black glass in a thin dark bezel, set into the panel (the panel's lower lip catches
+          // the light), with a faint reflection over the pixels
+          node('rect', { x: x - 0.6, y: y - 0.2, width: w + 1.2, height: hgt + 1.4, rx: 3, 'class': 'screen-lip' }, g);
+          node('rect', { x: x, y: y, width: w, height: hgt, rx: 2.4, 'class': 'bezel' }, g);
           var inset = hgt * 0.12, ow = w - inset * 2, oh = hgt - inset * 2;
-          node('rect', { x: x + inset, y: y + inset, width: ow, height: oh, 'class': 'oled' }, g);
+          node('rect', { x: x + inset, y: y + inset, width: ow, height: oh, rx: 0.8, 'class': 'oled' }, g);
           // the MIKRO's OLED is 128 x 32 pixels
           drawing.oled = { x: x + inset, y: y + inset, px: ow / 128, path: node('path', { 'class': 'pixels' }, g),
             inverse: node('path', { 'class': 'pixels-inverse' }, g), lines: null };
+          node('rect', { x: x + 0.6, y: y + 0.6, width: w - 1.2, height: hgt - 1.2, rx: 1.9, 'class': 'glass-sheen' }, g);
           return;
         }
-        node('rect', { x: x, y: y, width: w, height: hgt, rx: real ? (kind === 'pad' ? 4 : 2.5) : (kind === 'pad' ? 10 : 6), 'class': 'cap' }, g);
+        if (real && kind === 'button') drawCap(g, x, y, w, hgt);
+        else node('rect', { x: x, y: y, width: w, height: hgt, rx: real ? (kind === 'pad' ? 4 : 2.5) : (kind === 'pad' ? 10 : 6), 'class': 'cap' }, g);
         if (!real) {
           node('text', { x: x + w / 2, y: y + hgt / 2 }, g).textContent = kind === 'screen' ? spec.title.replace('MASCHINE ', '') : label;
         } else if (kind === 'pad') {

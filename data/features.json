@@ -155,7 +155,7 @@
         {"combo": ["SHIFT", "NOTE REPEAT"], "does": "Switch the NOTE REPEAT button between Note Repeat and Arpeggiator."},
         {"combo": ["NOTE REPEAT", "TURN"], "does": "Repeat / arp rate (1/2 to 1/64, triplets included)."},
         {"combo": ["NOTE REPEAT", "◀", "▶"], "does": "Arp: choose the parameter the encoder edits (Rate, Type, Octaves, Gate, Latch). Latch on: the arp keeps playing the last notes after you let go of the pads; new pads replace them."},
-        {"combo": ["STRIP"], "does": "Note repeat rate; touching the strip starts note repeat while you touch it."},
+        {"combo": ["STRIP"], "does": "Note repeat rate; touching the strip starts note repeat while you touch it, also for pads you are already holding (hold a pad, then touch the strip)."},
         {"combo": ["PITCH"], "does": "Touch strip becomes a pitch bend (springs back when released). Press again: back to rate."},
         {"combo": ["MOD"], "does": "Touch strip becomes the mod wheel. Press again: back to rate."},
         {"combo": ["SWING", "TURN"], "does": "Live's swing amount; note repeat and the arpeggiator follow it."}
@@ -207,8 +207,8 @@
       "title": "Transport",
       "summary": "MASCHINE's transport, in Live.",
       "items": [
-        {"combo": ["PLAY"], "does": "Start / stop."},
-        {"combo": ["SHIFT", "PLAY"], "does": "Restart from the start marker."},
+        {"combo": ["PLAY"], "does": "Start / stop (stopping keeps the position)."},
+        {"combo": ["SHIFT", "PLAY"], "does": "Continue from where playback stopped (like Shift + Space in Live)."},
         {"combo": ["RESTART"], "does": "Restart from the start marker."},
         {"combo": ["SHIFT", "RESTART"], "does": "Loop on / off."},
         {"combo": ["REC"], "does": "Session record on / off (also ends Arrangement recording)."},
@@ -312,7 +312,7 @@
     {"what": "Setup", "v1": "Controller Editor template, MIDI mode (SHIFT + MASCHINE), choose ports in Live", "v2": "Copy one folder; the bridge starts with Live and the script loads itself"},
     {"what": "SHIFT", "v1": "RESTART acted as SHIFT", "v2": "The real SHIFT button; RESTART restarts playback"},
     {"what": "Tracks, scenes and steps on the pads", "v1": "Pad 1 (bottom left) first", "v2": "Read like text from pad 13 (A), as printed and as in MASCHINE; return tracks and Master stay on the last pads"},
-    {"what": "PLAY", "v1": "Start (SHIFT: restart)", "v2": "Start / stop like MASCHINE (SHIFT or RESTART: restart)"},
+    {"what": "PLAY", "v1": "Start (SHIFT: restart)", "v2": "Start / stop like MASCHINE; SHIFT + PLAY continues where it stopped; RESTART plays from the start"},
     {"what": "ERASE alone", "v1": "Deleted the focused clip / track / scene", "v2": "Does nothing (safety); SHIFT + ERASE deletes the focused item"},
     {"what": "Hot-Swap", "v1": "SHIFT + ERASE", "v2": "SHIFT + BROWSER"},
     {"what": "Pinned note repeat", "v1": "SHIFT + NOTE REPEAT", "v2": "Tap NOTE REPEAT (SHIFT + NOTE REPEAT now switches to the arpeggiator)"},

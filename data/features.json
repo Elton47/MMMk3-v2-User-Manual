@@ -37,7 +37,8 @@
         {"combo": ["TURN"], "does": "Move the clip view left / right by one track."},
         {"combo": ["SHIFT", "TURN"], "does": "Move the clip view up / down by one scene."},
         {"combo": ["◀", "▶"], "does": "Move the clip view by four tracks."},
-        {"combo": ["SHIFT", "PATTERN"], "does": "New: stop recording and select the next empty slot (ready to record)."}
+        {"combo": ["SHIFT", "PATTERN"], "does": "New: stop recording and select the next empty slot (ready to record)."},
+        {"combo": ["STRIP"], "does": "The strip lights show how far the selected track's playing clip is through its loop, in the clip's colour. Touch the strip to jump within the loop (on Live's launch quantization)."}
       ]
     },
     {
@@ -50,7 +51,8 @@
         {"combo": ["DUPLICATE", "PAD"], "does": "Duplicate the scene."},
         {"combo": ["ERASE", "PAD"], "does": "Delete the scene (the last scene can't be deleted)."},
         {"combo": ["TURN"], "does": "Scroll the scenes by one (SHIFT: by 16)."},
-        {"combo": ["SHIFT", "SCENE"], "does": "Capture and insert scene (copies what is playing into a new scene)."}
+        {"combo": ["SHIFT", "SCENE"], "does": "Capture and insert scene (copies what is playing into a new scene)."},
+        {"combo": ["STRIP"], "does": "The strip lights show the playing clip's progress in the scene's colour. Touch the strip to jump all playing clips within their loops."}
       ]
     },
     {
@@ -149,13 +151,14 @@
       "title": "Playing: velocity, repeat, arp, touch strip",
       "summary": "The bridge plays the notes itself, next to the hardware, so the pads can do things one-note-per-pad MIDI can't: chords, arpeggios, note repeat that follows pressure, 16 velocities.",
       "items": [
-        {"combo": ["FIXED VEL"], "does": "Fixed velocity on / off (velocity 100)."},
+        {"combo": ["FIXED VEL"], "does": "Fixed velocity on / off: every pad plays at the same velocity (100 unless you change it)."},
+        {"combo": ["FIXED VEL", "TURN"], "does": "Set the fixed velocity (1-127), shown on the screen. Remembered next time."},
         {"combo": ["SHIFT", "FIXED VEL"], "does": "16 Velocities: all pads play the focused note, pad 1 softest to pad 16 hardest."},
         {"combo": ["NOTE REPEAT"], "does": "Hold: note repeat while held. Tap: latch on / off. From clip or scene mode it brings up the drum pads or keyboard until repeat stops."},
         {"combo": ["SHIFT", "NOTE REPEAT"], "does": "Switch the NOTE REPEAT button between Note Repeat and Arpeggiator."},
         {"combo": ["NOTE REPEAT", "TURN"], "does": "Repeat / arp rate (1/2 to 1/64, triplets included)."},
         {"combo": ["NOTE REPEAT", "◀", "▶"], "does": "Arp: choose the parameter the encoder edits (Rate, Type, Octaves, Gate, Latch). Latch on: the arp keeps playing the last notes after you let go of the pads; new pads replace them."},
-        {"combo": ["STRIP"], "does": "Note repeat rate; touching the strip starts note repeat while you touch it, also for pads you are already holding (hold a pad, then touch the strip)."},
+        {"combo": ["STRIP"], "does": "Note repeat rate; touching the strip starts note repeat while you touch it, also for pads you are already holding (hold a pad, then touch the strip). In PATTERN, SCENE and PLUG-IN mode the strip has its own job (see there)."},
         {"combo": ["PITCH"], "does": "Touch strip becomes a pitch bend (springs back when released). Press again: back to rate."},
         {"combo": ["MOD"], "does": "Touch strip becomes the mod wheel. Press again: back to rate."},
         {"combo": ["SWING", "TURN"], "does": "Live's swing amount; note repeat and the arpeggiator follow it."}
@@ -279,7 +282,8 @@
         {"combo": ["◀", "▶"], "does": "Previous / next parameter."},
         {"combo": ["PUSH", "TURN"], "does": "Previous / next page (a rack: Macros 1-8, 9-16)."},
         {"combo": ["SHIFT", "◀", "▶"], "does": "Previous / next device on the track."},
-        {"combo": ["PUSH"], "does": "Tap: reset the parameter to its default."}
+        {"combo": ["PUSH"], "does": "Tap: reset the parameter to its default."},
+        {"combo": ["STRIP"], "does": "The strip lights show the parameter's value as a bar; touch the strip to set it. PITCH / MOD take the strip over while they are lit."}
       ]
     },
     {
@@ -321,6 +325,6 @@
     {"what": "Previous / next track", "v1": "CHORDS / STEP", "v2": "SHIFT + ◀ ▶ (CHORDS and STEP are now chord and step modes)"},
     {"what": "Device / Clip detail view", "v1": "PLUG-IN", "v2": "SHIFT + PLUG-IN (PLUG-IN now controls device parameters)"},
     {"what": "Track mode pin", "v1": "SHIFT + GROUP", "v2": "Tap GROUP (hold: temporary)"},
-    {"what": "New", "v1": "", "v2": "Chords, arpeggiator, 16 Velocities, step sequencer, hardware browser, parameter control, pitch / mod strip, humanize, screen feedback, pads light instantly when played"}
+    {"what": "New", "v1": "", "v2": "Chords, arpeggiator, 16 Velocities, step sequencer, hardware browser, parameter control, pitch / mod strip, clip progress and parameter value on the strip (touch to jump / set), humanize, screen feedback, pads light instantly when played"}
   ]
 }

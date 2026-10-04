@@ -1,11 +1,11 @@
 // The interactive manual: schematic controller, sections from data/features.json, search,
-// selection, deep links (#mikro/SHIFT, #mk3/PLUG-IN).
+// selection, deep links (#mikro/SHIFT, #mk3/PLUG-IN, #mikro?q=arp).
 MM.manual = (function () {
   'use strict';
 
   var SVG = 'http://www.w3.org/2000/svg';
   var el = MM.el, h = MM.h;
-  var state = { data: null, device: 'mikro', selected: null, query: '', ready: false, drawing: null };
+  var state = { data: null, device: 'mikro', selected: null, query: '', terms: [], index: [], ready: false, drawing: null };
 
   // --- data helpers ------------------------------------------------------------------------
 
@@ -34,10 +34,6 @@ MM.manual = (function () {
       });
     });
     return hit || fallback;
-  }
-
-  function itemText(section, item) {
-    return (section.title + ' ' + item.combo.join(' ') + ' ' + item.does + ' ' + (item.context || '')).toLowerCase();
   }
 
   function visibleSections() {
@@ -467,21 +463,24 @@ MM.manual = (function () {
 
   // --- reference ---------------------------------------------------------------------------
 
-  function comboElement(combo) {
+  // terms (optional): search terms whose matches are marked (see marked()).
+  function comboElement(combo, terms) {
     var wrap = h('span', { className: 'combo' });
     combo.forEach(function (token, i) {
       if (i) wrap.appendChild(h('span', { className: 'plus', 'aria-hidden': 'true', text: '+' }));
-      wrap.appendChild(MM.key(token));
+      var key = MM.key(token);
+      if (terms) { key.textContent = ''; marked(key, token, terms); }
+      wrap.appendChild(key);
     });
     return wrap;
   }
 
-  function itemElement(item, section, withTitle) {
-    var does = h('span', { className: 'does', text: item.does });
-    if (item.context) does.appendChild(h('span', { className: 'context', text: ' (' + item.context + ')' }));
+  function itemElement(item, section, withTitle, terms) {
+    var does = marked(h('span', { className: 'does' }), item.does, terms);
+    if (item.context) does.appendChild(marked(h('span', { className: 'context' }), ' (' + item.context + ')', terms));
     var li = h('li', {}, [
       withTitle ? h('div', { className: 'section-label', text: section.title }) : null,
-      comboElement(item.combo),
+      comboElement(item.combo, terms),
       does
     ]);
     li.addEventListener('mouseenter', function () { paintHardware(item.combo, section); });
@@ -490,7 +489,7 @@ MM.manual = (function () {
     return li;
   }
 
-  function swatchTable(section, swatches) {
+  function swatchTable(section, swatches, terms) {
     // Drum pad name colours: a colour dot, its name, and the words that give it.
     var body = h('tbody');
     swatches.forEach(function (swatch) {
@@ -498,11 +497,11 @@ MM.manual = (function () {
       dot.style.background = swatch.rgb;
       var words = h('td');
       swatch.keywords.forEach(function (keyword) {
-        words.appendChild(h('code', { text: keyword }));
+        words.appendChild(marked(h('code'), keyword, terms));
         words.appendChild(document.createTextNode(' '));
       });
-      if (swatch.note) words.appendChild(h('span', { className: 'context', text: '(' + swatch.note + ')' }));
-      body.appendChild(h('tr', {}, [h('td', {}, [dot, swatch.name]), words]));
+      if (swatch.note) words.appendChild(marked(h('span', { className: 'context' }), '(' + swatch.note + ')', terms));
+      body.appendChild(h('tr', {}, [marked(h('td', {}, [dot]), swatch.name, terms), words]));
     });
     var table = h('table', {}, [
       h('thead', {}, [h('tr', {}, [h('th', { scope: 'col', text: 'Colour' }), h('th', { scope: 'col', text: 'Pad name contains' })])]),
@@ -541,32 +540,30 @@ MM.manual = (function () {
     ]);
   }
 
+  function sectionHeading(section, id, terms) {
+    var heading = marked(h('h2', { id: id }), section.title, terms);
+    if (section.devices) {
+      heading.appendChild(h('span', { className: 'device-tag',
+        text: state.data.devices[section.devices[0]].name.replace('MASCHINE ', '').split(' /')[0] + ' only' }));
+    }
+    return heading;
+  }
+
   function renderSections() {
     var container = el('sections');
     var toc = el('toc');
     container.innerHTML = '';
     toc.innerHTML = '';
-    var query = state.query;
     visibleSections().forEach(function (entry) {
       var section = entry.section;
-      var items = entry.items.filter(function (item) { return !query || itemText(section, item).indexOf(query) >= 0; });
-      var swatches = (section.swatches || []).filter(function (swatch) {
-        return !query || (swatch.name + ' ' + swatch.keywords.join(' ') + ' ' + (swatch.note || '')).toLowerCase().indexOf(query) >= 0;
-      });
-      if (query && !items.length && !swatches.length) return;
-      var heading = h('h2', { id: 'h-' + section.id, text: section.title });
-      if (section.devices) {
-        heading.appendChild(h('span', { className: 'device-tag',
-          text: state.data.devices[section.devices[0]].name.replace('MASCHINE ', '').split(' /')[0] + ' only' }));
-      }
       var list = h('ul', { className: 'items' });
-      items.forEach(function (item) { list.appendChild(itemElement(item, section)); });
+      entry.items.forEach(function (item) { list.appendChild(itemElement(item, section)); });
       container.appendChild(h('section', { className: 'card', id: section.id, 'aria-labelledby': 'h-' + section.id }, [
-        heading,
+        sectionHeading(section, 'h-' + section.id),
         section.summary ? h('p', { className: 'summary', text: section.summary }) : null,
-        section.id === 'highlights' && !query ? tourLink() : null,
-        section.grid && !query ? shiftGrid(section) : null,
-        swatches.length ? swatchTable(section, swatches) : null,
+        section.id === 'highlights' ? tourLink() : null,
+        section.grid ? shiftGrid(section) : null,
+        section.swatches && section.swatches.length ? swatchTable(section, section.swatches) : null,
         list
       ]));
       var link = h('a', { href: '#' + section.id, text: section.title.split(':')[0] });
@@ -576,9 +573,6 @@ MM.manual = (function () {
       });
       toc.appendChild(link);
     });
-    if (!container.children.length) {
-      container.appendChild(h('p', { className: 'empty', text: 'Nothing matches that search.' }));
-    }
   }
 
   function renderSelection() {
@@ -610,11 +604,214 @@ MM.manual = (function () {
     });
   }
 
+  // --- search ------------------------------------------------------------------------------
+  // The query splits into words, and an item matches when every word matches its section title,
+  // its combination or its text, ignoring case. A word matches the start of a word ("arp" finds
+  // "arpeggiator"); a number matches a whole number ("pad 5" finds PAD 5, not PAD 15). Matches show
+  // grouped under their sections, marked, for the selected controller (`devices`). The query is
+  // in the hash (#mikro?q=arp), so a search can be linked to.
+
+  var SUGGESTIONS = ['SHIFT', 'NOTE REPEAT', 'tempo', 'undo', 'PAD 5'];
+
+  function escapeRegExp(text) { return text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
+
+  function searchTerms(query) {
+    var seen = {};
+    return query.toLowerCase().split(/\s+/).filter(function (word) {
+      // a lone "+" (as in "shift + pad") or punctuation is not a word to look for
+      if (!word || /^[+,;:.!?]+$/.test(word) || seen[word]) return false;
+      return (seen[word] = true);
+    }).map(function (word) {
+      var source = '(?:^|[^a-z0-9])(' + escapeRegExp(word) + ')' + (/^\d+$/.test(word) ? '(?![0-9])' : '');
+      return { word: word, test: new RegExp(source), all: new RegExp(source, 'g') };
+    });
+  }
+
+  function matchesAll(text, terms) {
+    for (var i = 0; i < terms.length; i++) if (!terms[i].test.test(text)) return false;
+    return true;
+  }
+
+  // Appends `text` to `parent` with the matches of `terms` in <mark>s; returns parent.
+  function marked(parent, text, terms) {
+    text = String(text);
+    if (!terms || !terms.length) { parent.appendChild(document.createTextNode(text)); return parent; }
+    var lower = text.toLowerCase(), ranges = [];
+    terms.forEach(function (term) {
+      var re = term.all, m;
+      re.lastIndex = 0;
+      while ((m = re.exec(lower))) {
+        var start = m.index + m[0].length - m[1].length;
+        ranges.push([start, start + m[1].length]);
+      }
+    });
+    ranges.sort(function (a, b) { return a[0] - b[0]; });
+    // overlapping matches, and matches only a space apart ("note repeat"), make one mark
+    var merged = [];
+    ranges.forEach(function (range) {
+      var last = merged[merged.length - 1];
+      if (last && (range[0] <= last[1] || /^\s+$/.test(text.slice(last[1], range[0])))) last[1] = Math.max(last[1], range[1]);
+      else merged.push([range[0], range[1]]);
+    });
+    var pos = 0;
+    merged.forEach(function (range) {
+      if (range[0] > pos) parent.appendChild(document.createTextNode(text.slice(pos, range[0])));
+      parent.appendChild(h('mark', { className: 'hit', text: text.slice(range[0], range[1]) }));
+      pos = range[1];
+    });
+    if (pos < text.length) parent.appendChild(document.createTextNode(text.slice(pos)));
+    return parent;
+  }
+
+  // Lower-cased search texts, built once: an item's is its section title, its combination and its
+  // text; a drum colour's is its name, its words and its note.
+  function buildIndex() {
+    state.index = state.data.sections.map(function (section) {
+      var title = section.title.toLowerCase();
+      return {
+        section: section,
+        items: section.items.map(function (item) {
+          return { item: item, text: title + '\n' + item.combo.join(' + ').toLowerCase() + '\n' +
+            item.does.toLowerCase() + (item.context ? ' (' + item.context.toLowerCase() + ')' : '') };
+        }),
+        swatches: (section.swatches || []).map(function (swatch) {
+          return { swatch: swatch, text: (swatch.name + '\n' + swatch.keywords.join(' ') + '\n' + (swatch.note || '')).toLowerCase() };
+        })
+      };
+    });
+  }
+
+  function search(terms, device) {
+    var groups = [], count = 0;
+    state.index.forEach(function (entry) {
+      if (!MM.manual.forDevice(entry.section, device)) return;
+      var items = entry.items.filter(function (e) {
+        return MM.manual.forDevice(e.item, device) && matchesAll(e.text, terms);
+      }).map(function (e) { return e.item; });
+      var swatches = entry.swatches.filter(function (e) { return matchesAll(e.text, terms); })
+        .map(function (e) { return e.swatch; });
+      if (!items.length && !swatches.length) return;
+      groups.push({ section: entry.section, items: items, swatches: swatches });
+      count += items.length + swatches.length;
+    });
+    return { groups: groups, count: count };
+  }
+
+  function plural(n, word) { return n + ' ' + word + (n === 1 ? '' : 's'); }
+
+  function setQuery(value) {
+    el('search').value = value;
+    state.query = value.trim();
+    state.terms = searchTerms(state.query);
+    renderSearch();
+    searchSettled();
+  }
+
+  // Leaves the search and shows the full manual, scrolled to the section (if any).
+  function clearSearch(sectionId) {
+    setQuery('');
+    if (sectionId && el(sectionId)) MM.scrollToEl(el(sectionId));
+  }
+
+  function noMatch(box, terms) {
+    var otherDevice = state.device === 'mikro' ? 'mk3' : 'mikro';
+    var other = search(terms, otherDevice).count;
+    var suggestions = SUGGESTIONS.filter(function (word) { return search(searchTerms(word), state.device).count; });
+    var hint = h('p', { className: 'summary' }, [
+      'Nothing in the ' + state.data.devices[state.device].name + ' manual matches “' + state.query + '”. ' +
+      'Check the spelling, use fewer words, or try one of these:'
+    ]);
+    var chips = h('div', { className: 'suggestions' }, suggestions.map(function (word) {
+      return h('button', { type: 'button', className: 'suggestion', onclick: function () { setQuery(word); el('search').focus(); } },
+        [word === word.toUpperCase() ? MM.key(word) : word]);
+    }));
+    var actions = h('div', { className: 'actions' }, [
+      other ? h('button', { type: 'button', className: 'btn btn-tonal', onclick: function () { setDevice(otherDevice); } },
+        ['Show ' + plural(other, 'result') + ' for the ' + state.data.devices[otherDevice].name]) : null,
+      h('button', { type: 'button', className: 'btn btn-text', onclick: function () { clearSearch(); el('search').focus(); } }, ['Clear the search'])
+    ]);
+    box.appendChild(h('section', { className: 'card search-empty' }, [h('h2', { text: 'No match' }), hint, chips, actions]));
+  }
+
+  // Shows the matches of the query, or the full manual when there is no query. Fast enough to run
+  // on every key (about 160 items).
+  function renderSearch() {
+    var terms = state.terms, searching = terms.length > 0;
+    var box = el('search-results');
+    el('view-manual').classList.toggle('searching', searching);
+    el('sections').hidden = searching;
+    el('toc').hidden = searching;
+    el('changes').hidden = searching;
+    el('search-clear').hidden = !el('search').value;
+    el('search-hint').hidden = !!el('search').value;
+    box.hidden = !searching;
+    box.innerHTML = '';
+    if (!searching) return;
+    var result = search(terms, state.device);
+    if (!result.count) { noMatch(box, terms); return; }
+    box.appendChild(h('p', { className: 'search-count' }, [
+      h('strong', { text: plural(result.count, 'result') }),
+      ' for “' + state.query + '” in ' + plural(result.groups.length, 'section')
+    ]));
+    result.groups.forEach(function (group) {
+      var section = group.section;
+      var list = h('ul', { className: 'items' });
+      group.items.forEach(function (item) { list.appendChild(itemElement(item, section, false, terms)); });
+      var open = h('button', { type: 'button', className: 'btn btn-text search-open', onclick: function () { clearSearch(section.id); } },
+        ['Open section']);
+      open.setAttribute('aria-label', 'Open the section ' + section.title);
+      box.appendChild(h('section', { className: 'card search-group', 'aria-labelledby': 's-' + section.id }, [
+        h('div', { className: 'search-group-head' }, [sectionHeading(section, 's-' + section.id, terms), open]),
+        group.swatches.length ? swatchTable(section, group.swatches, terms) : null,
+        group.items.length ? list : null
+      ]));
+    });
+  }
+
+  // After typing pauses: tell screen readers the result count and put the query in the hash.
+  var settleTimer = null;
+  function searchSettled() {
+    clearTimeout(settleTimer);
+    settleTimer = setTimeout(function () {
+      var status = '';
+      if (state.terms.length) {
+        var result = search(state.terms, state.device);
+        status = result.count ? plural(result.count, 'result') + ' in ' + plural(result.groups.length, 'section') : 'No match';
+      }
+      el('search-status').textContent = status;
+      if (!el('view-manual').hidden) updateHash();
+    }, 400);
+  }
+
+  function initSearch() {
+    var input = el('search');
+    buildIndex();
+    input.addEventListener('input', function () {
+      state.query = input.value.trim();
+      state.terms = searchTerms(state.query);
+      renderSearch();
+      searchSettled();
+    });
+    input.addEventListener('keydown', function (e) {
+      if (e.key !== 'Escape') return;
+      e.preventDefault();
+      if (input.value) setQuery(''); else input.blur();
+    });
+    el('search-clear').addEventListener('click', function () { setQuery(''); input.focus(); });
+    // the whole pill is the field: a click beside the input focuses it
+    document.querySelector('.search-bar').addEventListener('click', function (e) {
+      if (e.target === e.currentTarget) input.focus();
+    });
+  }
+
   // --- state -------------------------------------------------------------------------------
 
   function updateHash() {
-    var hash = '#' + state.device + (state.selected ? '/' + encodeURIComponent(state.selected) : '');
-    if (location.hash !== hash) history.replaceState(null, '', hash);
+    var hash = '#' + state.device + (state.selected ? '/' + encodeURIComponent(state.selected) : '') +
+      (state.query ? '?q=' + encodeURIComponent(state.query) : '');
+    if (location.hash === hash) return;
+    // some browsers throttle (or throw on) many history calls in a short time
+    try { history.replaceState(null, '', hash); } catch (e) { /* keep the old hash */ }
   }
 
   function select(id) {
@@ -637,6 +834,8 @@ MM.manual = (function () {
     drawDevice();
     renderSections();
     renderSelection();
+    renderSearch();
+    if (state.terms.length) searchSettled();
     if (!keepHash) updateHash();
   }
 
@@ -659,10 +858,7 @@ MM.manual = (function () {
         next.focus();
       });
     });
-    el('search').addEventListener('input', function (e) {
-      state.query = e.target.value.trim().toLowerCase();
-      renderSections();
-    });
+    initSearch();
     el('clear-selection').addEventListener('click', function () { select(state.selected); });
     el('welcome-dismiss').addEventListener('click', function () {
       MM.store('welcomeDismissed', '1');
@@ -674,11 +870,17 @@ MM.manual = (function () {
       if (tag === 'input' || tag === 'textarea' || e.target.isContentEditable) return;
       e.preventDefault();
       el('search').focus();
+      el('search').select();
     });
   }
 
-  // parts: the hash split on "/": [device or section id, control]
-  function show(parts) {
+  // parts: the hash split on "/": [device or section id, control]; query: the search (the hash's
+  // ?q=), none shows the full manual
+  function show(parts, query) {
+    query = query || '';
+    el('search').value = query;
+    state.query = query.trim();
+    state.terms = searchTerms(state.query);
     var first = parts[0] || '';
     var device = LAYOUTS[first] ? first : (LAYOUTS[MM.store('device')] ? MM.store('device') : 'mikro');
     var section = !LAYOUTS[first] && first && first !== 'manual' ? first : null;
@@ -689,6 +891,8 @@ MM.manual = (function () {
     } else {
       if (state.selected && controlIds().indexOf(state.selected) < 0) state.selected = null;
       renderSelection();
+      renderSearch();
+      searchSettled();
       if (!section) updateHash();
     }
     updateWelcome();

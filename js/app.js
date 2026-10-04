@@ -1,7 +1,7 @@
 // Boot and routing. Views: #setup... (the setup wizard), #highlights... (the self-playing
 // highlights tour: #highlights, #highlights/3, #highlights/mk3/3) and everything else (the
-// manual: #manual, #mikro, #mk3/PLUG-IN, #<section id>). A first visit without a hash opens the
-// setup.
+// manual: #manual, #mikro, #mk3/PLUG-IN, #<section id>, a search: #manual?q=arp,
+// #mk3?q=note%20repeat). A first visit without a hash opens the setup.
 (function () {
   'use strict';
 
@@ -29,8 +29,23 @@
     current = name;
   }
 
+  // The value of `name` in the hash's query (#manual?q=arp), or null.
+  function hashParam(query, name) {
+    var found = null;
+    query.split('&').some(function (pair) {
+      var eq = pair.indexOf('=');
+      if ((eq < 0 ? pair : pair.slice(0, eq)) !== name) return false;
+      try { found = decodeURIComponent((eq < 0 ? '' : pair.slice(eq + 1)).replace(/\+/g, ' ')); } catch (e) { found = ''; }
+      return true;
+    });
+    return found;
+  }
+
   function route() {
     var hash = location.hash.replace(/^#/, '');
+    var queryAt = hash.indexOf('?');
+    var query = queryAt >= 0 ? hash.slice(queryAt + 1) : '';
+    if (queryAt >= 0) hash = hash.slice(0, queryAt);
     var parts = hash.split('/');
     if (parts[0] === 'help') {
       // The header's help button: the troubleshooting step for this visitor's setup.
@@ -56,7 +71,7 @@
     showView('manual');
     document.title = 'Manual · MASCHINE for Ableton Live';
     MM.store('manualSeen', '1');
-    if (ready.manual) MM.manual.show(parts);
+    if (ready.manual) MM.manual.show(parts, hashParam(query, 'q'));
   }
 
   function boot() {

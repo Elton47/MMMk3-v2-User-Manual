@@ -83,12 +83,17 @@
           <button type="button" role="radio" data-device="mikro"><svg class="icon check" aria-hidden="true"><use href="#i-check"/></svg>MIKRO MK3</button>
           <button type="button" role="radio" data-device="mk3"><svg class="icon check" aria-hidden="true"><use href="#i-check"/></svg>MK3 / MASCHINE+</button>
         </div>
-        <label class="search-bar">
+        <div class="search-bar" role="search">
           <svg class="icon" aria-hidden="true"><use href="#i-search"/></svg>
-          <span class="visually-hidden">Search the manual</span>
-          <input id="search" type="search" placeholder="Search: tempo, chords, arm, undo…" autocomplete="off" enterkeyhint="search">
-          <kbd class="search-hint" aria-hidden="true">/</kbd>
-        </label>
+          <label for="search" class="visually-hidden">Search the manual</label>
+          <input id="search" type="search" placeholder="Search: tempo, chords, arm, undo…" autocomplete="off" spellcheck="false" enterkeyhint="search" aria-controls="search-results" aria-keyshortcuts="/">
+          <kbd id="search-hint" class="search-hint" aria-hidden="true">/</kbd>
+          <button type="button" id="search-clear" class="icon-button search-clear" title="Clear the search (Esc)" hidden>
+            <svg class="icon" aria-hidden="true"><use href="#i-close"/></svg>
+            <span class="visually-hidden">Clear the search</span>
+          </button>
+        </div>
+        <p id="search-status" class="visually-hidden" role="status" aria-live="polite"></p>
       </div>
 
       <div class="manual-layout">
@@ -122,6 +127,7 @@
             <ul id="selection-items" class="items"></ul>
           </div>
           <nav id="toc" class="toc" aria-label="Modes"></nav>
+          <div id="search-results" class="search-results" aria-label="Search results" hidden></div>
           <div id="sections"></div>
           <section id="changes" class="card">
             <h2>What changed since v1</h2>
@@ -198,6 +204,7 @@
       <symbol id="i-auto" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 3.5v17a8.5 8.5 0 0 0 0-17z" fill="currentColor" stroke="none"/></symbol>
       <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
       <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8.5" y="8.5" width="11" height="11" rx="2"/><path d="M15.5 8.5V6a1.5 1.5 0 0 0-1.5-1.5H6A1.5 1.5 0 0 0 4.5 6v8A1.5 1.5 0 0 0 6 15.5h2.5"/></symbol>
+      <symbol id="i-close" viewBox="0 0 24 24"><path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/></symbol>
       <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6"/><path d="M15 15l5 5"/></symbol>
       <symbol id="i-left" viewBox="0 0 24 24"><path d="M14.5 6l-6 6 6 6"/></symbol>
       <symbol id="i-right" viewBox="0 0 24 24"><path d="M9.5 6l6 6-6 6"/></symbol>

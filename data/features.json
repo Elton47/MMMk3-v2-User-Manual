@@ -26,6 +26,21 @@
       ]
     },
     {
+      "id": "highlights",
+      "title": "Highlights",
+      "summary": "The best of it in a minute. Each one is explained in its own section below.",
+      "items": [
+        {"combo": ["SHIFT"], "does": "A real controller, not a template: a real SHIFT key and Live's colours on the pads. No Controller Editor, no MIDI mode."},
+        {"combo": ["TURN"], "does": "The screen shows almost anything: the mode and track, tempo, swing and volume as you change them, and device parameters with their names and values."},
+        {"combo": ["CHORDS"], "does": "A chord on every pad, always in Live's key: triads to 9ths, with voicings."},
+        {"combo": ["NOTE REPEAT"], "does": "Note repeat that follows pad pressure, an arpeggiator and 16 velocities: things a plain MIDI controller can't do."},
+        {"combo": ["STEP"], "does": "A step sequencer on the pads, read like MASCHINE, with the playhead running across them."},
+        {"combo": ["STAR"], "does": "Live's browser on the hardware screen: find a sound and load it without touching the mouse.", "devices": ["mikro"]},
+        {"combo": ["VARIATION", "PAD"], "does": "Record a variation in one press: the clip is copied below, named Bass_1, Bass_2 ..., and recorded into; the original stays untouched."},
+        {"combo": ["STRIP"], "does": "The touch strip shows where the loop is, and while you record it flashes red on every click: a silent metronome."}
+      ]
+    },
+    {
       "id": "clip",
       "title": "PATTERN: clips",
       "summary": "A 4x4 view of Live's Session clips (4 tracks x 4 scenes). Pad colours follow the clip colours; playing clips are bright. Recording a new clip (an empty slot, or VARIATION + pad) selects its track, so Live's auto-arm arms it (the dimmed arm, which follows the track you select; tracks armed for real are disarmed), and the pads switch to the drum pads or the keyboard so you can play into it right away.",

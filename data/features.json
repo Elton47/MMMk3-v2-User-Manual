@@ -135,7 +135,7 @@
     {
       "id": "step",
       "title": "STEP: step sequencer",
-      "summary": "The pads are 16 steps of the focused sound (the focused drum pad, or the last keyboard note) in the focused clip, read like text as in MASCHINE: step 1 top left (pad 13), step 16 bottom right (pad 4). The playhead runs across the pads while the clip plays.",
+      "summary": "The pads are 16 steps of the focused sound (the focused drum pad, or the last keyboard note) in the focused clip, read like text as in MASCHINE: step 1 top left (pad 13), step 16 bottom right (pad 4). The playhead runs across the pads while the clip plays, and the page follows it on longer clips (after you change the page yourself, it follows again once the playhead reaches your page).",
       "items": [
         {"combo": ["STEP"], "does": "Switch to step mode."},
         {"combo": ["PAD"], "does": "Add / remove a note on that step. On an empty slot, the first step creates a one-bar clip."},

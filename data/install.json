@@ -130,6 +130,7 @@
           "Keep loopMIDI starting with Windows, so the ports are there whenever you start Live."
         ]},
         {"note": "loopMIDI is third-party software with its own licence terms (free for personal use: see its website)."},
+        {"note": "**Rather not install loopMIDI?** Use **v1.6.1** instead: it is in the same download, works without loopMIDI, and has [its own manual](https://elton47.github.io/MMMk3-User-Manual/). It doesn't have v2's screens, real SHIFT key, chords or arpeggiator."},
         {"note": "**Coming:** on an up-to-date Windows 11, a free update will set this up automatically, without loopMIDI, once Microsoft releases its new MIDI support (expected late 2026). If you already use loopMIDI, you can keep it.", "kind": "coming", "when": {"os": ["win11"]}}
       ]
     },

@@ -1,0 +1,255 @@
+// The choreography of the highlights tour (js/highlights.js): what the controller does while a
+// highlight is shown. Keyed by the item's combo in data/features.json, its tokens joined with
+// '+' ('SHIFT', 'VARIATION+PAD'). An item without an entry here still plays: its combo's
+// controls glow, and the screen and the pads show that control's sample content (the manual's
+// `screens` and `padDemos` in layouts.js).
+//
+// Each entry (all fields optional):
+//   every     ms per tick (default 500)
+//   duration  ms the highlight stays (default 6500)
+//   glow      combo tokens to outline (default: the item's combo); the first one is the control
+//             the callout points at
+//   loupe     true: the callout also shows the MIKRO's screen, magnified
+//   tick(n, api)  draws tick n (0, 1, 2 ...). It draws the whole state for n, so a tick can be
+//             skipped or repeated: no state is kept between ticks.
+// api: device ('mikro' | 'mk3'), layout (LAYOUTS[device]), calm (the visitor prefers reduced
+// motion: no flashing, slower changes), blank() (16 unlit pads), lit(color, level, drum) (a pad:
+// level 'dim' | 'mid' | 'bright'), demo(token) (a copy of the layout's pad demo), pads(list) (16
+// entries in pad order, pad 1 first; listPad() turns a reading position into a pad number),
+// screen(oled, lcd) (OLED lines on the MIKRO, colour screens { left, right } on the MK3; without
+// lcd the MK3 shows the OLED text), screenOf(token) (the layout's sample screen), light(ids)
+// (exactly these buttons are lit), turn(steps) (the encoder has turned this many detents),
+// strip(fill, color, flash) (the touch strip as a progress bar: fill 0-1 in color, or red while
+// flash; null clears it), outline(tokens) (change the outlined controls).
+// The sample Live set (SAMPLE_TRACKS, SAMPLE_DRUMS, PAD_COLORS ...) comes from layouts.js.
+
+var HIGHLIGHT_SHOWS = (function () {
+  'use strict';
+
+  var RED = PAD_COLORS[15];
+  var WHITE = SAMPLE_MASTER.color;
+  var drums = SAMPLE_TRACKS[0], bass = SAMPLE_TRACKS[1], keys = SAMPLE_TRACKS[2];
+
+  // A colour screen side in the style of the script's MK3 screens (see drawLcd() in manual.js).
+  function side(title, sub, center, small, accent) {
+    return { left: { title: title, sub: sub, center: center, small: small, accent: accent || drums.color } };
+  }
+
+  // The MIKRO's 3-line list: the chosen entry on a lit bar, kept in the middle while it can be.
+  function oledList(entries, chosen, marker) {
+    var start = Math.max(0, Math.min(chosen - 1, entries.length - 3));
+    return entries.slice(start, start + 3).map(function (name, i) {
+      var text = name + (marker || '');
+      return start + i === chosen ? { text: text, inverse: true } : text;
+    });
+  }
+
+  // Live's tempo, swing and a device parameter, as the encoder changes them.
+  var TURNS = [
+    ['TEMPO', 120], ['TEMPO', 121], ['TEMPO', 122], ['TEMPO', 123],
+    ['SWING', 10], ['SWING', 15], ['SWING', 20],
+    ['PLUG-IN', 2.4], ['PLUG-IN', 2.9], ['PLUG-IN', 3.6]
+  ];
+
+  // I, V, vi, IV in C major. The pads are the scale from the bottom left (pad 1 = C), and a chord
+  // pad's notes are the pads two and four above it: the chord's pad lights bright, its notes soft.
+  var CHORDS = [
+    { pad: 1, name: 'C Major', degree: 'I' }, { pad: 5, name: 'G Major', degree: 'V' },
+    { pad: 6, name: 'A Minor', degree: 'VI' }, { pad: 4, name: 'F Major', degree: 'IV' }
+  ];
+
+  var STEP_NOTES = [1, 5, 8, 11, 13];  // the kick pattern of the manual's STEP demo
+
+  var BROWSER_ROOT = ['Collections', 'Sounds', 'Drums', 'Instruments', 'Audio Effects', 'MIDI Effects'];
+  var BROWSER_KITS = ['606 Kit', '707 Kit', '808 Kit', '909 Kit', 'Boom Kit'];
+
+  return {
+    // A real SHIFT key, and Live's colours on the pads: a wave through MASCHINE's 16 sound
+    // colours, then the clip grid and the Drum Rack in the sample set's colours.
+    'SHIFT': {
+      every: 120,
+      tick: function (n, api) {
+        var t = n * 120;
+        if (t < 2600) {
+          var front = Math.floor(t / 120), pads = api.blank();
+          for (var i = 0; i < 16 && i <= front; i++) {
+            pads[listPad(i) - 1] = api.lit(PAD_COLORS[i], front >= 16 || i === front ? 'bright' : 'mid');
+          }
+          api.pads(pads);
+          api.screenOf('MASCHINE');
+        } else if (t < 4600) {
+          api.pads(api.demo('PATTERN'));
+          api.screenOf('PATTERN');
+        } else {
+          api.pads(api.demo('PAD MODE'));
+          api.screenOf('PAD MODE');
+        }
+      }
+    },
+
+    // The screen follows what the encoder changes: tempo, swing, then a device parameter.
+    'TURN': {
+      every: 650,
+      loupe: true,
+      tick: function (n, api) {
+        var turn = TURNS[n % TURNS.length], value = turn[1];
+        api.turn(n);
+        api.light([turn[0]]);
+        if (turn[0] === 'TEMPO') {
+          api.screen(['Tempo', value.toFixed(2) + ' BPM'], side('Tempo', 'Master', value.toFixed(2), 'BPM'));
+        } else if (turn[0] === 'SWING') {
+          api.screen(['Swing', value + ' %'], side('Swing', 'Master', value + ' %', 'Repeat and arp follow'));
+        } else {
+          var text = value.toFixed(2) + ' kHz', page = api.layout.screens['PLUG-IN'], lcd = null;
+          if (page && page.left && page.left.knobs) {
+            lcd = { left: Object.assign({}, page.left, {
+              touched: 0, knobs: [['Frequency', 0.5 + (value - 2.4) / 3, text]].concat(page.left.knobs.slice(1))
+            }), right: page.right };
+          }
+          api.screen([bass.name, 'Auto Filter  Filter', 'Frequency   ' + text], lcd);
+        }
+      }
+    },
+
+    // A chord on every pad: I, V, vi, IV, each pressed for a moment.
+    'CHORDS': {
+      every: 400,
+      loupe: true,
+      tick: function (n, api) {
+        var chord = CHORDS[Math.floor(n / 4) % CHORDS.length], pressed = n % 4 !== 3;
+        var pads = api.blank().map(function () { return api.lit(keys.color, 'dim'); });
+        if (pressed) {
+          pads[chord.pad - 1] = api.lit(keys.color, 'bright');
+          pads[chord.pad + 1] = api.lit(keys.color, 'mid');
+          pads[chord.pad + 3] = api.lit(keys.color, 'mid');
+        }
+        api.pads(pads);
+        api.screen([chord.name, 'Triad  ' + chord.degree + '  C Major'],
+          side(keys.name, 'Chords', chord.name, 'Triad  ' + chord.degree, keys.color));
+      }
+    },
+
+    // Note repeat on the Drum Rack: the closed hat in 1/16 with accents (pressure gives the
+    // velocity), then a snare roll in 1/32.
+    'NOTE REPEAT': {
+      every: 1000 / 32,
+      loupe: true,
+      duration: 7000,
+      tick: function (n, api) {
+        var t = n * 1000 / 32;
+        var pads = api.demo('PAD MODE').map(function (entry) { return entry && api.lit(entry.color, 'dim', entry.drum); });
+        var pad = null, period = 0, rate = '1/16';
+        if (t >= 400 && t < 3400) { pad = 3; period = 125; }
+        else if (t >= 3900 && t < 6600) { pad = 2; period = 62.5; rate = '1/32'; }
+        else if (t >= 3400) rate = '1/32';
+        if (pad) {
+          var note = Math.floor((t - 400) / period), on = api.calm || (t % period) < period / 2;
+          var level = !on ? 'dim' : period > 100 && note % 4 !== 0 ? 'mid' : 'bright';
+          pads[pad - 1] = api.lit(drums.color, level, SAMPLE_DRUMS[pad - 1]);
+        }
+        api.pads(pads);
+        api.screen(['Repeat', rate], side(drums.name, 'Note Repeat', rate, 'Rate'));
+      }
+    },
+
+    // Steps go in one by one, then the pattern plays with the white playhead running across the
+    // pads in reading order (pad 13 is step 1).
+    'STEP': {
+      every: 125,
+      tick: function (n, api) {
+        var entered = Math.min(STEP_NOTES.length, Math.floor(n / 2) + 1);
+        var playing = n >= 10, playhead = 0;
+        if (playing) playhead = (api.calm ? Math.floor((n - 10) / 4) : n - 10) % 16 + 1;
+        var pads = api.blank();
+        for (var step = 1; step <= 16; step++) {
+          var index = STEP_NOTES.indexOf(step), entry = null;
+          if (step === playhead) entry = api.lit(WHITE, 'bright');
+          else if (index >= 0 && index < entered) entry = api.lit(drums.color, !playing && index === entered - 1 && n % 2 === 0 ? 'bright' : 'mid');
+          else if (step % 4 === 1) entry = api.lit(drums.color, 'dim');
+          pads[listPad(step - 1) - 1] = entry;
+        }
+        api.pads(pads);
+        api.light(playing ? ['PLAY'] : []);
+        api.screenOf('STEP');
+      }
+    },
+
+    // Live's browser on the MIKRO's screen: scroll to Drums, open it, scroll to a kit and load it;
+    // the pads light up with the kit.
+    'STAR': {
+      every: 700,
+      loupe: true,
+      duration: 7000,
+      tick: function (n, api) {
+        var frame = Math.min(n, 6), pushed = n === 3 || n === 6;
+        api.turn(frame < 3 ? frame : frame < 6 ? frame - 1 : 4);
+        api.light(pushed ? ['ENCODER'] : []);
+        if (frame < 3) api.screen(oledList(BROWSER_ROOT, frame, ' >'));
+        else if (frame < 6) api.screen(oledList(BROWSER_KITS, frame - 3));
+        else api.screen(['Loaded', BROWSER_KITS[2]]);
+        api.pads(frame < 6 ? api.blank() : api.demo('PAD MODE'));
+      }
+    },
+
+    // VARIATION held: the clip grid, the first free slot below each clip red. A red pad records a
+    // copy of the clip above it: Bass_1, recording while the original stays as it was.
+    'VARIATION+PAD': {
+      every: 500,
+      loupe: true,
+      duration: 7000,
+      glow: ['VARIATION', 'PAD'],
+      tick: function (n, api) {
+        var grid = api.demo('PATTERN'), pads = api.blank();
+        var clip = function (entry) { return !!entry && entry.color !== RED; };
+        var target = 9;  // pad 10: below 2-Bass's clip in scene 1
+        for (var track = 0; track < 4; track++) {
+          for (var scene = 0; scene < 4; scene++) {
+            var pad = (3 - scene) * 4 + track;
+            if (!clip(grid[pad])) continue;
+            pads[pad] = grid[pad];
+            if (n >= 4) continue;
+            for (var below = scene + 1; below < 4; below++) {
+              var free = (3 - below) * 4 + track;
+              if (!clip(grid[free])) { pads[free] = api.lit(RED, 'bright'); break; }
+            }
+          }
+        }
+        if (n >= 4) {
+          // the copy plays and records; the original stops
+          pads[target + 4] = api.lit(bass.color, 'dim');
+          pads[target] = api.lit(bass.color, api.calm || n % 2 === 0 ? 'bright' : 'mid');
+          api.outline(['VARIATION', 'PAD 10']);
+          api.light(['REC']);
+          api.screen(['Bass_1', 'Recording the copy'], side(bass.name, 'Variation', 'Bass_1', 'Recording the copy', bass.color));
+        } else {
+          api.outline(['VARIATION', 'PAD']);
+          api.light([]);
+          api.screen(['Variation', 'Red pad: record copy'], side(bass.name, 'Variation', 'Red pad', 'Record a copy of the clip above', RED));
+        }
+        api.pads(pads);
+      }
+    },
+
+    // The strip shows where the loop is: a 2-bar drum loop in its clip colour; then, recording
+    // Bass_1, it flashes red on every beat: a silent metronome.
+    'STRIP': {
+      every: 1000 / 16,
+      loupe: true,
+      duration: 7000,
+      tick: function (n, api) {
+        var t = n * 1000 / 16, loop = 4000;
+        var recording = t >= 3200, since = recording ? t - 3200 : t + 600;
+        var beat = Math.floor(since / 500) % 4 + 1, bar = Math.floor(since / 2000) % 2 + 1;
+        var flash = recording && !api.calm && since % 500 < 110;
+        api.strip((since % loop) / loop, recording ? bass.color : drums.color, flash);
+        api.light(recording ? ['PLAY', 'REC'] : ['PLAY']);
+        var position = 'Bar ' + bar + '  Beat ' + beat;
+        if (recording) api.screen(['Recording', 'Bass_1  ' + position], side(bass.name, 'Recording', position, 'Bass_1', bass.color));
+        else api.screen(['Drum Loop', position], side(drums.name, 'Playing', position, 'Drum Loop'));
+        var grid = api.demo('PATTERN');
+        if (recording) grid[9] = api.lit(bass.color, 'bright');
+        api.pads(grid);
+      }
+    }
+  };
+})();

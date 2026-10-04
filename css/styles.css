@@ -425,7 +425,7 @@ button { font: inherit; color: inherit; }
 .hardware { position: sticky; top: calc(var(--bar-height) + 16px); align-self: start; }
 /* the drawing is a control surface: clicks and drags never select its printed text */
 .hardware-card { padding: 12px; -webkit-user-select: none; user-select: none; }
-#device { display: block; width: 100%; height: auto; -webkit-user-select: none; user-select: none; }
+#device, .hw-drawing { display: block; width: 100%; height: auto; -webkit-user-select: none; user-select: none; }
 /* side by side, the sticky drawing stays within the window height (a tall layout is centred) */
 @media (min-width: 1101px) {
   #device { max-height: calc(100vh - var(--bar-height) - 56px); }
@@ -435,139 +435,140 @@ button { font: inherit; color: inherit; }
 /* hardware drawing: flat schematic (layouts without real: true) */
 .hw-body { fill: var(--hw-body); }
 .hw-control { cursor: pointer; outline: none; }
-#device:not(.real) .hw-control rect, #device:not(.real) .hw-control circle { fill: var(--hw-button); stroke: transparent; stroke-width: 2.5; transition: fill .12s, stroke .12s; }
-#device:not(.real) .hw-control.pad rect { fill: var(--hw-pad); }
+.hw-drawing:not(.real) .hw-control rect, .hw-drawing:not(.real) .hw-control circle { fill: var(--hw-button); stroke: transparent; stroke-width: 2.5; transition: fill .12s, stroke .12s; }
+.hw-drawing:not(.real) .hw-control.pad rect { fill: var(--hw-pad); }
 .hw-control.screen { cursor: default; }
-#device:not(.real) .hw-control.screen rect { fill: var(--hw-screen); stroke: #2b2a2e; stroke-width: 1.5; }
-#device:not(.real) .hw-control.strip rect { fill: #1b1a1d; stroke: #3d3c40; stroke-width: 1; }
-#device:not(.real) .hw-control.encoder circle.ring { fill: #1f1e21; stroke: #4a494d; stroke-width: 3; }
-#device:not(.real) .hw-control.knob circle { fill: #2c2b2e; stroke: #4a494d; stroke-width: 2; }
-#device:not(.real) .hw-control text { fill: var(--hw-button-text); font: 600 11px var(--md-ref-typeface); pointer-events: none; text-anchor: middle; dominant-baseline: central; }
-#device:not(.real) .hw-control.pad text { fill: #8f8c92; font-size: 13px; }
-#device:not(.real) .hw-control.screen text { fill: #5e5c62; font-size: 12px; letter-spacing: .1em; }
-#device:not(.real) .hw-control:hover rect, #device:not(.real) .hw-control:hover circle { stroke: var(--hw-related); }
-#device:not(.real) .hw-control:focus-visible rect, #device:not(.real) .hw-control:focus-visible circle { stroke: #ffffff; stroke-width: 3.5; }
-#device:not(.real) .hw-control.related rect, #device:not(.real) .hw-control.related circle { fill: color-mix(in srgb, var(--hw-related) 35%, var(--hw-button)); stroke: var(--hw-related); }
-#device:not(.real) .hw-control.selected rect, #device:not(.real) .hw-control.selected circle { fill: var(--hw-active); stroke: #ffd1ad; }
-#device:not(.real) .hw-control.selected text, #device:not(.real) .hw-control.related text { fill: #fff; }
+.hw-drawing:not(.real) .hw-control.screen rect { fill: var(--hw-screen); stroke: #2b2a2e; stroke-width: 1.5; }
+.hw-drawing:not(.real) .hw-control.strip rect { fill: #1b1a1d; stroke: #3d3c40; stroke-width: 1; }
+.hw-drawing:not(.real) .hw-control.encoder circle.ring { fill: #1f1e21; stroke: #4a494d; stroke-width: 3; }
+.hw-drawing:not(.real) .hw-control.knob circle { fill: #2c2b2e; stroke: #4a494d; stroke-width: 2; }
+.hw-drawing:not(.real) .hw-control text { fill: var(--hw-button-text); font: 600 11px var(--md-ref-typeface); pointer-events: none; text-anchor: middle; dominant-baseline: central; }
+.hw-drawing:not(.real) .hw-control.pad text { fill: #8f8c92; font-size: 13px; }
+.hw-drawing:not(.real) .hw-control.screen text { fill: #5e5c62; font-size: 12px; letter-spacing: .1em; }
+.hw-drawing:not(.real) .hw-control:hover rect, .hw-drawing:not(.real) .hw-control:hover circle { stroke: var(--hw-related); }
+.hw-drawing:not(.real) .hw-control:focus-visible rect, .hw-drawing:not(.real) .hw-control:focus-visible circle { stroke: #ffffff; stroke-width: 3.5; }
+.hw-drawing:not(.real) .hw-control.related rect, .hw-drawing:not(.real) .hw-control.related circle { fill: color-mix(in srgb, var(--hw-related) 35%, var(--hw-button)); stroke: var(--hw-related); }
+.hw-drawing:not(.real) .hw-control.selected rect, .hw-drawing:not(.real) .hw-control.selected circle { fill: var(--hw-active); stroke: #ffd1ad; }
+.hw-drawing:not(.real) .hw-control.selected text, .hw-drawing:not(.real) .hw-control.related text { fill: #fff; }
 /* pads light in their MASCHINE sound colour (PAD_COLORS in layouts.js) */
-#device:not(.real) .hw-control.pad.related rect { fill: color-mix(in srgb, var(--pad-color) 45%, var(--hw-pad)); stroke: var(--pad-color); }
-#device:not(.real) .hw-control.pad.selected rect { fill: var(--pad-color); stroke: #fff; }
-#device:not(.real) .hw-control.pad.selected text { fill: #1c1b1d; }
+.hw-drawing:not(.real) .hw-control.pad.related rect { fill: color-mix(in srgb, var(--pad-color) 45%, var(--hw-pad)); stroke: var(--pad-color); }
+.hw-drawing:not(.real) .hw-control.pad.selected rect { fill: var(--pad-color); stroke: #fff; }
+.hw-drawing:not(.real) .hw-control.pad.selected text { fill: #1c1b1d; }
 
 /* hardware drawing: measured layouts (real: true) in the hardware's own colours. Labels are printed
    light grey, SHIFT labels darker grey, PLAY green, REC red, SHIFT boxed; pads are unlit rubber. */
-#device.real .hw-body { fill: url(#hw-body-fill); stroke: #2f2f32; stroke-width: 1.5; }
-#device.real .hw-dot { fill: #7d8ae6; opacity: .5; }
-#device.real text { pointer-events: none; }
-#device.real .cap { stroke: #08080a; stroke-width: 1.6; transition: fill .12s, stroke .12s; }
-#device.real .button .cap { fill: url(#hw-cap-fill); }
-#device.real .label { fill: #d4d4d8; font: 700 8.4px var(--md-ref-typeface); letter-spacing: .03em; dominant-baseline: middle; }
-#device.real .sublabel { fill: #707075; font: 500 7.4px var(--md-ref-typeface); letter-spacing: .02em; dominant-baseline: middle; }
-#device.real .label.green { fill: #45d35d; }
-#device.real .label.red, #device.real .sublabel.red { fill: #ff4033; }
-#device.real .label-box { fill: #e6e6ea; }
-#device.real .label.inverse { fill: #121214; }
-#device.real .icon-line { fill: none; stroke: #d4d4d8; stroke-width: 1.4; stroke-linecap: round; }
-#device.real .icon-fill { fill: #d4d4d8; }
-#device.real .pad .cap { fill: url(#hw-pad-fill); }
-#device.real .pad .sheen { fill: url(#hw-pad-sheen); opacity: 0; pointer-events: none; transition: opacity .12s; }
-#device.real .pad-print { fill: #8d8d92; font: 500 8.4px var(--md-ref-typeface); dominant-baseline: middle; }
-#device.real .pad-number { font-weight: 800; }
-#device.real .pad-letter { font-weight: 700; text-anchor: end; }
-#device.real .strip .cap { fill: #0c0c0d; stroke: #2c2c2f; stroke-width: 1.2; }
-#device.real .strip-inner { fill: #151517; pointer-events: none; }
-#device.real .encoder .ring { fill: #0d0d0e; stroke: #2e2e31; stroke-width: 1.5; transition: stroke .12s; }
-#device.real .encoder .knurl { fill: #19191b; stroke: #3c3c40; stroke-width: 3.2; stroke-dasharray: 1.3 1.5; }
-#device.real .encoder .knob-cap { fill: url(#hw-knob-fill); stroke: #050506; stroke-width: 1; }
-#device.real .screen .bezel { fill: #0b0b0c; stroke: #2a2a2d; stroke-width: 1.2; }
-#device.real .screen .oled { fill: #000; }
-#device.real .screen .pixels { fill: #eaf1ff; }
+.hw-drawing.real .hw-body { fill: url(#hw-body-fill); stroke: #2f2f32; stroke-width: 1.5; }
+.hw-drawing.real .hw-dot { fill: #7d8ae6; opacity: .5; }
+.hw-drawing.real text { pointer-events: none; }
+.hw-drawing.real .cap { stroke: #08080a; stroke-width: 1.6; transition: fill .12s, stroke .12s; }
+.hw-drawing.real .button .cap { fill: url(#hw-cap-fill); }
+.hw-drawing.real .label { fill: #d4d4d8; font: 700 8.4px var(--md-ref-typeface); letter-spacing: .03em; dominant-baseline: middle; }
+.hw-drawing.real .sublabel { fill: #707075; font: 500 7.4px var(--md-ref-typeface); letter-spacing: .02em; dominant-baseline: middle; }
+.hw-drawing.real .label.green { fill: #45d35d; }
+.hw-drawing.real .label.red, .hw-drawing.real .sublabel.red { fill: #ff4033; }
+.hw-drawing.real .label-box { fill: #e6e6ea; }
+.hw-drawing.real .label.inverse { fill: #121214; }
+.hw-drawing.real .icon-line { fill: none; stroke: #d4d4d8; stroke-width: 1.4; stroke-linecap: round; }
+.hw-drawing.real .icon-fill { fill: #d4d4d8; }
+.hw-drawing.real .pad .cap { fill: url(#hw-pad-fill); }
+.hw-drawing.real .pad .sheen { fill: url(#hw-pad-sheen); opacity: 0; pointer-events: none; transition: opacity .12s; }
+.hw-drawing.real .pad-print { fill: #8d8d92; font: 500 8.4px var(--md-ref-typeface); dominant-baseline: middle; }
+.hw-drawing.real .pad-number { font-weight: 800; }
+.hw-drawing.real .pad-letter { font-weight: 700; text-anchor: end; }
+.hw-drawing.real .strip .cap { fill: #0c0c0d; stroke: #2c2c2f; stroke-width: 1.2; }
+.hw-drawing.real .strip-inner { fill: #151517; pointer-events: none; }
+.hw-drawing.real .encoder .ring { fill: #0d0d0e; stroke: #2e2e31; stroke-width: 1.5; transition: stroke .12s; }
+.hw-drawing.real .encoder .knurl { fill: #19191b; stroke: #3c3c40; stroke-width: 3.2; stroke-dasharray: 1.3 1.5; }
+.hw-drawing.real .encoder .knob-cap { fill: url(#hw-knob-fill); stroke: #050506; stroke-width: 1; }
+.hw-drawing.real .screen .bezel { fill: #0b0b0c; stroke: #2a2a2d; stroke-width: 1.2; }
+.hw-drawing.real .screen .oled { fill: #000; }
+.hw-drawing.real .screen .pixels { fill: #eaf1ff; }
+.hw-drawing.real .screen .pixels-inverse { fill: #000; }
 /* MK3: the glossy display panel, the darker edge band, plain light display buttons, knobs with a
    dark skirt and lighter top, the dots around the encoder, and the colour screens */
-#device.real .hw-glass { fill: url(#hw-glass-fill); stroke: #000; stroke-width: 1; }
-#device.real .hw-edge { fill: #0b0b0c; opacity: .55; }
-#device.real .hw-mark { fill: #6a6a6e; }
-#device.real .button.light .cap { fill: url(#hw-light-fill); stroke: #9aa3a9; stroke-width: 1; }
-#device.real .knob .ring { fill: #0b0b0c; stroke: #2a2a2d; stroke-width: 1.4; transition: stroke .12s; }
-#device.real .knob-top { fill: url(#hw-knob-top); stroke: #050506; stroke-width: .8; pointer-events: none; }
-#device.real .encoder .knurl, #device.real .encoder .knob-cap { pointer-events: none; }
-#device.real .screen .lcd { fill: #0c0c0e; stroke: #232327; stroke-width: 1; }
-#device.real .screen text { dominant-baseline: middle; font-family: var(--md-ref-typeface); }
-#device.real .lcd-rule { fill: #1e1f23; }
-#device.real .lcd-touched { fill: #1e1f23; }
-#device.real .lcd-track { fill: #3c3e44; }
-#device.real .lcd-chip { stroke: #0c0c0e; stroke-width: 1.5; }
-#device.real .lcd-button { fill: #e2e2e6; font-size: 19px; font-weight: 600; text-anchor: middle; }
-#device.real .lcd-title { fill: #e2e2e6; font-size: 30px; font-weight: 600; }
-#device.real .lcd-sub { fill: #8f9199; font-size: 22px; font-weight: 500; }
-#device.real .lcd-center { fill: #e2e2e6; font-size: 50px; font-weight: 600; text-anchor: middle; }
-#device.real .lcd-small { fill: #8f9199; font-size: 23px; font-weight: 500; text-anchor: middle; }
-#device.real .lcd-list { fill: #e2e2e6; font-size: 21px; font-weight: 500; }
-#device.real .lcd-list.chosen { fill: #0c0c0e; font-weight: 700; }
-#device.real .lcd-knob-name { fill: #e2e2e6; font-size: 20px; font-weight: 600; text-anchor: middle; }
-#device.real .lcd-knob-value { fill: #8f9199; font-size: 23px; font-weight: 500; text-anchor: middle; }
-#device.real .lcd-knob-value.touched { fill: #fff; }
+.hw-drawing.real .hw-glass { fill: url(#hw-glass-fill); stroke: #000; stroke-width: 1; }
+.hw-drawing.real .hw-edge { fill: #0b0b0c; opacity: .55; }
+.hw-drawing.real .hw-mark { fill: #6a6a6e; }
+.hw-drawing.real .button.light .cap { fill: url(#hw-light-fill); stroke: #9aa3a9; stroke-width: 1; }
+.hw-drawing.real .knob .ring { fill: #0b0b0c; stroke: #2a2a2d; stroke-width: 1.4; transition: stroke .12s; }
+.hw-drawing.real .knob-top { fill: url(#hw-knob-top); stroke: #050506; stroke-width: .8; pointer-events: none; }
+.hw-drawing.real .encoder .knurl, .hw-drawing.real .encoder .knob-cap { pointer-events: none; }
+.hw-drawing.real .screen .lcd { fill: #0c0c0e; stroke: #232327; stroke-width: 1; }
+.hw-drawing.real .screen text { dominant-baseline: middle; font-family: var(--md-ref-typeface); }
+.hw-drawing.real .lcd-rule { fill: #1e1f23; }
+.hw-drawing.real .lcd-touched { fill: #1e1f23; }
+.hw-drawing.real .lcd-track { fill: #3c3e44; }
+.hw-drawing.real .lcd-chip { stroke: #0c0c0e; stroke-width: 1.5; }
+.hw-drawing.real .lcd-button { fill: #e2e2e6; font-size: 19px; font-weight: 600; text-anchor: middle; }
+.hw-drawing.real .lcd-title { fill: #e2e2e6; font-size: 30px; font-weight: 600; }
+.hw-drawing.real .lcd-sub { fill: #8f9199; font-size: 22px; font-weight: 500; }
+.hw-drawing.real .lcd-center { fill: #e2e2e6; font-size: 50px; font-weight: 600; text-anchor: middle; }
+.hw-drawing.real .lcd-small { fill: #8f9199; font-size: 23px; font-weight: 500; text-anchor: middle; }
+.hw-drawing.real .lcd-list { fill: #e2e2e6; font-size: 21px; font-weight: 500; }
+.hw-drawing.real .lcd-list.chosen { fill: #0c0c0e; font-weight: 700; }
+.hw-drawing.real .lcd-knob-name { fill: #e2e2e6; font-size: 20px; font-weight: 600; text-anchor: middle; }
+.hw-drawing.real .lcd-knob-value { fill: #8f9199; font-size: 23px; font-weight: 500; text-anchor: middle; }
+.hw-drawing.real .lcd-knob-value.touched { fill: #fff; }
 /* MK3 group buttons are always lit dimly in their track colour, the selected track brighter */
-#device.real .button.lit .cap { fill: color-mix(in srgb, var(--lit-color) 30%, #2a2a2d); }
-#device.real .button.lit.lit-bright .cap { fill: color-mix(in srgb, var(--lit-color) 78%, #2a2a2d); }
-#device.real .button.lit.lit-bright .label { fill: #141416; }
+.hw-drawing.real .button.lit .cap { fill: color-mix(in srgb, var(--lit-color) 30%, #2a2a2d); }
+.hw-drawing.real .button.lit.lit-bright .cap { fill: color-mix(in srgb, var(--lit-color) 78%, #2a2a2d); }
+.hw-drawing.real .button.lit.lit-bright .label { fill: #141416; }
 /* choosing another group button makes that one the selected track: the first one dims again */
-#device.real:has(.button.lit.selected) .button.lit.lit-bright:not(.selected):not(.related) .cap { fill: color-mix(in srgb, var(--lit-color) 30%, #2a2a2d); }
-#device.real:has(.button.lit.selected) .button.lit.lit-bright:not(.selected):not(.related) .label { fill: #d4d4d8; }
+.hw-drawing.real:has(.button.lit.selected) .button.lit.lit-bright:not(.selected):not(.related) .cap { fill: color-mix(in srgb, var(--lit-color) 30%, #2a2a2d); }
+.hw-drawing.real:has(.button.lit.selected) .button.lit.lit-bright:not(.selected):not(.related) .label { fill: #d4d4d8; }
 /* pad demos: the pads as the selected mode lights them (dim / mid / bright, like the hardware);
    a pad of a combo (related) or the selected pad keeps its own highlight */
-#device.real .pad.demo-dim:not(.selected):not(.related) .cap { fill: color-mix(in srgb, var(--demo-color) 40%, #353538); }
-#device.real .pad.demo-mid:not(.selected):not(.related) .cap { fill: color-mix(in srgb, var(--demo-color) 80%, #353538); }
-#device.real .pad.demo-mid:not(.selected):not(.related) .sheen { opacity: .45; }
-#device.real .pad.demo-bright:not(.selected):not(.related) .cap { fill: var(--demo-color); }
-#device.real .pad.demo-bright:not(.selected):not(.related) .sheen { opacity: .9; }
-#device.real .pad.demo-dim .pad-print { fill: #c4c4c8; }
-#device.real .pad.demo-mid .pad-print, #device.real .pad.demo-bright .pad-print { fill: #141416; }
+.hw-drawing.real .pad.demo-dim:not(.selected):not(.related) .cap { fill: color-mix(in srgb, var(--demo-color) 40%, #353538); }
+.hw-drawing.real .pad.demo-mid:not(.selected):not(.related) .cap { fill: color-mix(in srgb, var(--demo-color) 80%, #353538); }
+.hw-drawing.real .pad.demo-mid:not(.selected):not(.related) .sheen { opacity: .45; }
+.hw-drawing.real .pad.demo-bright:not(.selected):not(.related) .cap { fill: var(--demo-color); }
+.hw-drawing.real .pad.demo-bright:not(.selected):not(.related) .sheen { opacity: .9; }
+.hw-drawing.real .pad.demo-dim .pad-print { fill: #c4c4c8; }
+.hw-drawing.real .pad.demo-mid .pad-print, .hw-drawing.real .pad.demo-bright .pad-print { fill: #141416; }
 /* states: hover / a combo's controls (related) / the selected control, lit like the hardware */
-#device.real .hw-control:hover .cap, #device.real .hw-control:hover .ring { stroke: var(--hw-related); }
-#device.real .hw-control:focus-visible .cap, #device.real .hw-control:focus-visible .ring { stroke: #fff; stroke-width: 2.4; }
-#device.real .button.related .cap { fill: color-mix(in srgb, var(--hw-related) 22%, #2c2c2f); stroke: var(--hw-related); }
-#device.real .button.selected .cap { fill: #4b4b50; stroke: var(--hw-active); stroke-width: 2.4; }
-#device.real .button.selected .label, #device.real .button.related .label { fill: #fff; }
-#device.real .button.selected .label.inverse, #device.real .button.related .label.inverse { fill: #121214; }
+.hw-drawing.real .hw-control:hover .cap, .hw-drawing.real .hw-control:hover .ring { stroke: var(--hw-related); }
+.hw-drawing.real .hw-control:focus-visible .cap, .hw-drawing.real .hw-control:focus-visible .ring { stroke: #fff; stroke-width: 2.4; }
+.hw-drawing.real .button.related .cap { fill: color-mix(in srgb, var(--hw-related) 22%, #2c2c2f); stroke: var(--hw-related); }
+.hw-drawing.real .button.selected .cap { fill: #4b4b50; stroke: var(--hw-active); stroke-width: 2.4; }
+.hw-drawing.real .button.selected .label, .hw-drawing.real .button.related .label { fill: #fff; }
+.hw-drawing.real .button.selected .label.inverse, .hw-drawing.real .button.related .label.inverse { fill: #121214; }
 /* PLAY and REC keep their colour and light up brighter, like the backlit buttons */
-#device.real .button.selected .label.green, #device.real .button.related .label.green {
+.hw-drawing.real .button.selected .label.green, .hw-drawing.real .button.related .label.green {
   fill: #6dff7f; filter: drop-shadow(0 0 2px rgb(109 255 127 / .65));
 }
-#device.real .button.selected .label.red, #device.real .button.related .label.red,
-#device.real .button.selected .sublabel.red, #device.real .button.related .sublabel.red {
+.hw-drawing.real .button.selected .label.red, .hw-drawing.real .button.related .label.red,
+.hw-drawing.real .button.selected .sublabel.red, .hw-drawing.real .button.related .sublabel.red {
   fill: #ff6a5c; filter: drop-shadow(0 0 2px rgb(255 106 92 / .6));
 }
-#device.real .button.selected .icon-fill { fill: #fff; }
-#device.real .button.selected .icon-line { stroke: #fff; }
-#device.real .pad.related .cap { fill: color-mix(in srgb, var(--pad-color) 55%, #2a2a2d); stroke: var(--pad-color); }
-#device.real .pad.related .sheen { opacity: .35; }
-#device.real .pad.selected .cap { fill: var(--pad-color); stroke: #fff; stroke-width: 2; }
-#device.real .pad.selected .sheen { opacity: .9; }
-#device.real .pad.selected .pad-print, #device.real .pad.related .pad-print { fill: #141416; }
+.hw-drawing.real .button.selected .icon-fill { fill: #fff; }
+.hw-drawing.real .button.selected .icon-line { stroke: #fff; }
+.hw-drawing.real .pad.related .cap { fill: color-mix(in srgb, var(--pad-color) 55%, #2a2a2d); stroke: var(--pad-color); }
+.hw-drawing.real .pad.related .sheen { opacity: .35; }
+.hw-drawing.real .pad.selected .cap { fill: var(--pad-color); stroke: #fff; stroke-width: 2; }
+.hw-drawing.real .pad.selected .sheen { opacity: .9; }
+.hw-drawing.real .pad.selected .pad-print, .hw-drawing.real .pad.related .pad-print { fill: #141416; }
 /* a combo whose own token has a pad demo (SOLO + PAD: the track view): its pads show that demo,
    outlined as the combo's pads; pads the demo leaves unlit stay unlit */
-#device.real.combo-demo .pad.related:not(.selected) .cap { fill: url(#hw-pad-fill); stroke: var(--hw-related); }
-#device.real.combo-demo .pad.related:not(.selected) .sheen { opacity: 0; }
-#device.real.combo-demo .pad.related:not(.selected) .pad-print { fill: #8d8d92; }
-#device.real.combo-demo .pad.related.demo-dim:not(.selected) .cap { fill: color-mix(in srgb, var(--demo-color) 40%, #353538); }
-#device.real.combo-demo .pad.related.demo-mid:not(.selected) .cap { fill: color-mix(in srgb, var(--demo-color) 80%, #353538); }
-#device.real.combo-demo .pad.related.demo-mid:not(.selected) .sheen { opacity: .45; }
-#device.real.combo-demo .pad.related.demo-bright:not(.selected) .cap { fill: var(--demo-color); }
-#device.real.combo-demo .pad.related.demo-bright:not(.selected) .sheen { opacity: .9; }
-#device.real.combo-demo .pad.related.demo-dim:not(.selected) .pad-print { fill: #c4c4c8; }
-#device.real.combo-demo .pad.related.demo-mid:not(.selected) .pad-print,
-#device.real.combo-demo .pad.related.demo-bright:not(.selected) .pad-print { fill: #141416; }
-#device.real .encoder.related .ring, #device.real .knob.related .ring, #device.real .strip.related .cap { stroke: var(--hw-related); stroke-width: 2.2; }
-#device.real .encoder.selected .ring, #device.real .knob.selected .ring, #device.real .strip.selected .cap { stroke: var(--hw-active); stroke-width: 2.6; }
+.hw-drawing.real.combo-demo .pad.related:not(.selected) .cap { fill: url(#hw-pad-fill); stroke: var(--hw-related); }
+.hw-drawing.real.combo-demo .pad.related:not(.selected) .sheen { opacity: 0; }
+.hw-drawing.real.combo-demo .pad.related:not(.selected) .pad-print { fill: #8d8d92; }
+.hw-drawing.real.combo-demo .pad.related.demo-dim:not(.selected) .cap { fill: color-mix(in srgb, var(--demo-color) 40%, #353538); }
+.hw-drawing.real.combo-demo .pad.related.demo-mid:not(.selected) .cap { fill: color-mix(in srgb, var(--demo-color) 80%, #353538); }
+.hw-drawing.real.combo-demo .pad.related.demo-mid:not(.selected) .sheen { opacity: .45; }
+.hw-drawing.real.combo-demo .pad.related.demo-bright:not(.selected) .cap { fill: var(--demo-color); }
+.hw-drawing.real.combo-demo .pad.related.demo-bright:not(.selected) .sheen { opacity: .9; }
+.hw-drawing.real.combo-demo .pad.related.demo-dim:not(.selected) .pad-print { fill: #c4c4c8; }
+.hw-drawing.real.combo-demo .pad.related.demo-mid:not(.selected) .pad-print,
+.hw-drawing.real.combo-demo .pad.related.demo-bright:not(.selected) .pad-print { fill: #141416; }
+.hw-drawing.real .encoder.related .ring, .hw-drawing.real .knob.related .ring, .hw-drawing.real .strip.related .cap { stroke: var(--hw-related); stroke-width: 2.2; }
+.hw-drawing.real .encoder.selected .ring, .hw-drawing.real .knob.selected .ring, .hw-drawing.real .strip.selected .cap { stroke: var(--hw-active); stroke-width: 2.6; }
 /* light caps and buttons with a lit colour (MK3 group buttons) light up like the hardware */
-#device.real .button.light.related .cap { fill: color-mix(in srgb, var(--hw-related) 45%, #e9edf0); }
-#device.real .button.light.selected .cap { fill: #fff; }
-#device.real .button.lit.related .cap { fill: color-mix(in srgb, var(--lit-color) 88%, #2a2a2d); stroke: var(--hw-related); stroke-width: 2.2; }
-#device.real .button.lit.selected .cap { fill: var(--lit-color); stroke: #fff; stroke-width: 2; }
-#device.real .button.lit.selected .label, #device.real .button.lit.related .label { fill: #141416; }
-#device.real .strip.selected .strip-inner, #device.real .strip.related .strip-inner { fill: color-mix(in srgb, var(--hw-related) 25%, #151517); }
+.hw-drawing.real .button.light.related .cap { fill: color-mix(in srgb, var(--hw-related) 45%, #e9edf0); }
+.hw-drawing.real .button.light.selected .cap { fill: #fff; }
+.hw-drawing.real .button.lit.related .cap { fill: color-mix(in srgb, var(--lit-color) 88%, #2a2a2d); stroke: var(--hw-related); stroke-width: 2.2; }
+.hw-drawing.real .button.lit.selected .cap { fill: var(--lit-color); stroke: #fff; stroke-width: 2; }
+.hw-drawing.real .button.lit.selected .label, .hw-drawing.real .button.lit.related .label { fill: #141416; }
+.hw-drawing.real .strip.selected .strip-inner, .hw-drawing.real .strip.related .strip-inner { fill: color-mix(in srgb, var(--hw-related) 25%, #151517); }
 .badge circle { fill: var(--hw-active); stroke: #fff; stroke-width: 2; }
 .badge text { fill: #fff; font: 700 12px var(--md-ref-typeface); text-anchor: middle; dominant-baseline: central; }
 
@@ -870,6 +871,117 @@ td:first-child { font-weight: 500; }
 
 .load-error { padding: 16px; border-radius: var(--md-sys-shape-md); background: var(--md-sys-color-error-container); color: var(--md-sys-color-on-error-container); }
 
+/* --- highlights tour ---------------------------------------------------------------------- */
+
+.tour { max-width: var(--page-max); margin: 0 auto; padding: 20px 16px 8px; }
+.tour-head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 12px 24px; margin: 4px 0 16px; }
+.tour-title { font-size: 32px; line-height: 40px; font-weight: 500; }
+.tour-intro { margin: 6px 0 0; color: var(--md-sys-color-on-surface-variant); font-size: 16px; line-height: 24px; }
+
+/* the stage: the controller large in a soft spotlight, the callout beside or under it */
+.tour-stage {
+  position: relative; padding: 28px 16px; border-radius: var(--md-sys-shape-xl);
+  background:
+    radial-gradient(ellipse 60% 70% at 50% 46%, color-mix(in srgb, var(--md-sys-color-primary) 9%, transparent), transparent 72%),
+    var(--md-sys-color-surface-container-low);
+  -webkit-user-select: none; user-select: none;
+}
+.tour-device-wrap { position: relative; }
+#tour-device { max-height: calc(100vh - var(--bar-height) - 300px); min-height: 160px; overflow: visible; }
+#tour-device .hw-body { filter: drop-shadow(0 18px 28px rgb(0 0 0 / .32)); }
+@media (min-width: 1180px) {
+  /* room beside the controller for the callout */
+  .tour-device-wrap { padding: 0 clamp(270px, 20vw, 380px); }
+}
+
+/* the glowing controls: an outline that breathes, lit like the manual's related controls */
+.tour-outline {
+  fill: none; stroke: var(--hw-active); stroke-width: 2.4; pointer-events: none;
+  filter: drop-shadow(0 0 5px rgb(239 103 18 / .85));
+  animation: tour-breathe 1.8s ease-in-out infinite;
+}
+@keyframes tour-breathe { 0%, 100% { opacity: 1; } 50% { opacity: .5; } }
+.tour-stage.held .tour-outline { animation-play-state: paused; }
+.tour-turn { opacity: .95; transition: opacity .2s linear; pointer-events: none; }
+.tour-turn.tick { opacity: .6; }
+.tour-turn path { fill: none; stroke: #fff; stroke-width: 2.4; stroke-linecap: round; }
+.tour-turn polygon { fill: #fff; }
+#tour-device .knurl { transform-box: fill-box; transform-origin: center; transition: transform .4s var(--md-sys-motion-easing); }
+#tour-device .pad .cap, #tour-device .pad .sheen { transition-duration: .05s; }
+/* lit buttons (PLAY while playing, REC while recording, the mode being turned) */
+.hw-drawing.real .button.tour-on .cap { fill: #56565b; }
+.hw-drawing.real .button.tour-on .label { fill: #fff; }
+.hw-drawing.real .button.tour-on .label.green { fill: #6dff7f; filter: drop-shadow(0 0 2px rgb(109 255 127 / .65)); }
+.hw-drawing.real .button.tour-on .label.red, .hw-drawing.real .button.tour-on .sublabel.red { fill: #ff6a5c; filter: drop-shadow(0 0 2px rgb(255 106 92 / .6)); }
+.hw-drawing.real .encoder.tour-on .ring { stroke: #fff; stroke-width: 2.6; }
+/* the touch strip as a progress bar, and its LEDs */
+.hw-drawing.real .strip-fill { opacity: .9; pointer-events: none; filter: drop-shadow(0 0 4px currentColor); }
+.hw-drawing.real .hw-dot.on { opacity: 1; filter: drop-shadow(0 0 2px currentColor); }
+
+/* the callout: an elevated card; beside the controller with a leader line on wide windows,
+   under it with an arrow on narrow ones */
+.tour-bubble {
+  position: relative; z-index: 2; max-width: 640px; margin: 22px auto 0; padding: 18px 20px 20px;
+  border-radius: var(--md-sys-shape-lg); border: 1px solid var(--md-sys-color-outline-variant);
+  background: var(--md-sys-color-surface-bright); color: var(--md-sys-color-on-surface);
+  box-shadow: var(--md-sys-elevation-3);
+  transition: opacity .18s linear, transform .3s var(--md-sys-motion-easing);
+}
+.tour-stage:not(.shown) .tour-bubble { visibility: hidden; }
+.tour-stage.wide .tour-bubble { position: absolute; margin: 0; max-width: none; }
+.tour-stage.narrow .tour-bubble::before {
+  content: ""; position: absolute; top: -9px; left: var(--arrow-x, 50%); width: 16px; height: 16px; margin-left: -8px;
+  background: inherit; border: 1px solid var(--md-sys-color-outline-variant); border-right: 0; border-bottom: 0;
+  border-radius: 3px 0 0 0; transform: rotate(45deg);
+}
+.tour-stage.changing .tour-bubble { opacity: 0; transform: translateY(8px); }
+.tour-count { margin: 0 0 10px; color: var(--md-sys-color-primary); font-size: 12px; line-height: 16px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; }
+.tour-combo { font-size: inherit; }
+.tour-combo .combo { gap: 6px; }
+.tour-combo .key { padding: 5px 10px; border-radius: 8px; font-size: 15px; line-height: 20px; }
+.tour-combo .plus { font-size: 15px; }
+.tour-text { margin: 12px 0 0; font-size: 16px; line-height: 24px; }
+/* the MIKRO's screen, magnified (its 128 x 32 pixels) */
+.tour-loupe {
+  display: block; width: 100%; max-width: 264px; height: auto; margin-top: 14px; padding: 7px 8px;
+  border-radius: var(--md-sys-shape-sm); background: #000; box-shadow: inset 0 0 0 2px #2a2a2d, var(--md-sys-elevation-1);
+}
+.tour-loupe[hidden] { display: none; }
+.tour-loupe .pixels { fill: #eaf1ff; }
+.tour-loupe .pixels-inverse { fill: #000; }
+
+.tour-leader { position: absolute; inset: 0; z-index: 1; display: none; width: 100%; height: 100%; overflow: visible; pointer-events: none; transition: opacity .18s linear; }
+.tour-stage.wide .tour-leader { display: block; }
+.tour-stage.changing .tour-leader { opacity: 0; }
+.tour-leader-line { fill: none; stroke: var(--hw-active); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; transition: stroke-dashoffset .5s var(--md-sys-motion-easing) .12s; }
+.tour-leader-start { fill: var(--hw-active); }
+.tour-leader-end { fill: var(--hw-active); stroke: #fff; stroke-width: 2; }
+
+/* progress: a dot per highlight, the current one a pill that fills while it plays */
+.tour-controls { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 8px 12px; margin-top: 16px; }
+.tour-dots { display: flex; align-items: center; }
+.tour-dot {
+  position: relative; display: grid; place-items: center; width: 22px; height: 32px; padding: 0;
+  border: 0; background: transparent; cursor: pointer; transition: width var(--md-sys-motion-medium) var(--md-sys-motion-easing);
+}
+.tour-dot::before {
+  content: ""; width: calc(100% - 12px); height: 8px; border-radius: 4px;
+  background: var(--md-sys-color-outline-variant); transition: background-color var(--md-sys-motion-short) linear;
+}
+.tour-dot:hover::before { background: var(--md-sys-color-outline); }
+.tour-dot:focus-visible { outline-offset: -4px; border-radius: var(--md-sys-shape-sm); }
+.tour-dot.active { width: 48px; }
+.tour-dot.active::before { background: color-mix(in srgb, var(--md-sys-color-primary) 28%, transparent); }
+.tour-dot-fill {
+  position: absolute; left: 6px; right: 6px; top: 50%; height: 8px; margin-top: -4px; border-radius: 4px;
+  background: var(--md-sys-color-primary); transform-origin: left center; transform: scaleX(0); opacity: 0;
+}
+.tour-dot.active .tour-dot-fill { opacity: 1; }
+.tour-status { min-width: 56px; color: var(--md-sys-color-on-surface-variant); font-size: 12px; line-height: 16px; font-weight: 500; font-variant-numeric: tabular-nums; }
+.tour-banner { max-width: 640px; margin: 12px auto 0; }
+.tour-more { margin: 8px 0 0; text-align: center; }
+.tour-link { margin: 0 0 12px; }
+
 /* --- responsive ------------------------------------------------------------------------- */
 
 @media (max-width: 1100px) {
@@ -921,6 +1033,12 @@ td:first-child { font-weight: 500; }
   .segmented button { flex: 1; padding: 0 8px; }
   .card { padding: 16px 16px 8px; }
   .choice-options { grid-template-columns: minmax(0, 1fr); }
+  .tour { padding-top: 12px; }
+  .tour-title { font-size: 26px; line-height: 34px; }
+  .tour-intro { font-size: 15px; line-height: 23px; }
+  .tour-stage { padding: 16px 10px 14px; margin: 0 -8px; border-radius: var(--md-sys-shape-lg); }
+  .tour-bubble { padding: 16px; }
+  .tour-text { font-size: 15px; line-height: 23px; }
 }
 
 @media (max-width: 400px) {
@@ -936,7 +1054,7 @@ td:first-child { font-weight: 500; }
 }
 
 @media print {
-  .top-app-bar, .manual-toolbar, .hardware, .welcome-card, .toc, .snackbar, .step-list-wrap, .step-nav, .footer { display: none !important; }
+  .top-app-bar, .manual-toolbar, .hardware, .tour-controls, .welcome-card, .toc, .snackbar, .step-list-wrap, .step-nav, .footer { display: none !important; }
   .manual-layout, .wizard { display: block; }
   .card, .step-card { break-inside: avoid; box-shadow: none; }
 }

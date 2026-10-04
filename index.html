@@ -40,6 +40,9 @@
         <a href="#manual" data-view="manual" class="nav-tab">
           <svg class="icon" aria-hidden="true"><use href="#i-book"/></svg><span>Manual</span>
         </a>
+        <a href="#highlights" data-view="highlights" class="nav-tab">
+          <svg class="icon" aria-hidden="true"><use href="#i-spark"/></svg><span>Highlights</span>
+        </a>
       </nav>
       <a href="#help" class="icon-button" id="help-button" title="Help and troubleshooting">
         <svg class="icon" aria-hidden="true"><use href="#i-help"/></svg>
@@ -128,11 +131,58 @@
       </div>
     </section>
 
+    <!-- Highlights tour (js/highlights.js, choreography in js/highlight-shows.js), content from
+         the Highlights section of data/features.json -->
+    <section id="view-highlights" class="view" aria-labelledby="tour-title" hidden>
+      <div class="tour">
+        <header class="tour-head">
+          <div class="tour-heading">
+            <p class="eyebrow">Highlights</p>
+            <h1 id="tour-title" class="tour-title">The best of it in a minute</h1>
+            <p class="tour-intro">Sit back: the tour plays by itself. Point at the controller to hold a step.</p>
+          </div>
+          <div class="segmented" role="radiogroup" aria-label="Controller">
+            <button type="button" role="radio" data-device="mikro"><svg class="icon check" aria-hidden="true"><use href="#i-check"/></svg>MIKRO MK3</button>
+            <button type="button" role="radio" data-device="mk3"><svg class="icon check" aria-hidden="true"><use href="#i-check"/></svg>MK3 / MASCHINE+</button>
+          </div>
+        </header>
+        <div id="tour-stage" class="tour-stage">
+          <div class="tour-device-wrap">
+            <svg id="tour-device" class="hw-drawing" role="img" aria-label="Controller"></svg>
+          </div>
+          <svg class="tour-leader" aria-hidden="true" focusable="false">
+            <path class="tour-leader-line"/>
+            <circle class="tour-leader-start" r="4"/>
+            <circle class="tour-leader-end" r="5"/>
+          </svg>
+          <div id="tour-bubble" class="tour-bubble">
+            <p class="tour-count" id="tour-count"></p>
+            <h2 class="tour-combo" id="tour-combo"></h2>
+            <svg id="tour-loupe" class="tour-loupe" aria-hidden="true" focusable="false" hidden><path class="pixels"/><path class="pixels-inverse"/></svg>
+            <p class="tour-text" id="tour-text"></p>
+          </div>
+        </div>
+        <div class="tour-controls">
+          <button type="button" id="tour-pause" class="icon-button" aria-pressed="false" title="Pause the tour">
+            <svg class="icon" aria-hidden="true"><use id="tour-pause-icon" href="#i-pause"/></svg>
+            <span class="visually-hidden">Pause the tour</span>
+          </button>
+          <div id="tour-dots" class="tour-dots" role="group" aria-label="Highlights"></div>
+          <span id="tour-status" class="tour-status" aria-hidden="true"></span>
+        </div>
+        <p id="tour-unverified" class="banner tour-banner" hidden>
+          <svg class="icon" aria-hidden="true"><use href="#i-info"/></svg>
+          <span>MK3 / MASCHINE+ support is built from the hardware protocol and not yet tested on a real unit.</span>
+        </p>
+        <p class="tour-more"><a class="btn btn-text has-icon-start" href="#manual"><svg class="icon" aria-hidden="true"><use href="#i-book"/></svg>Everything in detail: the manual</a></p>
+      </div>
+    </section>
+
     <noscript><p class="noscript">This manual needs JavaScript. The product page: <a href="https://payhip.com/b/h4tva">payhip.com/b/h4tva</a>.</p></noscript>
   </main>
 
   <footer class="footer">
-    <p>Elton47 · <a href="https://payhip.com/b/h4tva">Get the script</a> · <a href="#setup">Set up</a> · <a href="https://elton47.github.io/MMMk3-User-Manual/">v1.6.1 manual (Live 11)</a></p>
+    <p>Elton47 · <a href="https://payhip.com/b/h4tva">Get the script</a> · <a href="#setup">Set up</a> · <a href="#highlights">Highlights</a> · <a href="https://elton47.github.io/MMMk3-User-Manual/">v1.6.1 manual (Live 11)</a></p>
     <p>Not affiliated with Native Instruments or Ableton.</p>
   </footer>
 
@@ -160,6 +210,9 @@
       <symbol id="i-edit" viewBox="0 0 24 24"><path d="M4.5 19.5l1-4L15.5 5.5l3 3-10 10z"/></symbol>
       <symbol id="i-computer" viewBox="0 0 24 24"><rect x="3.5" y="4.5" width="17" height="11.5" rx="1.5"/><path d="M9 20h6M12 16v4"/></symbol>
       <symbol id="i-pads" viewBox="0 0 24 24"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></symbol>
+      <symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 3.5l1.9 5.6 5.6 1.9-5.6 1.9L12 18.5l-1.9-5.6L4.5 11l5.6-1.9z"/><path d="M18.5 15.5l.7 2 2 .7-2 .7-.7 2-.7-2-2-.7 2-.7z"/></symbol>
+      <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5.5v13l10.5-6.5z"/></symbol>
+      <symbol id="i-pause" viewBox="0 0 24 24"><path d="M8.5 5.5v13M15.5 5.5v13"/></symbol>
       <symbol id="i-live" viewBox="0 0 24 24"><path d="M5 5v14M9 5v14M13 5v14M15.5 19L19 5"/></symbol>
     </defs>
   </svg>
@@ -168,6 +221,8 @@
   <script src="js/site.js"></script>
   <script src="js/manual.js"></script>
   <script src="js/setup.js"></script>
+  <script src="js/highlight-shows.js"></script>
+  <script src="js/highlights.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>

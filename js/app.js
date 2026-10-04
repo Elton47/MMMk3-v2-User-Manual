@@ -1,5 +1,7 @@
-// Boot and routing. Views: #setup... (the setup wizard) and everything else (the manual:
-// #manual, #mikro, #mk3/PLUG-IN, #<section id>). A first visit without a hash opens the setup.
+// Boot and routing. Views: #setup... (the setup wizard), #highlights... (the self-playing
+// highlights tour: #highlights, #highlights/3, #highlights/mk3/3) and everything else (the
+// manual: #manual, #mikro, #mk3/PLUG-IN, #<section id>). A first visit without a hash opens the
+// setup.
 (function () {
   'use strict';
 
@@ -15,7 +17,8 @@
   }
 
   function showView(name) {
-    ['setup', 'manual'].forEach(function (view) {
+    if (name !== 'highlights') MM.tour.stop();
+    ['setup', 'manual', 'highlights'].forEach(function (view) {
       el('view-' + view).hidden = view !== name;
     });
     document.querySelectorAll('.nav-tab').forEach(function (tab) {
@@ -33,6 +36,13 @@
       // The header's help button: the troubleshooting step for this visitor's setup.
       showView('setup');
       if (ready.setup) MM.setup.help();
+      return;
+    }
+    if (parts[0] === 'highlights') {
+      showView('highlights');
+      document.title = 'Highlights · MASCHINE for Ableton Live';
+      if (ready.manual) MM.tour.show(parts.slice(1));
+      else el('tour-stage').innerHTML = '<p class="load-error">Could not load the highlights. Reload the page to try again.</p>';
       return;
     }
     var setup = parts[0] === 'setup' ||
@@ -62,6 +72,7 @@
       if (features) {
         el('version').textContent = 'Manual · v' + features.version;
         MM.manual.init(features);
+        MM.tour.init(features);
         ready.manual = true;
       } else {
         el('sections').innerHTML = '<p class="empty">Could not load the manual data (open the page through a web server).</p>';

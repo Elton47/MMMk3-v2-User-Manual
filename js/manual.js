@@ -5,7 +5,7 @@ MM.manual = (function () {
 
   var SVG = 'http://www.w3.org/2000/svg';
   var el = MM.el, h = MM.h;
-  var state = { data: null, device: 'mikro', selected: null, query: '', ready: false };
+  var state = { data: null, device: 'mikro', selected: null, query: '', ready: false, drawing: null };
 
   // --- data helpers ------------------------------------------------------------------------
 
@@ -85,7 +85,8 @@ MM.manual = (function () {
     '-': '00000000000000011111000000000000000', '.': '00000000000000000000000000110001100',
     ':': '00000011000110000000011000110000000', ' ': '00000000000000000000000000000000000',
     '/': '00001000100001000100010000100010000', '%': '11001110100001000100010000101110011',
-    '+': '00000001000010011111001000010000000'
+    '+': '00000001000010011111001000010000000', '>': '10000010000010000010001000100010000',
+    '<': '00001000100010001000001000001000001', '_': '00000000000000000000000000000011111'
   };
 
   // Path data for text in the pixel font: top-left at (x, y), one font pixel = px units.
@@ -109,8 +110,14 @@ MM.manual = (function () {
     });
   }
 
-  function drawDefs(svg) {
-    var defs = node('defs', {}, svg);
+  // The gradients of the realistic drawings, once per page in a hidden <svg> of their own: every
+  // drawing (the manual's and the highlights tour's) refers to them, and a gradient inside a
+  // hidden view would not paint the other one.
+  function sharedDefs() {
+    if (el('hw-defs')) return;
+    var holder = node('svg', { id: 'hw-defs', width: 0, height: 0, 'aria-hidden': 'true', focusable: 'false' });
+    holder.style.position = 'absolute';
+    var defs = node('defs', {}, holder);
     gradient(defs, 'linearGradient', 'hw-body-fill', { x1: 0, y1: 0, x2: 0, y2: 1 }, [[0, '#202022'], [1, '#141415']]);
     gradient(defs, 'linearGradient', 'hw-cap-fill', { x1: 0, y1: 0, x2: 0, y2: 1 }, [[0, '#353538'], [1, '#27272a']]);
     gradient(defs, 'radialGradient', 'hw-pad-fill', { cx: '50%', cy: '45%', r: '70%' }, [[0, '#4a4a4e'], [1, '#353538']]);
@@ -119,7 +126,7 @@ MM.manual = (function () {
     gradient(defs, 'radialGradient', 'hw-knob-top', { cx: '40%', cy: '34%', r: '72%' }, [[0, '#6b6b70'], [0.6, '#404044'], [1, '#2a2a2d']]);
     gradient(defs, 'linearGradient', 'hw-light-fill', { x1: 0, y1: 0, x2: 0, y2: 1 }, [[0, '#e9edf0'], [1, '#c4cbd0']]);
     gradient(defs, 'linearGradient', 'hw-glass-fill', { x1: 0, y1: 0, x2: 0.35, y2: 1 }, [[0, '#121214'], [0.45, '#08080a'], [1, '#040405']]);
-    return defs;
+    document.body.appendChild(holder);
   }
 
   function drawIcon(g, icon, x, y, w, hgt) {
@@ -212,28 +219,171 @@ MM.manual = (function () {
     });
   }
 
-  // The screens show `lines`: the OLED takes text lines, the colour screens { left, right } (a
-  // side that is left out shows the layout's default).
-  function showScreen(lines) {
-    var lcd = state.lcd;
-    if (lcd && lines && lcd.content !== lines) {
-      lcd.content = lines;
-      Object.keys(lcd.sides).forEach(function (name) {
-        drawLcd(lcd.sides[name], lines[name] || layout().screen[name]);
+  // A drawing of a layout in an <svg>: the manual's (#device, the controls are buttons) and the
+  // highlights tour's (js/highlights.js, a picture). options.onSelect(id): called when a control
+  // is clicked or chosen with Enter / Space; without it the controls are not interactive.
+  // Returns { svg, device, layout(), draw(device), node(id), showScreen(lines), paintPads(demo),
+  // dots (the strip LEDs) }.
+  function createDrawing(svg, options) {
+    options = options || {};
+    var drawing = { svg: svg, device: null, oled: null, lcd: null, dots: [] };
+
+    drawing.layout = function () { return LAYOUTS[drawing.device]; };
+
+    drawing.node = function (id) {
+      return svg.querySelector('[data-id="' + id.replace(/"/g, '\\"') + '"]');
+    };
+
+    // The screens show `lines`: the OLED takes text lines, the colour screens { left, right } (a
+    // side that is left out shows the layout's default).
+    drawing.showScreen = function (lines) {
+      var lcd = drawing.lcd;
+      if (lcd && lines && lcd.content !== lines) {
+        lcd.content = lines;
+        Object.keys(lcd.sides).forEach(function (name) {
+          drawLcd(lcd.sides[name], lines[name] || drawing.layout().screen[name]);
+        });
+      }
+      // The OLED: 2 lines (big + small) or 3 small lines, like the script's screens. In the 3-line
+      // layout a line can be { text, inverse: true }: dark text on a lit bar (a chosen list entry).
+      var oled = drawing.oled;
+      if (!oled || !lines || oled.lines === lines) return;
+      oled.lines = lines;
+      var px = oled.px, d = '', inverse = '';
+      if (lines.length > 2) {
+        lines.forEach(function (line, i) {
+          var x = oled.x + 2 * px, y = oled.y + (2 + i * 11) * px;
+          if (line && line.inverse) {
+            d += 'M' + oled.x.toFixed(2) + ' ' + (y - px).toFixed(2) + 'h' + (128 * px).toFixed(2) +
+              'v' + (9 * px).toFixed(2) + 'h-' + (128 * px).toFixed(2) + 'z';
+            inverse += pixelText(line.text, x, y, px);
+          } else {
+            d += pixelText(line && line.text !== undefined ? line.text : line || '', x, y, px);
+          }
+        });
+      } else {
+        d = pixelText(lines[0] || '', oled.x + 2 * px, oled.y + 2 * px, px * 2) +
+          pixelText(lines[1] || '', oled.x + 2 * px, oled.y + 21 * px, px);
+      }
+      oled.path.setAttribute('d', d);
+      oled.inverse.setAttribute('d', inverse);
+    };
+
+    // The pads as a mode lights them: demo is 16 entries in pad order, null or { color, level,
+    // drum } (see padDemos() in layouts.js); no demo lights nothing.
+    drawing.paintPads = function (demo) {
+      for (var n = 1; n <= 16; n++) {
+        var g = drawing.node('PAD ' + n);
+        if (!g) continue;
+        var entry = demo && demo[n - 1];
+        ['dim', 'mid', 'bright'].forEach(function (level) {
+          g.classList.toggle('demo-' + level, !!entry && entry.level === level);
+        });
+        if (entry) g.style.setProperty('--demo-color', entry.drum ? drumColor(entry.drum, entry.color) : entry.color);
+        else g.style.removeProperty('--demo-color');
+      }
+    };
+
+    drawing.draw = function (device) {
+      drawing.device = device;
+      drawing.oled = null;
+      drawing.lcd = null;
+      drawing.dots = [];
+      var spec = drawing.layout();
+      var interactive = typeof options.onSelect === 'function';
+      svg.innerHTML = '';
+      svg.setAttribute('viewBox', '0 0 ' + spec.width + ' ' + spec.height);
+      var real = !!spec.real;  // measured from a photo: drawn with the printed look
+      svg.classList.add('hw-drawing');
+      svg.classList.toggle('real', real);
+      if (real) sharedDefs();
+      var defs = node('defs', {}, svg);  // this drawing's own: the colour screens' clip paths
+      node('rect', { x: 1, y: 1, width: spec.width - 2, height: spec.height - 2, rx: spec.radius || 26, 'class': 'hw-body' }, svg);
+      (spec.panels || []).forEach(function (p) {
+        node('rect', { x: Math.max(p[0], 1), y: Math.max(p[1], 1), width: Math.min(p[2], spec.width - 1 - Math.max(p[0], 1)),
+          height: Math.min(p[3], spec.height - 1 - Math.max(p[1], 1)), 'class': p[4] }, svg);
       });
-    }
-    // The OLED: 2 lines (big + small) or 3 small lines, like the script's screens.
-    var oled = state.oled;
-    if (!oled || !lines || oled.lines === lines) return;
-    oled.lines = lines;
-    var px = oled.px, d = '';
-    if (lines.length > 2) {
-      lines.forEach(function (line, i) { d += pixelText(line, oled.x + 2 * px, oled.y + (2 + i * 11) * px, px); });
-    } else {
-      d = pixelText(lines[0] || '', oled.x + 2 * px, oled.y + 2 * px, px * 2) +
-        pixelText(lines[1] || '', oled.x + 2 * px, oled.y + 21 * px, px);
-    }
-    oled.path.setAttribute('d', d);
+      (spec.stripDots || []).forEach(function (dot) {
+        drawing.dots.push(node('circle', { cx: dot[0], cy: dot[1], r: 2.2, 'class': 'hw-dot' }, svg));
+      });
+      (spec.marks || []).forEach(function (dot) { node('circle', { cx: dot[0], cy: dot[1], r: dot[2], 'class': 'hw-mark' }, svg); });
+      spec.controls.forEach(function (c) {
+        var id = c[0], label = c[1], x = c[2], y = c[3], w = c[4], hgt = c[5], kind = c[6], opts = c[7] || {};
+        var g = node('g', { 'class': 'hw-control ' + kind, 'data-id': id }, svg);
+        if (interactive && kind !== 'screen') {
+          g.setAttribute('tabindex', '0');
+          g.setAttribute('role', 'button');
+          g.setAttribute('aria-label', controlName(id, label));
+          g.setAttribute('aria-pressed', 'false');
+          g.addEventListener('click', function () { options.onSelect(id); });
+          g.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); options.onSelect(id); }
+          });
+        }
+        if (kind === 'pad') g.style.setProperty('--pad-color', PAD_COLORS[Number(label) - 1]);
+        if (opts.lit) {
+          g.classList.add('lit');
+          g.classList.toggle('lit-bright', !!opts.litBright);
+          g.style.setProperty('--lit-color', opts.lit);
+        }
+        if (opts.light) g.classList.add('light');
+        if (kind === 'encoder' || kind === 'knob') {
+          var r = Math.min(w, hgt) / 2, cx = x + w / 2, cy = y + hgt / 2;
+          node('circle', { cx: cx, cy: cy, r: r, 'class': 'ring' }, g);
+          if (real && opts.face) {
+            // a dark skirt with a lighter top; the encoder has a ridged band between them
+            if (kind === 'encoder') node('circle', { cx: cx, cy: cy, r: r * (opts.face + 1) / 2, 'class': 'knurl' }, g);
+            node('circle', { cx: cx, cy: cy, r: r * opts.face, 'class': 'knob-top' }, g);
+          } else if (kind === 'encoder' && real) {
+            node('circle', { cx: cx, cy: cy, r: r * 0.8, 'class': 'knurl' }, g);
+            node('circle', { cx: cx, cy: cy, r: r * 0.66, 'class': 'knob-cap' }, g);
+          } else if (kind === 'encoder') {
+            node('circle', { cx: cx, cy: cy, r: r * 0.62 }, g);
+          }
+          if (!real) node('text', { x: cx, y: cy }, g).textContent = label;
+          return;
+        }
+        if (kind === 'screen' && real && opts.lcd) {
+          // a colour screen flush in the glass; content drawn in its own 480 x 272 units
+          node('rect', { x: x, y: y, width: w, height: hgt, 'class': 'lcd' }, g);
+          var clipId = (svg.id || 'hw') + '-lcd-clip-' + opts.lcd;
+          node('rect', { x: x, y: y, width: w, height: hgt }, node('clipPath', { id: clipId }, defs));
+          var s = Math.min(w / 480, hgt / 272);
+          var content = node('g', { transform: 'translate(' + (x + (w - 480 * s) / 2).toFixed(2) + ' ' +
+            (y + (hgt - 272 * s) / 2).toFixed(2) + ') scale(' + s.toFixed(4) + ')' }, node('g', { 'clip-path': 'url(#' + clipId + ')' }, g));
+          drawing.lcd = drawing.lcd || { sides: {}, content: null };
+          drawing.lcd.sides[opts.lcd] = content;
+          return;
+        }
+        if (kind === 'screen' && real) {
+          node('rect', { x: x, y: y, width: w, height: hgt, rx: 2, 'class': 'bezel' }, g);
+          var inset = hgt * 0.12, ow = w - inset * 2, oh = hgt - inset * 2;
+          node('rect', { x: x + inset, y: y + inset, width: ow, height: oh, 'class': 'oled' }, g);
+          // the MIKRO's OLED is 128 x 32 pixels
+          drawing.oled = { x: x + inset, y: y + inset, px: ow / 128, path: node('path', { 'class': 'pixels' }, g),
+            inverse: node('path', { 'class': 'pixels-inverse' }, g), lines: null };
+          return;
+        }
+        node('rect', { x: x, y: y, width: w, height: hgt, rx: real ? (kind === 'pad' ? 4 : 2.5) : (kind === 'pad' ? 10 : 6), 'class': 'cap' }, g);
+        if (!real) {
+          node('text', { x: x + w / 2, y: y + hgt / 2 }, g).textContent = kind === 'screen' ? spec.title.replace('MASCHINE ', '') : label;
+        } else if (kind === 'pad') {
+          node('rect', { x: x, y: y, width: w, height: hgt, rx: 4, 'class': 'sheen' }, g);
+          var printed = node('text', { x: x + 7, y: y + 12, 'class': 'pad-print' }, g);
+          node('tspan', { 'class': 'pad-number' }, printed).textContent = label;
+          if (opts.sub) node('tspan', { 'class': 'pad-label', dx: 4 }, printed).textContent = opts.sub;
+          if (opts.letter) node('text', { x: x + w - 7, y: y + 12, 'class': 'pad-print pad-letter' }, g).textContent = opts.letter;
+        } else if (kind === 'strip') {
+          node('rect', { x: x + 3, y: y + 3, width: w - 6, height: hgt - 6, rx: 1.5, 'class': 'strip-inner' }, g);
+        } else if (opts.icon) {
+          drawIcon(g, opts.icon, x, y, w, hgt);
+        } else if (!opts.light) {
+          drawLabel(g, label, opts, x, y, w, hgt);
+        }
+      });
+    };
+
+    return drawing;
   }
 
   function updateScreen(combo) {
@@ -242,7 +392,7 @@ MM.manual = (function () {
     var lines = null;
     (combo || []).some(function (token) { return (lines = spec.screens[token] || null); });
     if (!lines && state.selected) lines = spec.screens[state.selected] || null;
-    showScreen(lines || spec.screen);
+    state.drawing.showScreen(lines || spec.screen);
   }
 
   // The mode a section is about: its first single-button item (for this device) that has a pad
@@ -272,116 +422,20 @@ MM.manual = (function () {
     if (!demo && kept) demo = demos[keep];
     el('device').classList.toggle('combo-demo', !!demo);
     if (!demo && state.selected) demo = demos[state.selected] || null;
-    for (var n = 1; n <= 16; n++) {
-      var g = controlNode('PAD ' + n);
-      if (!g) continue;
-      var entry = demo && demo[n - 1];
-      ['dim', 'mid', 'bright'].forEach(function (level) {
-        g.classList.toggle('demo-' + level, !!entry && entry.level === level);
-      });
-      if (entry) g.style.setProperty('--demo-color', entry.drum ? drumColor(entry.drum, entry.color) : entry.color);
-      else g.style.removeProperty('--demo-color');
-    }
+    state.drawing.paintPads(demo);
   }
 
   function drawDevice() {
-    state.oled = null;
-    state.lcd = null;
-    var svg = el('device');
     var spec = layout();
-    svg.innerHTML = '';
-    svg.setAttribute('viewBox', '0 0 ' + spec.width + ' ' + spec.height);
-    svg.setAttribute('aria-label', spec.title + ' layout: choose a control to see what it does');
-    var real = !!spec.real;  // measured from a photo: drawn with the printed look
-    svg.classList.toggle('real', real);
-    var defs = real ? drawDefs(svg) : null;
-    node('rect', { x: 1, y: 1, width: spec.width - 2, height: spec.height - 2, rx: spec.radius || 26, 'class': 'hw-body' }, svg);
-    (spec.panels || []).forEach(function (p) {
-      node('rect', { x: Math.max(p[0], 1), y: Math.max(p[1], 1), width: Math.min(p[2], spec.width - 1 - Math.max(p[0], 1)),
-        height: Math.min(p[3], spec.height - 1 - Math.max(p[1], 1)), 'class': p[4] }, svg);
-    });
-    (spec.stripDots || []).forEach(function (dot) { node('circle', { cx: dot[0], cy: dot[1], r: 2.2, 'class': 'hw-dot' }, svg); });
-    (spec.marks || []).forEach(function (dot) { node('circle', { cx: dot[0], cy: dot[1], r: dot[2], 'class': 'hw-mark' }, svg); });
-    spec.controls.forEach(function (c) {
-      var id = c[0], label = c[1], x = c[2], y = c[3], w = c[4], hgt = c[5], kind = c[6], opts = c[7] || {};
-      var interactive = kind !== 'screen';
-      var g = node('g', { 'class': 'hw-control ' + kind, 'data-id': id }, svg);
-      if (interactive) {
-        g.setAttribute('tabindex', '0');
-        g.setAttribute('role', 'button');
-        g.setAttribute('aria-label', controlName(id, label));
-        g.setAttribute('aria-pressed', 'false');
-        g.addEventListener('click', function () { select(id); });
-        g.addEventListener('keydown', function (e) {
-          if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); select(id); }
-        });
-      }
-      if (kind === 'pad') g.style.setProperty('--pad-color', PAD_COLORS[Number(label) - 1]);
-      if (opts.lit) {
-        g.classList.add('lit');
-        g.classList.toggle('lit-bright', !!opts.litBright);
-        g.style.setProperty('--lit-color', opts.lit);
-      }
-      if (opts.light) g.classList.add('light');
-      if (kind === 'encoder' || kind === 'knob') {
-        var r = Math.min(w, hgt) / 2, cx = x + w / 2, cy = y + hgt / 2;
-        node('circle', { cx: cx, cy: cy, r: r, 'class': 'ring' }, g);
-        if (real && opts.face) {
-          // a dark skirt with a lighter top; the encoder has a ridged band between them
-          if (kind === 'encoder') node('circle', { cx: cx, cy: cy, r: r * (opts.face + 1) / 2, 'class': 'knurl' }, g);
-          node('circle', { cx: cx, cy: cy, r: r * opts.face, 'class': 'knob-top' }, g);
-        } else if (kind === 'encoder' && real) {
-          node('circle', { cx: cx, cy: cy, r: r * 0.8, 'class': 'knurl' }, g);
-          node('circle', { cx: cx, cy: cy, r: r * 0.66, 'class': 'knob-cap' }, g);
-        } else if (kind === 'encoder') {
-          node('circle', { cx: cx, cy: cy, r: r * 0.62 }, g);
-        }
-        if (!real) node('text', { x: cx, y: cy }, g).textContent = label;
-        return;
-      }
-      if (kind === 'screen' && real && opts.lcd) {
-        // a colour screen flush in the glass; content drawn in its own 480 x 272 units
-        node('rect', { x: x, y: y, width: w, height: hgt, 'class': 'lcd' }, g);
-        var clipId = 'lcd-clip-' + opts.lcd;
-        node('rect', { x: x, y: y, width: w, height: hgt }, node('clipPath', { id: clipId }, defs));
-        var s = Math.min(w / 480, hgt / 272);
-        var content = node('g', { transform: 'translate(' + (x + (w - 480 * s) / 2).toFixed(2) + ' ' +
-          (y + (hgt - 272 * s) / 2).toFixed(2) + ') scale(' + s.toFixed(4) + ')' }, node('g', { 'clip-path': 'url(#' + clipId + ')' }, g));
-        state.lcd = state.lcd || { sides: {}, content: null };
-        state.lcd.sides[opts.lcd] = content;
-        return;
-      }
-      if (kind === 'screen' && real) {
-        node('rect', { x: x, y: y, width: w, height: hgt, rx: 2, 'class': 'bezel' }, g);
-        var inset = hgt * 0.12, ow = w - inset * 2, oh = hgt - inset * 2;
-        node('rect', { x: x + inset, y: y + inset, width: ow, height: oh, 'class': 'oled' }, g);
-        // the MIKRO's OLED is 128 x 32 pixels
-        state.oled = { x: x + inset, y: y + inset, px: ow / 128, path: node('path', { 'class': 'pixels' }, g), lines: null };
-        return;
-      }
-      node('rect', { x: x, y: y, width: w, height: hgt, rx: real ? (kind === 'pad' ? 4 : 2.5) : (kind === 'pad' ? 10 : 6), 'class': 'cap' }, g);
-      if (!real) {
-        node('text', { x: x + w / 2, y: y + hgt / 2 }, g).textContent = kind === 'screen' ? spec.title.replace('MASCHINE ', '') : label;
-      } else if (kind === 'pad') {
-        node('rect', { x: x, y: y, width: w, height: hgt, rx: 4, 'class': 'sheen' }, g);
-        var printed = node('text', { x: x + 7, y: y + 12, 'class': 'pad-print' }, g);
-        node('tspan', { 'class': 'pad-number' }, printed).textContent = label;
-        if (opts.sub) node('tspan', { 'class': 'pad-label', dx: 4 }, printed).textContent = opts.sub;
-        if (opts.letter) node('text', { x: x + w - 7, y: y + 12, 'class': 'pad-print pad-letter' }, g).textContent = opts.letter;
-      } else if (kind === 'strip') {
-        node('rect', { x: x + 3, y: y + 3, width: w - 6, height: hgt - 6, rx: 1.5, 'class': 'strip-inner' }, g);
-      } else if (opts.icon) {
-        drawIcon(g, opts.icon, x, y, w, hgt);
-      } else if (!opts.light) {
-        drawLabel(g, label, opts, x, y, w, hgt);
-      }
-    });
-    node('g', { id: 'badges' }, svg);
+    state.drawing = state.drawing || createDrawing(el('device'), { onSelect: select });
+    state.drawing.draw(state.device);
+    el('device').setAttribute('aria-label', spec.title + ' layout: choose a control to see what it does');
+    node('g', { id: 'badges' }, el('device'));
     paintHardware();
   }
 
   function controlNode(id) {
-    return el('device').querySelector('[data-id="' + id.replace(/"/g, '\\"') + '"]');
+    return state.drawing.node(id);
   }
 
   function paintHardware(combo, section) {
@@ -480,6 +534,13 @@ MM.manual = (function () {
     return grid;
   }
 
+  // The Highlights section opens the self-playing tour over the controller (js/highlights.js).
+  function tourLink() {
+    return h('p', { className: 'tour-link' }, [
+      h('a', { className: 'btn btn-tonal has-icon-start', href: '#highlights' }, [MM.icon('play'), 'Watch the highlights tour'])
+    ]);
+  }
+
   function renderSections() {
     var container = el('sections');
     var toc = el('toc');
@@ -503,6 +564,7 @@ MM.manual = (function () {
       container.appendChild(h('section', { className: 'card', id: section.id, 'aria-labelledby': 'h-' + section.id }, [
         heading,
         section.summary ? h('p', { className: 'summary', text: section.summary }) : null,
+        section.id === 'highlights' && !query ? tourLink() : null,
         section.grid && !query ? shiftGrid(section) : null,
         swatches.length ? swatchTable(section, swatches) : null,
         list
@@ -566,7 +628,7 @@ MM.manual = (function () {
     if (!LAYOUTS[device]) return;
     state.device = device;
     MM.store('device', device);
-    document.querySelectorAll('.segmented button').forEach(function (b) {
+    document.querySelectorAll('#view-manual .segmented button').forEach(function (b) {
       b.setAttribute('aria-checked', String(b.getAttribute('data-device') === device));
       b.setAttribute('tabindex', b.getAttribute('data-device') === device ? '0' : '-1');
     });
@@ -585,7 +647,7 @@ MM.manual = (function () {
   function init(data) {
     state.data = data;
     renderChanges();
-    var buttons = Array.prototype.slice.call(document.querySelectorAll('.segmented button'));
+    var buttons = Array.prototype.slice.call(document.querySelectorAll('#view-manual .segmented button'));
     buttons.forEach(function (b, index) {
       b.addEventListener('click', function () { setDevice(b.getAttribute('data-device')); });
       b.addEventListener('keydown', function (e) {
@@ -645,5 +707,8 @@ MM.manual = (function () {
     return !!(state.data && state.data.sections.some(function (s) { return s.id === id; }));
   }
 
-  return { init: init, show: show, setDeviceFromSetup: setDeviceFromSetup, hasSection: hasSection, updateWelcome: updateWelcome };
+  return {
+    init: init, show: show, setDeviceFromSetup: setDeviceFromSetup, hasSection: hasSection, updateWelcome: updateWelcome,
+    createDrawing: createDrawing, forDevice: function (entry, device) { return !entry.devices || entry.devices.indexOf(device) >= 0; }
+  };
 })();

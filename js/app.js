@@ -1,7 +1,8 @@
 // Boot and routing. Views: #setup... (the setup wizard), #highlights... (the self-playing
-// highlights tour: #highlights, #highlights/3, #highlights/mk3/3) and everything else (the
-// manual: #manual, #mikro, #mk3/PLUG-IN, #<section id>, a search: #manual?q=arp,
-// #mk3?q=note%20repeat). A first visit without a hash opens the setup.
+// highlights tour: #highlights, #highlights/3, #highlights/mk3/3), #cheatsheet... (the printable
+// cheat sheet: #cheatsheet, #cheatsheet/mk3) and everything else (the manual: #manual, #mikro,
+// #mk3/PLUG-IN, #<section id>, a search: #manual?q=arp, #mk3?q=note%20repeat). A first visit
+// without a hash opens the setup.
 (function () {
   'use strict';
 
@@ -18,11 +19,12 @@
 
   function showView(name) {
     if (name !== 'highlights') MM.tour.stop();
-    ['setup', 'manual', 'highlights'].forEach(function (view) {
+    ['setup', 'manual', 'highlights', 'cheatsheet'].forEach(function (view) {
       el('view-' + view).hidden = view !== name;
     });
+    var tabName = name === 'cheatsheet' ? 'manual' : name;  // the cheat sheet belongs to the manual
     document.querySelectorAll('.nav-tab').forEach(function (tab) {
-      if (tab.getAttribute('data-view') === name) tab.setAttribute('aria-current', 'page');
+      if (tab.getAttribute('data-view') === tabName) tab.setAttribute('aria-current', 'page');
       else tab.removeAttribute('aria-current');
     });
     if (current && current !== name) window.scrollTo(0, 0);
@@ -60,6 +62,13 @@
       else el('tour-stage').innerHTML = '<p class="load-error">Could not load the highlights. Reload the page to try again.</p>';
       return;
     }
+    if (parts[0] === 'cheatsheet') {
+      showView('cheatsheet');
+      document.title = 'Cheat sheet · MASCHINE for Ableton Live';
+      if (ready.manual) MM.cheatsheet.show(parts.slice(1));
+      else el('cheatsheet').innerHTML = '<p class="load-error">Could not load the manual data. Reload the page to try again.</p>';
+      return;
+    }
     var setup = parts[0] === 'setup' ||
       (!hash && !MM.store('setupDone') && !MM.store('manualSeen'));
     if (setup) {
@@ -87,6 +96,7 @@
       if (features) {
         el('version').textContent = 'Manual · v' + features.version;
         MM.manual.init(features);
+        MM.cheatsheet.init(features);
         MM.tour.init(features);
         ready.manual = true;
       } else {

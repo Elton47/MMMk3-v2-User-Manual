@@ -914,8 +914,7 @@ td:first-child { font-weight: 500; }
 .hw-drawing.real .button.tour-on .label.green { fill: #6dff7f; filter: drop-shadow(0 0 2px rgb(109 255 127 / .65)); }
 .hw-drawing.real .button.tour-on .label.red, .hw-drawing.real .button.tour-on .sublabel.red { fill: #ff6a5c; filter: drop-shadow(0 0 2px rgb(255 106 92 / .6)); }
 .hw-drawing.real .encoder.tour-on .ring { stroke: #fff; stroke-width: 2.6; }
-/* the touch strip as a progress bar, and its LEDs */
-.hw-drawing.real .strip-fill { opacity: .9; pointer-events: none; filter: drop-shadow(0 0 4px currentColor); }
+/* the touch strip's LEDs as a progress bar */
 .hw-drawing.real .hw-dot.on { opacity: 1; filter: drop-shadow(0 0 2px currentColor); }
 
 /* the callout: an elevated card; beside the controller with a leader line on wide windows,

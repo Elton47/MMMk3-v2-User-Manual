@@ -108,34 +108,19 @@ MM.tour = (function () {
     arrow.classList.toggle('tick', steps % 2 === 1);
   }
 
-  // The touch strip as a progress bar: fill (0-1) in color, red while flash; null clears it.
+  // The touch strip's LEDs as a progress bar: fill (0-1) in color, red while flash; null clears
+  // it. Only the LED dots light up, like on the controller; the touch surface stays unlit.
   function strip(fill, color, flash) {
-    var drawing = state.drawing, g = drawing.node('STRIP');
-    if (!g) return;
-    var bar = g.querySelector('.strip-fill');
+    var drawing = state.drawing;
     var on = fill !== null && fill !== undefined;
     var shade = flash ? PAD_COLORS[15] : color;
-    if (on && !bar) {
-      var c = controlSpecs('STRIP')[0];
-      bar = svgNode('rect', { x: c[2] + 3, y: c[3] + 3, height: c[5] - 6, width: 0, rx: 1.5, 'class': 'strip-fill' }, g);
-      bar.setAttribute('data-width', c[4] - 6);
-    }
-    if (bar) {
-      if (!on) { bar.parentNode.removeChild(bar); }
-      else {
-        bar.setAttribute('width', (Number(bar.getAttribute('data-width')) * Math.max(0, Math.min(1, fill))).toFixed(2));
-        bar.style.fill = shade;
-        bar.style.color = shade;
-      }
-    }
-    var count = on ? Math.round(fill * drawing.dots.length) : 0;
+    var count = on ? Math.round(Math.max(0, Math.min(1, fill)) * drawing.dots.length) : 0;
     drawing.dots.forEach(function (dot, i) {
       var lit = i < Math.max(count, on ? 1 : 0);
       dot.classList.toggle('on', lit);
       dot.style.fill = lit ? shade : '';
       dot.style.color = lit ? shade : '';
     });
-    g.classList.toggle('tour-flash', !!(on && flash));
   }
 
   function lcdFrom(lines) {

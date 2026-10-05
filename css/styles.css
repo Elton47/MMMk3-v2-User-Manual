@@ -721,6 +721,14 @@ td:first-child { font-weight: 500; }
   display: inline-block; width: 16px; height: 16px; margin-right: 10px; border-radius: 50%;
   vertical-align: -3px; box-shadow: inset 0 0 0 1px rgb(0 0 0 / .2);
 }
+.swatch-table .swatch-kind { min-width: 9em; }
+/* Phones: colour and sound on one line, the words under them. */
+@media (max-width: 600px) {
+  .swatch-table thead { display: none; }
+  .swatch-table tr { display: grid; grid-template-columns: auto 1fr; }
+  .swatch-table .swatch-kind { min-width: 0; }
+  .swatch-table .swatch-words { grid-column: 1 / -1; padding-top: 0; }
+}
 .swatches code {
   display: inline-block; margin: 0 2px 4px 0; padding: 1px 6px; border-radius: var(--md-sys-shape-xs);
   background: var(--md-sys-color-surface-container-highest); font-size: 12px;

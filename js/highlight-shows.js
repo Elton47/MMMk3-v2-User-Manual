@@ -192,7 +192,8 @@ var HIGHLIGHT_SHOWS = (function () {
 
     // MASCHINE Kits: STAR, open MASCHINE Kits (Favorites first), turn to an Expansion and open
     // it: its kits, a favourite with a star. Turning onto a kit previews it; SHIFT + STAR makes
-    // it a favourite too (popup, then its star); PUSH loads it as a new track's Drum Rack.
+    // it a favourite too (popup, then its star); PUSH loads it as the selected MIDI track's Drum Rack
+    // (or a new track's), the pads in the drum colours.
     'PUSH': {
       every: 750,
       loupe: true,

@@ -84,11 +84,77 @@ var SAMPLE_SELECTED = 0;  // index into SAMPLE_TRACKS
 var SAMPLE_ARMED = 1;
 var SAMPLE_SCENE_COLOR = PAD_COLORS[5];  // Green
 // The Drum Rack on 1-Drums, in pad order (pad 1 first). manual.js colours each pad by the drum
-// name colour table in features.json (first matching rule), like the script's name colours.
+// name rules (drumRule() below), like the script's name colours.
 // Kit and pad 1 as in the script's reference drums screen (data/screens.json).
 var SAMPLE_DRUMS = ['Kick 909 1', 'Snare', 'Closed Hat', 'Open Hat', 'Clap', 'Rim', 'Low Tom', 'High Tom',
   'Crash', 'Ride', 'Shaker', 'Cowbell', 'Perc 1', 'Perc 2', 'FX', 'Bass'];
 var SAMPLE_KIT = 'Kit-Core 909';  // that Drum Rack's name
+
+// The drum name colour rules, ported 1:1 from the script (pad_layout.py: _DRUM_NAME_COLORS,
+// _ENDINGS, _PLACED, drum_kind), in rule order: [kind, words a name word starts with, short
+// words that only count whole]. The kind is the text after the colour in the swatch names of
+// features.json ('Red: Kick, 808, sub, bass'), which gives the rule its colour; that table lists
+// the common words, these are all of them. Keep both in step with the script.
+var DRUM_NAME_RULES = [
+  ['Kick, 808, sub, bass', ['kick', 'bassdrum', 'bass', '808', 'sub', 'boom', 'sine', 'kck'], ['bd', 'bdr', 'kk', 'kik']],
+  ['Snare', ['snare', 'snr', 'volt', 'breaker'], ['sd', 'sdr', 'sn', 'sne']],
+  ['Rim, stick, snap', ['rim', 'stick', 'sidestick', 'snap'], ['rs', 'ss']],
+  ['Clap', ['clap', 'clp', 'handclap', 'slap'], ['cp', 'cl']],
+  ['Tom, big drum', ['tom', 'floortom', 'bigtom', 'taiko', 'timpani', 'surdo'], ['tm', 'lt', 'mt', 'ht', 'ft']],
+  ['Percussion', ['perc', 'prc', 'conga', 'cng', 'bongo', 'timbal', 'cowbell', 'block', 'wood', 'clave',
+    'agogo', 'kettle', 'guiro', 'cajon', 'tabla', 'djembe', 'darabuk', 'click', 'tap', 'fractal'], ['cb']],
+  ['Bell, metal tones', ['bell', 'triangle', 'gong', 'chime', 'tubular', 'glock', 'marimba', 'kalimba',
+    'vibe'], ['tri']],
+  ['Atmosphere, pad', ['ambien', 'drone', 'atmos', 'texture', 'pad'], []],
+  ['Shaker, tambourine', ['shaker', 'shake', 'shk', 'tamb', 'tmb', 'cabasa', 'maraca'], []],
+  ['Open hi-hat', ['ohh', 'oht', 'openhat', 'openhh'], ['oh']],  // and 'Open HH'
+  ['Hi-hat', ['hat', 'hihat', 'hh', 'hht', 'chh', 'closed', 'silver'], ['ch']],
+  ['Ride', ['ride'], ['rd']],
+  ['Crash, cymbal', ['crash', 'crsh', 'cymbal', 'cym', 'china', 'splash'], ['cy']],
+  ['Synth, keys', ['synth', 'lead', 'chord', 'key', 'piano', 'arp', 'pluck', 'stab', 'organ', 'string',
+    'brass', 'horn', 'guitar', 'ensemble', 'modular', 'lick'], []],
+  ['Vocal', ['vocal', 'voc', 'vox', 'voice', 'chant', 'breath', 'choir', 'shout', 'adlib'], ['vx']],
+  ['FX, riser, noise', ['fx', 'sfx', 'riser', 'rise', 'sweep', 'uplift', 'downlift', 'zap', 'laser',
+    'lazer', 'glitch', 'noise', 'dist', 'rev', 'blip', 'blop', 'buzz', 'crackle', 'swell', 'drill', 'dive',
+    'scratch', 'pop'], []],
+  ['Hit, impact', ['hit', 'impact', 'strike', 'metal'], []],
+  ['Loop, break, fill', ['loop', 'break', 'drum', 'groove', 'fill'], []]
+];
+
+// The index into DRUM_NAME_RULES of the rule a drum pad name matches, or -1 (white). The name is
+// read word by word, first word first. A hat at a word's start or end ('HatRoll', 'ClosedHH',
+// 'OpenHat') or 'hihat' is a hi-hat, not one mid-word ('Manhattan'); a drum with its place in
+// front ('LoTom', 'HiConga') is checked first, as 'hitom' starts with 'hit'; kick, snare, clap
+// and tri also count at a word's end ('SubKick', 'HandClap', 'MuteTri').
+var drumRule = (function () {
+  var HAT = /^(hat|hh)|(hat|hh|hats)$|hihat/;
+  var PLACED = /^(lo|low|mid|middle|hi|high|floor|fl|rack|big)(tom|bongo|conga|timbal)/;
+  var kinds = DRUM_NAME_RULES.map(function (rule) { return rule[0]; });
+  var OPEN = kinds.indexOf('Open hi-hat'), HIHAT = kinds.indexOf('Hi-hat');
+  var ENDINGS = [[/(kick|kck)$/, kinds.indexOf('Kick, 808, sub, bass')], [/snare$/, kinds.indexOf('Snare')],
+    [/clap$/, kinds.indexOf('Clap')], [/tri$/, kinds.indexOf('Bell, metal tones')]];
+  function wordRule(word) {
+    if (HAT.test(word) && word.indexOf('open') >= 0) return OPEN;
+    var placed = PLACED.exec(word);
+    if (placed) return wordRule(placed[2]);
+    for (var i = 0; i < DRUM_NAME_RULES.length; i++) {
+      var rule = DRUM_NAME_RULES[i];
+      if (rule[2].indexOf(word) >= 0 || (i === HIHAT && HAT.test(word))) return i;
+      if (rule[1].some(function (start) { return word.indexOf(start) === 0; })) return i;
+    }
+    for (var e = 0; e < ENDINGS.length; e++) if (ENDINGS[e][0].test(word)) return ENDINGS[e][1];
+    return -1;
+  }
+  return function (name) {
+    var words = String(name || '').toLowerCase().match(/[a-z0-9]+/g) || [];
+    if (words.indexOf('open') >= 0 && words.some(function (word) { return HAT.test(word); })) return OPEN;
+    for (var i = 0; i < words.length; i++) {
+      var rule = wordRule(words[i]);
+      if (rule >= 0) return rule;
+    }
+    return -1;
+  };
+})();
 var SAMPLE_SCENES = ['Intro', 'Verse', 'Chorus', 'Drop'];
 // Live's browser: the categories as the script lists them (Collections first, then MASCHINE
 // Kits, then the library), and the Drums category (a folder of single hits, then the kits;

@@ -15,25 +15,37 @@ MM.manual = (function () {
   function controlsForToken(token) { return controlIds().filter(function (id) { return tokenMatches(token, id); }); }
   function itemUsesControl(item, id) { return item.combo.some(function (token) { return tokenMatches(token, id); }); }
 
-  // The colour of a drum pad name, from the drum name colour table in features.json (first
-  // matching row wins, like the script's rules). A keyword matches anywhere in the name ignoring
-  // case; a keyword of several words needs all of them; a short capitalised keyword (CH, OH) must
-  // be a whole word. Names no row matches keep `fallback`.
-  function drumColor(name, fallback) {
-    var words = name.toLowerCase().split(/[^a-z0-9]+/);
-    var lower = name.toLowerCase();
-    function matches(keyword) {
-      if (/^[A-Z]{1,2}$/.test(keyword)) return words.indexOf(keyword.toLowerCase()) >= 0;
-      return keyword.toLowerCase().split(' ').every(function (part) { return lower.indexOf(part) >= 0; });
-    }
-    var hit = null;
+  // A drum name colour row ('Red: Kick, 808, sub, bass') split into its colour and its kind.
+  function swatchParts(swatch) {
+    var at = swatch.name.indexOf(': ');
+    return at < 0 ? { color: swatch.name, kind: '' } : { color: swatch.name.slice(0, at), kind: swatch.name.slice(at + 2) };
+  }
+
+  function drumSwatches() {
+    var found = [];
     (state.data ? state.data.sections : []).some(function (section) {
-      return (section.swatches || []).some(function (swatch) {
-        if (swatch.keywords.some(matches)) hit = swatch.rgb;
-        return !!hit;
-      });
+      found = section.swatches || [];
+      return found.length > 0;
     });
-    return hit || fallback;
+    return found;
+  }
+
+  // The colour of a drum pad name, as the script colours it: drumRule() (layouts.js, the
+  // script's rules ported 1:1) gives the kind, the table in features.json its colour. Names no
+  // rule matches are white, like on the controller; `fallback` only shows before the data loads.
+  function drumColor(name, fallback) {
+    var swatches = drumSwatches();
+    if (!swatches.length) return fallback;
+    var rule = drumRule(name);
+    var kind = rule >= 0 ? DRUM_NAME_RULES[rule][0] : null;
+    var hit = null;
+    swatches.some(function (swatch) {
+      var parts = swatchParts(swatch);
+      if (kind ? parts.kind === kind : parts.color === 'White') hit = swatch.rgb;
+      return !!hit;
+    });
+    if (!hit && rule >= 0 && swatches[rule]) hit = swatches[rule].rgb;  // the rows are in rule order
+    return hit || (kind ? fallback : '#ebebeb');
   }
 
   function visibleSections() {
@@ -615,21 +627,29 @@ MM.manual = (function () {
   }
 
   function swatchTable(section, swatches, terms) {
-    // Drum pad name colours: a colour dot, its name, and the words that give it.
+    // Drum pad name colours, one row per rule in rule order: a colour dot and its name, the kind
+    // of sound, and the words that give it (abbreviations, in capitals, only as whole words).
     var body = h('tbody');
     swatches.forEach(function (swatch) {
+      var parts = swatchParts(swatch);
       var dot = h('span', { className: 'swatch', 'aria-hidden': 'true' });
       dot.style.background = swatch.rgb;
-      var words = h('td');
+      var words = h('td', { className: 'swatch-words' });
       swatch.keywords.forEach(function (keyword) {
-        words.appendChild(marked(h('code'), keyword, terms));
+        var whole = /[A-Z]/.test(keyword) && keyword === keyword.toUpperCase();
+        words.appendChild(marked(h('code', whole ? { title: 'Only as a whole word' } : {}), keyword, terms));
         words.appendChild(document.createTextNode(' '));
       });
       if (swatch.note) words.appendChild(marked(h('span', { className: 'context' }), '(' + swatch.note + ')', terms));
-      body.appendChild(h('tr', {}, [marked(h('td', {}, [dot]), swatch.name, terms), words]));
+      body.appendChild(h('tr', {}, [
+        marked(h('td', { className: 'swatch-colour' }, [dot]), parts.color, terms),
+        marked(h('td', { className: 'swatch-kind' }), parts.kind, terms),
+        words
+      ]));
     });
-    var table = h('table', {}, [
-      h('thead', {}, [h('tr', {}, [h('th', { scope: 'col', text: 'Colour' }), h('th', { scope: 'col', text: 'Pad name contains' })])]),
+    var table = h('table', { className: 'swatch-table' }, [
+      h('thead', {}, [h('tr', {}, [h('th', { scope: 'col', text: 'Colour' }), h('th', { scope: 'col', text: 'Sound' }),
+        h('th', { scope: 'col', text: 'Name words' })])]),
       body
     ]);
     return h('div', { className: 'swatches' }, [

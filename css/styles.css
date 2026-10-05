@@ -643,6 +643,21 @@ mark.hit {
 .hw-drawing.real.combo-demo .pad.related.demo-dim:not(.selected) .pad-print { fill: #2e2e32; }
 .hw-drawing.real.combo-demo .pad.related.demo-mid:not(.selected) .pad-print,
 .hw-drawing.real.combo-demo .pad.related.demo-bright:not(.selected) .pad-print { fill: #141416; }
+/* a pad lit by its track's level (the mixer, demo-meter): the brightness moves gently around its
+   level, each pad at its own pace (--meter-period / --meter-delay from manual.js); still under
+   reduced motion */
+@property --meter { syntax: '<number>'; inherits: true; initial-value: 0.5; }
+@keyframes pad-meter { 0%, 100% { --meter: .15; } 22% { --meter: .85; } 48% { --meter: .4; } 70% { --meter: 1; } 86% { --meter: .55; } }
+@media (prefers-reduced-motion: no-preference) {
+  .hw-drawing.real .pad.demo-meter { animation: pad-meter var(--meter-period, 2.4s) ease-in-out var(--meter-delay, 0s) infinite; }
+  .hw-drawing.real .pad.demo-meter .cap, #tour-device .pad.demo-meter .cap { transition: none; }  /* the animation is the motion */
+  .hw-drawing.real .pad.demo-meter.demo-dim:not(.selected):not(.related) .cap,
+  .hw-drawing.real.combo-demo .pad.related.demo-meter.demo-dim:not(.selected) .cap { fill: color-mix(in srgb, var(--demo-color) calc(34% + var(--meter) * 16%), #e6e7e9); }
+  .hw-drawing.real .pad.demo-meter.demo-mid:not(.selected):not(.related) .cap,
+  .hw-drawing.real.combo-demo .pad.related.demo-meter.demo-mid:not(.selected) .cap { fill: color-mix(in srgb, var(--demo-color) calc(66% + var(--meter) * 20%), #e6e7e9); }
+  .hw-drawing.real .pad.demo-meter.demo-bright:not(.selected):not(.related) .cap,
+  .hw-drawing.real.combo-demo .pad.related.demo-meter.demo-bright:not(.selected) .cap { fill: color-mix(in srgb, var(--demo-color) calc(84% + var(--meter) * 16%), #e6e7e9); }
+}
 .hw-drawing.real .encoder.related .ring, .hw-drawing.real .knob.related .ring, .hw-drawing.real .strip.related .cap { stroke: var(--hw-related); stroke-width: 2.2; }
 .hw-drawing.real .encoder.selected .ring, .hw-drawing.real .knob.selected .ring, .hw-drawing.real .strip.selected .cap { stroke: var(--hw-active); stroke-width: 2.6; }
 /* light caps and buttons with a lit colour (MK3 group buttons) light up like the hardware */

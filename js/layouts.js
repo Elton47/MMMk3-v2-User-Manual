@@ -208,11 +208,63 @@ function trackScreen(index, subtitle, detail, value, corner, flags) {
 // PLUG-IN: the track, then the device; with more than one parameter page also the page (its
 // name without a trailing number, 'Macros 2' -> 'Macros') and the count, as the script words it:
 // line 2 'Keys Rack  Macros 2/2', the corner (two lines) 'Keys Rack 2/2'. One page: the device only.
-// page / count: 1-based page and the number of pages.
-function pluginScreen(index, device, pageName, page, count, parameter, value) {
-  if (count <= 1) return trackScreen(index, device, parameter, value, device);
-  var of = page + '/' + count;
-  return trackScreen(index, device + '  ' + pageName.replace(/ \d+$/, '') + ' ' + of, parameter, value, device + ' ' + of);
+// page / count: 1-based page and the number of pages. fill: the fill bar along the bottom, how
+// far the parameter is turned up (0-126; centre: from the middle, for a parameter that goes both
+// ways), as the script sends it.
+function pluginScreen(index, device, pageName, page, count, parameter, value, fill, centre) {
+  var screen;
+  if (count <= 1) screen = trackScreen(index, device, parameter, value, device);
+  else {
+    var of = page + '/' + count;
+    screen = trackScreen(index, device + '  ' + pageName.replace(/ \d+$/, '') + ' ' + of, parameter, value, device + ' ' + of);
+  }
+  return withFill(screen, fill, centre);
+}
+
+// PLUG-IN on 2-Bass's Auto Filter, Frequency at khz: its fill bar on Live's log scale (26 Hz -
+// 19.9 kHz), 2.40 kHz at 80 as in the script's reference screen (plugin-fill).
+function frequencyScreen(khz) {
+  return pluginScreen(1, 'Auto Filter', 'Filter', 1, 4, 'Frequency', khz.toFixed(2) + ' kHz',
+    80 + 126 * Math.log(khz / 2.4) / Math.log(19900 / 26));
+}
+
+// A screen state with the fill bar (MIKRO_FILL 0-126; centre: MIKRO_FILL_CENTER, from the middle).
+function withFill(screen, fill, centre) {
+  if (typeof fill !== 'number') return screen;
+  screen.MIKRO_FILL = Math.max(0, Math.min(126, Math.round(fill)));
+  if (centre) screen.MIKRO_FILL_CENTER = 1;
+  return screen;
+}
+
+// The mixer (VOLUME tap) visits the tracks in Live's mixer order: the tracks, the returns, the
+// Master (box labels as the script's: the number, A / B, M).
+var MIXER_TRACKS = SAMPLE_TRACKS.map(function (t, i) { return { name: t.name, label: String(i + 1) }; })
+  .concat(SAMPLE_RETURNS.map(function (t) { return { name: t.name, label: t.name.charAt(0) }; }),
+    [{ name: SAMPLE_MASTER.name, label: 'M' }]);
+
+// The fill of a volume or send in dB, as the script computes it (Live's curve: 0 dB = 0.85,
+// encoder.py db_to_volume; 126 = full).
+function volumeFill(db) {
+  var v = db === -Infinity ? 0 : db >= -18 ? Math.min(1, 0.85 + db * 0.025) : 0.4 * Math.pow(10, (db + 18) / 20);
+  return Math.round(Math.max(0, v) * 126);
+}
+// dB as Live shows it: '-3.0 dB', '-inf dB'.
+function dbText(db) { return db === -Infinity ? '-inf dB' : db.toFixed(1) + ' dB'; }
+// Pan as Live shows it: -50 ... 50 -> '12L', 'C', '25R'; its fill (from the centre).
+function panText(pan) { return pan === 0 ? 'C' : Math.abs(pan) + (pan < 0 ? 'L' : 'R'); }
+function panFill(pan) { return (pan / 50 + 1) / 2 * 126; }
+
+// The mixer's screen (metering.py _draw): line 1 the visited track's box and name with 'Mixer'
+// in the corner, line 2 (three lines only) 'Mixer 2/11', then the parameter and its value; the
+// fill bar along the bottom, Pan's from the centre. index: into MIXER_TRACKS; parameter:
+// 'Volume' | 'Send A' ... with amount in dB, or 'Pan' with amount -50 ... 50; flags:
+// MM.screen.MUTE / SOLO.
+function mixerScreen(index, parameter, amount, flags) {
+  var t = MIXER_TRACKS[index], pan = parameter === 'Pan';
+  return withFill({ TITLE: t.name, MIKRO_TRACK_LABEL: t.label, MIKRO_TRACK_FLAGS: MM.screen.SHOWN | (flags || 0),
+    SUBTITLE: 'Mixer ' + (index + 1) + '/' + MIXER_TRACKS.length, MIKRO_LINE3: parameter,
+    MIKRO_LINE3_VALUE: pan ? panText(amount) : dbText(amount), MIKRO_CORNER: 'Mixer' },
+  pan ? panFill(amount) : volumeFill(amount), pan);
 }
 
 // A mode named on line 1 (Pattern, Scenes, Tracks ...).
@@ -267,16 +319,6 @@ function settingsScreen() {
   return listScreen('Settings', 'Screen: ' + lines, rows, 0);
 }
 
-// a and b mixed: t = 0 gives a, t = 1 gives b (both '#rrggbb').
-function mixHex(a, b, t) {
-  var out = '#';
-  for (var i = 1; i < 7; i += 2) {
-    var v = Math.round(parseInt(a.substr(i, 2), 16) * (1 - t) + parseInt(b.substr(i, 2), 16) * t);
-    out += (v < 16 ? '0' : '') + v.toString(16);
-  }
-  return out;
-}
-
 // Pad number (1-16) of a list position: lists read like text, position 0 = pad 13 (top left),
 // position 3 = pad 16, position 4 = pad 9, ... position 15 = pad 4 (bottom right).
 function listPad(position) { return (3 - Math.floor(position / 4)) * 4 + position % 4 + 1; }
@@ -286,6 +328,19 @@ function listPad(position) { return (3 - Math.floor(position / 4)) * 4 + positio
 // TRACK_VIEW_KEEPS (drum mode) they act on that mode's pads instead and the pads stay as they are.
 var TRACK_VIEW_MODIFIERS = ['STOP', 'SOLO', 'MUTE', 'SELECT'];
 var TRACK_VIEW_KEEPS = ['PAD MODE'];
+
+// The mixer's sample state: 2-Bass visited (Live's selection stays on 1-Drums), 3-Keys muted
+// (indexes into SAMPLE_TRACKS).
+var MIXER_VISITED = 1, MIXER_MUTED = 2;
+
+// Pad demos chosen by section (section id -> combo tokens joined with '+', or '*' for any other
+// combo there -> the token of the pad demo to show, null: none): in the mixer every combo
+// (MUTE + PAD, STOP + PAD ...) acts on the mixer's pads; holding VOLUME or SHIFT + VOLUME to turn
+// leaves the pads as they are.
+var SECTION_PADS = {
+  mixer: { '*': 'VOLUME' },
+  master: { 'VOLUME+TURN': null, 'SHIFT+VOLUME': null }
+};
 
 // What the pads show in each mode, as the script lights them, for the sample set above. Per mode
 // (keyed by the control id of the mode button): 16 entries in pad order (index 0 = pad 1), each
@@ -360,17 +415,21 @@ function padDemos(trackMode) {
     demos.STEP[listPad(step - 1) - 1] = entry;
   }
 
-  // VOLUME: meters of tracks 1-4, bottom to top. The three lower pads follow the level (d: dim
-  // at half, m: passed); the top pad is the loud end: a lighter shade near 0 dB, red on a clip.
-  var meters = [['mmd', ''], ['mmm', 'hot'], ['mmm', 'clip'], ['m..', '']];
+  // VOLUME: the mixer (metering.py), in TRACK mode's layout: each track in its colour with the
+  // brightness of its level (loud near 0 dB 'bright', playing 'mid', quiet 'dim'; meter: a seed,
+  // so manual.js lets each pad's brightness move gently on its own), the visited track
+  // (MIXER_VISITED) steady white, a muted one (MIXER_MUTED) dim white. The returns and the Master
+  // on the last pads.
+  var levels = ['bright', null, null, 'mid', 'mid', 'dim', 'dim', 'mid', 'dim', 'dim', 'mid'];
+  var seeds = [0.1, 0, 0, 0.55, 0.3, 0.8, 0.45, 0.7, 0.2, 0.9, 0.35];
+  var mixed = SAMPLE_TRACKS.concat(SAMPLE_RETURNS, [SAMPLE_MASTER]);
   demos.VOLUME = pads();
-  meters.forEach(function (meter, column) {
-    var color = SAMPLE_TRACKS[column].color;
-    meter[0].split('').forEach(function (segment, row) {
-      if (segment !== '.') demos.VOLUME[row * 4 + column] = lit(color, segment === 'd' ? 'dim' : 'mid');
-    });
-    if (meter[1] === 'hot') demos.VOLUME[12 + column] = lit(mixHex(color, '#ffffff', 0.55), 'bright');
-    if (meter[1] === 'clip') demos.VOLUME[12 + column] = lit(PAD_COLORS[15], 'bright');
+  mixed.forEach(function (track, i) {
+    var position = i < SAMPLE_TRACKS.length ? i : 16 - mixed.length + i;
+    var entry = i === MIXER_VISITED ? lit(SAMPLE_MASTER.color, 'bright')
+      : i === MIXER_MUTED ? lit(SAMPLE_MASTER.color, 'dim') : lit(track.color, levels[i]);
+    if (i !== MIXER_VISITED && i !== MIXER_MUTED) entry.meter = seeds[i];
+    demos.VOLUME[listPad(position) - 1] = entry;
   });
 
   // EVENTS: the drum pads that have notes in the focused clip, in their own colours; the
@@ -402,9 +461,18 @@ var LAYOUTS = {
     // 'Auto Filter 1/4' doesn't fit beside the track, so the corner stays empty, as on the
     // controller). PUSH + TURN pages through the 16 macros of a rack on 3-Keys (Macros 1-8, 9-16),
     // named Keys so that 'Keys 1/2' fits in the corner on two lines ('Keys Rack 2/2' would not).
-    var plugin = pluginScreen(1, 'Auto Filter', 'Filter', 1, 4, 'Frequency', '2.40 kHz');
-    var macros = [pluginScreen(2, 'Keys', 'Macros 1', 1, 2, 'Macro 1', '32'),
-      pluginScreen(2, 'Keys', 'Macros 2', 2, 2, 'Macro 9', '64')];
+    // The fill bar: a macro's value of 0-127 on 126.
+    var plugin = frequencyScreen(2.4);
+    var macros = [pluginScreen(2, 'Keys', 'Macros 1', 1, 2, 'Macro 1', '32', 32 * 126 / 127),
+      pluginScreen(2, 'Keys', 'Macros 2', 2, 2, 'Macro 9', '64', 64 * 126 / 127)];
+    // The mixer on 2-Bass (MIXER_VISITED), as the script's reference screens (mixer, mixer-pan):
+    // Volume -3.0 dB, Pan 12L.
+    var mixer = function (parameter, amount, flags) { return mixerScreen(MIXER_VISITED, parameter, amount, flags); };
+    var mixerVolume = mixer('Volume', -3);
+    // LOCK: a pin after the track's name while the controller is locked to it (KEYBOARD on 2-Bass,
+    // the script's reference screen 'locked')
+    var locked = trackScreen(1, 'Keyboard  C Major', 'Octave', 'C3', 'C Major');
+    locked.TITLE += ' \ue00f';
     var tracks = '1 - ' + SAMPLE_TRACKS.length + ' of ' + SAMPLE_TRACKS.length;
     // STAR: the browser's top list on MASCHINE Kits
     var browser = browserScreen('Browser', SAMPLE_BROWSER, 1, function () { return true; });
@@ -428,7 +496,7 @@ var LAYOUTS = {
         'PLUG-IN': plugin,
         'TEMPO': popupScreen('Tempo', '120.00 BPM'),
         'SWING': popupScreen('Swing', '25 %'),
-        'VOLUME': modeScreen('Meters 1-4', SAMPLE_TRACKS.slice(0, 4).map(function (t) { return t.name.slice(0, 6); }).join(' | ')),
+        'VOLUME': mixerVolume,
         'PAD MODE': drums,
         'KEYBOARD': trackScreen(2, 'Keyboard  C Major', 'Octave', 'C3', 'C Major'),
         'CHORDS': trackScreen(2, 'Triad Close  C Major', 'Chord', 'Triad', 'C Major'),
@@ -439,7 +507,7 @@ var LAYOUTS = {
         'FIXED VEL': popupScreen('Fixed Velocity', 'On (100)'),
         'EVENTS': modeScreen('Events', 'Drum Loop'),
         'GROUP': modeScreen('Tracks', tracks, SAMPLE_TRACKS[SAMPLE_SELECTED].name, '', tracks),
-        'LOCK': popupScreen('Device lock', 'toggled'),
+        'LOCK': locked,
         'MASCHINE': settingsScreen(),
         'STAR': browser,
         'BROWSER': browser
@@ -447,7 +515,25 @@ var LAYOUTS = {
       // Screens for a combo hovered in a given section (section id -> combo tokens joined with
       // '+', '*' for any other combo there); a list of states plays in turn (manual.js).
       sectionScreens: {
-        plugin: { '*': plugin, 'PUSH+TURN': macros },
+        plugin: { '*': plugin, 'PUSH+TURN': macros,
+          'TURN': [plugin, frequencyScreen(2.9), frequencyScreen(3.6)] },
+        // The mixer: TURN in 1 dB steps; PUSH + TURN chooses Volume, Pan (its bar from the
+        // centre), Send A; a PUSH tap resets; the strip sets 0.1 dB steps; MUTE / SOLO taps show
+        // on the track's box (hollow: muted; S: soloed); the arrows visit 1-Drums ... 3-Keys (muted).
+        mixer: { '*': mixerVolume,
+          'TURN': [mixerVolume, mixer('Volume', -2), mixer('Volume', -1), mixer('Volume', 0)],
+          'PUSH+TURN': [mixerVolume, mixer('Pan', -12), mixer('Send A', -Infinity)],
+          'PUSH': [mixerVolume, mixer('Volume', 0), mixer('Pan', -12), mixer('Pan', 0)],
+          'STRIP': [mixerVolume, mixer('Volume', -2.4), mixer('Volume', -1.7)],
+          'MUTE': [mixerVolume, mixer('Volume', -3, MM.screen.MUTE)],
+          'SOLO': [mixerVolume, mixer('Volume', -3, MM.screen.SOLO)],
+          '◀+▶': [mixerScreen(0, 'Volume', 0), mixerVolume, mixerScreen(MIXER_MUTED, 'Volume', -6, MM.screen.MUTE)] },
+        // VOLUME held + TURN: the selected track's volume (its name, the value); SHIFT + VOLUME:
+        // the Cue volume in 0.5 dB steps (the script's reference screen 'cue').
+        master: {
+          'VOLUME+TURN': ['0.0 dB', '-1.0 dB', '-2.0 dB'].map(function (v) { return modeScreen(SAMPLE_TRACKS[0].name, '', v); }),
+          'SHIFT+VOLUME': ['-12.0 dB', '-11.5 dB', '-11.0 dB'].map(function (v) { return modeScreen('Cue', '', v); }) },
+        edit: { 'SHIFT+LOCK': popupScreen('Device lock', 'toggled') },
         views: { 'SHIFT+BROWSER': hotSwap },
         // In MASCHINE Kits: TURN scrolls the kits (previewing each), PUSH loads one, SHIFT + STAR
         // on a kit: the favourite popup, then the star on its row.
@@ -565,7 +651,7 @@ var LAYOUTS = {
       'PATTERN': clips,
       'TEMPO': { left: side('Tempo', 'Master', '120.00', 'BPM') },
       'SWING': { left: side('Swing', 'Master', '25 %', 'Repeat and arp follow') },
-      'VOLUME': { left: side(tracks[0][0], 'Meters', 'Meters 1-4', firstFour) },
+      'VOLUME': { left: side(tracks[MIXER_VISITED][0], 'Mixer ' + (MIXER_VISITED + 1) + '/' + MIXER_TRACKS.length, '-3.0 dB', 'Volume', tracks[MIXER_VISITED][1]) },
       'PAD MODE': {
         left: side(tracks[0][0], 'Drums', SAMPLE_KIT, 'Pad 1  ' + SAMPLE_DRUMS[0]),
         // list entries [name, colour, drum name]: manual.js colours a drum by its name colour

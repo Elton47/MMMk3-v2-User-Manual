@@ -41,7 +41,8 @@
         {"combo": ["STAR"], "does": "Live's browser on the hardware screen: find a sound and load it without touching the mouse.", "devices": ["mikro"]},
         {"combo": ["PUSH"], "does": "MASCHINE Kits: play your Expansions in Live without the MASCHINE plug-in. STAR > MASCHINE Kits, turn to hear a kit, push to load it as a Drum Rack, pad for pad as in MASCHINE; SHIFT + STAR marks a favourite.", "devices": ["mikro"]},
         {"combo": ["VARIATION", "PAD"], "does": "Record a variation in one press: the clip is copied below, named Bass_1, Bass_2 ..., and recorded into; the original stays untouched."},
-        {"combo": ["STRIP"], "does": "The touch strip shows where the loop is, and while you record it flashes red on every click: a silent metronome."}
+        {"combo": ["STRIP"], "does": "The touch strip shows where the loop is, and while you record it flashes red on every click: a silent metronome."},
+        {"combo": ["VOLUME"], "does": "The mixer: tap VOLUME and the pads become your tracks, glowing with their levels. Visit a track with a pad or the arrows, turn for volume, PUSH + TURN for pan and sends, slide the strip like a fader; a bar on the screen shows where it is.", "devices": ["mikro"]}
       ]
     },
     {
@@ -263,7 +264,8 @@
         {"combo": ["TEMPO", "TURN"], "does": "Tempo ±1 BPM (SHIFT: ±0.1). Tap TEMPO: show the tempo."},
         {"combo": ["SWING", "TURN"], "does": "Swing ±1 % (SHIFT: ±10 %). Tap SWING: show the swing."},
         {"combo": ["VOLUME", "TURN"], "does": "Selected track volume ±1 dB (SHIFT: ±0.1 dB)."},
-        {"combo": ["VOLUME"], "does": "Tap: level meters of 4 tracks on the pads (tap again: back; holding VOLUME to change the volume leaves the pads as they are) (TURN scrolls, PAD selects the track). The top pad lights in a lighter track colour near 0 dB and red when the track clips. Hold: meters while held."}
+        {"combo": ["VOLUME"], "does": "Tap: the mixer on the pads, the encoder and the screen (see Mixer); tap again: back. Holding VOLUME to turn leaves everything else as it is."},
+        {"combo": ["SHIFT", "VOLUME"], "does": "Cue volume, the level of the browser and MASCHINE Kits previews (and headphones with cue out): hold and turn, or tap to keep it on (0.5 dB steps); SHIFT + VOLUME again or another mode ends it.", "devices": ["mikro"]}
       ]
     },
     {
@@ -279,7 +281,7 @@
         {"combo": ["MUTE"], "does": "Tap: mute the selected track."},
         {"combo": ["SHIFT", "MUTE"], "does": "Unmute and unsolo every track."},
         {"combo": ["SELECT"], "does": "Tap: arm the selected track (SHIFT: without disarming others).", "devices": ["mikro"]},
-        {"combo": ["LOCK"], "does": "Lock the controller to the current track."},
+        {"combo": ["LOCK"], "does": "Lock the controller to the current track; a pin shows after its name on the screen while it is locked."},
         {"combo": ["SHIFT", "LOCK"], "does": "Lock to the selected device."}
       ]
     },
@@ -301,6 +303,79 @@
       ]
     },
     {
+      "id": "mixer",
+      "title": "Mixer: VOLUME tap",
+      "summary": "A VOLUME tap turns the controller into a mixer. The pads show your tracks as in TRACK mode, each in its colour and glowing with its level (muted tracks dim white); the visited track's pad is white. The screen shows that track and its parameter, with a bar along the bottom; the encoder and the touch strip change it. Visiting a track doesn't select it in Live: you can mix one track while playing another. Values land exactly on Live's 0.1 dB steps.",
+      "devices": [
+        "mikro"
+      ],
+      "items": [
+        {
+          "combo": [
+            "VOLUME"
+          ],
+          "does": "Mixer on / off."
+        },
+        {
+          "combo": [
+            "PAD"
+          ],
+          "does": "Visit that track (Live's selection stays)."
+        },
+        {
+          "combo": [
+            "◀",
+            "▶"
+          ],
+          "does": "Visit the previous / next track, in Live's mixer order: the tracks (a folded group is one), the returns, the Master."
+        },
+        {
+          "combo": [
+            "TURN"
+          ],
+          "does": "Change the parameter: volume and sends ±1 dB, pan in Live's steps (SHIFT: fine, ±0.1 dB)."
+        },
+        {
+          "combo": [
+            "PUSH",
+            "TURN"
+          ],
+          "does": "Choose the parameter: Volume, Pan, Send A, Send B ..."
+        },
+        {
+          "combo": [
+            "PUSH"
+          ],
+          "does": "Tap: reset it (volume 0.0 dB, pan centre, a send to its default)."
+        },
+        {
+          "combo": [
+            "STRIP"
+          ],
+          "does": "The fader: shows the parameter in the track's colour, touch to set it (0.1 dB steps, pan in whole steps); a whole touch is one undo step."
+        },
+        {
+          "combo": [
+            "MUTE"
+          ],
+          "does": "Tap: mute / unmute the visited track. Hold + PAD: that pad's track."
+        },
+        {
+          "combo": [
+            "SOLO"
+          ],
+          "does": "Tap: solo / unsolo the visited track. Hold + PAD: that pad's track."
+        },
+        {
+          "combo": [
+            "STOP",
+            "PAD"
+          ],
+          "does": "Stop that pad's track."
+        }
+      ]
+    },
+    {
       "id": "plugin",
       "title": "PLUG-IN: device parameters (MIKRO)",
       "summary": "The encoder controls one parameter of the selected device at a time. Parameters come in pages: Ableton's own banks for Live's devices (Filter, Envelope...), the visible macros of a rack, or groups of 8 for plug-ins. The screen shows the device, the page and how many there are (Macros 2/2; on two lines, the device and the count at the right of the track name when they fit), and the parameter's name and value. A rack shows as many macros as it shows in Live: click the rack's + macro button for up to 16. Each device remembers where you were.",
@@ -312,7 +387,7 @@
         {"combo": ["PUSH", "TURN"], "does": "Previous / next page (a rack: Macros 1-8, 9-16). The screen shows the page and the count, e.g. 2/2."},
         {"combo": ["SHIFT", "◀", "▶"], "does": "Previous / next device on the track."},
         {"combo": ["PUSH"], "does": "Tap: reset the parameter to its default."},
-        {"combo": ["STRIP"], "does": "The strip lights show the parameter's value as a bar, in the track or rack chain colour; a rack's macros each have their own colour (macro 1 orange ... macro 16 red, like MASCHINE's sounds). Touch the strip to set the value. PITCH / MOD take the strip over while they are lit."}
+        {"combo": ["STRIP"], "does": "The strip lights show the parameter's value as a bar, in the track or rack chain colour; a rack's macros each have their own colour (macro 1 orange ... macro 16 red, like MASCHINE's sounds). Touch the strip to set the value; a whole touch, however far you slide, is one undo step. A thin bar along the bottom of the screen shows how far the parameter is turned up (from the centre for a parameter that goes both ways, like a pan or a detune). PITCH / MOD take the strip over while they are lit."}
       ]
     },
     {

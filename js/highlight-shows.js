@@ -98,7 +98,7 @@ var HIGHLIGHT_SHOWS = (function () {
               touched: 0, knobs: [['Frequency', 0.5 + (value - 2.4) / 3, text]].concat(page.left.knobs.slice(1))
             }), right: page.right };
           }
-          api.screen(pluginScreen(1, 'Auto Filter', 'Filter', 1, 4, 'Frequency', text), lcd);
+          api.screen(frequencyScreen(value), lcd);
         }
       }
     },
@@ -259,6 +259,39 @@ var HIGHLIGHT_SHOWS = (function () {
           api.screen(n < 2 ? popupScreen('Variation', 'Red pad: record a copy') : api.layout.screens.PATTERN, side(bass.name, 'Variation', 'Red pad', 'Record a copy of the clip above', RED));
         }
         api.pads(pads);
+      }
+    },
+
+    // The mixer (MIKRO): a VOLUME tap and the pads are the tracks, glowing with their levels
+    // (2-Bass visited: white; 3-Keys muted: dim white). TURN raises 2-Bass's volume in 1 dB steps,
+    // the strip slides it in 0.1 dB steps, PUSH + TURN picks Pan (its bar from the centre) and
+    // turns it. The strip's LEDs show the parameter in the track's colour.
+    'VOLUME': {
+      every: 700,
+      loupe: true,
+      duration: 8400,
+      tick: function (n, api) {
+        var steps = [
+          // [screen, outlined, lit buttons, encoder detents]
+          [mixerScreen(MIXER_VISITED, 'Volume', -3), ['VOLUME', 'PAD'], ['VOLUME'], 0],
+          [mixerScreen(MIXER_VISITED, 'Volume', -3), ['VOLUME', 'PAD'], [], 0],
+          [mixerScreen(MIXER_VISITED, 'Volume', -2), ['VOLUME', 'ENCODER'], [], 1],
+          [mixerScreen(MIXER_VISITED, 'Volume', -1), ['VOLUME', 'ENCODER'], [], 2],
+          [mixerScreen(MIXER_VISITED, 'Volume', 0), ['VOLUME', 'ENCODER'], [], 3],
+          [mixerScreen(MIXER_VISITED, 'Volume', -0.8), ['VOLUME', 'STRIP'], [], 3],
+          [mixerScreen(MIXER_VISITED, 'Volume', -1.5), ['VOLUME', 'STRIP'], [], 3],
+          [mixerScreen(MIXER_VISITED, 'Pan', -12), ['VOLUME', 'ENCODER'], ['ENCODER'], 4],
+          [mixerScreen(MIXER_VISITED, 'Pan', -11), ['VOLUME', 'ENCODER'], ['ENCODER'], 5],
+          [mixerScreen(MIXER_VISITED, 'Pan', -10), ['VOLUME', 'ENCODER'], ['ENCODER'], 6],
+          [mixerScreen(MIXER_VISITED, 'Pan', -10), ['VOLUME', 'PAD'], [], 6]
+        ];
+        var step = steps[Math.min(n, steps.length - 1)], screen = step[0];
+        api.outline(step[1]);
+        api.light(step[2]);
+        api.turn(step[3]);
+        api.strip(screen.MIKRO_FILL / 126, SAMPLE_TRACKS[MIXER_VISITED].color);
+        api.pads(api.demo('VOLUME'));
+        api.screen(screen);
       }
     },
 

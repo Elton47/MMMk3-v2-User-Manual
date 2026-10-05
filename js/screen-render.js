@@ -15,6 +15,9 @@
 //   LIST_SELECTED              the highlighted row (0-2)
 //   MIKRO_SCROLL               a list's position 0-126 for its scrollbar (null: none)
 //   MIKRO_CORNER               two lines: a value at the right of line 1, when the title leaves room
+//   MIKRO_FILL                 the fill bar along the bottom (the mixer, PLUG-IN): 0 empty ... 126
+//                              full; null / 127: no bar
+//   MIKRO_FILL_CENTER          1: the bar grows from the centre, with a tick there (Pan, detune ...)
 // { popup: 'Title\nValue' } is a popup (a changed value), drawn in the two-line layout.
 // Long text is shortened with an ellipsis (the controller scrolls it instead).
 //
@@ -31,6 +34,10 @@ MM.screen = (function () {
 
   var W = 128, H = 32;
   var NO_VALUE = 127;
+  var FILL_FULL = 126;  // a full fill bar
+  // The fill bar's top row: two rows under two lines, the bottom row under three lines (lines 2
+  // and 3 move up a row to keep one clear).
+  var FILL_TOP_TWO = 30, FILL_TOP_THREE = 31;
   var SHOWN = 4, MUTE = 1, SOLO = 2;
   var STAR = '★';  // a favourite MASCHINE kit in the browser ('Kit\t★')
   var small = null, large = null;
@@ -247,10 +254,34 @@ MM.screen = (function () {
     smallText(img, 1, y, smallFit(text, nameWidth), 1);
   }
 
-  function threeLines(img, state, width) {
+  function threeLines(img, state, width, fillBar) {
     header(img, state, width, 0);
-    smallText(img, 1, 12, smallFit(get(state, 'SUBTITLE', ''), width), 1);
-    valueLine(img, 23, get(state, 'MIKRO_LINE3', ''), get(state, 'MIKRO_LINE3_VALUE', ''), width);
+    smallText(img, 1, fillBar ? 11 : 12, smallFit(get(state, 'SUBTITLE', ''), width), 1);
+    valueLine(img, fillBar ? 21 : 23, get(state, 'MIKRO_LINE3', ''), get(state, 'MIKRO_LINE3_VALUE', ''), width);
+  }
+
+  // The fill bar's value 0-126, or null: no bar.
+  function fillOf(state) {
+    var value = state.MIKRO_FILL;
+    if (typeof value !== 'number' || value !== Math.floor(value) || value < 0 || value >= NO_VALUE) return null;
+    return Math.min(value, FILL_FULL);
+  }
+
+  // How full the encoder's parameter is: a bar along the very bottom, lit from the left as far
+  // as the value (centre: from the middle, with a tick there); the rest a dotted track on the
+  // bottom row, so an empty fader still shows where it ends.
+  function fillBar(img, value, top, centre) {
+    var bottom = H - 1, lit = pyRound(W * value / FILL_FULL), x;
+    if (centre) {
+      var middle = Math.floor(W / 2), start = Math.min(middle, lit), end = Math.max(middle, lit);
+      if (end > start) img.rect(start, top, end - 1, bottom, true);
+      for (var y = top - 1; y <= bottom; y++) img.point(middle, y, 1);
+      for (x = start - 2; x >= 0; x -= 2) img.point(x, bottom, 1);
+      for (x = end + 1; x < W; x += 2) img.point(x, bottom, 1);
+      return;
+    }
+    if (lit > 0) img.rect(0, top, lit - 1, bottom, true);
+    for (x = lit + 1; x < W; x += 2) img.point(x, bottom, 1);
   }
 
   function largeBox(img, x, label, heard, bold, medium) {
@@ -352,8 +383,10 @@ MM.screen = (function () {
     }
     // A screen without line 3 (a mode with nothing more to say) is drawn in the same
     // layout with line 3 empty.
+    var fill = fillOf(state);
     if (lines === 2) twoLines(img, state, width);
-    else threeLines(img, state, width);
+    else threeLines(img, state, width, fill !== null);
+    if (fill !== null) fillBar(img, fill, lines === 2 ? FILL_TOP_TWO : FILL_TOP_THREE, state.MIKRO_FILL_CENTER === 1);
     return img;
   }
 

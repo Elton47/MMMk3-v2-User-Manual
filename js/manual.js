@@ -498,7 +498,9 @@ MM.manual = (function () {
     }
 
     // The pads as a mode lights them: demo is 16 entries in pad order, null or { color, level,
-    // drum } (see padDemos() in layouts.js); no demo lights nothing.
+    // drum, meter } (see padDemos() in layouts.js); no demo lights nothing. meter (0-1, a seed):
+    // the pad's brightness moves gently around its level, like a level meter (the mixer); the
+    // seed sets its own pace and phase (CSS: .demo-meter, still under reduced motion).
     drawing.paintPads = function (demo) {
       for (var n = 1; n <= 16; n++) {
         var g = drawing.node('PAD ' + n);
@@ -509,6 +511,16 @@ MM.manual = (function () {
         });
         if (entry) g.style.setProperty('--demo-color', entry.drum ? drumColor(entry.drum, entry.color) : entry.color);
         else g.style.removeProperty('--demo-color');
+        var meter = entry && typeof entry.meter === 'number' ? entry.meter : null;
+        g.classList.toggle('demo-meter', meter !== null);
+        if (meter !== null) {
+          var period = 1.7 + meter * 1.3;
+          g.style.setProperty('--meter-period', period.toFixed(2) + 's');
+          g.style.setProperty('--meter-delay', (-meter * 7 % period).toFixed(2) + 's');
+        } else {
+          g.style.removeProperty('--meter-period');
+          g.style.removeProperty('--meter-delay');
+        }
       }
     };
 
@@ -669,14 +681,21 @@ MM.manual = (function () {
   // (TRACK_VIEW_KEEPS), those modifiers don't switch to the track view: the pads show the mode.
   // A demo that comes from the combo itself (SOLO + PAD: the track view) also shows on the
   // combo's pads (class combo-demo on the drawing), instead of their plain highlight.
+  // SECTION_PADS (layouts.js) picks the demo for a section's combos (the mixer: its pads for all).
   function paintPads(combo, section) {
     var demos = layout().padDemos || {}, demo = null;
     var mode = sectionMode(section);
     var keep = mode && TRACK_VIEW_KEEPS.indexOf(mode) >= 0 ? mode : null, kept = false;
-    (combo || []).some(function (token) {
-      if (keep && TRACK_VIEW_MODIFIERS.indexOf(token) >= 0) { kept = true; return false; }
-      return (demo = demos[token] || null);
-    });
+    var chosen = combo && section && SECTION_PADS[section.id], key = combo ? combo.join('+') : '';
+    if (chosen && (key in chosen || '*' in chosen)) {
+      var token = key in chosen ? chosen[key] : chosen['*'];
+      demo = token ? demos[token] || null : null;
+    } else {
+      (combo || []).some(function (token) {
+        if (keep && TRACK_VIEW_MODIFIERS.indexOf(token) >= 0) { kept = true; return false; }
+        return (demo = demos[token] || null);
+      });
+    }
     if (!demo && kept) demo = demos[keep];
     el('device').classList.toggle('combo-demo', !!demo);
     if (!demo && state.selected) demo = demos[state.selected] || null;

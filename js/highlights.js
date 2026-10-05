@@ -123,10 +123,12 @@ MM.tour = (function () {
     });
   }
 
-  function lcdFrom(lines) {
-    var text = (lines || []).map(function (line) { return line && line.text !== undefined ? line.text : line || ''; });
-    var three = text.length > 2;
-    return { left: { title: text[0], sub: three ? text[1] : '', center: three ? text[2] : text[1], accent: SAMPLE_TRACKS[0].color } };
+  // A colour screen side for a MIKRO screen state (shows that give no MK3 screens of their own).
+  function lcdFrom(oled) {
+    var o = oled || {}, text = o.popup !== undefined ? String(o.popup).split('\n') : null;
+    if (text) return { left: { title: text[0], center: text[1] || '', accent: SAMPLE_TRACKS[0].color } };
+    var line3 = [o.MIKRO_LINE3, o.MIKRO_LINE3_VALUE].filter(Boolean).join('  ');
+    return { left: { title: o.TITLE || '', sub: o.SUBTITLE || '', center: line3, accent: SAMPLE_TRACKS[0].color } };
   }
 
   function makeApi() {
@@ -326,11 +328,8 @@ MM.tour = (function () {
     if (!loupeShown()) return;
     var box = [oled.x, oled.y, 128 * oled.px, 32 * oled.px].map(function (v) { return v.toFixed(2); }).join(' ');
     if (loupe.getAttribute('viewBox') !== box) loupe.setAttribute('viewBox', box);
-    ['pixels', 'inverse'].forEach(function (name) {
-      var source = oled[name === 'pixels' ? 'path' : 'inverse'], copy = loupe.querySelector('.' + (name === 'pixels' ? 'pixels' : 'pixels-inverse'));
-      var d = source.getAttribute('d') || '';
-      if (copy.getAttribute('d') !== d) copy.setAttribute('d', d);
-    });
+    var d = oled.path.getAttribute('d') || '', copy = loupe.querySelector('.pixels');
+    if (copy.getAttribute('d') !== d) copy.setAttribute('d', d);
   }
 
   function go(index, byUser) {

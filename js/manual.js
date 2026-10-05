@@ -58,46 +58,8 @@ MM.manual = (function () {
     return id;
   }
 
-  // A 5 x 7 pixel font for the OLED screen (our own glyphs). Each glyph: 7 rows of 5 bits.
-  var PIXEL_FONT = {
-    'A': '01110100011000111111100011000110001', 'B': '11110100011000111110100011000111110',
-    'C': '01110100011000010000100001000101110', 'D': '11110100011000110001100011000111110',
-    'E': '11111100001000011110100001000011111', 'F': '11111100001000011110100001000010000',
-    'G': '01110100011000010111100011000101111', 'H': '10001100011000111111100011000110001',
-    'I': '01110001000010000100001000010001110', 'J': '00111000100001000010000101001001100',
-    'K': '10001100101010011000101001001010001', 'L': '10000100001000010000100001000011111',
-    'M': '10001110111010110101100011000110001', 'N': '10001100011100110101100111000110001',
-    'O': '01110100011000110001100011000101110', 'P': '11110100011000111110100001000010000',
-    'Q': '01110100011000110001101011001001101', 'R': '11110100011000111110101001001010001',
-    'S': '01111100001000001110000010000111110', 'T': '11111001000010000100001000010000100',
-    'U': '10001100011000110001100011000101110', 'V': '10001100011000110001100010101000100',
-    'W': '10001100011000110101101011010101010', 'X': '10001100010101000100010101000110001',
-    'Y': '10001100010101000100001000010000100', 'Z': '11111000010001000100010001000011111',
-    '0': '01110100011001110101110011000101110', '1': '00100011000010000100001000010001110',
-    '2': '01110100010000100010001000100011111', '3': '11111000100010000010000011000101110',
-    '4': '00010001100101010010111110001000010', '5': '11111100001111000001000011000101110',
-    '6': '00110010001000011110100011000101110', '7': '11111000010001000100010000100001000',
-    '8': '01110100011000101110100011000101110', '9': '01110100011000101111000010001001100',
-    '-': '00000000000000011111000000000000000', '.': '00000000000000000000000000110001100',
-    ':': '00000011000110000000011000110000000', ' ': '00000000000000000000000000000000000',
-    '/': '00001000100001000100010000100010000', '%': '11001110100001000100010000101110011',
-    '+': '00000001000010011111001000010000000', '>': '10000010000010000010001000100010000',
-    '<': '00001000100010001000001000001000001', '_': '00000000000000000000000000000011111'
-  };
-
-  // Path data for text in the pixel font: top-left at (x, y), one font pixel = px units.
-  function pixelText(text, x, y, px) {
-    var d = '';
-    String(text).toUpperCase().split('').forEach(function (ch, i) {
-      var glyph = PIXEL_FONT[ch] || PIXEL_FONT[' '];
-      for (var bit = 0; bit < 35; bit++) {
-        if (glyph.charAt(bit) !== '1') continue;
-        var gx = x + (i * 6 + bit % 5) * px, gy = y + Math.floor(bit / 5) * px;
-        d += 'M' + gx.toFixed(2) + ' ' + gy.toFixed(2) + 'h' + px.toFixed(2) + 'v' + px.toFixed(2) + 'h-' + px.toFixed(2) + 'z';
-      }
-    });
-    return d;
-  }
+  // The share of a screen pixel its lit square fills: the OLED's pixels sit in a fine dark grid.
+  var OLED_DOT = 0.88;
 
   function gradient(defs, type, id, attrs, stops) {
     var g = node(type, Object.assign({ id: id }, attrs), defs);
@@ -276,8 +238,8 @@ MM.manual = (function () {
       return svg.querySelector('[data-id="' + id.replace(/"/g, '\\"') + '"]');
     };
 
-    // The screens show `lines`: the OLED takes text lines, the colour screens { left, right } (a
-    // side that is left out shows the layout's default).
+    // The screens show `lines`: the OLED a screen state (see js/screen-render.js), the colour
+    // screens { left, right } (a side that is left out shows the layout's default).
     drawing.showScreen = function (lines) {
       var lcd = drawing.lcd;
       if (lcd && lines && lcd.content !== lines) {
@@ -286,29 +248,14 @@ MM.manual = (function () {
           drawLcd(lcd.sides[name], lines[name] || drawing.layout().screen[name]);
         });
       }
-      // The OLED: 2 lines (big + small) or 3 small lines, like the script's screens. In the 3-line
-      // layout a line can be { text, inverse: true }: dark text on a lit bar (a chosen list entry).
+      // The OLED: a screen state (the fields the script sends), drawn pixel for pixel by the
+      // controller's own layout and fonts (js/screen-render.js).
       var oled = drawing.oled;
-      if (!oled || !lines || oled.lines === lines) return;
-      oled.lines = lines;
-      var px = oled.px, d = '', inverse = '';
-      if (lines.length > 2) {
-        lines.forEach(function (line, i) {
-          var x = oled.x + 2 * px, y = oled.y + (2 + i * 11) * px;
-          if (line && line.inverse) {
-            d += 'M' + oled.x.toFixed(2) + ' ' + (y - px).toFixed(2) + 'h' + (128 * px).toFixed(2) +
-              'v' + (9 * px).toFixed(2) + 'h-' + (128 * px).toFixed(2) + 'z';
-            inverse += pixelText(line.text, x, y, px);
-          } else {
-            d += pixelText(line && line.text !== undefined ? line.text : line || '', x, y, px);
-          }
-        });
-      } else {
-        d = pixelText(lines[0] || '', oled.x + 2 * px, oled.y + 2 * px, px * 2) +
-          pixelText(lines[1] || '', oled.x + 2 * px, oled.y + 21 * px, px);
-      }
-      oled.path.setAttribute('d', d);
-      oled.inverse.setAttribute('d', inverse);
+      if (!oled || !lines || lcd) return;
+      var key = JSON.stringify(lines);
+      if (oled.key === key) return;
+      oled.key = key;
+      oled.path.setAttribute('d', MM.screen.path(MM.screen.render(lines), oled.x, oled.y, oled.px, OLED_DOT));
     };
 
     // The pads as a mode lights them: demo is 16 entries in pad order, null or { color, level,
@@ -401,9 +348,10 @@ MM.manual = (function () {
           node('rect', { x: x, y: y, width: w, height: hgt, rx: 2.4, 'class': 'bezel' }, g);
           var inset = hgt * 0.12, ow = w - inset * 2, oh = hgt - inset * 2;
           node('rect', { x: x + inset, y: y + inset, width: ow, height: oh, rx: 0.8, 'class': 'oled' }, g);
-          // the MIKRO's OLED is 128 x 32 pixels
-          drawing.oled = { x: x + inset, y: y + inset, px: ow / 128, path: node('path', { 'class': 'pixels' }, g),
-            inverse: node('path', { 'class': 'pixels-inverse' }, g), lines: null };
+          // the MIKRO's OLED is 128 x 32 pixels, centred in the glass
+          var px = Math.min(ow / 128, oh / 32);
+          drawing.oled = { x: x + inset + (ow - 128 * px) / 2, y: y + inset + (oh - 32 * px) / 2, px: px,
+            path: node('path', { 'class': 'pixels' }, g), key: null };
           node('rect', { x: x + 0.6, y: y + 0.6, width: w - 1.2, height: hgt - 1.2, rx: 1.9, 'class': 'glass-sheen' }, g);
           return;
         }

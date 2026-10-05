@@ -87,9 +87,67 @@ var SAMPLE_SCENE_COLOR = PAD_COLORS[5];  // Green
 // name colour table in features.json (first matching rule), like the script's name colours.
 var SAMPLE_DRUMS = ['Kick', 'Snare', 'Closed Hat', 'Open Hat', 'Clap', 'Rim', 'Low Tom', 'High Tom',
   'Crash', 'Ride', 'Shaker', 'Cowbell', 'Perc 1', 'Perc 2', 'FX', 'Bass'];
+var SAMPLE_KIT = '808 Core Kit';  // that Drum Rack's name
+var SAMPLE_SCENES = ['Intro', 'Verse', 'Chorus', 'Drop'];
+// Live's browser: the categories as the script lists them (Collections first), and the Drums
+// category (a folder of single hits, then the kits; SAMPLE_KIT is loaded from it).
+var SAMPLE_BROWSER = ['Collections', 'Sounds', 'Drums', 'Instruments', 'Audio Effects', 'MIDI Effects',
+  'Max for Live', 'Plug-Ins', 'Clips', 'Samples', 'Grooves', 'Packs', 'User Library', 'Current Project'];
+var SAMPLE_BROWSER_DRUMS = ['Drum Hits', '707 Core Kit', '808 Core Kit', '909 Core Kit', 'Big Room Kit',
+  'Boom Kit', 'Dusty Kit', 'House Kit', 'Lo-Fi Kit', 'Techno Kit'];
 
 // The short name of a sample track ('1-Drums' -> 'Drums').
 function shortName(track) { return track.name.replace(/^\d+-/, ''); }
+
+// --- the MIKRO's screen --------------------------------------------------------------------
+// Screen states with the fields the script sends for the sample set (js/screen-render.js draws
+// them as the controller does; MM.screenLines picks 2 or 3 lines). Texts as the script words them.
+
+// A pad mode or PLUG-IN: line 1 the track's numbered box and its name (corner: the value at its
+// right on two lines), line 2 the subtitle (three lines only), then the detail and its value.
+// index: into SAMPLE_TRACKS; flags: MM.screen.MUTE / SOLO.
+function trackScreen(index, subtitle, detail, value, corner, flags) {
+  return { TITLE: SAMPLE_TRACKS[index].name, MIKRO_TRACK_LABEL: String(index + 1),
+    MIKRO_TRACK_FLAGS: MM.screen.SHOWN | (flags || 0), SUBTITLE: subtitle, MIKRO_LINE3: detail || '',
+    MIKRO_LINE3_VALUE: value || '', MIKRO_CORNER: corner || '' };
+}
+
+// A mode named on line 1 (Pattern, Scenes, Tracks ...).
+function modeScreen(title, subtitle, detail, value, corner) {
+  return { TITLE: title, SUBTITLE: subtitle || '', MIKRO_LINE3: detail || '', MIKRO_LINE3_VALUE: value || '',
+    MIKRO_CORNER: corner || '' };
+}
+
+// A MIDI note as Live names it (60 = C3); a Drum Rack's pad 1 is 36 (C1).
+function noteName(pitch) {
+  return ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'][pitch % 12] + (Math.floor(pitch / 12) - 2);
+}
+
+// A popup: a value that changed (tempo, swing, a toggle ...).
+function popupScreen(title, value) { return { popup: value ? title + '\n' + value : title }; }
+
+// A list (the browser, the settings page): three rows around the chosen one, which is
+// highlighted, and the scrollbar. rows: the row texts ('name\tvalue' for a value on the right).
+function listScreen(title, subtitle, rows, chosen) {
+  var start = Math.max(0, Math.min(chosen - 1, rows.length - 3));
+  return { TITLE: title, SUBTITLE: subtitle, LIST_ITEM: rows.slice(start, start + 3), LIST_SELECTED: chosen - start,
+    MIKRO_SCROLL: rows.length > 1 ? Math.round(chosen * 126 / (rows.length - 1)) : null };
+}
+
+// Live's browser at a level: its name, the items (folders marked ' >'), the chosen one.
+function browserScreen(level, items, chosen, folders) {
+  var rows = items.map(function (name, i) { return folders(i) ? name + ' >' : name; });
+  return listScreen(level + ' ' + (chosen + 1) + '/' + items.length, items[chosen] + ' ' + (folders(chosen) ? '>' : ''),
+    rows, chosen);
+}
+
+// The settings page (MASCHINE), its first setting chosen.
+function settingsScreen() {
+  var lines = MM.screenLines + ' lines';
+  var rows = ['Screen\t' + lines, 'Velocity curve\tLinear', 'Fixed velocity\t100', 'Pad pressure\tPoly',
+    'Drum colours\tBy chain', 'Playback lights\tOn', 'Step follows\tOn', 'About\t2.0.0'];
+  return listScreen('Settings', 'Screen: ' + lines, rows, 0);
+}
 
 // a and b mixed: t = 0 gives a, t = 1 gives b (both '#rrggbb').
 function mixHex(a, b, t) {
@@ -217,34 +275,37 @@ var LAYOUTS = {
     var pads = printedPads(c, step.map(function (s) { return 318.3 + s; }), step.map(function (s) { return 190.7 + s; }), 59.3, 59.3);
     var dots = [];
     for (var d = 0; d < 25; d++) dots.push([(44.5 + d * (216.25 - 44.5) / 24 - 14) * k, (291.25 - 145) * k]);
+    var pattern = modeScreen('Pattern', 'Tracks 1-4 Scenes 1-4', SAMPLE_TRACKS[SAMPLE_SELECTED].name, '', 'Scenes 1-4');
+    var scenes = '1 - ' + SAMPLE_SCENES.length + ' of ' + SAMPLE_SCENES.length;
+    var tracks = '1 - ' + SAMPLE_TRACKS.length + ' of ' + SAMPLE_TRACKS.length;
     return {
       title: 'MASCHINE MIKRO MK3',
       width: 1000,
       height: Math.round(313 * k),
       radius: 7,
       real: true,
-      screen: ['Clips 1-4', 'Scene 1  ' + SAMPLE_TRACKS.slice(0, 2).map(shortName).join(' ')],
-      // What the OLED shows when a control is selected or a combo with it is hovered (sample
-      // content in the style of the script's screens; 2 lines: big + small, 3 lines: all small).
+      screen: pattern,
+      // What the screen shows when a control is selected or a combo with it is hovered: the
+      // script's screen for the sample set (the screen helpers above).
       screens: {
-        'PLUG-IN': [SAMPLE_TRACKS[1].name, 'Auto Filter  Filter', 'Frequency   2.40 kHz'],
-        'TEMPO': ['Tempo', '120.00 BPM'],
-        'SWING': ['Swing', '25 %'],
-        'VOLUME': ['Meters 1-4', SAMPLE_TRACKS.slice(0, 4).map(shortName).join(' ')],
-        'PAD MODE': ['808 Kit', SAMPLE_DRUMS[0]],
-        'KEYBOARD': ['Keyboard', 'C Major  C3'],
-        'CHORDS': ['Chords', 'Triad  C Major'],
-        'STEP': ['Step ' + SAMPLE_DRUMS[0], 'Page 1  1/16'],
-        'SCENE': ['Scenes', '1 - 4 of 4'],
-        'PATTERN': ['Clips 1-4', 'Scene 1  ' + SAMPLE_TRACKS.slice(0, 2).map(shortName).join(' ')],
-        'NOTE REPEAT': ['Repeat', '1/16'],
-        'FIXED VEL': ['Fixed Vel', 'Velocity 127'],
-        'EVENTS': ['Events', 'Drum Loop'],
-        'GROUP': ['Tracks', '1 - ' + SAMPLE_TRACKS.length + ' of ' + SAMPLE_TRACKS.length],
-        'LOCK': ['Locked', SAMPLE_TRACKS[1].name + '  Auto Filter'],
-        'MASCHINE': ['MASCHINE for Live', '2.0.0  by Elton47', 'Live 12.4.6'],
-        'STAR': ['Browser', 'Drums  808 Kit'],
-        'BROWSER': ['Browser', 'Drums  808 Kit']
+        'PLUG-IN': trackScreen(1, 'Auto Filter  Filter', 'Frequency', '2.40 kHz', 'Auto Filter'),
+        'TEMPO': popupScreen('Tempo', '120.00 BPM'),
+        'SWING': popupScreen('Swing', '25 %'),
+        'VOLUME': modeScreen('Meters 1-4', SAMPLE_TRACKS.slice(0, 4).map(function (t) { return t.name.slice(0, 6); }).join(' | ')),
+        'PAD MODE': trackScreen(0, SAMPLE_KIT, SAMPLE_DRUMS[0], 'C1', SAMPLE_KIT),
+        'KEYBOARD': trackScreen(2, 'Keyboard  C Major', 'Octave', 'C3', 'C Major'),
+        'CHORDS': trackScreen(2, 'Triad Close  C Major', 'Chord', 'Triad', 'C Major'),
+        'STEP': trackScreen(0, 'Step ' + SAMPLE_DRUMS[0], 'Page 1/2  1/16', 'C1', SAMPLE_DRUMS[0]),
+        'SCENE': modeScreen('Scenes', scenes, SAMPLE_SCENES[0], '', scenes),
+        'PATTERN': pattern,
+        'NOTE REPEAT': popupScreen('Note Repeat', '1/16 latched'),
+        'FIXED VEL': popupScreen('Fixed Velocity', 'On (100)'),
+        'EVENTS': modeScreen('Events', 'Drum Loop'),
+        'GROUP': modeScreen('Tracks', tracks, SAMPLE_TRACKS[SAMPLE_SELECTED].name, '', tracks),
+        'LOCK': popupScreen('Device lock', 'toggled'),
+        'MASCHINE': settingsScreen(),
+        'STAR': browserScreen('Browser', SAMPLE_BROWSER, 2, function () { return true; }),
+        'BROWSER': browserScreen('Browser', SAMPLE_BROWSER, 2, function () { return true; })
       },
       stripDots: dots,
       padDemos: padDemos('GROUP'),

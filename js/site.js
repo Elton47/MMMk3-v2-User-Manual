@@ -1,5 +1,5 @@
 // Shared helpers: storage, element building, icons, snackbar, clipboard, theme.
-var MM = (function () {
+var MM = Object.assign(window.MM || {}, (function () {
   'use strict';
 
   var reducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -157,4 +157,4 @@ var MM = (function () {
     snackbar: snackbar, copyText: copyText, scrollToEl: scrollToEl, initTheme: initTheme,
     reducedMotion: function () { return !!(reducedMotion && reducedMotion.matches); }
   };
-})();
+})());

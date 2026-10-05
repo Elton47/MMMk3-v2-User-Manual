@@ -202,6 +202,7 @@ MM.cheatsheetOverview = (function () {
     drawing.draw(device);
     svg.classList.add('cs-drawing');
     var spec = LAYOUTS[device], W = spec.width, H = spec.height;
+    if (drawing.oled) drawing.showScreen(spec.screen);  // the MIKRO's screen, as on the controller
     var D = words(data, device);
     var boxes = {};
     spec.controls.forEach(function (c) { boxes[c[0]] = { x: c[2], y: c[3], w: c[4], h: c[5], cx: c[2] + c[4] / 2, cy: c[3] + c[5] / 2 }; });

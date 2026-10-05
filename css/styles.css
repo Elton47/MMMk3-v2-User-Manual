@@ -540,7 +540,6 @@ mark.hit {
 .hw-drawing.real .screen .bezel { fill: #0d0d0f; stroke: #050506; stroke-width: 1; }
 .hw-drawing.real .screen .oled { fill: #000; }
 .hw-drawing.real .screen .pixels { fill: #eaf1ff; }
-.hw-drawing.real .screen .pixels-inverse { fill: #000; }
 .hw-drawing.real .screen .glass-sheen { fill: url(#hw-glass-sheen); pointer-events: none; }
 /* MK3: the glossy display panel, the darker edge band, plain light display buttons, the dots
    around the encoder, and the colour screens */
@@ -1007,7 +1006,6 @@ td:first-child { font-weight: 500; }
 }
 .tour-loupe[hidden] { display: none; }
 .tour-loupe .pixels { fill: #eaf1ff; }
-.tour-loupe .pixels-inverse { fill: #000; }
 
 .tour-leader { position: absolute; inset: 0; z-index: 1; display: none; width: 100%; height: 100%; overflow: visible; pointer-events: none; transition: opacity .18s linear; }
 .tour-stage.wide .tour-leader { display: block; }
@@ -1114,6 +1112,7 @@ td:first-child { font-weight: 500; }
 .cs-drawing .knob-shadow, .cs-drawing .knurl-light, .cs-drawing .knob-sheen, .cs-drawing .screen-lip,
 .cs-drawing .glass-sheen { display: none; }
 .cs-drawing .oled, .cs-drawing .lcd { fill: #ececec !important; stroke: #9a9a9a !important; stroke-width: 1 !important; }
+.cs-drawing .pixels { fill: #111 !important; }
 .cs-drawing .label, .cs-drawing .label.green, .cs-drawing .label.red { fill: #000 !important; filter: none !important; }
 .cs-drawing .sublabel, .cs-drawing .sublabel.red { fill: #777 !important; filter: none !important; }
 .cs-drawing .label-box { fill: #000 !important; }

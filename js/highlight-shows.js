@@ -16,8 +16,9 @@
 // motion: no flashing, slower changes), blank() (16 unlit pads), lit(color, level, drum) (a pad:
 // level 'dim' | 'mid' | 'bright'), demo(token) (a copy of the layout's pad demo), pads(list) (16
 // entries in pad order, pad 1 first; listPad() turns a reading position into a pad number),
-// screen(oled, lcd) (OLED lines on the MIKRO, colour screens { left, right } on the MK3; without
-// lcd the MK3 shows the OLED text), screenOf(token) (the layout's sample screen), light(ids)
+// screen(oled, lcd) (a screen state on the MIKRO, made with the screen helpers in layouts.js:
+// trackScreen, modeScreen, popupScreen, browserScreen ...; colour screens { left, right } on the
+// MK3; without lcd the MK3 shows the state's text), screenOf(token) (the layout's sample screen), light(ids)
 // (exactly these buttons are lit), turn(steps) (the encoder has turned this many detents),
 // strip(fill, color, flash) (the touch strip's LED dots as a progress bar: fill 0-1 in color, or
 // red while flash; null clears it; the strip surface stays unlit), outline(tokens) (change the outlined controls).
@@ -33,15 +34,6 @@ var HIGHLIGHT_SHOWS = (function () {
   // A colour screen side in the style of the script's MK3 screens (see drawLcd() in manual.js).
   function side(title, sub, center, small, accent) {
     return { left: { title: title, sub: sub, center: center, small: small, accent: accent || drums.color } };
-  }
-
-  // The MIKRO's 3-line list: the chosen entry on a lit bar, kept in the middle while it can be.
-  function oledList(entries, chosen, marker) {
-    var start = Math.max(0, Math.min(chosen - 1, entries.length - 3));
-    return entries.slice(start, start + 3).map(function (name, i) {
-      var text = name + (marker || '');
-      return start + i === chosen ? { text: text, inverse: true } : text;
-    });
   }
 
   // Live's tempo, swing and a device parameter, as the encoder changes them.
@@ -60,8 +52,8 @@ var HIGHLIGHT_SHOWS = (function () {
 
   var STEP_NOTES = [1, 5, 8, 11, 13];  // the kick pattern of the manual's STEP demo
 
-  var BROWSER_ROOT = ['Collections', 'Sounds', 'Drums', 'Instruments', 'Audio Effects', 'MIDI Effects'];
-  var BROWSER_KITS = ['606 Kit', '707 Kit', '808 Kit', '909 Kit', 'Boom Kit'];
+  // The MIKRO's screens below are what the script shows (the screen helpers in layouts.js).
+  var CHORDS_SCREEN = trackScreen(2, 'Triad Close  C Major', 'Chord', 'Triad', 'C Major');
 
   return {
     // A real SHIFT key, and Live's colours on the pads: a wave through MASCHINE's 16 sound
@@ -76,7 +68,7 @@ var HIGHLIGHT_SHOWS = (function () {
             pads[listPad(i) - 1] = api.lit(PAD_COLORS[i], front >= 16 || i === front ? 'bright' : 'mid');
           }
           api.pads(pads);
-          api.screenOf('MASCHINE');
+          api.screenOf(api.device === 'mikro' ? 'PATTERN' : 'MASCHINE');
         } else if (t < 4600) {
           api.pads(api.demo('PATTERN'));
           api.screenOf('PATTERN');
@@ -96,9 +88,9 @@ var HIGHLIGHT_SHOWS = (function () {
         api.turn(n);
         api.light([turn[0]]);
         if (turn[0] === 'TEMPO') {
-          api.screen(['Tempo', value.toFixed(2) + ' BPM'], side('Tempo', 'Master', value.toFixed(2), 'BPM'));
+          api.screen(popupScreen('Tempo', value.toFixed(2) + ' BPM'), side('Tempo', 'Master', value.toFixed(2), 'BPM'));
         } else if (turn[0] === 'SWING') {
-          api.screen(['Swing', value + ' %'], side('Swing', 'Master', value + ' %', 'Repeat and arp follow'));
+          api.screen(popupScreen('Swing', value + ' %'), side('Swing', 'Master', value + ' %', 'Repeat and arp follow'));
         } else {
           var text = value.toFixed(2) + ' kHz', page = api.layout.screens['PLUG-IN'], lcd = null;
           if (page && page.left && page.left.knobs) {
@@ -106,7 +98,7 @@ var HIGHLIGHT_SHOWS = (function () {
               touched: 0, knobs: [['Frequency', 0.5 + (value - 2.4) / 3, text]].concat(page.left.knobs.slice(1))
             }), right: page.right };
           }
-          api.screen([bass.name, 'Auto Filter  Filter', 'Frequency   ' + text], lcd);
+          api.screen(trackScreen(1, 'Auto Filter  Filter', 'Frequency', text, 'Auto Filter'), lcd);
         }
       }
     },
@@ -124,7 +116,7 @@ var HIGHLIGHT_SHOWS = (function () {
           pads[chord.pad + 3] = api.lit(keys.color, 'mid');
         }
         api.pads(pads);
-        api.screen([chord.name, 'Triad  ' + chord.degree + '  C Major'],
+        api.screen(CHORDS_SCREEN,
           side(keys.name, 'Chords', chord.name, 'Triad  ' + chord.degree, keys.color));
       }
     },
@@ -148,7 +140,12 @@ var HIGHLIGHT_SHOWS = (function () {
           pads[pad - 1] = api.lit(drums.color, level, SAMPLE_DRUMS[pad - 1]);
         }
         api.pads(pads);
-        api.screen(['Repeat', rate], side(drums.name, 'Note Repeat', rate, 'Rate'));
+        // the screen: the pad last hit (hitting a pad selects it), and the new rate popping up
+        // for a moment (NOTIFY_DURATION in the script: 1.2 s)
+        var hit = t < 400 ? 1 : t < 3900 ? 3 : 2;
+        var oled = t >= 3400 && t < 4600 ? popupScreen('Note Repeat', rate)
+          : trackScreen(0, SAMPLE_KIT, SAMPLE_DRUMS[hit - 1], noteName(35 + hit), SAMPLE_KIT);
+        api.screen(oled, side(drums.name, 'Note Repeat', rate, 'Rate'));
       }
     },
 
@@ -184,9 +181,10 @@ var HIGHLIGHT_SHOWS = (function () {
         var frame = Math.min(n, 6), pushed = n === 3 || n === 6;
         api.turn(frame < 3 ? frame : frame < 6 ? frame - 1 : 4);
         api.light(pushed ? ['ENCODER'] : []);
-        if (frame < 3) api.screen(oledList(BROWSER_ROOT, frame, ' >'));
-        else if (frame < 6) api.screen(oledList(BROWSER_KITS, frame - 3));
-        else api.screen(['Loaded', BROWSER_KITS[2]]);
+        // Live's categories are folders; in Drums only Drum Hits is (the kits load)
+        if (frame < 3) api.screen(browserScreen('Browser', SAMPLE_BROWSER, frame, function () { return true; }));
+        else if (frame < 6) api.screen(browserScreen('Drums', SAMPLE_BROWSER_DRUMS, frame - 3, function (i) { return i === 0; }));
+        else api.screen(popupScreen('Loaded', SAMPLE_KIT));
         api.pads(frame < 6 ? api.blank() : api.demo('PAD MODE'));
       }
     },
@@ -220,11 +218,11 @@ var HIGHLIGHT_SHOWS = (function () {
           pads[target] = api.lit(bass.color, api.calm || n % 2 === 0 ? 'bright' : 'mid');
           api.outline(['VARIATION', 'PAD 10']);
           api.light(['REC']);
-          api.screen(['Bass_1', 'Recording the copy'], side(bass.name, 'Variation', 'Bass_1', 'Recording the copy', bass.color));
+          api.screen(n < 6 ? popupScreen('Variation', 'Recording the copy') : api.layout.screens.PATTERN, side(bass.name, 'Variation', 'Bass_1', 'Recording the copy', bass.color));
         } else {
           api.outline(['VARIATION', 'PAD']);
           api.light([]);
-          api.screen(['Variation', 'Red pad: record copy'], side(bass.name, 'Variation', 'Red pad', 'Record a copy of the clip above', RED));
+          api.screen(n < 2 ? popupScreen('Variation', 'Red pad: record a copy') : api.layout.screens.PATTERN, side(bass.name, 'Variation', 'Red pad', 'Record a copy of the clip above', RED));
         }
         api.pads(pads);
       }
@@ -245,8 +243,9 @@ var HIGHLIGHT_SHOWS = (function () {
         api.strip((since % loop) / loop, recording ? bass.color : drums.color, flash);
         api.light(recording ? ['PLAY', 'REC'] : ['PLAY']);
         var position = 'Bar ' + bar + '  Beat ' + beat;
-        if (recording) api.screen(['Recording', 'Bass_1  ' + position], side(bass.name, 'Recording', position, 'Bass_1', bass.color));
-        else api.screen(['Drum Loop', position], side(drums.name, 'Playing', position, 'Drum Loop'));
+        // the MIKRO's screen stays on PATTERN
+        if (recording) api.screen(api.layout.screens.PATTERN, side(bass.name, 'Recording', position, 'Bass_1', bass.color));
+        else api.screen(api.layout.screens.PATTERN, side(drums.name, 'Playing', position, 'Drum Loop'));
         var grid = api.demo('PATTERN');
         if (recording) grid[9] = api.lit(bass.color, 'bright');
         api.pads(grid);

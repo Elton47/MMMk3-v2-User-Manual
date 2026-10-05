@@ -90,9 +90,11 @@
 
     Promise.all([
       fetchJSON('data/features.json').catch(function () { return null; }),
-      fetchJSON('data/install.json').catch(function () { return null; })
+      fetchJSON('data/install.json').catch(function () { return null; }),
+      fetchJSON('data/screens.json').catch(function () { return null; })
     ]).then(function (results) {
       var features = results[0], install = results[1];
+      MM.screen.init(results[2]);  // the MIKRO screen's fonts (a blank screen without them)
       if (features) {
         el('version').textContent = 'Manual · v' + features.version;
         MM.manual.init(features);

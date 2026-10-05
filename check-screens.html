@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Screen check</title>
+  <!-- Not part of the site: renders every reference screen of data/screens.json with
+       js/screen-render.js and compares it with the controller's own pixels. The result is in the
+       title ("screens: 24/24 match") and in #result, e.g. for a headless browser's --dump-dom. -->
+  <style>
+    body { margin: 16px; background: #1b1b1d; color: #e6e6e8; font: 14px/1.4 system-ui, sans-serif; }
+    h1 { font-size: 18px; margin: 0 0 12px; }
+    #result { font-weight: 700; margin: 0 0 16px; }
+    .ok { color: #7fd67f; } .bad { color: #ff6b6b; }
+    .row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin: 0 0 12px; }
+    .name { width: 180px; }
+    canvas { image-rendering: pixelated; width: 384px; height: 96px; background: #000; }
+  </style>
+</head>
+<body>
+  <h1>MIKRO screens: the manual's renderer against the controller's</h1>
+  <p id="result">running…</p>
+  <div id="list"></div>
+  <script src="js/screen-render.js"></script>
+  <script>
+    (function () {
+      'use strict';
+      function canvas(rows, diff) {
+        var c = document.createElement('canvas');
+        c.width = 128; c.height = 32;
+        var ctx = c.getContext('2d'), img = ctx.createImageData(128, 32);
+        for (var y = 0; y < 32; y++) {
+          for (var x = 0; x < 128; x++) {
+            var i = (y * 128 + x) * 4, on = rows[y].charAt(x) === '1';
+            var wrong = diff && diff[y].charAt(x) !== on;
+            img.data[i] = wrong ? 255 : on ? 234 : 0;
+            img.data[i + 1] = wrong ? 40 : on ? 241 : 0;
+            img.data[i + 2] = wrong ? 40 : on ? 255 : 0;
+            img.data[i + 3] = 255;
+          }
+        }
+        ctx.putImageData(img, 0, 0);
+        return c;
+      }
+      function report(text, ok) {
+        var result = document.getElementById('result');
+        result.textContent = text;
+        result.className = ok ? 'ok' : 'bad';
+        document.title = text;
+      }
+      fetch('data/screens.json').then(function (r) { return r.json(); }).then(function (data) {
+        MM.screen.init(data);
+        var list = document.getElementById('list'), passed = 0, failed = [];
+        data.samples.forEach(function (sample) {
+          var mine = MM.screen.rows(MM.screen.render(sample.popup !== undefined ? { popup: sample.popup } : sample.fields, sample.lines));
+          var wrong = 0;
+          for (var y = 0; y < 32; y++) {
+            for (var x = 0; x < 128; x++) if (mine[y].charAt(x) !== sample.pixels[y].charAt(x)) wrong++;
+          }
+          if (wrong) failed.push(sample.name + ' (' + wrong + ' px)');
+          else passed++;
+          var row = document.createElement('div');
+          row.className = 'row';
+          var name = document.createElement('span');
+          name.className = 'name ' + (wrong ? 'bad' : 'ok');
+          name.textContent = sample.name + (wrong ? ': ' + wrong + ' px differ' : ': match');
+          row.appendChild(name);
+          row.appendChild(canvas(sample.pixels));
+          row.appendChild(canvas(mine, wrong ? sample.pixels.map(function (line) {
+            return { charAt: function (x) { return line.charAt(x) === '1'; } };
+          }) : null));
+          list.appendChild(row);
+        });
+        var total = data.samples.length;
+        report('screens: ' + passed + '/' + total + ' match' + (failed.length ? '; differ: ' + failed.join(', ') : ''),
+          passed === total);
+      }).catch(function (e) { report('screens: error ' + e, false); });
+    })();
+  </script>
+</body>
+</html>

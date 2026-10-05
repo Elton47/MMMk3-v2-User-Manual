@@ -85,16 +85,17 @@ var SAMPLE_ARMED = 1;
 var SAMPLE_SCENE_COLOR = PAD_COLORS[5];  // Green
 // The Drum Rack on 1-Drums, in pad order (pad 1 first). manual.js colours each pad by the drum
 // name colour table in features.json (first matching rule), like the script's name colours.
-var SAMPLE_DRUMS = ['Kick', 'Snare', 'Closed Hat', 'Open Hat', 'Clap', 'Rim', 'Low Tom', 'High Tom',
+// Kit and pad 1 as in the script's reference drums screen (data/screens.json).
+var SAMPLE_DRUMS = ['Kick 909 1', 'Snare', 'Closed Hat', 'Open Hat', 'Clap', 'Rim', 'Low Tom', 'High Tom',
   'Crash', 'Ride', 'Shaker', 'Cowbell', 'Perc 1', 'Perc 2', 'FX', 'Bass'];
-var SAMPLE_KIT = '808 Core Kit';  // that Drum Rack's name
+var SAMPLE_KIT = 'Kit-Core 909';  // that Drum Rack's name
 var SAMPLE_SCENES = ['Intro', 'Verse', 'Chorus', 'Drop'];
 // Live's browser: the categories as the script lists them (Collections first), and the Drums
 // category (a folder of single hits, then the kits; SAMPLE_KIT is loaded from it).
 var SAMPLE_BROWSER = ['Collections', 'Sounds', 'Drums', 'Instruments', 'Audio Effects', 'MIDI Effects',
   'Max for Live', 'Plug-Ins', 'Clips', 'Samples', 'Grooves', 'Packs', 'User Library', 'Current Project'];
-var SAMPLE_BROWSER_DRUMS = ['Drum Hits', '707 Core Kit', '808 Core Kit', '909 Core Kit', 'Big Room Kit',
-  'Boom Kit', 'Dusty Kit', 'House Kit', 'Lo-Fi Kit', 'Techno Kit'];
+var SAMPLE_BROWSER_DRUMS = ['Drum Hits', 'Kit-606', 'Kit-Core 909', 'Kit-Dusty', 'Kit-House',
+  'Kit-Lo-Fi', 'Kit-Techno'];
 
 // The short name of a sample track ('1-Drums' -> 'Drums').
 function shortName(track) { return track.name.replace(/^\d+-/, ''); }
@@ -276,6 +277,9 @@ var LAYOUTS = {
     var dots = [];
     for (var d = 0; d < 25; d++) dots.push([(44.5 + d * (216.25 - 44.5) / 24 - 14) * k, (291.25 - 145) * k]);
     var pattern = modeScreen('Pattern', 'Tracks 1-4 Scenes 1-4', SAMPLE_TRACKS[SAMPLE_SELECTED].name, '', 'Scenes 1-4');
+    // The script starts on the pads (PAD MODE: the drums, as 1-Drums has a Drum Rack), so that is
+    // the screen with nothing selected; the track is heard (not muted).
+    var drums = trackScreen(0, SAMPLE_KIT, SAMPLE_DRUMS[0], noteName(36), SAMPLE_KIT);
     var scenes = '1 - ' + SAMPLE_SCENES.length + ' of ' + SAMPLE_SCENES.length;
     var tracks = '1 - ' + SAMPLE_TRACKS.length + ' of ' + SAMPLE_TRACKS.length;
     return {
@@ -284,7 +288,7 @@ var LAYOUTS = {
       height: Math.round(313 * k),
       radius: 7,
       real: true,
-      screen: pattern,
+      screen: drums,
       // What the screen shows when a control is selected or a combo with it is hovered: the
       // script's screen for the sample set (the screen helpers above).
       screens: {
@@ -292,7 +296,7 @@ var LAYOUTS = {
         'TEMPO': popupScreen('Tempo', '120.00 BPM'),
         'SWING': popupScreen('Swing', '25 %'),
         'VOLUME': modeScreen('Meters 1-4', SAMPLE_TRACKS.slice(0, 4).map(function (t) { return t.name.slice(0, 6); }).join(' | ')),
-        'PAD MODE': trackScreen(0, SAMPLE_KIT, SAMPLE_DRUMS[0], 'C1', SAMPLE_KIT),
+        'PAD MODE': drums,
         'KEYBOARD': trackScreen(2, 'Keyboard  C Major', 'Octave', 'C3', 'C Major'),
         'CHORDS': trackScreen(2, 'Triad Close  C Major', 'Chord', 'Triad', 'C Major'),
         'STEP': trackScreen(0, 'Step ' + SAMPLE_DRUMS[0], 'Page 1/2  1/16', 'C1', SAMPLE_DRUMS[0]),
@@ -418,9 +422,9 @@ var LAYOUTS = {
       'SWING': { left: side('Swing', 'Master', '25 %', 'Repeat and arp follow') },
       'VOLUME': { left: side(tracks[0][0], 'Meters', 'Meters 1-4', firstFour) },
       'PAD MODE': {
-        left: side(tracks[0][0], 'Drums', '808 Kit', 'Pad 1  ' + SAMPLE_DRUMS[0]),
+        left: side(tracks[0][0], 'Drums', SAMPLE_KIT, 'Pad 1  ' + SAMPLE_DRUMS[0]),
         // list entries [name, colour, drum name]: manual.js colours a drum by its name colour
-        right: { title: 'Drum Rack', sub: '808 Kit', selected: 0, list: SAMPLE_DRUMS.slice(0, 6).map(function (name) {
+        right: { title: 'Drum Rack', sub: SAMPLE_KIT, selected: 0, list: SAMPLE_DRUMS.slice(0, 6).map(function (name) {
           return [name, tracks[0][1], name];
         }) }
       },
@@ -435,8 +439,8 @@ var LAYOUTS = {
       'LOCK': { left: side(tracks[1][0], 'Locked', 'Auto Filter', 'Device lock', tracks[1][1]) },
       'ARRANGER': { left: side(tracks[0][0], 'View', 'Arrangement', 'Session / Arrangement') },
       'BROWSER': {
-        left: { title: 'Browser', sub: 'Drums', selected: 0, accent: '#8f8f96',
-          list: [['808 Kit'], ['909 Kit'], ['Boom Kit'], ['Dub Kit'], ['Lo-Fi Kit']] }
+        left: { title: 'Browser', sub: 'Drums', selected: 1, accent: '#8f8f96',
+          list: SAMPLE_BROWSER_DRUMS.slice(1, 6).map(function (name) { return [name]; }) }
       },
       'GROUP A-H': { left: side(tracks[0][0], 'Tracks', 'Tracks 1-8', 'Group buttons select') }
     };
@@ -465,7 +469,8 @@ var LAYOUTS = {
       stripDots: leds,
       marks: marks,
       padDemos: padDemos('SELECT'),
-      screen: clips,
+      // nothing selected: the script starts on the pads (the drums), like the MIKRO
+      screen: screens['PAD MODE'],
       screens: screens,
       controls: [
         c('CHANNEL', 'CHANNEL', 26.5, 28.5, 45, 16, 'button', { sub: 'MIDI' }),

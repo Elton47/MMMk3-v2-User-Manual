@@ -68,7 +68,7 @@ var HIGHLIGHT_SHOWS = (function () {
             pads[listPad(i) - 1] = api.lit(PAD_COLORS[i], front >= 16 || i === front ? 'bright' : 'mid');
           }
           api.pads(pads);
-          api.screenOf(api.device === 'mikro' ? 'PATTERN' : 'MASCHINE');
+          api.screen(api.layout.screen, api.layout.screen);  // the start screen: the drums
         } else if (t < 4600) {
           api.pads(api.demo('PATTERN'));
           api.screenOf('PATTERN');

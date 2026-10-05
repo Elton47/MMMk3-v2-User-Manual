@@ -495,7 +495,8 @@ mark.hit {
 
 /* hardware drawing: measured layouts (real: true) in the hardware's own look: a matte charcoal
    panel, soft-touch rubber caps with matte grey print (PLAY green, REC red, SHIFT boxed), a black
-   knurled encoder, the OLED behind black glass; pads are unlit rubber. */
+   encoder with a large matte top, the OLED behind black glass; unlit pads are milky translucent
+   silicone with dark grey print, lit pads glow in their colour. */
 .hw-drawing.real .hw-body { fill: url(#hw-body-fill); stroke: #161618; stroke-width: 1.5; }
 .hw-drawing.real .hw-rim { fill: none; stroke: #ffffff; stroke-opacity: .13; stroke-width: 1.2; }
 .hw-drawing.real .hw-dot { fill: #7d8ae6; opacity: .5; }
@@ -519,36 +520,34 @@ mark.hit {
 .hw-drawing.real .icon-line { fill: none; stroke: #bdbdc1; stroke-width: 1.4; stroke-linecap: round; }
 .hw-drawing.real .icon-fill { fill: #bdbdc1; }
 .hw-drawing.real .icon-fill.arrow { fill: #85858a; }
-.hw-drawing.real .pad .cap { fill: url(#hw-pad-fill); }
+.hw-drawing.real .pad .cap { fill: url(#hw-pad-fill); stroke: #8e8f94; stroke-width: 1; }
 .hw-drawing.real .pad .sheen { fill: url(#hw-pad-sheen); opacity: 0; pointer-events: none; transition: opacity .12s; }
-.hw-drawing.real .pad-print { fill: #8d8d92; font: 500 8.4px var(--md-ref-typeface); dominant-baseline: middle; }
+.hw-drawing.real .pad-print { fill: #4a4a4e; font: 500 8.4px var(--md-ref-typeface); dominant-baseline: middle; }
 .hw-drawing.real .pad-number { font-weight: 800; }
 .hw-drawing.real .pad-letter { font-weight: 700; text-anchor: end; }
 .hw-drawing.real .strip .cap { fill: #0c0c0d; stroke: #2c2c2f; stroke-width: 1.2; }
 .hw-drawing.real .strip-inner { fill: #151517; pointer-events: none; }
-/* the encoder and knobs (drawKnob()): shadow, dark side, knurled ridges with their light, satin top */
+/* the encoder and knobs (drawKnob()): shadow, a thin black skirt with faint ridges and their
+   light, a large matte top with a soft highlight */
 .hw-drawing.real .knob-shadow { fill: url(#hw-knob-shadow); pointer-events: none; }
-.hw-drawing.real .encoder .ring { fill: url(#hw-skirt-fill); stroke: #050506; stroke-width: 1.2; transition: stroke .12s; }
-.hw-drawing.real .encoder .knurl { fill: none; stroke: #3a3a3f; }
-.hw-drawing.real .encoder .knurl-light { fill: none; stroke: url(#hw-knurl-light); }
-.hw-drawing.real .encoder .knob-cap { fill: url(#hw-dish-fill); stroke: url(#hw-lip); stroke-width: 1.3; }
-.hw-drawing.real .encoder .knob-sheen { fill: url(#hw-dish-sheen); }
+.hw-drawing.real .encoder .ring, .hw-drawing.real .knob .ring { fill: url(#hw-skirt-fill); stroke: #050506; stroke-width: 1; transition: stroke .12s; }
+.hw-drawing.real .knurl { fill: none; stroke: #2a2a2e; }
+.hw-drawing.real .knurl-light { fill: none; stroke: url(#hw-knurl-light); }
+.hw-drawing.real .knob-cap { fill: url(#hw-knob-satin); stroke: url(#hw-knob-edge); stroke-width: .8; }
+.hw-drawing.real .knob-sheen { fill: url(#hw-knob-sheen); }
+.hw-drawing.real .knurl, .hw-drawing.real .knurl-light, .hw-drawing.real .knob-cap, .hw-drawing.real .knob-sheen { pointer-events: none; }
 .hw-drawing.real .screen .screen-lip { fill: #fff; opacity: .07; }
 .hw-drawing.real .screen .bezel { fill: #0d0d0f; stroke: #050506; stroke-width: 1; }
 .hw-drawing.real .screen .oled { fill: #000; }
 .hw-drawing.real .screen .pixels { fill: #eaf1ff; }
 .hw-drawing.real .screen .pixels-inverse { fill: #000; }
 .hw-drawing.real .screen .glass-sheen { fill: url(#hw-glass-sheen); pointer-events: none; }
-/* MK3: the glossy display panel, the darker edge band, plain light display buttons, knobs with a
-   dark skirt and lighter top, the dots around the encoder, and the colour screens */
+/* MK3: the glossy display panel, the darker edge band, plain light display buttons, the dots
+   around the encoder, and the colour screens */
 .hw-drawing.real .hw-glass { fill: url(#hw-glass-fill); stroke: #000; stroke-width: 1; }
 .hw-drawing.real .hw-edge { fill: #0b0b0c; opacity: .55; }
 .hw-drawing.real .hw-mark { fill: #6a6a6e; }
 .hw-drawing.real .button.light .cap { fill: url(#hw-light-fill); stroke: #6f777c; stroke-width: 1; }
-.hw-drawing.real .knob .ring { fill: url(#hw-skirt-fill); stroke: #050506; stroke-width: 1.2; transition: stroke .12s; }
-.hw-drawing.real .knob-top { fill: url(#hw-knob-top); stroke: #050506; stroke-width: .8; pointer-events: none; }
-.hw-drawing.real .encoder .knurl, .hw-drawing.real .encoder .knurl-light, .hw-drawing.real .encoder .knob-cap,
-.hw-drawing.real .encoder .knob-sheen { pointer-events: none; }
 .hw-drawing.real .screen .lcd { fill: #0c0c0e; stroke: #232327; stroke-width: 1; }
 .hw-drawing.real .screen text { dominant-baseline: middle; font-family: var(--md-ref-typeface); }
 .hw-drawing.real .lcd-rule { fill: #1e1f23; }
@@ -572,18 +571,21 @@ mark.hit {
 /* choosing another group button makes that one the selected track: the first one dims again */
 .hw-drawing.real:has(.button.lit.selected) .button.lit.lit-bright:not(.selected):not(.related) .cap { fill: color-mix(in srgb, var(--lit-color) 30%, #2a2a2d); }
 .hw-drawing.real:has(.button.lit.selected) .button.lit.lit-bright:not(.selected):not(.related) .label { fill: #d4d4d8; }
-/* pad demos: the pads as the selected mode lights them (dim / mid / bright, like the hardware);
-   a pad of a combo (related) or the selected pad keeps its own highlight */
-.hw-drawing.real .pad.demo-dim:not(.selected):not(.related) .cap { fill: color-mix(in srgb, var(--demo-color) 40%, #353538); }
-.hw-drawing.real .pad.demo-mid:not(.selected):not(.related) .cap { fill: color-mix(in srgb, var(--demo-color) 80%, #353538); }
+/* pad demos: the pads as the selected mode lights them (dim / mid / bright, like the hardware):
+   the milky pad tinted by its light and glowing a little, a darker edge in the same colour; a pad of a combo
+   (related) or the selected pad keeps its own highlight */
+.hw-drawing.real .pad.demo-dim:not(.selected):not(.related) .cap { fill: color-mix(in srgb, var(--demo-color) 42%, #e6e7e9); stroke: color-mix(in srgb, var(--demo-color) 40%, #808186); }
+.hw-drawing.real .pad.demo-mid:not(.selected):not(.related) .cap { fill: color-mix(in srgb, var(--demo-color) 76%, #e6e7e9); stroke: color-mix(in srgb, var(--demo-color) 60%, #4a4a4e); }
+.hw-drawing.real .pad.demo-dim:not(.selected):not(.related) .sheen { opacity: .35; }
 .hw-drawing.real .pad.demo-mid:not(.selected):not(.related) .sheen { opacity: .45; }
-.hw-drawing.real .pad.demo-bright:not(.selected):not(.related) .cap { fill: var(--demo-color); }
+.hw-drawing.real .pad.demo-bright:not(.selected):not(.related) .cap { fill: var(--demo-color); stroke: color-mix(in srgb, var(--demo-color) 65%, #1a1a1c); }
 .hw-drawing.real .pad.demo-bright:not(.selected):not(.related) .sheen { opacity: .9; }
-.hw-drawing.real .pad.demo-dim .pad-print { fill: #c4c4c8; }
+.hw-drawing.real .pad.demo-dim .pad-print { fill: #2e2e32; }
 .hw-drawing.real .pad.demo-mid .pad-print, .hw-drawing.real .pad.demo-bright .pad-print { fill: #141416; }
 /* states: hover / a combo's controls (related) / the selected control, lit like the hardware */
 .hw-drawing.real .hw-control:hover .cap, .hw-drawing.real .hw-control:hover .ring { stroke: var(--hw-related); }
 .hw-drawing.real .hw-control:focus-visible .cap, .hw-drawing.real .hw-control:focus-visible .ring { stroke: #fff; stroke-width: 2.4; }
+.hw-drawing.real .pad:focus-visible .cap { stroke: var(--hw-active); }
 .hw-drawing.real .button.related .cap { fill: color-mix(in srgb, var(--hw-related) 22%, #2c2c2f); stroke: var(--hw-related); }
 .hw-drawing.real .button.selected .cap { fill: #4b4b50; stroke: var(--hw-active); stroke-width: 2.4; }
 .hw-drawing.real .button.selected .label, .hw-drawing.real .button.related .label { fill: #fff; }
@@ -599,7 +601,7 @@ mark.hit {
 }
 .hw-drawing.real .button.selected .icon-fill { fill: #fff; }
 .hw-drawing.real .button.selected .icon-line { stroke: #fff; }
-.hw-drawing.real .pad.related .cap { fill: color-mix(in srgb, var(--pad-color) 55%, #2a2a2d); stroke: var(--pad-color); }
+.hw-drawing.real .pad.related .cap { fill: color-mix(in srgb, var(--pad-color) 70%, #cfd0d3); stroke: color-mix(in srgb, var(--pad-color) 60%, #1a1a1c); stroke-width: 1.6; }
 .hw-drawing.real .pad.related .sheen { opacity: .35; }
 .hw-drawing.real .pad.selected .cap { fill: var(--pad-color); stroke: #fff; stroke-width: 2; }
 .hw-drawing.real .pad.selected .sheen { opacity: .9; }
@@ -608,13 +610,14 @@ mark.hit {
    outlined as the combo's pads; pads the demo leaves unlit stay unlit */
 .hw-drawing.real.combo-demo .pad.related:not(.selected) .cap { fill: url(#hw-pad-fill); stroke: var(--hw-related); }
 .hw-drawing.real.combo-demo .pad.related:not(.selected) .sheen { opacity: 0; }
-.hw-drawing.real.combo-demo .pad.related:not(.selected) .pad-print { fill: #8d8d92; }
-.hw-drawing.real.combo-demo .pad.related.demo-dim:not(.selected) .cap { fill: color-mix(in srgb, var(--demo-color) 40%, #353538); }
-.hw-drawing.real.combo-demo .pad.related.demo-mid:not(.selected) .cap { fill: color-mix(in srgb, var(--demo-color) 80%, #353538); }
+.hw-drawing.real.combo-demo .pad.related:not(.selected) .pad-print { fill: #4a4a4e; }
+.hw-drawing.real.combo-demo .pad.related.demo-dim:not(.selected) .cap { fill: color-mix(in srgb, var(--demo-color) 42%, #e6e7e9); }
+.hw-drawing.real.combo-demo .pad.related.demo-mid:not(.selected) .cap { fill: color-mix(in srgb, var(--demo-color) 76%, #e6e7e9); }
+.hw-drawing.real.combo-demo .pad.related.demo-dim:not(.selected) .sheen { opacity: .35; }
 .hw-drawing.real.combo-demo .pad.related.demo-mid:not(.selected) .sheen { opacity: .45; }
 .hw-drawing.real.combo-demo .pad.related.demo-bright:not(.selected) .cap { fill: var(--demo-color); }
 .hw-drawing.real.combo-demo .pad.related.demo-bright:not(.selected) .sheen { opacity: .9; }
-.hw-drawing.real.combo-demo .pad.related.demo-dim:not(.selected) .pad-print { fill: #c4c4c8; }
+.hw-drawing.real.combo-demo .pad.related.demo-dim:not(.selected) .pad-print { fill: #2e2e32; }
 .hw-drawing.real.combo-demo .pad.related.demo-mid:not(.selected) .pad-print,
 .hw-drawing.real.combo-demo .pad.related.demo-bright:not(.selected) .pad-print { fill: #141416; }
 .hw-drawing.real .encoder.related .ring, .hw-drawing.real .knob.related .ring, .hw-drawing.real .strip.related .cap { stroke: var(--hw-related); stroke-width: 2.2; }
@@ -1101,11 +1104,12 @@ td:first-child { font-weight: 500; }
 .cs-drawing .hw-edge { display: none; }
 .cs-drawing .hw-dot { fill: #8a8a8a !important; opacity: 1 !important; }
 .cs-drawing .hw-mark { fill: #8a8a8a !important; }
-.cs-drawing .cap, .cs-drawing .ring, .cs-drawing .knob-top, .cs-drawing .knob-cap,
+.cs-drawing .cap, .cs-drawing .ring, .cs-drawing .knob-cap,
 .cs-drawing .knurl, .cs-drawing .strip-inner, .cs-drawing .bezel {
   fill: #fff !important; stroke: #9a9a9a !important; stroke-width: 1.1 !important; stroke-dasharray: none !important; filter: none !important;
 }
 .cs-drawing .knurl { stroke: #c4c4c4 !important; }
+.cs-drawing .knob .knurl { display: none; }
 .cs-drawing .sheen, .cs-drawing .cap-shadow, .cs-drawing .cap-face, .cs-drawing .cap-rim, .cs-drawing .hw-rim,
 .cs-drawing .knob-shadow, .cs-drawing .knurl-light, .cs-drawing .knob-sheen, .cs-drawing .screen-lip,
 .cs-drawing .glass-sheen { display: none; }

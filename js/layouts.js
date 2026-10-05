@@ -5,7 +5,7 @@
 // prefix (a printed symbol before the label), icon ('maschine' | 'star' | 'search' | 'left' |
 // 'right'), inverse (label printed in a white box, like SHIFT), letter (a pad's group letter),
 // light (a plain light cap, like the MK3's display buttons), lit (the colour a button is always
-// lit in, dimly; brighter with litBright, and full when selected), face (knob / encoder: radius of the lighter top as a share of the radius),
+// lit in, dimly; brighter with litBright, and full when selected), face (knob / encoder: radius of the matte top as a share of the radius; default 0.84),
 // lcd ('left' | 'right': a colour screen showing that side of `screens`).
 // Control ids match the combo tokens in features.json (upper-case button labels, PAD n, ...).
 //
@@ -299,7 +299,7 @@ var LAYOUTS = {
     var display = [], knobs = [];
     for (var i = 0; i < 8; i++) {
       display.push(c('DISPLAY ' + (i + 1), String(i + 1), displayX[i], 28.5, i === 7 ? 44.5 : 44, 15.5, 'button', { light: true }));
-      knobs.push(round('KNOB ' + (i + 1), String(i + 1), 181 + i * 51, 208, 15.5, 'knob', { face: 0.71 }));
+      knobs.push(round('KNOB ' + (i + 1), String(i + 1), 181 + i * 51, 208, 15.5, 'knob', { face: 0.8 }));
     }
     // Group buttons: the printed letter. The script lights them in the colours of the 8 tracks
     // in view (they select those tracks), the selected track brighter.
@@ -420,7 +420,7 @@ var LAYOUTS = {
         c('MACRO', 'MACRO', 77.5, 167.5, 45, 16, 'button', { sub: 'Set' }),
         c('SCREEN', 'SCREEN', 167.75, 67.5, 178.25, 100.5, 'screen', { lcd: 'left' }),
         c('SCREEN 2', 'SCREEN', 375.5, 67.5, 177, 100.5, 'screen', { lcd: 'right' }),
-        round('ENCODER', 'ENCODER', 75, 271, 25, 'encoder', { face: 0.76 }),
+        round('ENCODER', 'ENCODER', 75, 271, 25, 'encoder'),
         c('VOLUME', 'VOLUME', 129, 240.5, 45, 16, 'button', { sub: 'Velocity', bracket: true }),
         c('SWING', 'SWING', 129, 262.5, 45, 16, 'button', { sub: 'Position', bracket: true }),
         c('TEMPO', 'TEMPO', 129, 284.5, 45, 16, 'button', { sub: 'Tune', bracket: true }),

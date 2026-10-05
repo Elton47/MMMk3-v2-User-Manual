@@ -120,22 +120,21 @@ MM.manual = (function () {
     // also lightens a lit or highlighted cap
     gradient(defs, 'linearGradient', 'hw-cap-fill', { x1: 0, y1: 0, x2: 0, y2: 1 }, [[0, '#2f2f32'], [1, '#28282b']]);
     gradient(defs, 'linearGradient', 'hw-face-fill', { x1: 0, y1: 0, x2: 0, y2: 1 }, [[0, '#ffffff', 0.07], [1, '#ffffff', 0.04]]);
-    // the encoder: a soft shadow on the panel, the knurled side lit from the upper left, a satin
-    // top that dips a little (darker towards the light) with a lip that catches it
-    gradient(defs, 'radialGradient', 'hw-knob-shadow', { cx: '50%', cy: '50%', r: '50%' }, [[0, '#000000', 0.6], [0.78, '#000000', 0.4], [1, '#000000', 0]]);
-    gradient(defs, 'radialGradient', 'hw-skirt-fill', { cx: '38%', cy: '34%', r: '70%' }, [[0, '#1d1d20'], [1, '#08080a']]);
-    gradient(defs, 'linearGradient', 'hw-knurl-light', { x1: 0.1, y1: 0, x2: 0.9, y2: 1 },
-      [[0, '#ffffff', 0.34], [0.38, '#ffffff', 0.06], [0.55, '#000000', 0], [1, '#000000', 0.55]]);
-    gradient(defs, 'linearGradient', 'hw-dish-fill', { x1: 0.15, y1: 0, x2: 0.85, y2: 1 }, [[0, '#0f0f11'], [0.55, '#18181b'], [1, '#232326']]);
-    gradient(defs, 'radialGradient', 'hw-dish-sheen', { cx: '62%', cy: '68%', r: '55%' }, [[0, '#ffffff', 0.07], [1, '#ffffff', 0]]);
-    gradient(defs, 'linearGradient', 'hw-lip', { x1: 0.15, y1: 0, x2: 0.85, y2: 1 }, [[0, '#76767c'], [0.45, '#2c2c30'], [1, '#060607']]);
+    // the encoder and the knobs: a soft shadow on the panel, a thin black skirt whose fine ridges
+    // barely catch the light (upper left), and a large matte black top with a soft highlight
+    gradient(defs, 'radialGradient', 'hw-knob-shadow', { cx: '50%', cy: '50%', r: '50%' }, [[0, '#000000', 0.5], [0.8, '#000000', 0.3], [1, '#000000', 0]]);
+    gradient(defs, 'radialGradient', 'hw-skirt-fill', { cx: '40%', cy: '36%', r: '70%' }, [[0, '#19191c'], [1, '#09090a']]);
+    gradient(defs, 'linearGradient', 'hw-knurl-light', { x1: 0.15, y1: 0, x2: 0.85, y2: 1 },
+      [[0, '#ffffff', 0.13], [0.35, '#ffffff', 0.03], [0.55, '#000000', 0], [1, '#000000', 0.4]]);
+    gradient(defs, 'radialGradient', 'hw-knob-satin', { cx: '40%', cy: '34%', r: '85%' }, [[0, '#262629'], [0.55, '#1d1d20'], [1, '#17171a']]);
+    gradient(defs, 'radialGradient', 'hw-knob-sheen', { cx: '36%', cy: '28%', r: '48%' }, [[0, '#ffffff', 0.09], [0.6, '#ffffff', 0.03], [1, '#ffffff', 0]]);
+    gradient(defs, 'linearGradient', 'hw-knob-edge', { x1: 0.2, y1: 0, x2: 0.8, y2: 1 }, [[0, '#4c4c52'], [0.45, '#1c1c1e'], [1, '#060607']]);
     // a faint reflection on the screen glass
     gradient(defs, 'linearGradient', 'hw-glass-sheen', { x1: 0, y1: 0, x2: 0.55, y2: 1 },
       [[0, '#ffffff', 0.09], [0.48, '#ffffff', 0.025], [0.5, '#ffffff', 0], [1, '#ffffff', 0]]);
-    gradient(defs, 'radialGradient', 'hw-pad-fill', { cx: '50%', cy: '45%', r: '70%' }, [[0, '#4a4a4e'], [1, '#353538']]);
+    // pads: translucent milky silicone, a soft glow in the middle fading to a slightly darker edge
+    gradient(defs, 'radialGradient', 'hw-pad-fill', { cx: '50%', cy: '46%', r: '72%' }, [[0, '#d6d7d9'], [0.55, '#d0d1d3'], [1, '#c1c2c5']]);
     gradient(defs, 'radialGradient', 'hw-pad-sheen', { cx: '50%', cy: '45%', r: '60%' }, [[0, '#ffffff', 0.45], [1, '#ffffff', 0]]);
-    gradient(defs, 'radialGradient', 'hw-knob-fill', { cx: '38%', cy: '32%', r: '75%' }, [[0, '#47474b'], [0.55, '#1c1c1f'], [1, '#0b0b0c']]);
-    gradient(defs, 'radialGradient', 'hw-knob-top', { cx: '40%', cy: '34%', r: '72%' }, [[0, '#6b6b70'], [0.6, '#404044'], [1, '#2a2a2d']]);
     gradient(defs, 'linearGradient', 'hw-light-fill', { x1: 0, y1: 0, x2: 0, y2: 1 }, [[0, '#e9edf0'], [1, '#c4cbd0']]);
     gradient(defs, 'linearGradient', 'hw-glass-fill', { x1: 0, y1: 0, x2: 0.35, y2: 1 }, [[0, '#121214'], [0.45, '#08080a'], [1, '#040405']]);
     document.body.appendChild(holder);
@@ -197,23 +196,20 @@ MM.manual = (function () {
     node('path', { d: 'M' + (x + rx).toFixed(2) + ' ' + (y + 0.75).toFixed(2) + 'H' + (x + w - rx).toFixed(2), 'class': 'cap-rim' }, g);
   }
 
-  // A knob seen from above (the encoder, the MK3's knobs): a soft shadow on the panel, the dark
-  // side; the encoder's side is knurled (fine ridges, lit from the upper left; only the ridges
-  // turn with it), with a smooth satin top that dips a little; a knob has a lighter top.
+  // A knob seen from above (the encoder, the MK3's knobs): a soft shadow on the panel, a thin
+  // black skirt with fine, low-contrast ridges (lit a little from the upper left; only the
+  // ridges turn with the encoder) and a large matte top (`face`: its share of the radius) with a
+  // soft highlight on its upper left.
   function drawKnob(g, kind, cx, cy, r, face) {
-    node('circle', { cx: cx + r * 0.07, cy: cy + r * 0.14, r: r * 1.13, 'class': 'knob-shadow' }, g);
+    node('circle', { cx: cx + r * 0.05, cy: cy + r * 0.11, r: r * 1.1, 'class': 'knob-shadow' }, g);
     node('circle', { cx: cx, cy: cy, r: r, 'class': 'ring' }, g);
-    if (kind === 'knob') {
-      node('circle', { cx: cx, cy: cy, r: r * face, 'class': 'knob-top' }, g);
-      return;
-    }
-    var inner = r * (face + 0.02), outer = r * 0.965, mid = (inner + outer) / 2, band = outer - inner;
-    var period = 2 * Math.PI * mid / Math.max(48, Math.round(2 * Math.PI * mid / 2));  // a ridge every ~2 units
+    var inner = r * face, outer = r * 0.975, mid = (inner + outer) / 2, band = outer - inner;
+    var period = 2 * Math.PI * mid / Math.max(64, Math.round(2 * Math.PI * mid / 1.3));  // a ridge every ~1.3 units
     node('circle', { cx: cx, cy: cy, r: mid, 'stroke-width': band.toFixed(2),
-      'stroke-dasharray': (period * 0.42).toFixed(3) + ' ' + (period * 0.58).toFixed(3), 'class': 'knurl' }, g);
+      'stroke-dasharray': (period * 0.45).toFixed(3) + ' ' + (period * 0.55).toFixed(3), 'class': 'knurl' }, g);
     node('circle', { cx: cx, cy: cy, r: mid, 'stroke-width': band.toFixed(2), 'class': 'knurl-light' }, g);
     node('circle', { cx: cx, cy: cy, r: r * face, 'class': 'knob-cap' }, g);
-    node('circle', { cx: cx, cy: cy, r: r * face - 0.6, 'class': 'knob-sheen' }, g);
+    node('circle', { cx: cx, cy: cy, r: r * face - 0.4, 'class': 'knob-sheen' }, g);
   }
 
   function svgText(parent, x, y, cls, text) {
@@ -378,7 +374,7 @@ MM.manual = (function () {
         if (kind === 'encoder' || kind === 'knob') {
           var r = Math.min(w, hgt) / 2, cx = x + w / 2, cy = y + hgt / 2;
           if (real) {
-            drawKnob(g, kind, cx, cy, r, opts.face || 0.64);
+            drawKnob(g, kind, cx, cy, r, opts.face || 0.84);
             return;
           }
           node('circle', { cx: cx, cy: cy, r: r, 'class': 'ring' }, g);
@@ -410,6 +406,11 @@ MM.manual = (function () {
             inverse: node('path', { 'class': 'pixels-inverse' }, g), lines: null };
           node('rect', { x: x + 0.6, y: y + 0.6, width: w - 1.2, height: hgt - 1.2, rx: 1.9, 'class': 'glass-sheen' }, g);
           return;
+        }
+        if (real && kind === 'pad') {
+          // a soft shadow on the panel under the pad's bottom and right edges
+          node('rect', { x: x + 0.8, y: y + 1.8, width: w, height: hgt, rx: 5, 'class': 'cap-shadow soft' }, g);
+          node('rect', { x: x + 0.3, y: y + 0.8, width: w, height: hgt, rx: 4.4, 'class': 'cap-shadow' }, g);
         }
         if (real && kind === 'button') drawCap(g, x, y, w, hgt);
         else node('rect', { x: x, y: y, width: w, height: hgt, rx: real ? (kind === 'pad' ? 4 : 2.5) : (kind === 'pad' ? 10 : 6), 'class': 'cap' }, g);

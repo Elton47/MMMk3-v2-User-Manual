@@ -51,14 +51,14 @@
       "summary": "A 4x4 view of Live's Session clips (4 tracks x 4 scenes). Pad colours follow the clip colours; playing clips are bright. Recording a new clip (an empty slot, or VARIATION + pad) selects its track, so Live's auto-arm arms it (the dimmed arm, which follows the track you select; tracks armed for real are disarmed), and the pads switch to the drum pads or the keyboard so you can play into it right away.",
       "items": [
         {"combo": ["PATTERN"], "does": "Tap: switch to clip mode. Hold + PAD: launch a clip, then return to the previous mode."},
-        {"combo": ["PAD"], "does": "Launch the clip. On an empty slot of a MIDI track: select that track (Live's auto-arm arms it) and record a new clip there; the pads switch to the drum pads or the keyboard so you can play right away."},
+        {"combo": ["PAD"], "does": "Launch the clip. On an empty slot of a MIDI track: select (arm) that track and record a new clip; the pads switch to the drum pads or keyboard to play."},
         {"combo": ["DUPLICATE", "PAD"], "does": "Duplicate that clip into the next slot."},
         {"combo": ["ERASE", "PAD"], "does": "Delete that clip."},
         {"combo": ["TURN"], "does": "Move the clip view left / right by one track."},
         {"combo": ["SHIFT", "TURN"], "does": "Move the clip view up / down by one scene."},
         {"combo": ["◀", "▶"], "does": "Move the clip view by four tracks."},
         {"combo": ["SHIFT", "PATTERN"], "does": "New: stop recording and select the next empty slot (ready to record)."},
-        {"combo": ["STRIP"], "does": "The strip lights show how far the selected track's playing clip is through its loop, in the clip's colour; while it records, the bar flashes red on every metronome click (a silent metronome). Touch the strip to jump within the loop (on Live's launch quantization)."}
+        {"combo": ["STRIP"], "does": "The strip lights show the selected track's playing clip through its loop, in its colour, flashing red on every metronome click while it records. Touch to jump within the loop (on Live's launch quantization)."}
       ]
     },
     {
@@ -155,7 +155,7 @@
         {"combo": ["CHORDS"], "does": "Switch to chord mode. Press again: next chord type (Triad, 7th, 9th, Sus2, Sus4, 6th, Power)."},
         {"combo": ["SHIFT", "CHORDS"], "does": "Next voicing (Close, Inversion 1, Inversion 2, Spread)."},
         {"combo": ["PAD"], "does": "Play the chord (works with note repeat and the arpeggiator)."},
-        {"combo": ["◀", "▶"], "does": "Choose the setting TURN changes: Octave, Root, Scale, Chord or Voicing. The screen shows the chord and key, and the chosen setting with its value."},
+        {"combo": ["◀", "▶"], "does": "Choose what TURN changes: Octave, Root, Scale, Chord or Voicing; the screen shows it with its value."},
         {"combo": ["TURN"], "does": "Change the chosen setting (Octave to start with); SHIFT + TURN: scale; PUSH + TURN: root note."}
       ]
     },
@@ -168,7 +168,7 @@
         {"combo": ["PAD"], "does": "Add / remove a note on that step. On an empty slot, the first step creates a one-bar clip."},
         {"combo": ["TURN"], "does": "Next / previous page of 16 steps (◀ ▶ too)."},
         {"combo": ["SHIFT", "TURN"], "does": "Step size: 1/32, 1/16, 1/8, 1/4."},
-        {"combo": ["SELECT", "PAD"], "does": "Choose the sound to sequence: while SELECT is held the pads show the sounds (the drum pads, or the keyboard), brighter where the clip has notes and brightest for the current one. Press one to pick it (you hear it); let go and the pads are its steps. The screen names the sound.", "devices": ["mikro"]},
+        {"combo": ["SELECT", "PAD"], "does": "Choose the sound to sequence: while SELECT is held the pads show the sounds, brighter where the clip has notes, brightest for the current one. Press one (you hear it); let go and the pads are its steps.", "devices": ["mikro"]},
         {"combo": ["PUSH", "TURN"], "does": "Next / previous sound: the next drum pad (named on the screen), or the next note of the scale."}
       ]
     },
@@ -180,12 +180,12 @@
         {"combo": ["FIXED VEL"], "does": "Fixed velocity on / off: every pad plays at the same velocity (100 unless you change it)."},
         {"combo": ["FIXED VEL", "TURN"], "does": "Set the fixed velocity (1-127): holding FIXED VEL shows it on the screen at once. Remembered next time."},
         {"combo": ["SHIFT", "FIXED VEL"], "does": "16 Velocities: all pads play the focused note, pad 1 softest to pad 16 hardest."},
-        {"combo": ["NOTE REPEAT"], "does": "Hold: note repeat while held. Tap: latch on / off. From clip or scene mode it brings up the drum pads or keyboard until repeat stops. With note repeat or the arpeggiator, the pads flash with their notes (a latched arp keeps them flashing). Repeats and arp notes follow Live's beat and land exactly on its grid when you record (Live's Record Quantization is set to the rate while they run, then put back); each note lasts the whole step (100 % gate), like MASCHINE."},
-        {"combo": ["SHIFT", "NOTE REPEAT"], "does": "Turn the NOTE REPEAT button into the Arpeggiator (the screen says which); again: back to Note Repeat. Holding or tapping NOTE REPEAT then works the same way for both."},
-        {"combo": ["NOTE REPEAT", "TURN"], "does": "While NOTE REPEAT is held, the screen shows its setting and value until you let go. Note Repeat: the rate (1/2 to 1/64, triplets too). Arpeggiator: the setting chosen with ◀ ▶. Turn to change it."},
-        {"combo": ["NOTE REPEAT", "◀", "▶"], "does": "Arpeggiator: choose the setting TURN changes: Rate; Type (Up, Down, Up/Down, Down/Up, As Played, Random, Chord); Octaves (1-4); Gate (note length; 100 % fills the step); Latch (On: the arp keeps playing your last notes after you let go of the pads, and new pads replace them)."},
-        {"combo": ["NOTE REPEAT", "PAD"], "does": "The arpeggiator, step by step: 1. SHIFT + NOTE REPEAT once (the screen says Arpeggiator). 2. Hold NOTE REPEAT and hold a chord on the pads: it arpeggiates. 3. Still holding NOTE REPEAT, use ◀ ▶ to pick Rate, Type, Octaves, Gate or Latch, and TURN to change it; the screen shows it. 4. Tap NOTE REPEAT instead of holding it to keep the arp on hands-free; tap again to stop."},
-        {"combo": ["STRIP"], "does": "Note repeat rate; touching the strip starts note repeat while you touch it, also for pads you are already holding (hold a pad, then touch the strip), and shows the rate. Otherwise the strip lights show the selected track's playing clip, like in PATTERN mode, flashing red on every metronome click while it records (a silent metronome). A new recording fills the strip over 4 bars; after that every new bar starts at 3/4 and fills to the end, like on MASCHINE. In PATTERN, SCENE and PLUG-IN mode touching the strip has its own job (see there)."},
+        {"combo": ["NOTE REPEAT"], "does": "Hold: note repeat while held. Tap: latch on / off. From clip or scene mode it brings up the drum pads or keyboard until repeat stops. The pads flash with the notes. Repeats and arp notes follow Live's beat and land exactly on its grid when you record (Live's Record Quantization follows the rate meanwhile); 100 % gate, like MASCHINE."},
+        {"combo": ["SHIFT", "NOTE REPEAT"], "does": "Switch NOTE REPEAT between Note Repeat and the Arpeggiator (the screen says which); holding or tapping works the same for both."},
+        {"combo": ["NOTE REPEAT", "TURN"], "does": "While NOTE REPEAT is held the screen shows its setting: the rate (1/2 to 1/64, triplets too), or the arp setting chosen with ◀ ▶. Turn to change it."},
+        {"combo": ["NOTE REPEAT", "◀", "▶"], "does": "Arpeggiator: choose what TURN changes: Rate; Type (Up, Down, Up/Down, Down/Up, As Played, Random, Chord); Octaves (1-4); Gate (100 % fills the step); Latch (On: it keeps playing after you let go; new pads replace the notes)."},
+        {"combo": ["NOTE REPEAT", "PAD"], "does": "The arpeggiator: 1. SHIFT + NOTE REPEAT (the screen says Arpeggiator). 2. Hold NOTE REPEAT and a chord on the pads. 3. Still holding, ◀ ▶ picks Rate, Type, Octaves, Gate or Latch, TURN changes it. 4. Tap NOTE REPEAT to keep it on hands-free; tap again to stop."},
+        {"combo": ["STRIP"], "does": "Note repeat rate: touch the strip for note repeat while you touch it (also on pads already held); the screen shows the rate. Otherwise the strip lights show the selected track's playing clip, flashing red on every metronome click while it records; a new recording fills it over 4 bars, then each new bar starts at 3/4, like MASCHINE. In PATTERN, SCENE and PLUG-IN the strip has its own job."},
         {"combo": ["PITCH"], "does": "Touch strip becomes a pitch bend (springs back when released). Press again: back to rate."},
         {"combo": ["MOD"], "does": "Touch strip becomes the mod wheel. Press again: back to rate."},
         {"combo": ["SWING", "TURN"], "does": "Live's swing amount; note repeat and the arpeggiator follow it."}
@@ -202,8 +202,8 @@
         ["Undo", "Redo", "Velocity 100", "Select all / none"]
       ],
       "items": [
-        {"combo": ["SHIFT", "PAD 1"], "does": "Undo. A recording started from the controller (an empty slot in PATTERN, or VARIATION + pad) is undone as one take, not note by note; pressed while it still records, the take is removed and recording goes on, to play it again. A variation's copy goes with the next undo."},
-        {"combo": ["SHIFT", "PAD 2"], "does": "Redo."},
+        {"combo": ["SHIFT", "PAD 1"], "does": "Undo (an arrow shows in the screen's corner). A recording started from the controller (an empty slot, or VARIATION + pad) is undone as one take; pressed while it still records, the take goes and recording goes on. A variation's copy goes with the next undo."},
+        {"combo": ["SHIFT", "PAD 2"], "does": "Redo (an arrow shows in the screen's corner)."},
         {"combo": ["SHIFT", "PAD 3"], "does": "Set note velocities to 100."},
         {"combo": ["SHIFT", "PAD 4"], "does": "Select all notes / select none."},
         {"combo": ["SHIFT", "PAD 5"], "does": "Quantize to the clip grid."},
@@ -230,7 +230,7 @@
         {"combo": ["EVENTS", "TURN"], "does": "Scroll the layout underneath (octave, drum rows; SHIFT: scale; PUSH: root)."},
         {"combo": ["ERASE", "EVENTS"], "does": "Clear every note of the focused clip (one undo step)."},
         {"combo": ["VARIATION"], "does": "Tap: humanize, small random changes to timing and velocity. Holding it and letting go without a pad changes nothing."},
-        {"combo": ["VARIATION", "PAD"], "does": "Record a variation, in any mode: while VARIATION is held the pads show the clips, and the free slot below each clip on the MIDI tracks lights red. Press one (or the clip): the clip is copied there, its track selected (auto-armed), and the copy focused and recorded into, while the original stays as it was. While Live plays, the copy launches and recording overdubs it once it plays; when Live is stopped, Live counts in first (Session Record), then plays and overdubs the copy. A full column gets a new scene. From PATTERN, SCENE or TRACK the pads switch to the drum pads or the keyboard to play; in the play modes and STEP you stay where you are. The copy is named after the original with the next number (Bass → Bass_1, a variation of Bass_1 → Bass_2; an unnamed clip → 1, 2 ...)."},
+        {"combo": ["VARIATION", "PAD"], "does": "Record a variation, in any mode: while VARIATION is held the pads show the clips, and the free slot below each clip on a MIDI track lights red. Press one (or the clip): the clip is copied there, its track selected and armed, and the copy recorded into (overdub) while the original stays as it was; with Live stopped, Live counts in first. A full column gets a new scene. From PATTERN, SCENE or TRACK the pads switch to the ones that play. The copy is named with the next number (Bass → Bass_1 → Bass_2; unnamed: 1, 2 ...)."},
         {"combo": ["SHIFT", "VARIATION"], "does": "Randomize velocities (60-127)."}
       ]
     },
@@ -265,7 +265,7 @@
         {"combo": ["SWING", "TURN"], "does": "Swing ±1 % (SHIFT: ±10 %). Tap SWING: show the swing."},
         {"combo": ["VOLUME", "TURN"], "does": "Selected track volume ±1 dB (SHIFT: ±0.1 dB)."},
         {"combo": ["VOLUME"], "does": "Tap: the mixer on the pads, the encoder and the screen (see Mixer); tap again: back. Holding VOLUME to turn leaves everything else as it is."},
-        {"combo": ["SHIFT", "VOLUME"], "does": "Cue volume, the level of the browser and MASCHINE Kits previews (and headphones with cue out): hold and turn, or tap to keep it on (0.5 dB steps); SHIFT + VOLUME again or another mode ends it.", "devices": ["mikro"]}
+        {"combo": ["SHIFT", "VOLUME"], "does": "Cue volume, the level of the previews (and headphones on cue): hold and turn, or tap to keep it on (0.5 dB steps) until SHIFT + VOLUME again or another mode.", "devices": ["mikro"]}
       ]
     },
     {
@@ -299,13 +299,13 @@
         {"combo": ["SHIFT", "STAR"], "does": "Show / hide the detail view.", "devices": ["mikro"]},
         {"combo": ["SHIFT", "◀", "▶"], "does": "Select the previous / next track."},
         {"combo": ["MASCHINE"], "does": "Open the settings page (see Settings).", "devices": ["mikro"]},
-        {"combo": ["ENCODER TOUCH"], "does": "Rest a finger on the encoder without turning: show the current mode's details (octave, scale, drum pad...). Turning never shows it, and takes it away."}
+        {"combo": ["ENCODER TOUCH"], "does": "Rest a finger on the encoder: the current mode's details (octave, scale, drum pad ...). Turning takes them away."}
       ]
     },
     {
       "id": "mixer",
       "title": "Mixer: VOLUME tap",
-      "summary": "A VOLUME tap turns the controller into a mixer. The pads show your tracks as in TRACK mode, each in its colour and glowing with its level (muted tracks dim white); the visited track's pad is white. The screen shows that track and its parameter, with a bar along the bottom; the encoder and the touch strip change it. Visiting a track doesn't select it in Live: you can mix one track while playing another. Values land exactly on Live's 0.1 dB steps.",
+      "summary": "A VOLUME tap turns the controller into a mixer. The pads show your tracks as in TRACK mode, each in its colour and glowing with its level (muted tracks dim white); the visited track's pad is white. The screen shows that track and its parameter, with a fill bar along the bottom; the encoder and the touch strip change it. Visiting a track doesn't select it in Live: you can mix one track while playing another. Values land exactly on Live's 0.1 dB steps.",
       "devices": [
         "mikro"
       ],
@@ -327,7 +327,7 @@
             "◀",
             "▶"
           ],
-          "does": "Visit the previous / next track, in Live's mixer order: the tracks (a folded group is one), the returns, the Master."
+          "does": "Visit the previous / next track: the tracks (a folded group is one), the returns, the Master."
         },
         {
           "combo": [
@@ -352,7 +352,7 @@
           "combo": [
             "STRIP"
           ],
-          "does": "The fader: shows the parameter in the track's colour, touch to set it (0.1 dB steps, pan in whole steps); a whole touch is one undo step."
+          "does": "The fader: shows the parameter in the track's colour, as the screen's fill bar does; touch to set it (0.1 dB steps, pan in whole steps), one undo step per touch."
         },
         {
           "combo": [
@@ -384,10 +384,10 @@
         {"combo": ["PLUG-IN"], "does": "Parameter mode on / off."},
         {"combo": ["TURN"], "does": "Change the parameter (SHIFT: fine)."},
         {"combo": ["◀", "▶"], "does": "Previous / next parameter."},
-        {"combo": ["PUSH", "TURN"], "does": "Previous / next page (a rack: Macros 1-8, 9-16). The screen shows the page and the count, e.g. 2/2."},
+        {"combo": ["PUSH", "TURN"], "does": "Previous / next page (a rack: Macros 1-8, 9-16); the screen shows e.g. 2/2."},
         {"combo": ["SHIFT", "◀", "▶"], "does": "Previous / next device on the track."},
         {"combo": ["PUSH"], "does": "Tap: reset the parameter to its default."},
-        {"combo": ["STRIP"], "does": "The strip lights show the parameter's value as a bar, in the track or rack chain colour; a rack's macros each have their own colour (macro 1 orange ... macro 16 red, like MASCHINE's sounds). Touch the strip to set the value; a whole touch, however far you slide, is one undo step. A thin bar along the bottom of the screen shows how far the parameter is turned up (from the centre for a parameter that goes both ways, like a pan or a detune). PITCH / MOD take the strip over while they are lit."}
+        {"combo": ["STRIP"], "does": "The strip lights show the parameter's value in the track or chain colour (each rack macro its own, like MASCHINE's sounds); touch to set it, one undo step per touch. The screen's fill bar shows it too, from the centre for a pan or a detune. PITCH / MOD take the strip over while lit."}
       ]
     },
     {
@@ -403,7 +403,7 @@
         {"combo": ["▶"], "does": "Open / load, like PUSH."},
         {"combo": ["TURN"], "context": "onto a MASCHINE kit", "does": "Hear NI's preview of it (preview on in Live's browser)."},
         {"combo": ["PUSH"], "context": "on a MASCHINE kit", "does": "Load it, replacing the selected MIDI track's instrument, or on a new track."},
-        {"combo": ["SHIFT", "STAR"], "context": "on a MASCHINE kit, browser open", "does": "Favourite / unfavourite the kit: a star shows on its row, and MASCHINE Kits lists Favorites first. Outside the browser SHIFT + STAR shows / hides the detail view."}
+        {"combo": ["SHIFT", "STAR"], "context": "on a MASCHINE kit, browser open", "does": "Favourite / unfavourite the kit: a star on its row, Favorites listed first. Outside the browser: show / hide the detail view."}
       ]
     },
     {
@@ -415,7 +415,7 @@
         {"combo": ["MASCHINE"], "does": "Settings on / off. The screen lists them with their values; the bar on the right shows where you are in the list."},
         {"combo": ["TURN"], "does": "The previous / next setting."},
         {"combo": ["◀", "▶"], "does": "Change the selected setting (PUSH: the next value)."},
-        {"combo": ["MASCHINE"], "context": "Screen", "does": "2 lines (the default: larger letters, like MASCHINE's own screen; the key, the kit or the device sits at the right of the first line when it fits) or 3 lines (smaller letters, more details at once)."},
+        {"combo": ["MASCHINE"], "context": "Screen", "does": "2 lines (the default: larger letters, like MASCHINE's screen) or 3 lines (smaller letters, more at once)."},
         {"combo": ["MASCHINE"], "context": "Velocity curve", "does": "How pad pressure turns into velocity: Linear, Soft or Hard."},
         {"combo": ["MASCHINE"], "context": "Fixed velocity", "does": "The velocity FIXED VEL plays (1-127, 100 to start with)."},
         {"combo": ["MASCHINE"], "context": "Pad pressure", "does": "What pressing harder on a held pad sends: Poly (each pad its own aftertouch), Channel (one for all) or Off."},

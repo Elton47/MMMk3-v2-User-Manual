@@ -229,6 +229,15 @@ function frequencyScreen(khz) {
 }
 
 // A screen state with the fill bar (MIKRO_FILL 0-126; centre: MIKRO_FILL_CENTER, from the middle).
+// Undo / Redo (SHIFT + PAD 1 / PAD 2): the screen as it was, with the arrow badge ('\ue010' undo,
+// '\ue011' redo) over the start of line 1 for a second (screen-render.js `badge`).
+function withBadge(screen, glyph) {
+  var out = {};
+  Object.keys(screen).forEach(function (key) { out[key] = screen[key]; });
+  out.badge = glyph;
+  return out;
+}
+
 function withFill(screen, fill, centre) {
   if (typeof fill !== 'number') return screen;
   screen.MIKRO_FILL = Math.max(0, Math.min(126, Math.round(fill)));
@@ -534,6 +543,9 @@ var LAYOUTS = {
           'VOLUME+TURN': ['0.0 dB', '-1.0 dB', '-2.0 dB'].map(function (v) { return modeScreen(SAMPLE_TRACKS[0].name, '', v); }),
           'SHIFT+VOLUME': ['-12.0 dB', '-11.5 dB', '-11.0 dB'].map(function (v) { return modeScreen('Cue', '', v); }) },
         edit: { 'SHIFT+LOCK': popupScreen('Device lock', 'toggled') },
+        // SHIFT + PAD 1 / PAD 2: no popup, only the arrow badge over the screen for a second.
+        'shift-pads': { 'SHIFT+PAD 1': [drums, withBadge(drums, '\ue010')],
+          'SHIFT+PAD 2': [drums, withBadge(drums, '\ue011')] },
         views: { 'SHIFT+BROWSER': hotSwap },
         // In MASCHINE Kits: TURN scrolls the kits (previewing each), PUSH loads one, SHIFT + STAR
         // on a kit: the favourite popup, then the star on its row.

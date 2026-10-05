@@ -19,6 +19,8 @@
 //                              full; null / 127: no bar
 //   MIKRO_FILL_CENTER          1: the bar grows from the centre, with a tick there (Pan, detune ...)
 // { popup: 'Title\nValue' } is a popup (a changed value), drawn in the two-line layout.
+// badge: '\ue010' (Undo) / '\ue011' (Redo) over any state: a small arrow on a black square over
+// the start of line 1, the rest of the screen stays (the bridge's draw_notification).
 // Long text is shortened with an ellipsis (the controller scrolls it instead).
 //
 // MM.screen.render(state, lines) -> { width, height, bits: Uint8Array (1 = lit) }
@@ -371,8 +373,22 @@ MM.screen = (function () {
   // A state { popup: 'Title\nValue' } is a popup.
   function render(state, lines) {
     state = state || {};
-    if (state.popup !== undefined) return popup(state.popup);
     lines = lines || get(state, 'MIKRO_LINES', MM.screenLines);
+    var img = draw(state, lines);
+    if (state.badge && ready()) badge(img, state.badge, lines);
+    return img;
+  }
+
+  // Undo / Redo: the glyph on a black square, (bottom, top) = (13, 3) on two lines, (9, 0) on
+  // three (the bridge's BADGE_TWO_LINES / BADGE_THREE_LINES).
+  function badge(img, glyph, lines) {
+    var bottom = lines === 3 ? 9 : 13, top = lines === 3 ? 0 : 3, right = largeWidth(glyph) + 4;
+    for (var y = 0; y <= bottom; y++) for (var x = 0; x <= right; x++) img.point(x, y, 0);
+    largeText(img, 2, top, glyph, 1);
+  }
+
+  function draw(state, lines) {
+    if (state.popup !== undefined) return popup(state.popup);
     var img = new Bitmap(W, H), width = W - 2;
     if (!ready()) return img;
     if (listItem(state, 0) || listItem(state, 1) || listItem(state, 2)) {

@@ -58,7 +58,7 @@
         {"combo": ["SHIFT", "TURN"], "does": "Move the clip view up / down by one scene."},
         {"combo": ["◀", "▶"], "does": "Move the clip view by four tracks."},
         {"combo": ["SHIFT", "PATTERN"], "does": "New: stop recording and select the next empty slot (ready to record)."},
-        {"combo": ["STRIP"], "does": "The strip lights show the selected track's playing clip through its loop, in its colour, flashing red on every metronome click while it records. Touch to jump within the loop (on Live's launch quantization)."}
+        {"combo": ["STRIP"], "does": "The strip lights show the selected track's playing clip through its loop, in its colour, flashing red on every metronome click while it records; stopped, where each track's clip stopped. Touch to jump within the loop (on Live's launch quantization)."}
       ]
     },
     {
@@ -185,7 +185,7 @@
         {"combo": ["NOTE REPEAT", "TURN"], "does": "While NOTE REPEAT is held the screen shows its setting: the rate (1/2 to 1/64, triplets too), or the arp setting chosen with ◀ ▶. Turn to change it."},
         {"combo": ["NOTE REPEAT", "◀", "▶"], "does": "Arpeggiator: choose what TURN changes: Rate; Type (Up, Down, Up/Down, Down/Up, As Played, Random, Chord); Octaves (1-4); Gate (100 % fills the step); Latch (On: it keeps playing after you let go; new pads replace the notes)."},
         {"combo": ["NOTE REPEAT", "PAD"], "does": "The arpeggiator: 1. SHIFT + NOTE REPEAT (the screen says Arpeggiator). 2. Hold NOTE REPEAT and a chord on the pads. 3. Still holding, ◀ ▶ picks Rate, Type, Octaves, Gate or Latch, TURN changes it. 4. Tap NOTE REPEAT to keep it on hands-free; tap again to stop."},
-        {"combo": ["STRIP"], "does": "Note repeat rate: touch the strip for note repeat while you touch it (also on pads already held); the screen shows the rate. Otherwise the strip lights show the selected track's playing clip, flashing red on every metronome click while it records; a new recording fills it over 4 bars, then each new bar starts at 3/4, like MASCHINE. In PATTERN, SCENE and PLUG-IN the strip has its own job."},
+        {"combo": ["STRIP"], "does": "Note repeat rate: touch the strip for note repeat while you touch it; the screen shows the rate. Otherwise the strip lights show the selected track's playing clip, flashing red on every metronome click while it records; a new recording fills it over 4 bars, then each new bar starts at 3/4. In PATTERN, SCENE and PLUG-IN the strip has its own job."},
         {"combo": ["PITCH"], "does": "Touch strip becomes a pitch bend (springs back when released). Press again: back to rate."},
         {"combo": ["MOD"], "does": "Touch strip becomes the mod wheel. Press again: back to rate."},
         {"combo": ["SWING", "TURN"], "does": "Live's swing amount; note repeat and the arpeggiator follow it."}
@@ -202,7 +202,7 @@
         ["Undo", "Redo", "Velocity 100", "Select all / none"]
       ],
       "items": [
-        {"combo": ["SHIFT", "PAD 1"], "does": "Undo (an arrow shows in the screen's corner). A recording started from the controller (an empty slot, or VARIATION + pad) is undone as one take; pressed while it still records, the take goes and recording goes on. A variation's copy goes with the next undo."},
+        {"combo": ["SHIFT", "PAD 1"], "does": "Undo (an arrow in the screen's corner). A recording from the controller (an empty slot, VARIATION + pad) is undone as one take; while it still records, the take goes and recording goes on."},
         {"combo": ["SHIFT", "PAD 2"], "does": "Redo (an arrow shows in the screen's corner)."},
         {"combo": ["SHIFT", "PAD 3"], "does": "Set note velocities to 100."},
         {"combo": ["SHIFT", "PAD 4"], "does": "Select all notes / select none."},
@@ -230,7 +230,7 @@
         {"combo": ["EVENTS", "TURN"], "does": "Scroll the layout underneath (octave, drum rows; SHIFT: scale; PUSH: root)."},
         {"combo": ["ERASE", "EVENTS"], "does": "Clear every note of the focused clip (one undo step)."},
         {"combo": ["VARIATION"], "does": "Tap: humanize, small random changes to timing and velocity. Holding it and letting go without a pad changes nothing."},
-        {"combo": ["VARIATION", "PAD"], "does": "Record a variation, in any mode: while VARIATION is held the pads show the clips, and the free slot below each clip on a MIDI track lights red. Press one (or the clip): the clip is copied there, its track selected and armed, and the copy recorded into (overdub) while the original stays as it was; with Live stopped, Live counts in first. A full column gets a new scene. From PATTERN, SCENE or TRACK the pads switch to the ones that play. The copy is named with the next number (Bass → Bass_1 → Bass_2; unnamed: 1, 2 ...)."},
+        {"combo": ["VARIATION", "PAD"], "does": "Record a variation, in any mode: while VARIATION is held the pads show the clips, and the free slot below each clip on a MIDI track lights red. Press one (or the clip): the clip is copied there, its track selected and armed, and the copy recorded into (overdub) while the original stays as it was; with Live stopped, Live counts in first. A full column gets a new scene. The copy is named with the next number (Bass → Bass_1 → Bass_2; unnamed: 1, 2 ...)."},
         {"combo": ["SHIFT", "VARIATION"], "does": "Randomize velocities (60-127)."}
       ]
     },
@@ -314,7 +314,7 @@
           "combo": [
             "VOLUME"
           ],
-          "does": "Mixer on / off."
+          "does": "Mixer on / off; it and PLUG-IN switch each other off."
         },
         {
           "combo": [
@@ -352,7 +352,7 @@
           "combo": [
             "STRIP"
           ],
-          "does": "The fader: shows the parameter in the track's colour, as the screen's fill bar does; touch to set it (0.1 dB steps, pan in whole steps), one undo step per touch."
+          "does": "The fader: shows the parameter in the track's colour (Pan from the centre, as PITCH), as the screen's fill bar does; touch to set it (0.1 dB steps, pan in whole steps), one undo step per touch."
         },
         {
           "combo": [
@@ -378,7 +378,7 @@
     {
       "id": "plugin",
       "title": "PLUG-IN: device parameters (MIKRO)",
-      "summary": "The encoder controls one parameter of the selected device at a time. Parameters come in pages: Ableton's own banks for Live's devices (Filter, Envelope...), the visible macros of a rack, or groups of 8 for plug-ins. The screen shows the device, the page and how many there are (Macros 2/2; on two lines, the device and the count at the right of the track name when they fit), and the parameter's name and value. A rack shows as many macros as it shows in Live: click the rack's + macro button for up to 16. Each device remembers where you were.",
+      "summary": "The encoder controls one parameter of the selected device at a time. Parameters come in pages: Ableton's own banks for Live's devices (Filter, Envelope...), the visible macros of a rack, or groups of 8 for plug-ins. The screen shows the device, the page and how many there are (Macros 2/2; on two lines, the device after the track's box on line 1 and the count in the corner), and the parameter's name and value. A rack shows as many macros as it shows in Live: click the rack's + macro button for up to 16. Each device remembers where you were.",
       "devices": ["mikro"],
       "items": [
         {"combo": ["PLUG-IN"], "does": "Parameter mode on / off."},
@@ -387,7 +387,7 @@
         {"combo": ["PUSH", "TURN"], "does": "Previous / next page (a rack: Macros 1-8, 9-16); the screen shows e.g. 2/2."},
         {"combo": ["SHIFT", "◀", "▶"], "does": "Previous / next device on the track."},
         {"combo": ["PUSH"], "does": "Tap: reset the parameter to its default."},
-        {"combo": ["STRIP"], "does": "The strip lights show the parameter's value in the track or chain colour (each rack macro its own, like MASCHINE's sounds); touch to set it, one undo step per touch. The screen's fill bar shows it too, from the centre for a pan or a detune. PITCH / MOD take the strip over while lit."}
+        {"combo": ["STRIP"], "does": "The strip lights show the parameter's value in the track or chain colour (each rack macro its own, like MASCHINE's sounds); touch to set it, one undo step per touch. The screen's fill bar shows it too; a pan or a detune lights both from the centre. PITCH / MOD take the strip over while lit."}
       ]
     },
     {

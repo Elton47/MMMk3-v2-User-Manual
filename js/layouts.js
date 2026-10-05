@@ -205,19 +205,18 @@ function trackScreen(index, subtitle, detail, value, corner, flags) {
     MIKRO_LINE3_VALUE: value || '', MIKRO_CORNER: corner || '' };
 }
 
-// PLUG-IN: the track, then the device; with more than one parameter page also the page (its
-// name without a trailing number, 'Macros 2' -> 'Macros') and the count, as the script words it:
-// line 2 'Keys Rack  Macros 2/2', the corner (two lines) 'Keys Rack 2/2'. One page: the device only.
+// PLUG-IN: three lines: the track, then the device; with more than one parameter page also the
+// page (its name without a trailing number, 'Macros 2' -> 'Macros') and the count, as the script
+// words it: line 2 'Keys Rack  Macros 2/2'. One page: the device only. Two lines (`two`): line 1
+// the track's box and the device in bold, the corner only the count ('2/2'; nothing with one page).
 // page / count: 1-based page and the number of pages. fill: the fill bar along the bottom, how
 // far the parameter is turned up (0-126; centre: from the middle, for a parameter that goes both
 // ways), as the script sends it.
 function pluginScreen(index, device, pageName, page, count, parameter, value, fill, centre) {
-  var screen;
+  var screen, of = page + '/' + count;
   if (count <= 1) screen = trackScreen(index, device, parameter, value, device);
-  else {
-    var of = page + '/' + count;
-    screen = trackScreen(index, device + '  ' + pageName.replace(/ \d+$/, '') + ' ' + of, parameter, value, device + ' ' + of);
-  }
+  else screen = trackScreen(index, device + '  ' + pageName.replace(/ \d+$/, '') + ' ' + of, parameter, value, device + ' ' + of);
+  screen.two = { TITLE: device, MIKRO_CORNER: count > 1 ? of : '' };
   return withFill(screen, fill, centre);
 }
 
@@ -466,14 +465,13 @@ var LAYOUTS = {
     // the screen with nothing selected; the track is heard (not muted).
     var drums = trackScreen(0, SAMPLE_KIT, SAMPLE_DRUMS[0], noteName(36), SAMPLE_KIT);
     var scenes = '1 - ' + SAMPLE_SCENES.length + ' of ' + SAMPLE_SCENES.length;
-    // PLUG-IN on 2-Bass's Auto Filter (Live's banks: Filter is page 1 of 4; on two lines
-    // 'Auto Filter 1/4' doesn't fit beside the track, so the corner stays empty, as on the
-    // controller). PUSH + TURN pages through the 16 macros of a rack on 3-Keys (Macros 1-8, 9-16),
-    // named Keys so that 'Keys 1/2' fits in the corner on two lines ('Keys Rack 2/2' would not).
+    // PLUG-IN on 2-Bass's Auto Filter (Live's banks: Filter is page 1 of 4; on two lines the
+    // device on line 1, '1/4' in the corner). PUSH + TURN pages through the 16 macros of a rack
+    // on 3-Keys, Keys Rack (Macros 1-8, 9-16), as the script's reference screen plugin-macros.
     // The fill bar: a macro's value of 0-127 on 126.
     var plugin = frequencyScreen(2.4);
-    var macros = [pluginScreen(2, 'Keys', 'Macros 1', 1, 2, 'Macro 1', '32', 32 * 126 / 127),
-      pluginScreen(2, 'Keys', 'Macros 2', 2, 2, 'Macro 9', '64', 64 * 126 / 127)];
+    var macros = [pluginScreen(2, 'Keys Rack', 'Macros 1', 1, 2, 'Macro 1', '32', 32 * 126 / 127),
+      pluginScreen(2, 'Keys Rack', 'Macros 2', 2, 2, 'Macro 9', '64', 64 * 126 / 127)];
     // The mixer on 2-Bass (MIXER_VISITED), as the script's reference screens (mixer, mixer-pan):
     // Volume -3.0 dB, Pan 12L.
     var mixer = function (parameter, amount, flags) { return mixerScreen(MIXER_VISITED, parameter, amount, flags); };

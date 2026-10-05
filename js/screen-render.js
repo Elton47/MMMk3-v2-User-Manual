@@ -18,6 +18,8 @@
 //   MIKRO_FILL                 the fill bar along the bottom (the mixer, PLUG-IN): 0 empty ... 126
 //                              full; null / 127: no bar
 //   MIKRO_FILL_CENTER          1: the bar grows from the centre, with a tick there (Pan, detune ...)
+// two                        fields that replace the state's on two lines only (PLUG-IN: line 1
+//                            the device, the corner the page count; three lines keep the track)
 // { popup: 'Title\nValue' } is a popup (a changed value), drawn in the two-line layout.
 // badge: '\ue010' (Undo) / '\ue011' (Redo) over any state: a small arrow on a black square over
 // the start of line 1, the rest of the screen stays (the bridge's draw_notification).
@@ -374,6 +376,12 @@ MM.screen = (function () {
   function render(state, lines) {
     state = state || {};
     lines = lines || get(state, 'MIKRO_LINES', MM.screenLines);
+    if (lines === 2 && state.two) {
+      var shown = {};
+      Object.keys(state).forEach(function (key) { shown[key] = state[key]; });
+      Object.keys(state.two).forEach(function (key) { shown[key] = state.two[key]; });
+      state = shown;
+    }
     var img = draw(state, lines);
     if (state.badge && ready()) badge(img, state.badge, lines);
     return img;

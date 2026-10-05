@@ -20,8 +20,9 @@
 // trackScreen, pluginScreen, modeScreen, popupScreen, browserScreen ...; colour screens { left, right } on the
 // MK3; without lcd the MK3 shows the state's text), screenOf(token) (the layout's sample screen), light(ids)
 // (exactly these buttons are lit), turn(steps) (the encoder has turned this many detents),
-// strip(fill, color, flash) (the touch strip's LED dots as a progress bar: fill 0-1 in color, or
-// red while flash; null clears it; the strip surface stays unlit), outline(tokens) (change the outlined controls).
+// strip(fill, color, flash, centre) (the touch strip's LED dots as a progress bar: fill 0-1 in color,
+// or red while flash; centre: from the middle LED, as Pan / PITCH; null clears it; the strip surface
+// stays unlit), outline(tokens) (change the outlined controls).
 // The sample Live set (SAMPLE_TRACKS, SAMPLE_DRUMS, PAD_COLORS ...) comes from layouts.js.
 
 var HIGHLIGHT_SHOWS = (function () {
@@ -265,7 +266,7 @@ var HIGHLIGHT_SHOWS = (function () {
     // The mixer (MIKRO): a VOLUME tap and the pads are the tracks, glowing with their levels
     // (2-Bass visited: white; 3-Keys muted: dim white). TURN raises 2-Bass's volume in 1 dB steps,
     // the strip slides it in 0.1 dB steps, PUSH + TURN picks Pan (its bar from the centre) and
-    // turns it. The strip's LEDs show the parameter in the track's colour.
+    // turns it. The strip's LEDs show the parameter in the track's colour (Pan from the centre).
     'VOLUME': {
       every: 700,
       loupe: true,
@@ -289,7 +290,7 @@ var HIGHLIGHT_SHOWS = (function () {
         api.outline(step[1]);
         api.light(step[2]);
         api.turn(step[3]);
-        api.strip(screen.MIKRO_FILL / 126, SAMPLE_TRACKS[MIXER_VISITED].color);
+        api.strip(screen.MIKRO_FILL / 126, SAMPLE_TRACKS[MIXER_VISITED].color, false, screen.MIKRO_FILL_CENTER === 1);
         api.pads(api.demo('VOLUME'));
         api.screen(screen);
       }

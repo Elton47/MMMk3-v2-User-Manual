@@ -109,14 +109,19 @@ MM.tour = (function () {
   }
 
   // The touch strip's LEDs as a progress bar: fill (0-1) in color, red while flash; null clears
-  // it. Only the LED dots light up, like on the controller; the touch surface stays unlit.
-  function strip(fill, color, flash) {
+  // it. centre: from the middle LED to the value, as for PITCH and a parameter symmetric around
+  // 0 (the mixer's Pan; the bridge's StripMode.CENTER). Only the LED dots light up, like on the
+  // controller; the touch surface stays unlit.
+  function strip(fill, color, flash, centre) {
     var drawing = state.drawing;
     var on = fill !== null && fill !== undefined;
     var shade = flash ? PAD_COLORS[15] : color;
-    var count = on ? Math.round(Math.max(0, Math.min(1, fill)) * drawing.dots.length) : 0;
+    var amount = on ? Math.max(0, Math.min(1, fill)) : 0;
+    var count = on ? Math.round(amount * drawing.dots.length) : 0;
+    var middle = Math.floor(drawing.dots.length / 2), position = Math.round(amount * (drawing.dots.length - 1));
     drawing.dots.forEach(function (dot, i) {
-      var lit = i < Math.max(count, on ? 1 : 0);
+      var lit = centre ? on && i >= Math.min(middle, position) && i <= Math.max(middle, position)
+        : i < Math.max(count, on ? 1 : 0);
       dot.classList.toggle('on', lit);
       dot.style.fill = lit ? shade : '';
       dot.style.color = lit ? shade : '';

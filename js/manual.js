@@ -314,6 +314,7 @@ MM.manual = (function () {
   // A drawing of a layout in an <svg>: the manual's (#device, the controls are buttons) and the
   // highlights tour's (js/highlights.js, a picture). options.onSelect(id): called when a control
   // is clicked or chosen with Enter / Space; without it the controls are not interactive.
+  // options.magnifier: hovering the MIKRO's screen (or tapping it) shows it magnified beside it.
   // Returns { svg, device, layout(), draw(device), node(id), showScreen(lines), paintPads(demo),
   // dots (the strip LEDs) }.
   function createDrawing(svg, options) {
@@ -347,6 +348,7 @@ MM.manual = (function () {
       oled.path.setAttribute('d', MM.screen.path(oled.img, oled.x, oled.y, oled.px));
       oled.size = null;
       paintOled();
+      syncMagnifier();
     };
 
     // The OLED on screen: its bitmap as an image of whole device pixels, placed on the device
@@ -381,7 +383,7 @@ MM.manual = (function () {
     var repaint = null;
     function laterPaint() {
       if (repaint) return;
-      repaint = requestAnimationFrame(function () { repaint = null; paintOled(); });
+      repaint = requestAnimationFrame(function () { repaint = null; paintOled(); syncMagnifier(); });
     }
     window.addEventListener('resize', laterPaint);
     window.addEventListener('scroll', laterPaint, { passive: true });
@@ -398,6 +400,102 @@ MM.manual = (function () {
       if (query.addEventListener) query.addEventListener('change', once); else query.addListener(once);
     })();
     drawing.repaintScreen = laterPaint;
+
+    // The MIKRO's OLED, magnified (options.magnifier): the drawn screen is true to scale, so at
+    // ordinary zoom it has fewer device pixels than the OLED and can't be sharp. Hovering it with
+    // a mouse, or tapping it, shows the current screen beside it at a whole number of device
+    // pixels per OLED pixel (up to 3 CSS px each), like the tour's loupe; it follows the screen
+    // while shown. It goes right, left, below or above the screen, whichever fits the window,
+    // never over the screen itself.
+    var magnifier = null;  // { box, canvas, shown, pinned, key }
+    var MAGNIFIER_PAD = 8, MAGNIFIER_GAP = 10, MAGNIFIER_MARGIN = 8;
+
+    function showMagnifier(pinned) {
+      if (!drawing.oled) return;
+      if (!magnifier) {
+        var box = document.createElement('div');
+        box.className = 'oled-magnifier';
+        box.setAttribute('aria-hidden', 'true');
+        box.hidden = true;
+        magnifier = { box: box, canvas: box.appendChild(document.createElement('canvas')), shown: false, pinned: false, key: null };
+        document.body.appendChild(box);
+      }
+      magnifier.shown = true;
+      magnifier.pinned = !!pinned;
+      syncMagnifier();
+    }
+
+    function hideMagnifier() {
+      if (!magnifier) return;
+      magnifier.shown = false;
+      magnifier.pinned = false;
+      magnifier.box.hidden = true;
+    }
+    drawing.hideMagnifier = hideMagnifier;
+
+    function syncMagnifier() {
+      var m = magnifier, oled = drawing.oled;
+      if (!m || !m.shown) return;
+      var screen = oled && oled.img && oled.group.querySelector('.bezel');
+      var r = screen && screen.getBoundingClientRect();
+      if (!r || !r.width) { hideMagnifier(); return; }
+      var ratio = window.devicePixelRatio || 1, pad = MAGNIFIER_PAD, gap = MAGNIFIER_GAP, edge = MAGNIFIER_MARGIN;
+      var vw = document.documentElement.clientWidth, vh = document.documentElement.clientHeight;
+      function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
+      // the largest whole k (device pixels per OLED pixel, at most 3 CSS px) that fits on a side
+      var place = null;
+      for (var k = Math.max(1, Math.floor(3 * ratio)); k >= 1 && !place; k--) {
+        var w = 128 * k / ratio + 2 * pad, hgt = 32 * k / ratio + 2 * pad;
+        var cx = clamp(r.left + r.width / 2 - w / 2, edge, vw - edge - w);
+        var cy = clamp(r.top + r.height / 2 - hgt / 2, edge, vh - edge - hgt);
+        place = [
+          { ok: r.right + gap + w <= vw - edge && hgt <= vh - 2 * edge, x: r.right + gap, y: cy },
+          { ok: r.left - gap - w >= edge && hgt <= vh - 2 * edge, x: r.left - gap - w, y: cy },
+          { ok: r.bottom + gap + hgt <= vh - edge && w <= vw - 2 * edge, x: cx, y: r.bottom + gap },
+          { ok: r.top - gap - hgt >= edge && w <= vw - 2 * edge, x: cx, y: r.top - gap - hgt }
+        ].filter(function (p) { return p.ok; })[0];
+        if (place) place.k = k;
+      }
+      if (!place) {
+        // no side has room even at 1 device pixel per OLED pixel: below or above, whichever is larger
+        var below = vh - r.bottom > r.top;
+        place = { k: 1, x: clamp(r.left, edge, Math.max(edge, vw - edge - 128 / ratio - 2 * pad)),
+          y: below ? r.bottom + gap : Math.max(edge, r.top - gap - 32 / ratio - 2 * pad) };
+      }
+      var key = [oled.key, place.k, ratio].join(' ');
+      if (m.key !== key) {
+        m.key = key;
+        oledCanvas(oled.img, 128 * place.k, 32 * place.k, m.canvas);
+        m.canvas.style.width = (m.canvas.width / ratio) + 'px';
+        m.canvas.style.height = (m.canvas.height / ratio) + 'px';
+      }
+      // the picture's top left on a device pixel
+      var left = Math.round((place.x + pad) * ratio) / ratio - pad, top = Math.round((place.y + pad) * ratio) / ratio - pad;
+      m.box.style.left = left + 'px';
+      m.box.style.top = top + 'px';
+      m.box.hidden = false;
+    }
+
+    // mouse: while the pointer is over the screen; touch / pen: a tap shows it, the next tap
+    // anywhere hides it
+    function magnifiable(g) {
+      g.classList.add('magnify');
+      g.addEventListener('pointerenter', function (e) { if (e.pointerType === 'mouse') showMagnifier(false); });
+      g.addEventListener('pointerleave', function (e) { if (e.pointerType === 'mouse' && magnifier && !magnifier.pinned) hideMagnifier(); });
+      g.addEventListener('pointerup', function (e) {
+        if (e.pointerType === 'mouse') return;
+        if (magnifier && magnifier.shown) hideMagnifier(); else showMagnifier(true);
+      });
+    }
+    if (options.magnifier) {
+      document.addEventListener('pointerdown', function (e) {
+        if (!magnifier || !magnifier.pinned || e.pointerType === 'mouse') return;
+        if (drawing.oled && drawing.oled.group.contains(e.target)) return;
+        hideMagnifier();
+      }, true);
+      document.addEventListener('keydown', function (e) { if (e.key === 'Escape') hideMagnifier(); });
+      window.addEventListener('hashchange', hideMagnifier);
+    }
 
     // The pads as a mode lights them: demo is 16 entries in pad order, null or { color, level,
     // drum } (see padDemos() in layouts.js); no demo lights nothing.
@@ -416,6 +514,7 @@ MM.manual = (function () {
 
     drawing.draw = function (device) {
       drawing.device = device;
+      hideMagnifier();
       drawing.oled = null;
       drawing.lcd = null;
       drawing.dots = [];
@@ -498,6 +597,7 @@ MM.manual = (function () {
           drawing.oled = { x: ox, y: oy, px: px, room: w - 1.4, group: g, img: null, size: null, canvas: null,
             path: node('path', { 'class': 'pixels', 'shape-rendering': 'crispEdges' }, g),
             image: node('image', { 'class': 'oled-image', preserveAspectRatio: 'none' }, g), key: null };
+          if (options.magnifier) magnifiable(g);
           return;
         }
         if (real && kind === 'pad') {
@@ -585,8 +685,9 @@ MM.manual = (function () {
 
   function drawDevice() {
     var spec = layout();
-    state.drawing = state.drawing || createDrawing(el('device'), { onSelect: select });
+    state.drawing = state.drawing || createDrawing(el('device'), { onSelect: select, magnifier: true });
     state.drawing.draw(state.device);
+    el('screen-hint').hidden = !state.drawing.oled;  // the MIKRO's OLED magnifies
     el('device').setAttribute('aria-label', spec.title + ' layout: choose a control to see what it does');
     node('g', { id: 'badges' }, el('device'));
     paintHardware();

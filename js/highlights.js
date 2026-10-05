@@ -477,7 +477,7 @@ MM.tour = (function () {
 
   function init(data) {
     state.data = data;
-    state.drawing = MM.manual.createDrawing(el('tour-device'));
+    state.drawing = MM.manual.createDrawing(el('tour-device'), { magnifier: true });
     var buttons = Array.prototype.slice.call(document.querySelectorAll('#view-highlights .segmented button'));
     buttons.forEach(function (b, index) {
       b.addEventListener('click', function () { switchDevice(b.getAttribute('data-device')); });

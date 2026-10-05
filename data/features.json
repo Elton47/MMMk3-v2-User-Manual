@@ -227,6 +227,7 @@
         {"combo": ["EVENTS", "PAD"], "does": "Select that pad's notes (again: deselect). While EVENTS is held, the pads with notes light in their own colours, selected ones brightest."},
         {"combo": ["EVENTS"], "does": "Tap: select all notes / none."},
         {"combo": ["EVENTS", "TURN"], "does": "Scroll the layout underneath (octave, drum rows; SHIFT: scale; PUSH: root)."},
+        {"combo": ["ERASE", "EVENTS"], "does": "Clear every note of the focused clip (one undo step)."},
         {"combo": ["VARIATION"], "does": "Tap: humanize, small random changes to timing and velocity. Holding it and letting go without a pad changes nothing."},
         {"combo": ["VARIATION", "PAD"], "does": "Record a variation, in any mode: while VARIATION is held the pads show the clips, and the free slot below each clip on the MIDI tracks lights red. Press one (or the clip): the clip is copied there, its track selected (auto-armed), and the copy focused and recorded into, while the original stays as it was. While Live plays, the copy launches and recording overdubs it once it plays; when Live is stopped, Live counts in first (Session Record), then plays and overdubs the copy. A full column gets a new scene. From PATTERN, SCENE or TRACK the pads switch to the drum pads or the keyboard to play; in the play modes and STEP you stay where you are. The copy is named after the original with the next number (Bass → Bass_1, a variation of Bass_1 → Bass_2; an unnamed clip → 1, 2 ...)."},
         {"combo": ["SHIFT", "VARIATION"], "does": "Randomize velocities (60-127)."}
@@ -322,7 +323,7 @@
       "items": [
         {"combo": ["STAR"], "does": "Browser on / off."},
         {"combo": ["TURN"], "does": "Scroll (SHIFT: by 10)."},
-        {"combo": ["PUSH"], "does": "Open the folder, or load the item onto the selected track (in Hot-Swap: replace the device)."},
+        {"combo": ["PUSH"], "does": "Open the folder, or load the item onto the selected track (in Hot-Swap: replace the device); the browser then closes, back to the mode you came from."},
         {"combo": ["◀"], "does": "Back up one level."},
         {"combo": ["▶"], "does": "Open / load, like PUSH."},
         {"combo": ["TURN"], "context": "onto a MASCHINE kit", "does": "Hear NI's preview of it (preview on in Live's browser)."},

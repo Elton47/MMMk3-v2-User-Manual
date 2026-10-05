@@ -549,6 +549,16 @@ mark.hit {
 .hw-drawing.real .screen .pixels { fill: #f2f2ee; }
 /* on screen the pixels and the glass are one image of whole device pixels (paintOled() in manual.js) */
 .hw-drawing.real .screen .oled-image { image-rendering: pixelated; pointer-events: none; }
+/* the MIKRO's screen magnified beside it (syncMagnifier() in manual.js), in the tour loupe's look */
+.hw-control.screen.magnify { cursor: zoom-in; }
+.oled-magnifier {
+  position: fixed; z-index: 45; padding: 8px; border-radius: 2px; pointer-events: none;
+  background: #070707; box-shadow: inset 0 0 0 1px #2a2a2d, var(--md-sys-elevation-3);
+  animation: magnifier-in .12s linear;
+}
+.oled-magnifier[hidden] { display: none; }
+.oled-magnifier canvas { display: block; image-rendering: pixelated; }
+@keyframes magnifier-in { from { opacity: 0; } }
 .hw-drawing.real:not(.cs-drawing) .screen.raster .pixels,
 .hw-drawing.real:not(.cs-drawing) .screen.raster .oled { display: none; }
 .cs-drawing .oled-image { display: none; }
@@ -1215,15 +1225,12 @@ td:first-child { font-weight: 500; }
   .cs-legend { grid-template-columns: minmax(0, 1fr); }
 }
 
-/* The Cheat sheet button keeps its label wherever it fits beside the search; only at phone widths
-   it is the sheet icon alone (title and aria-label say "Cheat sheet"), at the header icons' size. */
+/* The Cheat sheet button always shows its label. At phone widths it is a compact pill (smaller
+   label, tighter padding, the search's height) beside a narrower search. */
 @media (max-width: 480px) {
-  .cheatsheet-button { width: 48px; height: 48px; padding: 0; }
-  .cheatsheet-button .icon { width: 22px; height: 22px; }
-  .cheatsheet-label {
-    position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
-    overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
-  }
+  .manual-toolbar .search-bar { flex-basis: 140px; }
+  .cheatsheet-button { height: 48px; padding: 0 14px 0 12px; gap: 6px; font-size: 13px; letter-spacing: 0; }
+  .cheatsheet-button .icon { width: 18px; height: 18px; }
 }
 
 @media (max-width: 400px) {

@@ -682,8 +682,12 @@ MM.manual = (function () {
   // A demo that comes from the combo itself (SOLO + PAD: the track view) also shows on the
   // combo's pads (class combo-demo on the drawing), instead of their plain highlight.
   // SECTION_PADS (layouts.js) picks the demo for a section's combos (the mixer: its pads for all).
+  // A held modifier (SOLO, MUTE, STOP, the MIKRO's SELECT) brings the tracks onto the pads after a
+  // moment, as the script does (a tap leaves the pads as they are): HELD_DELAY ms.
+  var HELD_DELAY = 300;
   function paintPads(combo, section) {
-    var demos = layout().padDemos || {}, demo = null;
+    clearTimeout(state.padTimer);
+    var demos = layout().padDemos || {}, demo = null, source = null;
     var mode = sectionMode(section);
     var keep = mode && TRACK_VIEW_KEEPS.indexOf(mode) >= 0 ? mode : null, kept = false;
     var chosen = combo && section && SECTION_PADS[section.id], key = combo ? combo.join('+') : '';
@@ -693,19 +697,27 @@ MM.manual = (function () {
     } else {
       (combo || []).some(function (token) {
         if (keep && TRACK_VIEW_MODIFIERS.indexOf(token) >= 0) { kept = true; return false; }
-        return (demo = demos[token] || null);
+        return (demo = demos[token] || null) && (source = token);
       });
     }
     if (!demo && kept) demo = demos[keep];
-    el('device').classList.toggle('combo-demo', !!demo);
-    if (!demo && state.selected) demo = demos[state.selected] || null;
-    state.drawing.paintPads(demo);
+    var fromCombo = !!demo;
+    if (!demo && state.selected) { demo = demos[state.selected] || null; source = state.selected; }
+    function apply() {
+      el('device').classList.toggle('combo-demo', fromCombo);
+      state.drawing.paintPads(demo);
+      state.paintedDemo = demo;
+    }
+    var held = demo && source && source !== layout().trackMode && TRACK_VIEW_MODIFIERS.indexOf(source) >= 0;
+    if (held && state.paintedDemo !== demo) state.padTimer = setTimeout(apply, HELD_DELAY);
+    else apply();
   }
 
   function drawDevice() {
     var spec = layout();
     state.drawing = state.drawing || createDrawing(el('device'), { onSelect: select, magnifier: true });
     state.drawing.draw(state.device);
+    state.paintedDemo = undefined;  // a fresh drawing: its pads are unlit
     el('screen-hint').hidden = !state.drawing.oled;  // the MIKRO's OLED magnifies
     el('device').setAttribute('aria-label', spec.title + ' layout: choose a control to see what it does');
     node('g', { id: 'badges' }, el('device'));

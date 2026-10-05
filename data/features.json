@@ -271,7 +271,7 @@
     {
       "id": "edit",
       "title": "Clip, track and device actions",
-      "summary": "ERASE and DUPLICATE work with pads in every mode; with SHIFT they act on what is focused.",
+      "summary": "ERASE and DUPLICATE work with pads in every mode; with SHIFT they act on what is focused. SOLO, MUTE, SELECT and STOP held bring your tracks onto the pads after a moment (a tap leaves the pads as they are); held and let go without a pad, SOLO, MUTE and SELECT do nothing, STOP still stops.",
       "items": [
         {"combo": ["DUPLICATE"], "does": "Tap: duplicate the focused clip (TRACK mode: the track; SCENE mode: the scene)."},
         {"combo": ["SHIFT", "DUPLICATE"], "does": "Double the focused MIDI clip's loop."},

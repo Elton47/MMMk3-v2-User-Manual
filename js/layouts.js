@@ -554,6 +554,7 @@ var LAYOUTS = {
       },
       stripDots: dots,
       padDemos: padDemos('GROUP'),
+      trackMode: 'GROUP',  // the track mode button; the other TRACK_VIEW_MODIFIERS are held
       controls: [
         c('MASCHINE', 'MASCHINE', 33.75, 164, 17.5, 14, 'button', { icon: 'maschine' }),
         c('STAR', '★', 33.75, 185, 17.5, 14.5, 'button', { icon: 'star' }),
@@ -710,6 +711,7 @@ var LAYOUTS = {
       stripDots: leds,
       marks: marks,
       padDemos: padDemos('SELECT'),
+      trackMode: 'SELECT',  // the track mode button; the other TRACK_VIEW_MODIFIERS are held
       // nothing selected: the script starts on the pads (the drums), like the MIKRO
       screen: screens['PAD MODE'],
       screens: screens,

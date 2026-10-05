@@ -146,15 +146,19 @@ MM.manual = (function () {
     }
   }
 
+  // Corner radii as on the hardware: only slightly softened, nearly square. Shares of a rubber
+  // button's height, a pad's width and the screen's height.
+  var CAP_ROUND = 0.04, PAD_ROUND = 0.03, SCREEN_ROUND = 0.015;
+
   // A rubber cap (buttons): a soft shadow under the bottom and right edges, the cap with a thin
   // dark gap round it (its fill is the sides), a lighter flat top face and a faint highlight
   // along the top edge.
   function drawCap(g, x, y, w, hgt) {
-    var rx = Math.max(1.6, hgt * 0.07);
-    node('rect', { x: x + 0.9, y: y + 1.7, width: w, height: hgt, rx: rx + 0.6, 'class': 'cap-shadow soft' }, g);
+    var rx = hgt * CAP_ROUND;
+    node('rect', { x: x + 0.9, y: y + 1.7, width: w, height: hgt, rx: rx + 0.3, 'class': 'cap-shadow soft' }, g);
     node('rect', { x: x + 0.35, y: y + 0.8, width: w, height: hgt, rx: rx, 'class': 'cap-shadow' }, g);
     node('rect', { x: x, y: y, width: w, height: hgt, rx: rx, 'class': 'cap' }, g);
-    node('rect', { x: x + 1.2, y: y + 0.9, width: w - 2.4, height: hgt - 2.7, rx: Math.max(0.8, rx - 0.7), 'class': 'cap-face' }, g);
+    node('rect', { x: x + 1.2, y: y + 0.9, width: w - 2.4, height: hgt - 2.7, rx: rx * 0.7, 'class': 'cap-face' }, g);
     node('path', { d: 'M' + (x + rx).toFixed(2) + ' ' + (y + 0.75).toFixed(2) + 'H' + (x + w - rx).toFixed(2), 'class': 'cap-rim' }, g);
   }
 
@@ -344,28 +348,29 @@ MM.manual = (function () {
         if (kind === 'screen' && real) {
           // black glass in a thin dark bezel, set into the panel (the panel's lower lip catches
           // the light), with a faint reflection over the pixels
-          node('rect', { x: x - 0.6, y: y - 0.2, width: w + 1.2, height: hgt + 1.4, rx: 3, 'class': 'screen-lip' }, g);
-          node('rect', { x: x, y: y, width: w, height: hgt, rx: 2.4, 'class': 'bezel' }, g);
+          var round = hgt * SCREEN_ROUND;
+          node('rect', { x: x - 0.6, y: y - 0.2, width: w + 1.2, height: hgt + 1.4, rx: round + 0.3, 'class': 'screen-lip' }, g);
+          node('rect', { x: x, y: y, width: w, height: hgt, rx: round, 'class': 'bezel' }, g);
           var inset = hgt * 0.12, ow = w - inset * 2, oh = hgt - inset * 2;
-          node('rect', { x: x + inset, y: y + inset, width: ow, height: oh, rx: 0.8, 'class': 'oled' }, g);
+          node('rect', { x: x + inset, y: y + inset, width: ow, height: oh, rx: round * 0.5, 'class': 'oled' }, g);
           // the MIKRO's OLED is 128 x 32 pixels, centred in the glass
           var px = Math.min(ow / 128, oh / 32);
           drawing.oled = { x: x + inset + (ow - 128 * px) / 2, y: y + inset + (oh - 32 * px) / 2, px: px,
             path: node('path', { 'class': 'pixels' }, g), key: null };
-          node('rect', { x: x + 0.6, y: y + 0.6, width: w - 1.2, height: hgt - 1.2, rx: 1.9, 'class': 'glass-sheen' }, g);
+          node('rect', { x: x + 0.6, y: y + 0.6, width: w - 1.2, height: hgt - 1.2, rx: round * 0.8, 'class': 'glass-sheen' }, g);
           return;
         }
         if (real && kind === 'pad') {
           // a soft shadow on the panel under the pad's bottom and right edges
-          node('rect', { x: x + 0.8, y: y + 1.8, width: w, height: hgt, rx: 5, 'class': 'cap-shadow soft' }, g);
-          node('rect', { x: x + 0.3, y: y + 0.8, width: w, height: hgt, rx: 4.4, 'class': 'cap-shadow' }, g);
+          node('rect', { x: x + 0.8, y: y + 1.8, width: w, height: hgt, rx: w * PAD_ROUND + 0.6, 'class': 'cap-shadow soft' }, g);
+          node('rect', { x: x + 0.3, y: y + 0.8, width: w, height: hgt, rx: w * PAD_ROUND, 'class': 'cap-shadow' }, g);
         }
         if (real && kind === 'button') drawCap(g, x, y, w, hgt);
-        else node('rect', { x: x, y: y, width: w, height: hgt, rx: real ? (kind === 'pad' ? 4 : 2.5) : (kind === 'pad' ? 10 : 6), 'class': 'cap' }, g);
+        else node('rect', { x: x, y: y, width: w, height: hgt, rx: real ? (kind === 'pad' ? w * PAD_ROUND : hgt * CAP_ROUND) : (kind === 'pad' ? 10 : 6), 'class': 'cap' }, g);
         if (!real) {
           node('text', { x: x + w / 2, y: y + hgt / 2 }, g).textContent = kind === 'screen' ? spec.title.replace('MASCHINE ', '') : label;
         } else if (kind === 'pad') {
-          node('rect', { x: x, y: y, width: w, height: hgt, rx: 4, 'class': 'sheen' }, g);
+          node('rect', { x: x, y: y, width: w, height: hgt, rx: w * PAD_ROUND, 'class': 'sheen' }, g);
           var printed = node('text', { x: x + 7, y: y + 12, 'class': 'pad-print' }, g);
           node('tspan', { 'class': 'pad-number' }, printed).textContent = label;
           if (opts.sub) node('tspan', { 'class': 'pad-label', dx: 4 }, printed).textContent = opts.sub;

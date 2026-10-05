@@ -155,12 +155,13 @@ MM.manual = (function () {
   // button's height, a pad's width and the screen's height.
   var CAP_ROUND = 0.04, PAD_ROUND = 0.03, SCREEN_ROUND = 0.015;
 
-  // The OLED's bitmap (js/screen-render.js, 128 x 32) on a canvas for a space of W x H device
-  // pixels. With room for it, every screen pixel is an exact block of k x k device pixels (k the
-  // largest whole number that fits; nearest neighbour, no blur). In less room each device pixel
-  // shows the share of lit screen pixels under it (area averaging), like a small real screen,
-  // instead of dropping pixels. Lit pixels are a slightly warm white on a transparent ground.
-  var OLED_LIT = [242, 242, 238];
+  // The OLED's bitmap (js/screen-render.js, 128 x 32) on a canvas of W x H device pixels. When W
+  // is a whole multiple k of 128, every screen pixel is an exact block of k x k device pixels
+  // (nearest neighbour: crisp). Otherwise each device pixel shows the share of lit screen pixels
+  // under it (area averaging, in linear light), like a real screen of that size, so no pixel is
+  // dropped or doubled. border: device pixels of glass round the picture (default 0); ground: the
+  // glass colour [r, g, b] (default transparent). Lit pixels are a slightly warm white.
+  var OLED_LIT = [242, 242, 238], OLED_GLASS = [7, 7, 7];
 
   function areaWeights(n, m) {
     // output pixel j of m covers source [j * n / m, (j + 1) * n / m): [[source, share], ...]
@@ -176,23 +177,36 @@ MM.manual = (function () {
     return out;
   }
 
-  function oledCanvas(img, W, H, canvas) {
+  function oledCanvas(img, W, H, canvas, border, ground) {
     canvas = canvas || document.createElement('canvas');
-    var k = Math.min(Math.floor(W / img.width), Math.floor(H / img.height));
-    var cw = k >= 1 ? img.width * k : Math.max(1, Math.round(W));
-    var ch = k >= 1 ? img.height * k : Math.max(1, Math.round(H));
-    canvas.width = cw;
-    canvas.height = ch;
-    var ctx = canvas.getContext('2d'), data = ctx.createImageData(cw, ch), d = data.data;
-    function put(x, y, alpha) {
-      var i = (y * cw + x) * 4;
-      d[i] = OLED_LIT[0]; d[i + 1] = OLED_LIT[1]; d[i + 2] = OLED_LIT[2]; d[i + 3] = alpha;
+    border = border || 0;
+    var cw = Math.max(1, Math.round(W)), ch = Math.max(1, Math.round(H));
+    var k = cw % img.width === 0 && ch === cw / img.width * img.height ? cw / img.width : 0;
+    canvas.width = cw + 2 * border;
+    canvas.height = ch + 2 * border;
+    var ctx = canvas.getContext('2d'), data = ctx.createImageData(canvas.width, canvas.height), d = data.data;
+    // light adds up linearly: mix the lit share with the glass in linear light, encode (gamma 2.2)
+    function lin(v) { return Math.pow(v / 255, 2.2); }
+    function put(x, y, lit) {
+      var i = ((y + border) * canvas.width + x + border) * 4;
+      if (!ground) {
+        d[i] = OLED_LIT[0]; d[i + 1] = OLED_LIT[1]; d[i + 2] = OLED_LIT[2];
+        d[i + 3] = Math.round(255 * Math.pow(Math.min(1, lit), 1 / 2.2));
+        return;
+      }
+      for (var c = 0; c < 3; c++) {
+        d[i + c] = Math.round(255 * Math.pow(lit * lin(OLED_LIT[c]) + (1 - lit) * lin(ground[c]), 1 / 2.2));
+      }
+      d[i + 3] = 255;
     }
     var x, y;
-    if (k >= 1) {
+    if (ground) {
+      for (var i = 0; i < d.length; i += 4) { d[i] = ground[0]; d[i + 1] = ground[1]; d[i + 2] = ground[2]; d[i + 3] = 255; }
+    }
+    if (k) {
       for (y = 0; y < ch; y++) {
         var row = Math.floor(y / k) * img.width;
-        for (x = 0; x < cw; x++) if (img.bits[row + Math.floor(x / k)]) put(x, y, 255);
+        for (x = 0; x < cw; x++) if (img.bits[row + Math.floor(x / k)]) put(x, y, 1);
       }
     } else {
       var wx = areaWeights(img.width, cw), wy = areaWeights(img.height, ch);
@@ -203,13 +217,23 @@ MM.manual = (function () {
             var base = ry[0] * img.width;
             wx[x].forEach(function (rx) { if (img.bits[base + rx[0]]) lit += ry[1] * rx[1]; });
           });
-          // light adds up linearly: the share of light, encoded for the screen (gamma 2.2)
-          if (lit > 0) put(x, y, Math.round(255 * Math.pow(Math.min(1, lit), 1 / 2.2)));
+          if (lit > 0) put(x, y, Math.min(1, lit));
         }
       }
     }
     ctx.putImageData(data, 0, 0);
     return canvas;
+  }
+
+  // The size of the OLED's picture for a space of C device pixels across (the screen's own width
+  // in the drawing): a whole number of device pixels per screen pixel when one is within 6 % of it
+  // and fits in `room` device pixels (crisp), else C itself (area averaged). Returns
+  // { width, height, border }: the border is one screen pixel of glass, at least a device pixel.
+  function oledSize(C, room) {
+    var k = Math.max(1, Math.round(C / 128));
+    var whole = Math.abs(k * 128 - C) <= 0.06 * C && k * 130 <= room;
+    var width = whole ? k * 128 : Math.max(1, Math.round(C));
+    return { width: width, height: whole ? k * 32 : Math.max(1, Math.round(C / 4)), border: Math.max(1, Math.round(width / 128)) };
   }
 
   // A rubber cap (buttons): a soft shadow under the bottom and right edges, the cap with a thin
@@ -338,19 +362,17 @@ MM.manual = (function () {
       var size = d + ' ' + ratio;
       if (oled.size !== size) {
         oled.size = size;
-        // room: the whole glass inside the bezel; with less than 128 device pixels, the OLED's
-        // own size (`px`) averaged down
-        var k = Math.min(Math.floor(oled.gw * d / 128), Math.floor(oled.gh * d / 32));
-        oled.canvas = k >= 1 ? oledCanvas(oled.img, oled.gw * d, oled.gh * d, oled.canvas)
-          : oledCanvas(oled.img, 128 * oled.px * d, 32 * oled.px * d, oled.canvas);
+        // the picture with its glass border, in whole device pixels (see oledSize())
+        var fit = oledSize(128 * oled.px * d, oled.room * d);
+        oled.canvas = oledCanvas(oled.img, fit.width, fit.height, oled.canvas, fit.border, OLED_GLASS);
         oled.image.setAttribute('width', (oled.canvas.width / d).toFixed(4));
         oled.image.setAttribute('height', (oled.canvas.height / d).toFixed(4));
         oled.image.setAttribute('href', oled.canvas.toDataURL('image/png'));
       }
-      // centred in the glass, its top left on a device pixel
+      // centred on the screen, its top left on a device pixel
       var canvas = oled.canvas;
-      var left = Math.round(((oled.gx + oled.gw / 2) * ctm.a + ctm.e) * ratio - canvas.width / 2);
-      var top = Math.round(((oled.gy + oled.gh / 2) * ctm.d + ctm.f) * ratio - canvas.height / 2);
+      var left = Math.round(((oled.x + 64 * oled.px) * ctm.a + ctm.e) * ratio - canvas.width / 2);
+      var top = Math.round(((oled.y + 16 * oled.px) * ctm.d + ctm.f) * ratio - canvas.height / 2);
       oled.image.setAttribute('x', ((left / ratio - ctm.e) / ctm.a).toFixed(4));
       oled.image.setAttribute('y', ((top / ratio - ctm.f) / ctm.d).toFixed(4));
       oled.group.classList.add('raster');
@@ -465,12 +487,15 @@ MM.manual = (function () {
           // the lit pixels are crisp squares on the screen's pixel grid (no glow, no reflection)
           var round = hgt * SCREEN_ROUND;
           node('rect', { x: x, y: y, width: w, height: hgt, rx: round, 'class': 'bezel' }, g);
-          var inset = hgt * 0.12, ow = w - inset * 2, oh = hgt - inset * 2;
-          node('rect', { x: x + inset, y: y + inset, width: ow, height: oh, 'class': 'oled' }, g);
-          // the MIKRO's OLED is 128 x 32 pixels, centred in the glass
-          var px = Math.min(ow / 128, oh / 32);
-          drawing.oled = { x: x + inset + (ow - 128 * px) / 2, y: y + inset + (oh - 32 * px) / 2, px: px,
-            gx: x + inset, gy: y + inset, gw: ow, gh: oh, group: g, img: null, size: null, canvas: null,
+          // The MIKRO's OLED (128 x 32 pixels) fills the window as on the controller: the picture,
+          // one pixel of black glass round it, then a thin frame of the bezel. On screen the
+          // picture may grow into that frame (up to the bezel line, `room`) to get whole device
+          // pixels per screen pixel.
+          var frame = hgt * 0.06;
+          var px = Math.min((w - 2 * frame) / 130, (hgt - 2 * frame) / 34);
+          var ox = x + (w - 128 * px) / 2, oy = y + (hgt - 32 * px) / 2;
+          node('rect', { x: ox - px, y: oy - px, width: 130 * px, height: 34 * px, 'class': 'oled' }, g);
+          drawing.oled = { x: ox, y: oy, px: px, room: w - 1.4, group: g, img: null, size: null, canvas: null,
             path: node('path', { 'class': 'pixels', 'shape-rendering': 'crispEdges' }, g),
             image: node('image', { 'class': 'oled-image', preserveAspectRatio: 'none' }, g), key: null };
           return;

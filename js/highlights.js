@@ -333,7 +333,8 @@ MM.tour = (function () {
     var key = [oled.key, room, ratio].join(' ');
     if (loupe.getAttribute('data-key') === key) return;
     loupe.setAttribute('data-key', key);
-    MM.manual.oledCanvas(oled.img, room * ratio, room / 4 * ratio, loupe);
+    var k = Math.max(1, Math.floor(room * ratio / 128));
+    MM.manual.oledCanvas(oled.img, 128 * k, 32 * k, loupe);
     loupe.style.width = (loupe.width / ratio) + 'px';
     loupe.style.height = (loupe.height / ratio) + 'px';
   }

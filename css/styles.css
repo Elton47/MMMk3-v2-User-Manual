@@ -547,9 +547,10 @@ mark.hit {
 .hw-drawing.real .screen .bezel { fill: #0b0b0c; stroke: #2a2a2d; stroke-width: .9; }
 .hw-drawing.real .screen .oled { fill: #070707; }
 .hw-drawing.real .screen .pixels { fill: #f2f2ee; }
-/* on screen the pixels are an image of whole device pixels (paintOled() in manual.js) */
+/* on screen the pixels and the glass are one image of whole device pixels (paintOled() in manual.js) */
 .hw-drawing.real .screen .oled-image { image-rendering: pixelated; pointer-events: none; }
-.hw-drawing.real:not(.cs-drawing) .screen.raster .pixels { display: none; }
+.hw-drawing.real:not(.cs-drawing) .screen.raster .pixels,
+.hw-drawing.real:not(.cs-drawing) .screen.raster .oled { display: none; }
 .cs-drawing .oled-image { display: none; }
 /* MK3: the glossy display panel, the darker edge band, plain light display buttons, knobs with a
    dark skirt and lighter top, the dots around the encoder, and the colour screens */

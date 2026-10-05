@@ -162,6 +162,23 @@ var SAMPLE_SCENES = ['Intro', 'Verse', 'Chorus', 'Drop'];
 var SAMPLE_BROWSER = ['Collections', 'MASCHINE Kits', 'Sounds', 'Drums', 'Instruments', 'Audio Effects',
   'MIDI Effects', 'Max for Live', 'Plug-Ins', 'Clips', 'Samples', 'Grooves', 'Packs', 'User Library',
   'Current Project'];
+// The icons of the browser's top level (like Live's sidebar), as the script's BROWSER_ICONS
+// (display_model.py): private-use characters drawn by the screen fonts (data/screens.json), a
+// Places folder the folder icon, Collections the star. A top-level row is 'icon name >'.
+var BROWSER_ICONS = {
+  sounds: '', drums: '', instruments: '', audio_effects: '',
+  midi_effects: '', max_for_live: '', plugins: '', clips: '',
+  samples: '', grooves: '', packs: '', user_library: '',
+  current_project: '', folder: '', kits: '', collections: '★'
+};
+// A top-level item's icon by its name (the script's CATEGORIES labels); anything else is a
+// Places folder.
+var BROWSER_ICON_KEYS = { 'Collections': 'collections', 'MASCHINE Kits': 'kits', 'Sounds': 'sounds',
+  'Drums': 'drums', 'Instruments': 'instruments', 'Audio Effects': 'audio_effects',
+  'MIDI Effects': 'midi_effects', 'Max for Live': 'max_for_live', 'Plug-Ins': 'plugins',
+  'Clips': 'clips', 'Samples': 'samples', 'Grooves': 'grooves', 'Packs': 'packs',
+  'User Library': 'user_library', 'Current Project': 'current_project' };
+function browserIcon(name) { return BROWSER_ICONS[BROWSER_ICON_KEYS[name] || 'folder']; }
 var SAMPLE_BROWSER_DRUMS = ['Drum Hits', 'Kit-606', 'Kit-Core 909', 'Kit-Dusty', 'Kit-House',
   'Kit-Lo-Fi', 'Kit-Techno'];
 // MASCHINE Kits: Favorites first (there is one), then the Expansions by name; in an Expansion
@@ -220,9 +237,13 @@ function listScreen(title, subtitle, rows, chosen) {
     MIKRO_SCROLL: rows.length > 1 ? Math.round(chosen * 126 / (rows.length - 1)) : null };
 }
 
-// Live's browser at a level: its name, the items (folders marked ' >'), the chosen one.
+// Live's browser at a level: its name, the items (folders marked ' >'), the chosen one. The top
+// level ('Browser') starts each row with its icon (browserIcon); line 2 has none, as in the script.
 function browserScreen(level, items, chosen, folders) {
-  var rows = items.map(function (name, i) { return folders(i) ? name + ' >' : name; });
+  var rows = items.map(function (name, i) {
+    var row = folders(i) ? name + ' >' : name;
+    return level === 'Browser' ? browserIcon(name) + ' ' + row : row;
+  });
   return listScreen(level + ' ' + (chosen + 1) + '/' + items.length, items[chosen] + ' ' + (folders(chosen) ? '>' : ''),
     rows, chosen);
 }

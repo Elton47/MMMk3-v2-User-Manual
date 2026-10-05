@@ -294,7 +294,7 @@
     {
       "id": "plugin",
       "title": "PLUG-IN: device parameters (MIKRO)",
-      "summary": "The encoder controls one parameter of the selected device at a time. Parameters come in pages: Ableton's own banks for Live's devices (Filter, Envelope...), the visible macros of a rack, or groups of 8 for plug-ins. The screen shows the device, the page and how many there are (Macros 2/2; on two lines, Keys Rack 2/2 at the right), and the parameter's name and value. A rack shows as many macros as it shows in Live: click the rack's + macro button for up to 16. Each device remembers where you were.",
+      "summary": "The encoder controls one parameter of the selected device at a time. Parameters come in pages: Ableton's own banks for Live's devices (Filter, Envelope...), the visible macros of a rack, or groups of 8 for plug-ins. The screen shows the device, the page and how many there are (Macros 2/2; on two lines, the device and the count at the right of the track name when they fit), and the parameter's name and value. A rack shows as many macros as it shows in Live: click the rack's + macro button for up to 16. Each device remembers where you were.",
       "devices": ["mikro"],
       "items": [
         {"combo": ["PLUG-IN"], "does": "Parameter mode on / off."},

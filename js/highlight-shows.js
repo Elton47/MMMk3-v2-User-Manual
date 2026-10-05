@@ -17,7 +17,7 @@
 // level 'dim' | 'mid' | 'bright'), demo(token) (a copy of the layout's pad demo), pads(list) (16
 // entries in pad order, pad 1 first; listPad() turns a reading position into a pad number),
 // screen(oled, lcd) (a screen state on the MIKRO, made with the screen helpers in layouts.js:
-// trackScreen, modeScreen, popupScreen, browserScreen ...; colour screens { left, right } on the
+// trackScreen, pluginScreen, modeScreen, popupScreen, browserScreen ...; colour screens { left, right } on the
 // MK3; without lcd the MK3 shows the state's text), screenOf(token) (the layout's sample screen), light(ids)
 // (exactly these buttons are lit), turn(steps) (the encoder has turned this many detents),
 // strip(fill, color, flash) (the touch strip's LED dots as a progress bar: fill 0-1 in color, or
@@ -98,7 +98,7 @@ var HIGHLIGHT_SHOWS = (function () {
               touched: 0, knobs: [['Frequency', 0.5 + (value - 2.4) / 3, text]].concat(page.left.knobs.slice(1))
             }), right: page.right };
           }
-          api.screen(trackScreen(1, 'Auto Filter  Filter', 'Frequency', text, 'Auto Filter'), lcd);
+          api.screen(pluginScreen(1, 'Auto Filter', 'Filter', 1, 4, 'Frequency', text), lcd);
         }
       }
     },

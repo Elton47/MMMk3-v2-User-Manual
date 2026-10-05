@@ -87,6 +87,10 @@ MM.manual = (function () {
     gradient(defs, 'radialGradient', 'hw-pad-fill', { cx: '50%', cy: '46%', r: '72%' }, [[0, '#d6d7d9'], [0.55, '#d0d1d3'], [1, '#c1c2c5']]);
     gradient(defs, 'radialGradient', 'hw-pad-sheen', { cx: '50%', cy: '45%', r: '60%' }, [[0, '#ffffff', 0.45], [1, '#ffffff', 0]]);
     gradient(defs, 'linearGradient', 'hw-light-fill', { x1: 0, y1: 0, x2: 0, y2: 1 }, [[0, '#e9edf0'], [1, '#c4cbd0']]);
+    // the touch strip's ends: a light shadow fading out over a wide distance from each end, a
+    // hint of the shallow groove the strip sits in
+    gradient(defs, 'linearGradient', 'hw-strip-end-l', { x1: 0, y1: 0, x2: 1, y2: 0 }, [[0, '#000000', 0.2], [0.3, '#000000', 0.09], [0.65, '#000000', 0.025], [1, '#000000', 0]]);
+    gradient(defs, 'linearGradient', 'hw-strip-end-r', { x1: 1, y1: 0, x2: 0, y2: 0 }, [[0, '#000000', 0.2], [0.3, '#000000', 0.09], [0.65, '#000000', 0.025], [1, '#000000', 0]]);
     gradient(defs, 'linearGradient', 'hw-glass-fill', { x1: 0, y1: 0, x2: 0.35, y2: 1 }, [[0, '#121214'], [0.45, '#08080a'], [1, '#040405']]);
     document.body.appendChild(holder);
   }
@@ -476,6 +480,9 @@ MM.manual = (function () {
           if (opts.letter) node('text', { x: x + w - 7, y: y + 12, 'class': 'pad-print pad-letter' }, g).textContent = opts.letter;
         } else if (kind === 'strip') {
           node('rect', { x: x + 3, y: y + 3, width: w - 6, height: hgt - 6, rx: 1.5, 'class': 'strip-inner' }, g);
+          node('rect', { x: x + 2, y: y, width: w - 4, height: 1.6, 'class': 'strip-edge' }, g);
+          node('rect', { x: x, y: y, width: 26, height: hgt, 'class': 'strip-end', fill: 'url(#hw-strip-end-l)' }, g);
+          node('rect', { x: x + w - 26, y: y, width: 26, height: hgt, 'class': 'strip-end', fill: 'url(#hw-strip-end-r)' }, g);
         } else if (opts.icon) {
           drawIcon(g, opts.icon, x, y, w, hgt);
         } else if (!opts.light) {
@@ -487,12 +494,25 @@ MM.manual = (function () {
     return drawing;
   }
 
-  function updateScreen(combo) {
+  // The screen for a hovered combo: in a section with its own screens (layout().sectionScreens,
+  // e.g. PLUG-IN's), the combo's there; else the first token's that has one, else the selected
+  // control's. A list of states plays in turn (PUSH + TURN: page 1/2, then 2/2).
+  function updateScreen(combo, section) {
     var spec = layout();
+    clearInterval(state.screenTimer);
     if (!spec.screens) return;
-    var lines = null;
-    (combo || []).some(function (token) { return (lines = spec.screens[token] || null); });
+    var lines = null, own = combo && section && spec.sectionScreens && spec.sectionScreens[section.id];
+    if (own) lines = own[combo.join('+')] || own['*'] || null;
+    if (!lines) (combo || []).some(function (token) { return (lines = spec.screens[token] || null); });
     if (!lines && state.selected) lines = spec.screens[state.selected] || null;
+    if (Array.isArray(lines)) {
+      var frames = lines, frame = 0;
+      lines = frames[0];
+      state.screenTimer = setInterval(function () {
+        frame = (frame + 1) % frames.length;
+        state.drawing.showScreen(frames[frame]);
+      }, 1400);
+    }
     state.drawing.showScreen(lines || spec.screen);
   }
 
@@ -547,7 +567,7 @@ MM.manual = (function () {
       g.classList.remove('related');
       if (g.hasAttribute('aria-pressed')) g.setAttribute('aria-pressed', String(id === state.selected));
     });
-    updateScreen(combo);
+    updateScreen(combo, section);
     paintPads(combo, section);
     var badges = el('badges');
     if (!badges) return;

@@ -113,6 +113,16 @@ function trackScreen(index, subtitle, detail, value, corner, flags) {
     MIKRO_LINE3_VALUE: value || '', MIKRO_CORNER: corner || '' };
 }
 
+// PLUG-IN: the track, then the device; with more than one parameter page also the page (its
+// name without a trailing number, 'Macros 2' -> 'Macros') and the count, as the script words it:
+// line 2 'Keys Rack  Macros 2/2', the corner (two lines) 'Keys Rack 2/2'. One page: the device only.
+// page / count: 1-based page and the number of pages.
+function pluginScreen(index, device, pageName, page, count, parameter, value) {
+  if (count <= 1) return trackScreen(index, device, parameter, value, device);
+  var of = page + '/' + count;
+  return trackScreen(index, device + '  ' + pageName.replace(/ \d+$/, '') + ' ' + of, parameter, value, device + ' ' + of);
+}
+
 // A mode named on line 1 (Pattern, Scenes, Tracks ...).
 function modeScreen(title, subtitle, detail, value, corner) {
   return { TITLE: title, SUBTITLE: subtitle || '', MIKRO_LINE3: detail || '', MIKRO_LINE3_VALUE: value || '',
@@ -281,6 +291,13 @@ var LAYOUTS = {
     // the screen with nothing selected; the track is heard (not muted).
     var drums = trackScreen(0, SAMPLE_KIT, SAMPLE_DRUMS[0], noteName(36), SAMPLE_KIT);
     var scenes = '1 - ' + SAMPLE_SCENES.length + ' of ' + SAMPLE_SCENES.length;
+    // PLUG-IN on 2-Bass's Auto Filter (Live's banks: Filter is page 1 of 4; on two lines
+    // 'Auto Filter 1/4' doesn't fit beside the track, so the corner stays empty, as on the
+    // controller). PUSH + TURN pages through the 16 macros of a rack on 3-Keys (Macros 1-8, 9-16),
+    // named Keys so that 'Keys 1/2' fits in the corner on two lines ('Keys Rack 2/2' would not).
+    var plugin = pluginScreen(1, 'Auto Filter', 'Filter', 1, 4, 'Frequency', '2.40 kHz');
+    var macros = [pluginScreen(2, 'Keys', 'Macros 1', 1, 2, 'Macro 1', '32'),
+      pluginScreen(2, 'Keys', 'Macros 2', 2, 2, 'Macro 9', '64')];
     var tracks = '1 - ' + SAMPLE_TRACKS.length + ' of ' + SAMPLE_TRACKS.length;
     return {
       title: 'MASCHINE MIKRO MK3',
@@ -292,7 +309,7 @@ var LAYOUTS = {
       // What the screen shows when a control is selected or a combo with it is hovered: the
       // script's screen for the sample set (the screen helpers above).
       screens: {
-        'PLUG-IN': trackScreen(1, 'Auto Filter  Filter', 'Frequency', '2.40 kHz', 'Auto Filter'),
+        'PLUG-IN': plugin,
         'TEMPO': popupScreen('Tempo', '120.00 BPM'),
         'SWING': popupScreen('Swing', '25 %'),
         'VOLUME': modeScreen('Meters 1-4', SAMPLE_TRACKS.slice(0, 4).map(function (t) { return t.name.slice(0, 6); }).join(' | ')),
@@ -310,6 +327,11 @@ var LAYOUTS = {
         'MASCHINE': settingsScreen(),
         'STAR': browserScreen('Browser', SAMPLE_BROWSER, 2, function () { return true; }),
         'BROWSER': browserScreen('Browser', SAMPLE_BROWSER, 2, function () { return true; })
+      },
+      // Screens for a combo hovered in a given section (section id -> combo tokens joined with
+      // '+', '*' for any other combo there); a list of states plays in turn (manual.js).
+      sectionScreens: {
+        plugin: { '*': plugin, 'PUSH+TURN': macros }
       },
       stripDots: dots,
       padDemos: padDemos('GROUP'),

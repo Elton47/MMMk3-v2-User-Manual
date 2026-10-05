@@ -525,8 +525,14 @@ mark.hit {
 .hw-drawing.real .pad-print { fill: #4a4a4e; font: 500 8.4px var(--md-ref-typeface); dominant-baseline: middle; }
 .hw-drawing.real .pad-number { font-weight: 800; }
 .hw-drawing.real .pad-letter { font-weight: 700; text-anchor: end; }
-.hw-drawing.real .strip .cap { fill: #0c0c0d; stroke: #2c2c2f; stroke-width: 1.2; }
-.hw-drawing.real .strip-inner { fill: #151517; pointer-events: none; }
+/* the touch strip: a shallow groove in the panel: one flat dark grey, darker than the panel, square
+   corners, a light shadow fading in from the left and right ends and a faint darker top edge; no shine, no
+   gradient across the fill, no border */
+.hw-drawing.real .strip .cap { fill: #1e1e21; stroke: none; rx: 0; }
+.hw-drawing.real .strip-inner { fill: #1e1e21; rx: 0; pointer-events: none; }
+.hw-drawing.real .strip .cap-shadow { display: none; }
+.hw-drawing.real .strip-end, .hw-drawing.real .strip-edge { pointer-events: none; }
+.hw-drawing.real .strip-edge { fill: #000; opacity: .14; }
 .hw-drawing.real .encoder .ring { fill: #0d0d0e; stroke: #2e2e31; stroke-width: 1.5; transition: stroke .12s; }
 .hw-drawing.real .encoder .knurl { fill: #19191b; stroke: #3c3c40; stroke-width: 3.2; stroke-dasharray: 1.3 1.5; }
 .hw-drawing.real .encoder .knob-cap { fill: url(#hw-knob-fill); stroke: #050506; stroke-width: 1; }
@@ -627,7 +633,7 @@ mark.hit {
 .hw-drawing.real .button.lit.related .cap { fill: color-mix(in srgb, var(--lit-color) 88%, #2a2a2d); stroke: var(--hw-related); stroke-width: 2.2; }
 .hw-drawing.real .button.lit.selected .cap { fill: var(--lit-color); stroke: #fff; stroke-width: 2; }
 .hw-drawing.real .button.lit.selected .label, .hw-drawing.real .button.lit.related .label { fill: #141416; }
-.hw-drawing.real .strip.selected .strip-inner, .hw-drawing.real .strip.related .strip-inner { fill: color-mix(in srgb, var(--hw-related) 25%, #151517); }
+.hw-drawing.real .strip.selected .strip-inner, .hw-drawing.real .strip.related .strip-inner { fill: color-mix(in srgb, var(--hw-related) 25%, #1e1e21); }
 .badge circle { fill: var(--hw-active); stroke: #fff; stroke-width: 2; }
 .badge text { fill: #fff; font: 700 12px var(--md-ref-typeface); text-anchor: middle; dominant-baseline: central; }
 
@@ -1106,7 +1112,7 @@ td:first-child { font-weight: 500; }
   fill: #fff !important; stroke: #9a9a9a !important; stroke-width: 1.1 !important; stroke-dasharray: none !important; filter: none !important;
 }
 .cs-drawing .knurl { stroke: #c4c4c4 !important; }
-.cs-drawing .sheen, .cs-drawing .cap-shadow, .cs-drawing .cap-face, .cs-drawing .cap-rim, .cs-drawing .hw-rim { display: none; }
+.cs-drawing .sheen, .cs-drawing .strip-end, .cs-drawing .strip-edge, .cs-drawing .cap-shadow, .cs-drawing .cap-face, .cs-drawing .cap-rim, .cs-drawing .hw-rim { display: none; }
 .cs-drawing .oled, .cs-drawing .lcd { fill: #ececec !important; stroke: #9a9a9a !important; stroke-width: 1 !important; }
 .cs-drawing .pixels { fill: #111 !important; shape-rendering: auto; }
 .cs-drawing .label, .cs-drawing .label.green, .cs-drawing .label.red { fill: #000 !important; filter: none !important; }

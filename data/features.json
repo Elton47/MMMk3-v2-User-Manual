@@ -15,6 +15,7 @@
   "sections": [
     {
       "id": "start",
+      "nav": "Getting started",
       "title": "Getting started",
       "summary": "New here? The Set up guide walks you through it (macOS is automatic; Windows needs a one-time loopMIDI setup). After that: connect the controller and start Live. The script starts the Maschine Bridge, which takes over the hardware: no Controller Editor, no MIDI mode, a real SHIFT key. While Live loads, the screen shows Waiting for Live; when the set is ready, a rainbow wave sweeps across the pads. Your note repeat rate, arp settings, chord type and voicing, drum colours and velocity curve are remembered between Live sessions.",
       "notes": [
@@ -30,6 +31,7 @@
     },
     {
       "id": "highlights",
+      "nav": "Highlights",
       "title": "Highlights",
       "summary": "The best of it in a minute. Each one is explained in its own section below.",
       "items": [
@@ -47,6 +49,7 @@
     },
     {
       "id": "clip",
+      "nav": "Clips",
       "title": "PATTERN: clips",
       "summary": "A 4x4 view of Live's Session clips (4 tracks x 4 scenes). Pad colours follow the clip colours; playing clips are bright. Recording a new clip (an empty slot, or VARIATION + pad) selects its track, so Live's auto-arm arms it (the dimmed arm, which follows the track you select; tracks armed for real are disarmed), and the pads switch to the drum pads or the keyboard so you can play into it right away.",
       "items": [
@@ -63,6 +66,7 @@
     },
     {
       "id": "scene",
+      "nav": "Scenes",
       "title": "SCENE: scenes",
       "summary": "16 scenes on the pads, in their colours, in the order of Live's scene list: scene 1 top left (pad 13), then to the right and down. Playing scenes are bright, triggered scenes flash.",
       "items": [
@@ -77,6 +81,7 @@
     },
     {
       "id": "track",
+      "nav": "Tracks",
       "title": "TRACK: tracks on the pads",
       "summary": "Your tracks read like text: track 1 on pad 13 (marked A), track 2 on pad 14 (B), then to the right and down. The return tracks and the Master always sit on the last pads (two returns: pads 2 and 3, Master on pad 4); TURN scrolls the other tracks. Colours follow the tracks; muted tracks are white.",
       "items": [
@@ -96,6 +101,7 @@
     },
     {
       "id": "drum",
+      "nav": "Drums",
       "title": "PAD MODE: drums",
       "summary": "The 16 visible pads of the track's Drum Rack. Hitting a pad plays it and focuses it in Live (like MASCHINE focusing a sound). Pads are coloured by chain colour or by name (see the colour table). While a clip plays, the pads of the notes it plays light up.",
       "swatches_note": "Name colours: pads use their chain colour by default; press PAD MODE again to colour them by name instead (it is remembered). A chain without a colour also gets its name colour. The name is read word by word, first word first, as sample names start with the kind of sound (Kick BlackEarth 1, ClosedHH Dev, BD_Deep_01); a word counts when it starts with one of these words, and short abbreviations (BD, SN, HH, OH ...) only as whole words. Anything else is white.",
@@ -134,6 +140,7 @@
     },
     {
       "id": "keyboard",
+      "nav": "Keyboard",
       "title": "KEYBOARD: notes in key",
       "summary": "The pads walk up Live's current scale (root note bright). Root and scale are Live's own, so changing them here changes Live's Scale settings and vice versa, including per-clip scales. While a clip plays, the pads of the notes it plays light up.",
       "items": [
@@ -149,6 +156,7 @@
     },
     {
       "id": "chords",
+      "nav": "Chords",
       "title": "CHORDS: chord sets",
       "summary": "Every pad plays a chord built from Live's scale, starting on successive scale degrees, so every chord is in key. A chord you play, or one the clip plays back, lights its own pad bright and the pads of its other notes softer (the C chord: the E and G pads), so you see its shape.",
       "items": [
@@ -161,6 +169,7 @@
     },
     {
       "id": "step",
+      "nav": "Step sequencer",
       "title": "STEP: step sequencer",
       "summary": "The pads are 16 steps of the focused sound (the focused drum pad, or the last keyboard note) in the focused clip, read like text as in MASCHINE: step 1 top left (pad 13), step 16 bottom right (pad 4). The playhead runs across the pads while the clip plays, and the page follows it on longer clips (after you change the page yourself, it follows again once the playhead reaches your page).",
       "items": [
@@ -174,6 +183,7 @@
     },
     {
       "id": "playing",
+      "nav": "Playing",
       "title": "Playing: velocity, repeat, arp, touch strip",
       "summary": "The bridge plays the notes itself, next to the hardware, so the pads can do things one-note-per-pad MIDI can't: chords, arpeggios, note repeat that follows pressure, 16 velocities.",
       "items": [
@@ -193,6 +203,7 @@
     },
     {
       "id": "shift-pads",
+      "nav": "Clip editing",
       "title": "SHIFT + pads: edit the focused clip",
       "summary": "Acts on the selected notes, or on all notes when nothing is selected. Works in every mode, TRACK included. A pad only lights when its action can do something.",
       "grid": [
@@ -222,6 +233,7 @@
     },
     {
       "id": "events",
+      "nav": "Note selection",
       "title": "EVENTS: select notes",
       "summary": "Hold EVENTS: the pads show the drum pads or keyboard of the mode underneath; lit pads have notes in the focused clip.",
       "items": [
@@ -236,6 +248,7 @@
     },
     {
       "id": "transport",
+      "nav": "Transport",
       "title": "Transport",
       "summary": "MASCHINE's transport, in Live.",
       "items": [
@@ -258,6 +271,7 @@
     },
     {
       "id": "master",
+      "nav": "Tempo, swing, volume",
       "title": "Tempo, swing, volume",
       "summary": "Hold the button: the screen shows the value at once; turn the encoder to change it, and let go to go back. A quick tap shows the value for a moment.",
       "items": [
@@ -270,6 +284,7 @@
     },
     {
       "id": "edit",
+      "nav": "Actions",
       "title": "Clip, track and device actions",
       "summary": "ERASE and DUPLICATE work with pads in every mode; with SHIFT they act on what is focused. SOLO, MUTE, SELECT and STOP held bring your tracks onto the pads after a moment (a tap leaves the pads as they are); held and let go without a pad, SOLO, MUTE and SELECT do nothing, STOP still stops.",
       "items": [
@@ -287,6 +302,7 @@
     },
     {
       "id": "views",
+      "nav": "Views and navigation",
       "title": "Views and navigation",
       "items": [
         {"combo": ["PERFORM"], "does": "Session / Arrangement view.", "devices": ["mikro"]},
@@ -304,6 +320,7 @@
     },
     {
       "id": "mixer",
+      "nav": "Mixer",
       "title": "Mixer: VOLUME tap",
       "summary": "A VOLUME tap turns the controller into a mixer. The pads show your tracks as in TRACK mode, each in its colour and glowing with its level (muted tracks dim white); the visited track's pad is white. The screen shows that track and its parameter, with a fill bar along the bottom; the encoder and the touch strip change it. Visiting a track doesn't select it in Live: you can mix one track while playing another. Values land exactly on Live's 0.1 dB steps.",
       "devices": [
@@ -377,6 +394,7 @@
     },
     {
       "id": "plugin",
+      "nav": "Device parameters",
       "title": "PLUG-IN: device parameters (MIKRO)",
       "summary": "The encoder controls one parameter of the selected device at a time. Parameters come in pages: Ableton's own banks for Live's devices (Filter, Envelope...), the visible macros of a rack, or groups of 8 for plug-ins. The screen shows the device, the page and how many there are (Macros 2/2; on two lines, the device after the track's box on line 1 and the count in the corner), and the parameter's name and value. A rack shows as many macros as it shows in Live: click the rack's + macro button for up to 16. Each device remembers where you were.",
       "devices": ["mikro"],
@@ -392,6 +410,7 @@
     },
     {
       "id": "browser",
+      "nav": "Browser",
       "title": "STAR: browse and load (MIKRO)",
       "summary": "Live's browser on the hardware screen, in the order of Live's sidebar: Collections first (Favorites and your coloured collections), then MASCHINE Kits, the library (Sounds, Drums, Instruments ...), and the folders you added to Places. MASCHINE Kits (Live 12.1 or later, with MASCHINE Expansions or the MASCHINE library installed) lists your Expansions and their kits: PUSH on a kit loads it as a Drum Rack, pad for pad as in MASCHINE: onto the selected MIDI track, replacing its instrument (effects after it stay), or on a new MIDI track named after the kit (# Kit name, so Live numbers it) when an audio track is selected. Each pad is a Simpler in 1-Shot, so a hit rings out; long synth, vocal, FX, atmosphere and loop sounds play while held instead. The pads and the Drum Rack's chains get the drum colours by sound name (see PAD MODE). A drum-synth sound plays NI's recording of it where there is one; a sound that is a plug-in in MASCHINE (Massive, Monark ...) stays an empty pad with its name, to put your own sound on. Turning onto a kit plays NI's own preview of it through Live's preview (Cue output, preview switched on in Live's browser), like clicking a sample in Live's browser; the script puts the previews in your User Library (MASCHINE Kit Previews, as hard links: no extra disk space) the first time you open MASCHINE Kits, and picks up newly installed Expansions the same way. This is the way to play the Expansions in Live without the MASCHINE plug-in, which takes the controller away from the script (see Getting started).",
       "devices": ["mikro"],
@@ -408,6 +427,7 @@
     },
     {
       "id": "settings",
+      "nav": "Settings",
       "title": "MASCHINE: settings (MIKRO)",
       "summary": "Your preferences, on the controller. They are saved with Live's preferences on your computer, remembered after a restart, and take effect at once.",
       "devices": ["mikro"],
@@ -427,6 +447,7 @@
     },
     {
       "id": "mk3",
+      "nav": "MK3",
       "title": "MK3: knobs, screens, group buttons",
       "summary": "Built from the hardware protocol; not yet tested on a real MK3.",
       "devices": ["mk3"],

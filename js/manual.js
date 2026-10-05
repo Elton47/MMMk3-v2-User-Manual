@@ -878,7 +878,7 @@ MM.manual = (function () {
         section.swatches && section.swatches.length ? swatchTable(section, section.swatches) : null,
         list
       ])));
-      var link = h('a', { href: '#' + section.id, text: section.title.split(':')[0] });
+      var link = h('a', { href: '#' + section.id, text: section.nav || section.title.split(':')[0] });
       link.addEventListener('click', function (e) {
         e.preventDefault();
         MM.scrollToEl(el(section.id));
@@ -980,11 +980,12 @@ MM.manual = (function () {
     return parent;
   }
 
-  // Lower-cased search texts, built once: an item's is its section title, its combination and its
-  // text; a drum colour's is its name, its words and its note.
+  // Lower-cased search texts, built once: an item's is its section title (plus the short nav
+  // label of the section chips), its combination and its text; a drum colour's is its name, its
+  // words and its note.
   function buildIndex() {
     state.index = state.data.sections.map(function (section) {
-      var title = section.title.toLowerCase();
+      var title = (section.title + (section.nav ? '\n' + section.nav : '')).toLowerCase();
       return {
         section: section,
         items: section.items.map(function (item) {

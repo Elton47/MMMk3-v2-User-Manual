@@ -17,6 +17,9 @@
       "id": "start",
       "title": "Getting started",
       "summary": "New here? The Set up guide walks you through it (macOS is automatic; Windows needs a one-time loopMIDI setup). After that: connect the controller and start Live. The script starts the Maschine Bridge, which takes over the hardware: no Controller Editor, no MIDI mode, a real SHIFT key. While Live loads, the screen shows Waiting for Live; when the set is ready, a rainbow wave sweeps across the pads. Your note repeat rate, arp settings, chord type and voicing, drum colours and velocity curve are remembered between Live sessions.",
+      "notes": [
+        {"title": "Using the MASCHINE plug-in (Expansions)", "text": "NI's MASCHINE plug-in (VST / AU) takes the controller as soon as it is anywhere in the set, and keeps it until it is deleted: selecting another track or switching the plug-in off doesn't release it. Meanwhile the script steps aside: the lights, screen and pads are MASCHINE's, and Live's status bar says so. Delete the last MASCHINE plug-in and the controller is back with Live within about a second, on the drum pads or the keyboard. To switch between the two on the fly, use v1.6.1 (in the same download) in NI's MIDI mode, where SHIFT + MASCHINE (MK3, MASCHINE+: SHIFT + CHANNEL) switches between MASCHINE and Live."}
+      ],
       "items": [
         {"combo": ["SHIFT"], "does": "The real SHIFT button: hold it for the second function printed on a button, and for the SHIFT + pad edit matrix."},
         {"combo": ["PATTERN"], "does": "Clips on the pads."},
@@ -78,7 +81,8 @@
         {"combo": ["GROUP"], "does": "Tap: show tracks on the pads (latched). Hold + PAD: act on a track and return.", "devices": ["mikro"]},
         {"combo": ["SELECT"], "does": "Tap: show tracks on the pads (latched). Hold + PAD: act on a track and return.", "devices": ["mk3"]},
         {"combo": ["PAD"], "does": "Select the track. A group track folds / unfolds."},
-        {"combo": ["PAD"], "context": "unlit pad", "does": "Create a new MIDI track (with SHIFT: an audio track)."},
+        {"combo": ["PAD"], "context": "unlit pad", "does": "Create a new MIDI track."},
+        {"combo": ["DUPLICATE", "PAD"], "context": "unlit pad", "does": "Create a new audio track."},
         {"combo": ["SELECT", "PAD"], "does": "Arm that track and disarm the others, like Live's mixer (again: disarm). SHIFT + SELECT + PAD adds a track, to record several at once.", "devices": ["mikro"]},
         {"combo": ["SOLO", "PAD"], "does": "Solo / unsolo that track (works from any mode: the pads show tracks while SOLO is held)."},
         {"combo": ["MUTE", "PAD"], "does": "Mute / unmute that track (from any mode)."},
@@ -186,7 +190,7 @@
     {
       "id": "shift-pads",
       "title": "SHIFT + pads: edit the focused clip",
-      "summary": "Acts on the selected notes, or on all notes when nothing is selected. A pad only lights when its action can do something.",
+      "summary": "Acts on the selected notes, or on all notes when nothing is selected. Works in every mode, TRACK included. A pad only lights when its action can do something.",
       "grid": [
         ["Step -", "Step +", "Octave -", "Octave +"],
         ["Clear notes", "Clear envelopes", "Copy", "Paste"],
@@ -364,6 +368,8 @@
     {"what": "Previous / next track", "v1": "CHORDS / STEP", "v2": "SHIFT + ◀ ▶ (CHORDS and STEP are now chord and step modes)"},
     {"what": "Device / Clip detail view", "v1": "PLUG-IN", "v2": "SHIFT + PLUG-IN (PLUG-IN now controls device parameters)"},
     {"what": "Track mode pin", "v1": "SHIFT + GROUP", "v2": "Tap GROUP (hold: temporary)"},
-    {"what": "New", "v1": "", "v2": "Chords, arpeggiator, 16 Velocities, step sequencer, hardware browser, parameter control, pitch / mod strip, record variations (VARIATION + pad), take undo, clip progress and parameter value on the strip (touch to jump / set), a silent metronome on the strip while recording, humanize, screen feedback, pads light instantly when played"}
+    {"what": "New audio track (TRACK mode)", "v1": "SHIFT + unlit pad", "v2": "DUPLICATE + unlit pad (SHIFT + pads are the edit functions in every mode, TRACK included)"},
+    {"what": "New", "v1": "", "v2": "Chords, arpeggiator, 16 Velocities, step sequencer, hardware browser, parameter control, pitch / mod strip, record variations (VARIATION + pad), take undo, clip progress and parameter value on the strip (touch to jump / set), a silent metronome on the strip while recording, humanize, screen feedback, pads light instantly when played"},
+    {"what": "MASCHINE plug-in in Live", "v1": "NI's MIDI mode: SHIFT + MASCHINE (MK3, MASCHINE+: SHIFT + CHANNEL) switches between MASCHINE and the script", "v2": "The script steps aside while a MASCHINE plug-in is in the set and comes back when it is deleted (or use v1.6.1 to switch on the fly)"}
   ]
 }

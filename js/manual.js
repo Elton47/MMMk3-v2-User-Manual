@@ -638,6 +638,15 @@ MM.manual = (function () {
     ]);
   }
 
+  // A section's notes (features.json `notes`: {title, text}) as callouts under its summary, e.g.
+  // Getting started's note on NI's MASCHINE plug-in.
+  function noteElement(note, terms) {
+    return h('div', { className: 'note info manual-note' }, [
+      MM.icon('info'),
+      h('p', {}, [marked(h('strong'), note.title + '.', terms), ' ', marked(h('span'), note.text, terms)])
+    ]);
+  }
+
   function shiftGrid(section) {
     // The SHIFT + pads matrix, drawn like the pads: top row = pads 13-16. Hover lights it.
     var grid = h('div', { className: 'shift-grid', role: 'group', 'aria-label': 'SHIFT + pads' });
@@ -685,12 +694,13 @@ MM.manual = (function () {
       entry.items.forEach(function (item) { list.appendChild(itemElement(item, section)); });
       container.appendChild(h('section', { className: 'card', id: section.id, 'aria-labelledby': 'h-' + section.id }, [
         sectionHeading(section, 'h-' + section.id),
-        section.summary ? h('p', { className: 'summary', text: section.summary }) : null,
+        section.summary ? h('p', { className: 'summary', text: section.summary }) : null
+      ].concat((section.notes || []).map(function (note) { return noteElement(note); }), [
         section.id === 'highlights' ? tourLink() : null,
         section.grid ? shiftGrid(section) : null,
         section.swatches && section.swatches.length ? swatchTable(section, section.swatches) : null,
         list
-      ]));
+      ])));
       var link = h('a', { href: '#' + section.id, text: section.title.split(':')[0] });
       link.addEventListener('click', function (e) {
         e.preventDefault();
@@ -801,6 +811,9 @@ MM.manual = (function () {
         }),
         swatches: (section.swatches || []).map(function (swatch) {
           return { swatch: swatch, text: (swatch.name + '\n' + swatch.keywords.join(' ') + '\n' + (swatch.note || '')).toLowerCase() };
+        }),
+        notes: (section.notes || []).map(function (note) {
+          return { note: note, text: title + '\n' + (note.title + '\n' + note.text).toLowerCase() };
         })
       };
     });
@@ -815,9 +828,11 @@ MM.manual = (function () {
       }).map(function (e) { return e.item; });
       var swatches = entry.swatches.filter(function (e) { return matchesAll(e.text, terms); })
         .map(function (e) { return e.swatch; });
-      if (!items.length && !swatches.length) return;
-      groups.push({ section: entry.section, items: items, swatches: swatches });
-      count += items.length + swatches.length;
+      var notes = entry.notes.filter(function (e) { return matchesAll(e.text, terms); })
+        .map(function (e) { return e.note; });
+      if (!items.length && !swatches.length && !notes.length) return;
+      groups.push({ section: entry.section, items: items, swatches: swatches, notes: notes });
+      count += items.length + swatches.length + notes.length;
     });
     return { groups: groups, count: count };
   }
@@ -887,6 +902,7 @@ MM.manual = (function () {
       open.setAttribute('aria-label', 'Open the section ' + section.title);
       box.appendChild(h('section', { className: 'card search-group', 'aria-labelledby': 's-' + section.id }, [
         h('div', { className: 'search-group-head' }, [sectionHeading(section, 's-' + section.id, terms), open]),
+        group.notes.length ? h('div', { className: 'manual-notes' }, group.notes.map(function (note) { return noteElement(note, terms); })) : null,
         group.swatches.length ? swatchTable(section, group.swatches, terms) : null,
         group.items.length ? list : null
       ]));

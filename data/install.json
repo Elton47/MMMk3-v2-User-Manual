@@ -199,6 +199,11 @@
           {"q": "The pads flash in odd colours", "a": [
             "The controller is in NI's MIDI mode. Press {{midi_mode}} to leave it."
           ]},
+          {"q": "I use NI's MASCHINE plug-in (VST / AU) in Live, for example for the Expansions", "a": [
+            "While a MASCHINE plug-in is anywhere in the set, the controller belongs to it and the script steps aside. Live's status bar says so.",
+            "Delete the plug-in and the controller is back with Live within about a second. Selecting another track or switching the plug-in off is not enough.",
+            "To switch between the two on the fly, use **v1.6.1** (in the same download) in NI's MIDI mode: {{midi_mode}} switches between MASCHINE and Live."
+          ]},
           {"q": "Nothing happens at all", "a": [
             "Is NI's MASCHINE software installed? It installs the drivers.",
             "Is the controller connected by USB?",

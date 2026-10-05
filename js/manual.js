@@ -58,8 +58,6 @@ MM.manual = (function () {
     return id;
   }
 
-  // The share of a screen pixel its lit square fills: the OLED's pixels sit in a fine dark grid.
-  var OLED_DOT = 0.88;
 
   function gradient(defs, type, id, attrs, stops) {
     var g = node(type, Object.assign({ id: id }, attrs), defs);
@@ -85,9 +83,6 @@ MM.manual = (function () {
     // the encoder's top and the MK3 knobs' lighter tops
     gradient(defs, 'radialGradient', 'hw-knob-fill', { cx: '38%', cy: '32%', r: '75%' }, [[0, '#47474b'], [0.55, '#1c1c1f'], [1, '#0b0b0c']]);
     gradient(defs, 'radialGradient', 'hw-knob-top', { cx: '40%', cy: '34%', r: '72%' }, [[0, '#6b6b70'], [0.6, '#404044'], [1, '#2a2a2d']]);
-    // a faint reflection on the screen glass
-    gradient(defs, 'linearGradient', 'hw-glass-sheen', { x1: 0, y1: 0, x2: 0.55, y2: 1 },
-      [[0, '#ffffff', 0.09], [0.48, '#ffffff', 0.025], [0.5, '#ffffff', 0], [1, '#ffffff', 0]]);
     // pads: translucent milky silicone, a soft glow in the middle fading to a slightly darker edge
     gradient(defs, 'radialGradient', 'hw-pad-fill', { cx: '50%', cy: '46%', r: '72%' }, [[0, '#d6d7d9'], [0.55, '#d0d1d3'], [1, '#c1c2c5']]);
     gradient(defs, 'radialGradient', 'hw-pad-sheen', { cx: '50%', cy: '45%', r: '60%' }, [[0, '#ffffff', 0.45], [1, '#ffffff', 0]]);
@@ -143,6 +138,63 @@ MM.manual = (function () {
   // Corner radii as on the hardware: only slightly softened, nearly square. Shares of a rubber
   // button's height, a pad's width and the screen's height.
   var CAP_ROUND = 0.04, PAD_ROUND = 0.03, SCREEN_ROUND = 0.015;
+
+  // The OLED's bitmap (js/screen-render.js, 128 x 32) on a canvas for a space of W x H device
+  // pixels. With room for it, every screen pixel is an exact block of k x k device pixels (k the
+  // largest whole number that fits; nearest neighbour, no blur). In less room each device pixel
+  // shows the share of lit screen pixels under it (area averaging), like a small real screen,
+  // instead of dropping pixels. Lit pixels are a slightly warm white on a transparent ground.
+  var OLED_LIT = [242, 242, 238];
+
+  function areaWeights(n, m) {
+    // output pixel j of m covers source [j * n / m, (j + 1) * n / m): [[source, share], ...]
+    var out = [], step = n / m;
+    for (var j = 0; j < m; j++) {
+      var a = j * step, b = a + step, list = [];
+      for (var i = Math.floor(a); i < Math.min(n, Math.ceil(b)); i++) {
+        var share = (Math.min(b, i + 1) - Math.max(a, i)) / step;
+        if (share > 0) list.push([i, share]);
+      }
+      out.push(list);
+    }
+    return out;
+  }
+
+  function oledCanvas(img, W, H, canvas) {
+    canvas = canvas || document.createElement('canvas');
+    var k = Math.min(Math.floor(W / img.width), Math.floor(H / img.height));
+    var cw = k >= 1 ? img.width * k : Math.max(1, Math.round(W));
+    var ch = k >= 1 ? img.height * k : Math.max(1, Math.round(H));
+    canvas.width = cw;
+    canvas.height = ch;
+    var ctx = canvas.getContext('2d'), data = ctx.createImageData(cw, ch), d = data.data;
+    function put(x, y, alpha) {
+      var i = (y * cw + x) * 4;
+      d[i] = OLED_LIT[0]; d[i + 1] = OLED_LIT[1]; d[i + 2] = OLED_LIT[2]; d[i + 3] = alpha;
+    }
+    var x, y;
+    if (k >= 1) {
+      for (y = 0; y < ch; y++) {
+        var row = Math.floor(y / k) * img.width;
+        for (x = 0; x < cw; x++) if (img.bits[row + Math.floor(x / k)]) put(x, y, 255);
+      }
+    } else {
+      var wx = areaWeights(img.width, cw), wy = areaWeights(img.height, ch);
+      for (y = 0; y < ch; y++) {
+        for (x = 0; x < cw; x++) {
+          var lit = 0;
+          wy[y].forEach(function (ry) {
+            var base = ry[0] * img.width;
+            wx[x].forEach(function (rx) { if (img.bits[base + rx[0]]) lit += ry[1] * rx[1]; });
+          });
+          // light adds up linearly: the share of light, encoded for the screen (gamma 2.2)
+          if (lit > 0) put(x, y, Math.round(255 * Math.pow(Math.min(1, lit), 1 / 2.2)));
+        }
+      }
+    }
+    ctx.putImageData(data, 0, 0);
+    return canvas;
+  }
 
   // A rubber cap (buttons): a soft shadow under the bottom and right edges, the cap with a thin
   // dark gap round it (its fill is the sides), a lighter flat top face and a faint highlight
@@ -251,8 +303,63 @@ MM.manual = (function () {
       var key = JSON.stringify(lines);
       if (oled.key === key) return;
       oled.key = key;
-      oled.path.setAttribute('d', MM.screen.path(MM.screen.render(lines), oled.x, oled.y, oled.px, OLED_DOT));
+      oled.img = MM.screen.render(lines);
+      oled.path.setAttribute('d', MM.screen.path(oled.img, oled.x, oled.y, oled.px));
+      oled.size = null;
+      paintOled();
     };
+
+    // The OLED on screen: its bitmap as an image of whole device pixels, placed on the device
+    // pixel grid (see oledCanvas()). The vector pixels (`path`) stay for the cheat sheet, and
+    // show until the drawing has a size. Repainted when the size or the pixel ratio changes.
+    function paintOled() {
+      var oled = drawing.oled;
+      if (!oled || !oled.img) return;
+      var ctm = svg.getScreenCTM && svg.getScreenCTM();
+      var ratio = window.devicePixelRatio || 1;
+      if (!ctm || !ctm.a || !svg.getBoundingClientRect().width) return;
+      var d = ctm.a * ratio;  // device pixels per unit
+      var size = d + ' ' + ratio;
+      if (oled.size !== size) {
+        oled.size = size;
+        // room: the whole glass inside the bezel; with less than 128 device pixels, the OLED's
+        // own size (`px`) averaged down
+        var k = Math.min(Math.floor(oled.gw * d / 128), Math.floor(oled.gh * d / 32));
+        oled.canvas = k >= 1 ? oledCanvas(oled.img, oled.gw * d, oled.gh * d, oled.canvas)
+          : oledCanvas(oled.img, 128 * oled.px * d, 32 * oled.px * d, oled.canvas);
+        oled.image.setAttribute('width', (oled.canvas.width / d).toFixed(4));
+        oled.image.setAttribute('height', (oled.canvas.height / d).toFixed(4));
+        oled.image.setAttribute('href', oled.canvas.toDataURL('image/png'));
+      }
+      // centred in the glass, its top left on a device pixel
+      var canvas = oled.canvas;
+      var left = Math.round(((oled.gx + oled.gw / 2) * ctm.a + ctm.e) * ratio - canvas.width / 2);
+      var top = Math.round(((oled.gy + oled.gh / 2) * ctm.d + ctm.f) * ratio - canvas.height / 2);
+      oled.image.setAttribute('x', ((left / ratio - ctm.e) / ctm.a).toFixed(4));
+      oled.image.setAttribute('y', ((top / ratio - ctm.f) / ctm.d).toFixed(4));
+      oled.group.classList.add('raster');
+    }
+
+    var repaint = null;
+    function laterPaint() {
+      if (repaint) return;
+      repaint = requestAnimationFrame(function () { repaint = null; paintOled(); });
+    }
+    window.addEventListener('resize', laterPaint);
+    window.addEventListener('scroll', laterPaint, { passive: true });
+    if (window.ResizeObserver) new ResizeObserver(laterPaint).observe(svg);
+    (function watchRatio() {
+      // a change of zoom or screen changes the pixel ratio; watch the current one, then the next
+      if (!window.matchMedia) return;
+      var query = window.matchMedia('(resolution: ' + (window.devicePixelRatio || 1) + 'dppx)');
+      var once = function () {
+        if (query.removeEventListener) query.removeEventListener('change', once); else query.removeListener(once);
+        laterPaint();
+        watchRatio();
+      };
+      if (query.addEventListener) query.addEventListener('change', once); else query.addListener(once);
+    })();
+    drawing.repaintScreen = laterPaint;
 
     // The pads as a mode lights them: demo is 16 entries in pad order, null or { color, level,
     // drum } (see padDemos() in layouts.js); no demo lights nothing.
@@ -338,18 +445,18 @@ MM.manual = (function () {
           return;
         }
         if (kind === 'screen' && real) {
-          // black glass in a thin dark bezel, set into the panel (the panel's lower lip catches
-          // the light), with a faint reflection over the pixels
+          // an almost flat black screen in a thin, slightly lighter bezel line, nearly square;
+          // the lit pixels are crisp squares on the screen's pixel grid (no glow, no reflection)
           var round = hgt * SCREEN_ROUND;
-          node('rect', { x: x - 0.6, y: y - 0.2, width: w + 1.2, height: hgt + 1.4, rx: round + 0.3, 'class': 'screen-lip' }, g);
           node('rect', { x: x, y: y, width: w, height: hgt, rx: round, 'class': 'bezel' }, g);
           var inset = hgt * 0.12, ow = w - inset * 2, oh = hgt - inset * 2;
-          node('rect', { x: x + inset, y: y + inset, width: ow, height: oh, rx: round * 0.5, 'class': 'oled' }, g);
+          node('rect', { x: x + inset, y: y + inset, width: ow, height: oh, 'class': 'oled' }, g);
           // the MIKRO's OLED is 128 x 32 pixels, centred in the glass
           var px = Math.min(ow / 128, oh / 32);
           drawing.oled = { x: x + inset + (ow - 128 * px) / 2, y: y + inset + (oh - 32 * px) / 2, px: px,
-            path: node('path', { 'class': 'pixels' }, g), key: null };
-          node('rect', { x: x + 0.6, y: y + 0.6, width: w - 1.2, height: hgt - 1.2, rx: round * 0.8, 'class': 'glass-sheen' }, g);
+            gx: x + inset, gy: y + inset, gw: ow, gh: oh, group: g, img: null, size: null, canvas: null,
+            path: node('path', { 'class': 'pixels', 'shape-rendering': 'crispEdges' }, g),
+            image: node('image', { 'class': 'oled-image', preserveAspectRatio: 'none' }, g), key: null };
           return;
         }
         if (real && kind === 'pad') {
@@ -911,6 +1018,6 @@ MM.manual = (function () {
 
   return {
     init: init, show: show, setDeviceFromSetup: setDeviceFromSetup, hasSection: hasSection, updateWelcome: updateWelcome,
-    createDrawing: createDrawing, forDevice: function (entry, device) { return !entry.devices || entry.devices.indexOf(device) >= 0; }
+    createDrawing: createDrawing, oledCanvas: oledCanvas, forDevice: function (entry, device) { return !entry.devices || entry.devices.indexOf(device) >= 0; }
   };
 })();

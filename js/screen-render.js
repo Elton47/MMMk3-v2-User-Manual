@@ -352,14 +352,19 @@ MM.screen = (function () {
 
   // SVG path data: a square for each lit pixel, the screen's top left at (x, y), one pixel = px
   // units; dot: the share of a pixel its square fills (the glass shows a hairline between).
+  // Without a gap, each row's runs of lit pixels are one rectangle (the same pixels, fewer edges).
   function path(img, x, y, px, dot) {
     var s = px * (dot === undefined ? 1 : dot), off = (px - s) / 2, out = [];
-    var side = s.toFixed(3);
+    var side = s.toFixed(3), merge = s >= px;
     for (var row = 0; row < img.height; row++) {
       for (var col = 0; col < img.width; col++) {
         if (!img.bits[row * img.width + col]) continue;
+        var end = col + 1;
+        if (merge) while (end < img.width && img.bits[row * img.width + end]) end++;
+        var wide = (s + (end - col - 1) * px).toFixed(3);
         out.push('M' + (x + col * px + off).toFixed(3) + ' ' + (y + row * px + off).toFixed(3) +
-          'h' + side + 'v' + side + 'h-' + side + 'z');
+          'h' + wide + 'v' + side + 'h-' + wide + 'z');
+        col = end - 1;
       }
     }
     return out.join('');

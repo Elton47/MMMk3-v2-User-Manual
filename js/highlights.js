@@ -213,8 +213,7 @@ MM.tour = (function () {
     var text = el('tour-text');
     text.textContent = item.does;
     if (item.context) text.appendChild(h('span', { className: 'context', text: ' (' + item.context + ')' }));
-    if (loupeShown()) el('tour-loupe').removeAttribute('hidden');  // an <svg>: no hidden property
-    else el('tour-loupe').setAttribute('hidden', '');
+    el('tour-loupe').hidden = !loupeShown();
     syncLoupe();
   }
 
@@ -323,13 +322,20 @@ MM.tour = (function () {
     return !!(state.show && state.show.loupe && state.drawing.oled);
   }
 
+  // The magnified screen: the same bitmap on a canvas of whole device pixels per screen pixel
+  // (up to 2 CSS px each), so it stays crisp at any pixel ratio.
   function syncLoupe() {
     var loupe = el('tour-loupe'), oled = state.drawing.oled;
-    if (!loupeShown()) return;
-    var box = [oled.x, oled.y, 128 * oled.px, 32 * oled.px].map(function (v) { return v.toFixed(2); }).join(' ');
-    if (loupe.getAttribute('viewBox') !== box) loupe.setAttribute('viewBox', box);
-    var d = oled.path.getAttribute('d') || '', copy = loupe.querySelector('.pixels');
-    if (copy.getAttribute('d') !== d) copy.setAttribute('d', d);
+    if (!loupeShown() || !oled.img) return;
+    var ratio = window.devicePixelRatio || 1, box = loupe.parentNode, style = getComputedStyle(box);
+    var room = Math.min(256, box.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight) - 16);
+    if (!(room >= 32)) return;  // not laid out yet
+    var key = [oled.key, room, ratio].join(' ');
+    if (loupe.getAttribute('data-key') === key) return;
+    loupe.setAttribute('data-key', key);
+    MM.manual.oledCanvas(oled.img, room * ratio, room / 4 * ratio, loupe);
+    loupe.style.width = (loupe.width / ratio) + 'px';
+    loupe.style.height = (loupe.height / ratio) + 'px';
   }
 
   function go(index, byUser) {
@@ -501,7 +507,7 @@ MM.tour = (function () {
     var pending = null;
     function later() {
       if (pending) return;
-      pending = setTimeout(function () { pending = null; place(false); }, 60);
+      pending = setTimeout(function () { pending = null; place(false); syncLoupe(); }, 60);
     }
     window.addEventListener('resize', later);
     if (window.ResizeObserver) new ResizeObserver(later).observe(el('tour-device'));

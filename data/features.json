@@ -289,7 +289,7 @@
         {"combo": ["PERFORM"], "does": "Session / Arrangement view.", "devices": ["mikro"]},
         {"combo": ["ARRANGER"], "does": "Session / Arrangement view.", "devices": ["mk3"]},
         {"combo": ["BROWSER"], "does": "Show / hide Live's browser."},
-        {"combo": ["SHIFT", "BROWSER"], "does": "Hot-Swap the selected device (opens the browser on it)."},
+        {"combo": ["SHIFT", "BROWSER"], "does": "Hot-Swap the selected device: the controller's browser opens on its category (Drums, Instruments, Audio Effects ...); TURN to a preset, PUSH replaces the device and the browser closes. Again: cancel."},
         {"combo": ["SHIFT", "PLUG-IN"], "does": "Toggle the Clip / Device detail view."},
         {"combo": ["SAMPLING"], "does": "Show the clip / sample editor."},
         {"combo": ["SHIFT", "STAR"], "does": "Show / hide the detail view.", "devices": ["mikro"]},
@@ -321,7 +321,7 @@
       "items": [
         {"combo": ["STAR"], "does": "Browser on / off."},
         {"combo": ["TURN"], "does": "Scroll (SHIFT: by 10)."},
-        {"combo": ["PUSH"], "does": "Open the folder, or load the item onto the selected track (with Hot-Swap: replace the device)."},
+        {"combo": ["PUSH"], "does": "Open the folder, or load the item onto the selected track (in Hot-Swap: replace the device)."},
         {"combo": ["◀"], "does": "Back up one level."},
         {"combo": ["▶"], "does": "Open / load, like PUSH."},
         {"combo": ["TURN"], "context": "onto a MASCHINE kit", "does": "Hear NI's preview of it (preview on in Live's browser)."},

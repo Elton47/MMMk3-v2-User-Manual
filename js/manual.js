@@ -772,12 +772,17 @@ MM.manual = (function () {
 
   function searchTerms(query) {
     var seen = {};
-    return query.toLowerCase().split(/\s+/).filter(function (word) {
+    return query.toLowerCase().split(/\s+/).map(function (word) {
+      // hyphens don't count: "hotswap" finds "Hot-Swap", "plugin" finds "PLUG-IN"
+      return word.replace(/-/g, '');
+    }).filter(function (word) {
       // a lone "+" (as in "shift + pad") or punctuation is not a word to look for
       if (!word || /^[+,;:.!?]+$/.test(word) || seen[word]) return false;
       return (seen[word] = true);
     }).map(function (word) {
-      var source = '(?:^|[^a-z0-9])(' + escapeRegExp(word) + ')' + (/^\d+$/.test(word) ? '(?![0-9])' : '');
+      var number = /^\d+$/.test(word);
+      var letters = number ? word : word.split('').map(escapeRegExp).join('-?');
+      var source = '(?:^|[^a-z0-9])(' + letters + ')' + (number ? '(?![0-9])' : '');
       return { word: word, test: new RegExp(source), all: new RegExp(source, 'g') };
     });
   }

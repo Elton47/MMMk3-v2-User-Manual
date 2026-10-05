@@ -408,6 +408,13 @@ var LAYOUTS = {
     var tracks = '1 - ' + SAMPLE_TRACKS.length + ' of ' + SAMPLE_TRACKS.length;
     // STAR: the browser's top list on MASCHINE Kits
     var browser = browserScreen('Browser', SAMPLE_BROWSER, 1, function () { return true; });
+    // SHIFT + BROWSER: Hot-Swap the selected device (1-Drums' Drum Rack): the popup names it, the
+    // browser opens on its category (Drums, on its first item), TURN to a kit, PUSH swaps it.
+    var drumFolders = function (i) { return i === 0; };
+    var hotSwap = [popupScreen('Hot-Swap', SAMPLE_KIT),
+      browserScreen('Drums', SAMPLE_BROWSER_DRUMS, 0, drumFolders),
+      browserScreen('Drums', SAMPLE_BROWSER_DRUMS, SAMPLE_BROWSER_DRUMS.indexOf('Kit-House'), drumFolders),
+      popupScreen('Swapped', 'Kit-House')];
     return {
       title: 'MASCHINE MIKRO MK3',
       width: 1000,
@@ -441,6 +448,7 @@ var LAYOUTS = {
       // '+', '*' for any other combo there); a list of states plays in turn (manual.js).
       sectionScreens: {
         plugin: { '*': plugin, 'PUSH+TURN': macros },
+        views: { 'SHIFT+BROWSER': hotSwap },
         // In MASCHINE Kits: TURN scrolls the kits (previewing each), PUSH loads one, SHIFT + STAR
         // on a kit: the favourite popup, then the star on its row.
         browser: { '*': browser, 'TURN': [kitsScreen(0, [0]), kitsScreen(1, [0])],

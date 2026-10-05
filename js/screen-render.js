@@ -10,7 +10,8 @@
 //                              SOLO (2): a small S box after it
 //   MIKRO_TRACK_LABEL          the number in the box (A, B for returns, M the Master)
 //   MIKRO_LINES                3 or 2 (the settings page's Screen choice; default MM.screenLines)
-//   LIST_ITEM                  up to 3 rows ('name\tvalue' puts the value on the right)
+//   LIST_ITEM                  up to 3 rows ('name\tvalue' puts the value on the right; '\t★'
+//                              a favourite kit's star)
 //   LIST_SELECTED              the highlighted row (0-2)
 //   MIKRO_SCROLL               a list's position 0-126 for its scrollbar (null: none)
 //   MIKRO_CORNER               two lines: a value at the right of line 1, when the title leaves room
@@ -31,6 +32,7 @@ MM.screen = (function () {
   var W = 128, H = 32;
   var NO_VALUE = 127;
   var SHOWN = 4, MUTE = 1, SOLO = 2;
+  var STAR = '★';  // a favourite MASCHINE kit in the browser ('Kit\t★')
   var small = null, large = null;
 
   function init(data) {
@@ -202,8 +204,13 @@ MM.screen = (function () {
       var parts = partition(listItem(state, i)), text = parts[0], value = parts[1];
       var top = i * 11, fill = i === selected ? 0 : 1;
       if (i === selected) img.rect(0, top, W - 1, top + 9, true);
-      var valueWidth = value ? smallWidth(value) : 0;
-      if (value) smallText(img, W - 2 - valueWidth, top + 1, value, fill);
+      // A favourite kit's star: the large font's glyph (as big as on two lines), clear of the
+      // scrollbar. Any other value (the settings page) in the small font.
+      var star = value === STAR;
+      var valueWidth = value ? (star ? largeWidth(value) : smallWidth(value)) : 0;
+      var right = W - (star ? 5 : 2);
+      if (star) largeText(img, right - valueWidth, top, value, fill);
+      else if (value) smallText(img, right - valueWidth, top + 1, value, fill);
       var nameWidth = width - 3 - (value ? valueWidth + 6 : 0);
       smallText(img, 2, top + 1, smallFit(text, nameWidth), fill);
     }

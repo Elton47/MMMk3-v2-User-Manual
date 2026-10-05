@@ -90,12 +90,21 @@ var SAMPLE_DRUMS = ['Kick 909 1', 'Snare', 'Closed Hat', 'Open Hat', 'Clap', 'Ri
   'Crash', 'Ride', 'Shaker', 'Cowbell', 'Perc 1', 'Perc 2', 'FX', 'Bass'];
 var SAMPLE_KIT = 'Kit-Core 909';  // that Drum Rack's name
 var SAMPLE_SCENES = ['Intro', 'Verse', 'Chorus', 'Drop'];
-// Live's browser: the categories as the script lists them (Collections first), and the Drums
-// category (a folder of single hits, then the kits; SAMPLE_KIT is loaded from it).
-var SAMPLE_BROWSER = ['Collections', 'Sounds', 'Drums', 'Instruments', 'Audio Effects', 'MIDI Effects',
-  'Max for Live', 'Plug-Ins', 'Clips', 'Samples', 'Grooves', 'Packs', 'User Library', 'Current Project'];
+// Live's browser: the categories as the script lists them (Collections first, then MASCHINE
+// Kits, then the library), and the Drums category (a folder of single hits, then the kits;
+// SAMPLE_KIT is loaded from it).
+var SAMPLE_BROWSER = ['Collections', 'MASCHINE Kits', 'Sounds', 'Drums', 'Instruments', 'Audio Effects',
+  'MIDI Effects', 'Max for Live', 'Plug-Ins', 'Clips', 'Samples', 'Grooves', 'Packs', 'User Library',
+  'Current Project'];
 var SAMPLE_BROWSER_DRUMS = ['Drum Hits', 'Kit-606', 'Kit-Core 909', 'Kit-Dusty', 'Kit-House',
   'Kit-Lo-Fi', 'Kit-Techno'];
+// MASCHINE Kits: Favorites first (there is one), then the Expansions by name; in an Expansion
+// its kits by name. The Expansion and its first kits as in the script's reference screen
+// (data/screens.json, browser-kits); count: its number of kits.
+var SAMPLE_EXPANSIONS = ['Favorites', 'Chromatic Fire', 'Deep Matter', 'Golden Kingdom', 'Molten Veil',
+  'Prismatic Bliss'];
+var SAMPLE_EXPANSION = { name: 'Chromatic Fire', count: 15,
+  kits: ['Black Earth Kit', 'Concrete Dubs Kit', 'Dev Breaks Kit'] };
 
 // The short name of a sample track ('1-Drums' -> 'Drums').
 function shortName(track) { return track.name.replace(/^\d+-/, ''); }
@@ -150,6 +159,17 @@ function browserScreen(level, items, chosen, folders) {
   var rows = items.map(function (name, i) { return folders(i) ? name + ' >' : name; });
   return listScreen(level + ' ' + (chosen + 1) + '/' + items.length, items[chosen] + ' ' + (folders(chosen) ? '>' : ''),
     rows, chosen);
+}
+
+// The kits of SAMPLE_EXPANSION, kit `chosen` (0-1: the rows shown are the known kits);
+// favorites: the indexes of favourite kits (a star at the right of the row, as the script
+// sends it: 'Kit\t★', and 'Kit ★' on line 2).
+function kitsScreen(chosen, favorites) {
+  var e = SAMPLE_EXPANSION, star = function (i) { return favorites.indexOf(i) >= 0 ? '\t★' : ''; };
+  var start = Math.max(0, Math.min(chosen - 1, e.count - 3));
+  var rows = e.kits.slice(start, start + 3).map(function (name, i) { return name + star(start + i); });
+  return { TITLE: e.name + ' ' + (chosen + 1) + '/' + e.count, SUBTITLE: (e.kits[chosen] + star(chosen)).replace('\t', ' '),
+    LIST_ITEM: rows, LIST_SELECTED: chosen - start, MIKRO_SCROLL: Math.round(chosen * 126 / (e.count - 1)) };
 }
 
 // The settings page (MASCHINE), its first setting chosen.
@@ -299,6 +319,8 @@ var LAYOUTS = {
     var macros = [pluginScreen(2, 'Keys', 'Macros 1', 1, 2, 'Macro 1', '32'),
       pluginScreen(2, 'Keys', 'Macros 2', 2, 2, 'Macro 9', '64')];
     var tracks = '1 - ' + SAMPLE_TRACKS.length + ' of ' + SAMPLE_TRACKS.length;
+    // STAR: the browser's top list on MASCHINE Kits
+    var browser = browserScreen('Browser', SAMPLE_BROWSER, 1, function () { return true; });
     return {
       title: 'MASCHINE MIKRO MK3',
       width: 1000,
@@ -325,13 +347,19 @@ var LAYOUTS = {
         'GROUP': modeScreen('Tracks', tracks, SAMPLE_TRACKS[SAMPLE_SELECTED].name, '', tracks),
         'LOCK': popupScreen('Device lock', 'toggled'),
         'MASCHINE': settingsScreen(),
-        'STAR': browserScreen('Browser', SAMPLE_BROWSER, 2, function () { return true; }),
-        'BROWSER': browserScreen('Browser', SAMPLE_BROWSER, 2, function () { return true; })
+        'STAR': browser,
+        'BROWSER': browser
       },
       // Screens for a combo hovered in a given section (section id -> combo tokens joined with
       // '+', '*' for any other combo there); a list of states plays in turn (manual.js).
       sectionScreens: {
-        plugin: { '*': plugin, 'PUSH+TURN': macros }
+        plugin: { '*': plugin, 'PUSH+TURN': macros },
+        // In MASCHINE Kits: TURN scrolls the kits (previewing each), PUSH loads one, SHIFT + STAR
+        // on a kit: the favourite popup, then the star on its row.
+        browser: { '*': browser, 'TURN': [kitsScreen(0, [0]), kitsScreen(1, [0])],
+          'PUSH': [kitsScreen(1, [0]), popupScreen('Loaded', SAMPLE_EXPANSION.kits[1])],
+          'SHIFT+STAR': [kitsScreen(1, [0]), popupScreen('Favorite', SAMPLE_EXPANSION.kits[1]), kitsScreen(1, [0, 1])] },
+        highlights: { 'PUSH': kitsScreen(0, [0]) }
       },
       stripDots: dots,
       padDemos: padDemos('GROUP'),

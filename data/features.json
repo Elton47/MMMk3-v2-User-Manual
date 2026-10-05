@@ -18,7 +18,7 @@
       "title": "Getting started",
       "summary": "New here? The Set up guide walks you through it (macOS is automatic; Windows needs a one-time loopMIDI setup). After that: connect the controller and start Live. The script starts the Maschine Bridge, which takes over the hardware: no Controller Editor, no MIDI mode, a real SHIFT key. While Live loads, the screen shows Waiting for Live; when the set is ready, a rainbow wave sweeps across the pads. Your note repeat rate, arp settings, chord type and voicing, drum colours and velocity curve are remembered between Live sessions.",
       "notes": [
-        {"title": "Using the MASCHINE plug-in (Expansions)", "text": "NI's MASCHINE plug-in (VST / AU) takes the controller as soon as it is anywhere in the set, and keeps it until it is deleted: selecting another track or switching the plug-in off doesn't release it. Meanwhile the script steps aside: the lights, screen and pads are MASCHINE's, and Live's status bar says so. Delete the last MASCHINE plug-in and the controller is back with Live within about a second, on the drum pads or the keyboard. To switch between the two on the fly, use v1.6.1 (in the same download) in NI's MIDI mode, where SHIFT + MASCHINE (MK3, MASCHINE+: SHIFT + CHANNEL) switches between MASCHINE and Live."}
+        {"title": "Using the MASCHINE plug-in (Expansions)", "text": "NI's MASCHINE plug-in (VST / AU) takes the controller as soon as it is anywhere in the set, and keeps it until it is deleted: selecting another track or switching the plug-in off doesn't release it. Meanwhile the script steps aside: the lights, screen and pads are MASCHINE's, and Live's status bar says so. Delete the last MASCHINE plug-in and the controller is back with Live within about a second, on the drum pads or the keyboard. To switch between the two on the fly, use v1.6.1 (in the same download) in NI's MIDI mode, where SHIFT + MASCHINE (MK3, MASCHINE+: SHIFT + CHANNEL) switches between MASCHINE and Live. Or play the Expansions' kits without the plug-in: STAR > MASCHINE Kits (see STAR: browse and load)."}
       ],
       "items": [
         {"combo": ["SHIFT"], "does": "The real SHIFT button: hold it for the second function printed on a button, and for the SHIFT + pad edit matrix."},
@@ -39,6 +39,7 @@
         {"combo": ["NOTE REPEAT"], "does": "Note repeat that follows pad pressure: slide the touch strip to set its rate, or touch it while holding pads to repeat them on the spot. Plus an arpeggiator and 16 velocities, all recorded exactly on Live's grid."},
         {"combo": ["STEP"], "does": "A step sequencer on the pads, read like MASCHINE, with the playhead running across them."},
         {"combo": ["STAR"], "does": "Live's browser on the hardware screen: find a sound and load it without touching the mouse.", "devices": ["mikro"]},
+        {"combo": ["PUSH"], "does": "MASCHINE Kits: play your Expansions in Live without the MASCHINE plug-in. STAR > MASCHINE Kits, turn to hear a kit, push to load it as a Drum Rack, pad for pad as in MASCHINE; SHIFT + STAR marks a favourite.", "devices": ["mikro"]},
         {"combo": ["VARIATION", "PAD"], "does": "Record a variation in one press: the clip is copied below, named Bass_1, Bass_2 ..., and recorded into; the original stays untouched."},
         {"combo": ["STRIP"], "does": "The touch strip shows where the loop is, and while you record it flashes red on every click: a silent metronome."}
       ]
@@ -313,14 +314,17 @@
     {
       "id": "browser",
       "title": "STAR: browse and load (MIKRO)",
-      "summary": "Live's browser on the hardware screen, in the order of Live's sidebar: Collections first (Favorites and your coloured collections), then the library (Sounds, Drums, Instruments ...), then the folders you added to Places.",
+      "summary": "Live's browser on the hardware screen, in the order of Live's sidebar: Collections first (Favorites and your coloured collections), then MASCHINE Kits, the library (Sounds, Drums, Instruments ...), and the folders you added to Places. MASCHINE Kits (Live 12.1 or later, with MASCHINE Expansions or the MASCHINE library installed) lists your Expansions and their kits: PUSH on a kit makes a new MIDI track named after it (# Kit name, so Live numbers it) with a Drum Rack holding the kit's samples, pad for pad as in MASCHINE. Sounds that are plug-ins or drum synths in MASCHINE stay empty pads. Turning onto a kit plays NI's own preview of it through Live's preview (Cue output, preview switched on in Live's browser), like clicking a sample in Live's browser; the script puts the previews in your User Library (MASCHINE Kit Previews, as hard links: no extra disk space) the first time you open MASCHINE Kits, and picks up newly installed Expansions the same way. This is the way to play the Expansions in Live without the MASCHINE plug-in, which takes the controller away from the script (see Getting started).",
       "devices": ["mikro"],
       "items": [
         {"combo": ["STAR"], "does": "Browser on / off."},
         {"combo": ["TURN"], "does": "Scroll (SHIFT: by 10)."},
         {"combo": ["PUSH"], "does": "Open the folder, or load the item onto the selected track (with Hot-Swap: replace the device)."},
         {"combo": ["◀"], "does": "Back up one level."},
-        {"combo": ["▶"], "does": "Open / load, like PUSH."}
+        {"combo": ["▶"], "does": "Open / load, like PUSH."},
+        {"combo": ["TURN"], "context": "onto a MASCHINE kit", "does": "Hear NI's preview of it (preview on in Live's browser)."},
+        {"combo": ["PUSH"], "context": "on a MASCHINE kit", "does": "Load it on a new track as a Drum Rack, pad for pad as in MASCHINE."},
+        {"combo": ["SHIFT", "STAR"], "context": "on a MASCHINE kit, browser open", "does": "Favourite / unfavourite the kit: a star shows on its row, and MASCHINE Kits lists Favorites first. Outside the browser SHIFT + STAR shows / hides the detail view."}
       ]
     },
     {
@@ -369,7 +373,7 @@
     {"what": "Device / Clip detail view", "v1": "PLUG-IN", "v2": "SHIFT + PLUG-IN (PLUG-IN now controls device parameters)"},
     {"what": "Track mode pin", "v1": "SHIFT + GROUP", "v2": "Tap GROUP (hold: temporary)"},
     {"what": "New audio track (TRACK mode)", "v1": "SHIFT + unlit pad", "v2": "DUPLICATE + unlit pad (SHIFT + pads are the edit functions in every mode, TRACK included)"},
-    {"what": "New", "v1": "", "v2": "Chords, arpeggiator, 16 Velocities, step sequencer, hardware browser, parameter control, pitch / mod strip, record variations (VARIATION + pad), take undo, clip progress and parameter value on the strip (touch to jump / set), a silent metronome on the strip while recording, humanize, screen feedback, pads light instantly when played"},
+    {"what": "New", "v1": "", "v2": "Chords, arpeggiator, 16 Velocities, step sequencer, hardware browser, MASCHINE Expansion kits as Drum Racks (MIKRO), parameter control, pitch / mod strip, record variations (VARIATION + pad), take undo, clip progress and parameter value on the strip (touch to jump / set), a silent metronome on the strip while recording, humanize, screen feedback, pads light instantly when played"},
     {"what": "MASCHINE plug-in in Live", "v1": "NI's MIDI mode: SHIFT + MASCHINE (MK3, MASCHINE+: SHIFT + CHANNEL) switches between MASCHINE and the script", "v2": "The script steps aside while a MASCHINE plug-in is in the set and comes back when it is deleted (or use v1.6.1 to switch on the fly)"}
   ]
 }

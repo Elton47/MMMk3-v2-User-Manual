@@ -178,14 +178,47 @@ var HIGHLIGHT_SHOWS = (function () {
       loupe: true,
       duration: 7000,
       tick: function (n, api) {
-        var frame = Math.min(n, 6), pushed = n === 3 || n === 6;
-        api.turn(frame < 3 ? frame : frame < 6 ? frame - 1 : 4);
+        var drums = SAMPLE_BROWSER.indexOf('Drums');  // 3: after Collections, MASCHINE Kits, Sounds
+        var frame = Math.min(n, drums + 4), pushed = n === drums + 1 || n === drums + 4;
+        api.turn(frame <= drums ? frame : frame < drums + 4 ? frame - 1 : drums + 2);
         api.light(pushed ? ['ENCODER'] : []);
         // Live's categories are folders; in Drums only Drum Hits is (the kits load)
-        if (frame < 3) api.screen(browserScreen('Browser', SAMPLE_BROWSER, frame, function () { return true; }));
-        else if (frame < 6) api.screen(browserScreen('Drums', SAMPLE_BROWSER_DRUMS, frame - 3, function (i) { return i === 0; }));
+        if (frame <= drums) api.screen(browserScreen('Browser', SAMPLE_BROWSER, frame, function () { return true; }));
+        else if (frame < drums + 4) api.screen(browserScreen('Drums', SAMPLE_BROWSER_DRUMS, frame - drums - 1, function (i) { return i === 0; }));
         else api.screen(popupScreen('Loaded', SAMPLE_KIT));
-        api.pads(frame < 6 ? api.blank() : api.demo('PAD MODE'));
+        api.pads(frame < drums + 4 ? api.blank() : api.demo('PAD MODE'));
+      }
+    },
+
+    // MASCHINE Kits: STAR, open MASCHINE Kits (Favorites first), turn to an Expansion and open
+    // it: its kits, a favourite with a star. Turning onto a kit previews it; SHIFT + STAR makes
+    // it a favourite too (popup, then its star); PUSH loads it as a new track's Drum Rack.
+    'PUSH': {
+      every: 750,
+      loupe: true,
+      duration: 8000,
+      glow: ['STAR', 'PUSH'],
+      tick: function (n, api) {
+        var kits = SAMPLE_BROWSER.indexOf('MASCHINE Kits');
+        var folders = function () { return true; };
+        var steps = [
+          // [screen, lit buttons, encoder detents, outlined]
+          [browserScreen('Browser', SAMPLE_BROWSER, 0, folders), [], 0],
+          [browserScreen('Browser', SAMPLE_BROWSER, kits, folders), [], kits],
+          [browserScreen('MASCHINE Kits', SAMPLE_EXPANSIONS, 0, folders), ['ENCODER'], kits],
+          [browserScreen('MASCHINE Kits', SAMPLE_EXPANSIONS, 1, folders), [], kits + 1],
+          [kitsScreen(0, [0]), ['ENCODER'], kits + 1],
+          [kitsScreen(1, [0]), [], kits + 2],
+          [popupScreen('Favorite', SAMPLE_EXPANSION.kits[1]), ['SHIFT', 'STAR'], kits + 2, ['SHIFT', 'STAR']],
+          [kitsScreen(1, [0, 1]), [], kits + 2],
+          [popupScreen('Loaded', SAMPLE_EXPANSION.kits[1]), ['ENCODER'], kits + 2]
+        ];
+        var step = steps[Math.min(n, steps.length - 1)];
+        api.outline(step[3] || ['STAR', 'PUSH']);  // first: a new outline clears the turn arrow
+        api.screen(step[0]);
+        api.light(step[1]);
+        api.turn(step[2]);
+        api.pads(n < steps.length - 1 ? api.blank() : api.demo('PAD MODE'));
       }
     },
 

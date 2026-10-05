@@ -287,7 +287,7 @@
         {"combo": ["SAMPLING"], "does": "Show the clip / sample editor."},
         {"combo": ["SHIFT", "STAR"], "does": "Show / hide the detail view.", "devices": ["mikro"]},
         {"combo": ["SHIFT", "◀", "▶"], "does": "Select the previous / next track."},
-        {"combo": ["MASCHINE"], "does": "Show the script version, its author and your Live version.", "devices": ["mikro"]},
+        {"combo": ["MASCHINE"], "does": "Open the settings page (see Settings).", "devices": ["mikro"]},
         {"combo": ["ENCODER TOUCH"], "does": "Rest a finger on the encoder without turning: show the current mode's details (octave, scale, drum pad...). Turning never shows it, and takes it away."}
       ]
     },
@@ -317,6 +317,25 @@
         {"combo": ["PUSH"], "does": "Open the folder, or load the item onto the selected track (with Hot-Swap: replace the device)."},
         {"combo": ["◀"], "does": "Back up one level."},
         {"combo": ["▶"], "does": "Open / load, like PUSH."}
+      ]
+    },
+    {
+      "id": "settings",
+      "title": "MASCHINE: settings (MIKRO)",
+      "summary": "Your preferences, on the controller. They are saved with Live's preferences on your computer, remembered after a restart, and take effect at once.",
+      "devices": ["mikro"],
+      "items": [
+        {"combo": ["MASCHINE"], "does": "Settings on / off. The screen lists them with their values; the bar on the right shows where you are in the list."},
+        {"combo": ["TURN"], "does": "The previous / next setting."},
+        {"combo": ["◀", "▶"], "does": "Change the selected setting (PUSH: the next value)."},
+        {"combo": ["MASCHINE"], "context": "Screen", "does": "2 lines (the default: larger letters, like MASCHINE's own screen; the key, the kit or the device sits at the right of the first line when it fits) or 3 lines (smaller letters, more details at once)."},
+        {"combo": ["MASCHINE"], "context": "Velocity curve", "does": "How pad pressure turns into velocity: Linear, Soft or Hard."},
+        {"combo": ["MASCHINE"], "context": "Fixed velocity", "does": "The velocity FIXED VEL plays (1-127, 100 to start with)."},
+        {"combo": ["MASCHINE"], "context": "Pad pressure", "does": "What pressing harder on a held pad sends: Poly (each pad its own aftertouch), Channel (one for all) or Off."},
+        {"combo": ["MASCHINE"], "context": "Drum colours", "does": "The drum pads in their chain colours, or coloured by name (see the colour table)."},
+        {"combo": ["MASCHINE"], "context": "Playback lights", "does": "Pads light up with the notes the playing clip plays (On), or not."},
+        {"combo": ["MASCHINE"], "context": "Step follows", "does": "STEP's page follows the playhead (On), or stays where you put it."},
+        {"combo": ["MASCHINE"], "context": "About", "does": "The script version, its author and your Live version (◀ ▶ to show it)."}
       ]
     },
     {

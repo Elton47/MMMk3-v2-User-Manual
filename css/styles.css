@@ -495,7 +495,7 @@ mark.hit {
 
 /* hardware drawing: measured layouts (real: true) in the hardware's own look: a matte charcoal
    panel, soft-touch rubber caps with matte grey print (PLAY green, REC red, SHIFT boxed), a black
-   encoder with a large matte top, the OLED behind black glass; unlit pads are milky translucent
+   encoder with a ridged band, the OLED behind black glass; unlit pads are milky translucent
    silicone with dark grey print, lit pads glow in their colour. */
 .hw-drawing.real .hw-body { fill: url(#hw-body-fill); stroke: #161618; stroke-width: 1.5; }
 .hw-drawing.real .hw-rim { fill: none; stroke: #ffffff; stroke-opacity: .13; stroke-width: 1.2; }
@@ -527,26 +527,23 @@ mark.hit {
 .hw-drawing.real .pad-letter { font-weight: 700; text-anchor: end; }
 .hw-drawing.real .strip .cap { fill: #0c0c0d; stroke: #2c2c2f; stroke-width: 1.2; }
 .hw-drawing.real .strip-inner { fill: #151517; pointer-events: none; }
-/* the encoder and knobs (drawKnob()): shadow, a thin black skirt with faint ridges and their
-   light, a large matte top with a soft highlight */
-.hw-drawing.real .knob-shadow { fill: url(#hw-knob-shadow); pointer-events: none; }
-.hw-drawing.real .encoder .ring, .hw-drawing.real .knob .ring { fill: url(#hw-skirt-fill); stroke: #050506; stroke-width: 1; transition: stroke .12s; }
-.hw-drawing.real .knurl { fill: none; stroke: #2a2a2e; }
-.hw-drawing.real .knurl-light { fill: none; stroke: url(#hw-knurl-light); }
-.hw-drawing.real .knob-cap { fill: url(#hw-knob-satin); stroke: url(#hw-knob-edge); stroke-width: .8; }
-.hw-drawing.real .knob-sheen { fill: url(#hw-knob-sheen); }
-.hw-drawing.real .knurl, .hw-drawing.real .knurl-light, .hw-drawing.real .knob-cap, .hw-drawing.real .knob-sheen { pointer-events: none; }
+.hw-drawing.real .encoder .ring { fill: #0d0d0e; stroke: #2e2e31; stroke-width: 1.5; transition: stroke .12s; }
+.hw-drawing.real .encoder .knurl { fill: #19191b; stroke: #3c3c40; stroke-width: 3.2; stroke-dasharray: 1.3 1.5; }
+.hw-drawing.real .encoder .knob-cap { fill: url(#hw-knob-fill); stroke: #050506; stroke-width: 1; }
 .hw-drawing.real .screen .screen-lip { fill: #fff; opacity: .07; }
 .hw-drawing.real .screen .bezel { fill: #0d0d0f; stroke: #050506; stroke-width: 1; }
 .hw-drawing.real .screen .oled { fill: #000; }
 .hw-drawing.real .screen .pixels { fill: #eaf1ff; }
 .hw-drawing.real .screen .glass-sheen { fill: url(#hw-glass-sheen); pointer-events: none; }
-/* MK3: the glossy display panel, the darker edge band, plain light display buttons, the dots
-   around the encoder, and the colour screens */
+/* MK3: the glossy display panel, the darker edge band, plain light display buttons, knobs with a
+   dark skirt and lighter top, the dots around the encoder, and the colour screens */
 .hw-drawing.real .hw-glass { fill: url(#hw-glass-fill); stroke: #000; stroke-width: 1; }
 .hw-drawing.real .hw-edge { fill: #0b0b0c; opacity: .55; }
 .hw-drawing.real .hw-mark { fill: #6a6a6e; }
 .hw-drawing.real .button.light .cap { fill: url(#hw-light-fill); stroke: #6f777c; stroke-width: 1; }
+.hw-drawing.real .knob .ring { fill: #0b0b0c; stroke: #2a2a2d; stroke-width: 1.4; transition: stroke .12s; }
+.hw-drawing.real .knob-top { fill: url(#hw-knob-top); stroke: #050506; stroke-width: .8; pointer-events: none; }
+.hw-drawing.real .encoder .knurl, .hw-drawing.real .encoder .knob-cap { pointer-events: none; }
 .hw-drawing.real .screen .lcd { fill: #0c0c0e; stroke: #232327; stroke-width: 1; }
 .hw-drawing.real .screen text { dominant-baseline: middle; font-family: var(--md-ref-typeface); }
 .hw-drawing.real .lcd-rule { fill: #1e1f23; }
@@ -1102,14 +1099,13 @@ td:first-child { font-weight: 500; }
 .cs-drawing .hw-edge { display: none; }
 .cs-drawing .hw-dot { fill: #8a8a8a !important; opacity: 1 !important; }
 .cs-drawing .hw-mark { fill: #8a8a8a !important; }
-.cs-drawing .cap, .cs-drawing .ring, .cs-drawing .knob-cap,
+.cs-drawing .cap, .cs-drawing .ring, .cs-drawing .knob-top, .cs-drawing .knob-cap,
 .cs-drawing .knurl, .cs-drawing .strip-inner, .cs-drawing .bezel {
   fill: #fff !important; stroke: #9a9a9a !important; stroke-width: 1.1 !important; stroke-dasharray: none !important; filter: none !important;
 }
 .cs-drawing .knurl { stroke: #c4c4c4 !important; }
-.cs-drawing .knob .knurl { display: none; }
 .cs-drawing .sheen, .cs-drawing .cap-shadow, .cs-drawing .cap-face, .cs-drawing .cap-rim, .cs-drawing .hw-rim,
-.cs-drawing .knob-shadow, .cs-drawing .knurl-light, .cs-drawing .knob-sheen, .cs-drawing .screen-lip,
+.cs-drawing .screen-lip,
 .cs-drawing .glass-sheen { display: none; }
 .cs-drawing .oled, .cs-drawing .lcd { fill: #ececec !important; stroke: #9a9a9a !important; stroke-width: 1 !important; }
 .cs-drawing .pixels { fill: #111 !important; }

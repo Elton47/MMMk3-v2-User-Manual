@@ -1259,7 +1259,7 @@ td:first-child { font-weight: 500; }
   .cheatsheet {
     --cs-ink: #000; --cs-soft: #333;
     max-width: none; margin: 0; padding: 0; border-radius: 0; box-shadow: none;
-    font-size: 7.1pt; line-height: 1.32;
+    font-size: 7pt; line-height: 1.32;
   }
   .cs-head { padding-bottom: 2.2mm; margin-bottom: 3mm; border-bottom-width: 1.2pt; gap: 1.5mm 6mm; }
   .cs-head h1 { font-size: 13pt; }
@@ -1270,7 +1270,7 @@ td:first-child { font-weight: 500; }
   .cs-columns { column-count: 3; column-width: auto; column-gap: 5mm; column-rule: .5pt solid #bbb; }
   .cs-section { margin-bottom: 2.4mm; }
   .cs-section h2 { border-bottom-width: .8pt; margin-bottom: .6mm; }
-  .cs-item { padding: .45mm 0 .55mm; }
+  .cs-item { padding: .4mm 0 .5mm; }
   .cs-item + .cs-item, .cs-keep + .cs-item { border-top: .4pt solid #ccc; }
   .cs-key { border-width: .6pt; border-radius: 1.6pt; }
   .cs-grid td { border-width: .5pt; padding: .5mm .8mm .7mm; }

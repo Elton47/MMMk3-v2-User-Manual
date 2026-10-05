@@ -5,13 +5,14 @@
 // from data/features.json.
 // The Highlights section is left out: each highlight is explained in its own section. The SHIFT +
 // pads section also gets its 4 x 4 grid, drawn like the pads (top row = pads 13-16).
-// The manual's "Print cheat sheet" button opens this view and the print dialog.
+// The manual's "Cheat sheet" button opens this view (#cheatsheet: the manual's controller); its
+// own Print button opens the print dialog.
 MM.cheatsheet = (function () {
   'use strict';
 
   var el = MM.el, h = MM.h;
   var SKIP = ['highlights'];
-  var state = { data: null, device: 'mikro', printOnShow: false };
+  var state = { data: null, device: 'mikro' };
 
   function forDevice(entry) { return MM.manual.forDevice(entry, state.device); }
 
@@ -146,23 +147,12 @@ MM.cheatsheet = (function () {
       });
     });
     el('cs-print').addEventListener('click', print);
-    // the manual's button: open the sheet for the manual's controller, then the print dialog
-    el('cheatsheet-button').addEventListener('click', function (e) {
-      e.preventDefault();
-      var device = data.devices[MM.store('device')] ? MM.store('device') : 'mikro';
-      state.printOnShow = true;
-      location.hash = '#cheatsheet/' + device;
-    });
   }
 
   // parts: the hash after "cheatsheet/": [device]
   function show(parts) {
     var stored = MM.store('device');
     setDevice(state.data.devices[parts[0]] ? parts[0] : state.data.devices[stored] ? stored : 'mikro');
-    if (state.printOnShow) {
-      state.printOnShow = false;
-      print();
-    }
   }
 
   return { init: init, show: show };

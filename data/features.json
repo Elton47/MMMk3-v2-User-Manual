@@ -19,8 +19,8 @@
       "summary": "New here? The Set up guide walks you through it (macOS is automatic; Windows needs a one-time loopMIDI setup). After that: connect the controller and start Live. The script starts the Maschine Bridge, which takes over the hardware: no Controller Editor, no MIDI mode, a real SHIFT key. While Live loads, the screen shows Waiting for Live; when the set is ready, a rainbow wave sweeps across the pads. Your note repeat rate, arp settings, chord type and voicing, drum colours and velocity curve are remembered between Live sessions.",
       "items": [
         {"combo": ["SHIFT"], "does": "The real SHIFT button: hold it for the second function printed on a button, and for the SHIFT + pad edit matrix."},
-        {"combo": ["PATTERN"], "does": "Clips on the pads (the default mode)."},
-        {"combo": ["PAD MODE"], "does": "Drum pads (or the keyboard when the track has no Drum Rack)."},
+        {"combo": ["PATTERN"], "does": "Clips on the pads."},
+        {"combo": ["PAD MODE"], "does": "Drum pads (or the keyboard when the track has no Drum Rack). The controller starts here."},
         {"combo": ["KEYBOARD"], "does": "Play notes in Live's current scale."},
         {"combo": ["SHIFT", "MASCHINE"], "does": "NI's own MIDI mode toggle. The screen warns when it happens; press it again to get back.", "devices": ["mikro"]}
       ]
@@ -170,7 +170,7 @@
       "summary": "The bridge plays the notes itself, next to the hardware, so the pads can do things one-note-per-pad MIDI can't: chords, arpeggios, note repeat that follows pressure, 16 velocities.",
       "items": [
         {"combo": ["FIXED VEL"], "does": "Fixed velocity on / off: every pad plays at the same velocity (100 unless you change it)."},
-        {"combo": ["FIXED VEL", "TURN"], "does": "Set the fixed velocity (1-127), shown on the screen. Remembered next time."},
+        {"combo": ["FIXED VEL", "TURN"], "does": "Set the fixed velocity (1-127): holding FIXED VEL shows it on the screen at once. Remembered next time."},
         {"combo": ["SHIFT", "FIXED VEL"], "does": "16 Velocities: all pads play the focused note, pad 1 softest to pad 16 hardest."},
         {"combo": ["NOTE REPEAT"], "does": "Hold: note repeat while held. Tap: latch on / off. From clip or scene mode it brings up the drum pads or keyboard until repeat stops. With note repeat or the arpeggiator, the pads flash with their notes (a latched arp keeps them flashing). Repeats and arp notes follow Live's beat and land exactly on its grid when you record (Live's Record Quantization is set to the rate while they run, then put back); each note lasts the whole step (100 % gate), like MASCHINE."},
         {"combo": ["SHIFT", "NOTE REPEAT"], "does": "Turn the NOTE REPEAT button into the Arpeggiator (the screen says which); again: back to Note Repeat. Holding or tapping NOTE REPEAT then works the same way for both."},
@@ -250,12 +250,12 @@
     {
       "id": "master",
       "title": "Tempo, swing, volume",
-      "summary": "Hold the button and turn the encoder; the value pops up on the screen.",
+      "summary": "Hold the button: the screen shows the value at once; turn the encoder to change it, and let go to go back. A quick tap shows the value for a moment.",
       "items": [
         {"combo": ["TEMPO", "TURN"], "does": "Tempo ±1 BPM (SHIFT: ±0.1). Tap TEMPO: show the tempo."},
         {"combo": ["SWING", "TURN"], "does": "Swing ±1 % (SHIFT: ±10 %). Tap SWING: show the swing."},
         {"combo": ["VOLUME", "TURN"], "does": "Selected track volume ±1 dB (SHIFT: ±0.1 dB)."},
-        {"combo": ["VOLUME"], "does": "Tap: level meters of 4 tracks on the pads (TURN scrolls, PAD selects the track). The top pad lights in a lighter track colour near 0 dB and red when the track clips. Hold: meters while held."}
+        {"combo": ["VOLUME"], "does": "Tap: level meters of 4 tracks on the pads (tap again: back; holding VOLUME to change the volume leaves the pads as they are) (TURN scrolls, PAD selects the track). The top pad lights in a lighter track colour near 0 dB and red when the track clips. Hold: meters while held."}
       ]
     },
     {

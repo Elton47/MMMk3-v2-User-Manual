@@ -3,8 +3,10 @@
 // items of the Highlights section of data/features.json by itself, and looping. The controls of
 // a highlight glow, the pads, the strip and the screen act it out (js/highlight-shows.js), and a
 // callout with the combo and its text points at them: beside the controller on wide windows,
-// under it on narrow ones. Pointing at the controller or the callout holds the step; the pause
-// button, the dots and the arrow keys are there for those who want them.
+// under it on narrow ones. Pointing at the controller or the callout holds the step; previous /
+// pause / next buttons, the dots and the arrow keys are there for those who want them. The tour
+// pauses by itself while the page is hidden or the window has lost focus, and plays on when the
+// visitor is back, unless they had paused it themselves.
 MM.tour = (function () {
   'use strict';
 
@@ -16,8 +18,13 @@ MM.tour = (function () {
   var state = {
     data: null, device: null, items: [], index: 0, drawing: null, ready: false,
     show: null, api: null, duration: DURATION, elapsed: 0, tick: -1, last: 0, timer: null,
-    hover: false, paused: false, glow: [], swap: null
+    hover: false, paused: false, glow: [], swap: null,
+    autoPaused: false,  // paused because the page was hidden or the window lost focus (awayChanged())
+    blurred: false,     // the window has lost focus
+    resumedAt: 0        // when coming back played the tour on (see the pause button)
   };
+
+  function now() { return window.performance ? performance.now() : Date.now(); }
 
   // --- data --------------------------------------------------------------------------------
 
@@ -381,9 +388,9 @@ MM.tour = (function () {
   function held() { return state.paused || state.hover; }
 
   function frame() {
-    var now = window.performance ? performance.now() : Date.now();
-    var dt = Math.min(now - state.last, 100);
-    state.last = now;
+    var t = now();
+    var dt = Math.min(t - state.last, 100);
+    state.last = t;
     if (!state.show || held()) return;
     state.elapsed += dt;
     var n = Math.floor(state.elapsed / (state.show.every || EVERY));
@@ -398,7 +405,7 @@ MM.tour = (function () {
 
   function start() {
     stop();
-    state.last = window.performance ? performance.now() : Date.now();
+    state.last = now();
     state.timer = setInterval(frame, FRAME);
   }
 
@@ -439,6 +446,23 @@ MM.tour = (function () {
     button.setAttribute('title', label);
     button.querySelector('.visually-hidden').textContent = label;
     el('tour-pause-icon').setAttribute('href', state.paused ? '#i-play' : '#i-pause');
+  }
+
+  // The page hidden (another tab, minimised) or the window without focus: the tour pauses as if
+  // the pause button had been pressed. Back again, it plays on only if it was playing before.
+  function awayChanged() {
+    if (!state.ready) return;
+    if (document.hidden || state.blurred) {
+      if (state.paused) return;  // already paused (by hand or before): stays as it is
+      state.paused = true;
+      state.autoPaused = true;
+      updateStatus();
+    } else if (state.autoPaused) {
+      state.paused = false;
+      state.autoPaused = false;
+      state.resumedAt = now();
+      updateStatus();
+    }
   }
 
   function setDevice(device, index) {
@@ -499,9 +523,20 @@ MM.tour = (function () {
     hoverable(el('tour-device'));
     hoverable(el('tour-bubble'));
     el('tour-pause').addEventListener('click', function () {
+      // a click on Play in a window without focus first focuses it, which already plays the tour
+      // on (awayChanged()): that click must not pause it again
+      if (state.resumedAt && now() - state.resumedAt < 600) { state.resumedAt = 0; return; }
+      state.resumedAt = 0;
       state.paused = !state.paused;
+      state.autoPaused = false;
       updateStatus();
     });
+    // previous / next: that highlight from its start, still playing or still paused
+    el('tour-prev').addEventListener('click', function () { go(state.index - 1, true); });
+    el('tour-next').addEventListener('click', function () { go(state.index + 1, true); });
+    document.addEventListener('visibilitychange', awayChanged);
+    window.addEventListener('blur', function () { state.blurred = true; awayChanged(); });
+    window.addEventListener('focus', function () { state.blurred = false; awayChanged(); });
     document.addEventListener('keydown', function (e) {
       if (el('view-highlights').hidden || e.ctrlKey || e.metaKey || e.altKey) return;
       var tag = (e.target.tagName || '').toLowerCase();

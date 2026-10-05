@@ -1007,7 +1007,7 @@ td:first-child { font-weight: 500; }
   animation: tour-breathe 1.8s ease-in-out infinite;
 }
 @keyframes tour-breathe { 0%, 100% { opacity: 1; } 50% { opacity: .5; } }
-.tour-stage.held .tour-outline { animation-play-state: paused; }
+.tour-stage.held .tour-outline, .tour-stage.held #tour-device .pad.demo-meter { animation-play-state: paused; }
 .tour-turn { opacity: .95; transition: opacity .2s linear; pointer-events: none; }
 .tour-turn.tick { opacity: .6; }
 .tour-turn path { fill: none; stroke: #fff; stroke-width: 2.4; stroke-linecap: round; }
@@ -1062,6 +1062,8 @@ td:first-child { font-weight: 500; }
 
 /* progress: a dot per highlight, the current one a pill that fills while it plays */
 .tour-controls { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 8px 12px; margin-top: 16px; }
+/* previous / pause / next: one group, so they never wrap apart */
+.tour-buttons { display: flex; align-items: center; gap: 4px; }
 .tour-dots { display: flex; align-items: center; }
 .tour-dot {
   position: relative; display: grid; place-items: center; width: 22px; height: 32px; padding: 0;

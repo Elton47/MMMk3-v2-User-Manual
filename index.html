@@ -172,10 +172,18 @@
           </div>
         </div>
         <div class="tour-controls">
-          <button type="button" id="tour-pause" class="icon-button" aria-pressed="false" title="Pause the tour">
-            <svg class="icon" aria-hidden="true"><use id="tour-pause-icon" href="#i-pause"/></svg>
-            <span class="visually-hidden">Pause the tour</span>
-          </button>
+          <div class="tour-buttons">
+            <button type="button" id="tour-prev" class="icon-button" aria-label="Previous highlight" title="Previous highlight">
+              <svg class="icon" aria-hidden="true"><use href="#i-left"/></svg>
+            </button>
+            <button type="button" id="tour-pause" class="icon-button" aria-pressed="false" title="Pause the tour">
+              <svg class="icon" aria-hidden="true"><use id="tour-pause-icon" href="#i-pause"/></svg>
+              <span class="visually-hidden">Pause the tour</span>
+            </button>
+            <button type="button" id="tour-next" class="icon-button" aria-label="Next highlight" title="Next highlight">
+              <svg class="icon" aria-hidden="true"><use href="#i-right"/></svg>
+            </button>
+          </div>
           <div id="tour-dots" class="tour-dots" role="group" aria-label="Highlights"></div>
           <span id="tour-status" class="tour-status" aria-hidden="true"></span>
         </div>

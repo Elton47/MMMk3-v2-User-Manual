@@ -87,7 +87,11 @@ MM.cheatsheetOverview = (function () {
         { label: 'CHORDS', side: 'top', targets: ['CHORDS'], text: function (D) { return D.summary('chords', ','); } },
         { label: 'STEP', side: 'top', targets: ['STEP'], text: function (D) { return D.title('step'); } },
 
-        { label: 'STAR', side: 'left', targets: ['STAR'], text: function (D) { return D.summary('browser', ','); } },
+        { label: 'STAR · BROWSER', side: 'left', targets: ['STAR', 'BROWSER'], chain: true,
+          text: function (D) {
+            var browse = D.title('browser'), star = D.item('browser', ['STAR'], ';');
+            return browse && D.join('BROWSER: ' + browse.toLowerCase(), star && 'STAR: ' + star.charAt(0).toLowerCase() + star.slice(1));
+          } },
         { label: 'TURN · PUSH', side: 'left', targets: [{ id: 'ENCODER', via: [[137, 101]] }],
           text: function () { return 'The encoder: scroll and change values; touch it to see the mode\'s details'; } },
         { label: '◀ ▶', side: 'left', targets: [{ id: '◀', via: [[312, 172]] }, { id: '▶', via: [[356, 172]] }],

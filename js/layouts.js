@@ -156,24 +156,25 @@ var drumRule = (function () {
   };
 })();
 var SAMPLE_SCENES = ['Intro', 'Verse', 'Chorus', 'Drop'];
-// Live's browser: the categories as the script lists them (Collections first, then MASCHINE
-// Kits, then the library), and the Drums category (a folder of single hits, then the kits;
-// SAMPLE_KIT is loaded from it).
-var SAMPLE_BROWSER = ['Collections', 'MASCHINE Kits', 'Sounds', 'Drums', 'Instruments', 'Audio Effects',
+// Live's browser: the top list as the script lists it (Favorites, the controller's stars, first;
+// then Live's sidebar: Collections, MASCHINE Kits, the library), and the Drums category (a folder
+// of single hits, then the kits; SAMPLE_KIT is loaded from it).
+var SAMPLE_BROWSER = ['Favorites', 'Collections', 'MASCHINE Kits', 'Sounds', 'Drums', 'Instruments', 'Audio Effects',
   'MIDI Effects', 'Max for Live', 'Plug-Ins', 'Clips', 'Samples', 'Grooves', 'Packs', 'User Library',
   'Current Project'];
 // The icons of the browser's top level (like Live's sidebar), as the script's BROWSER_ICONS
 // (display_model.py): private-use characters drawn by the screen fonts (data/screens.json), a
-// Places folder the folder icon, Collections the star. A top-level row is 'icon name >'.
+// Places folder the folder icon, Favorites the star, Collections a dot (like the coloured dots in
+// Live's sidebar). A top-level row is 'icon name >'.
 var BROWSER_ICONS = {
   sounds: '', drums: '', instruments: '', audio_effects: '',
   midi_effects: '', max_for_live: '', plugins: '', clips: '',
   samples: '', grooves: '', packs: '', user_library: '',
-  current_project: '', folder: '', kits: '', collections: '★'
+  current_project: '', folder: '', kits: '', favorites: '★', collections: ''
 };
 // A top-level item's icon by its name (the script's CATEGORIES labels); anything else is a
 // Places folder.
-var BROWSER_ICON_KEYS = { 'Collections': 'collections', 'MASCHINE Kits': 'kits', 'Sounds': 'sounds',
+var BROWSER_ICON_KEYS = { 'Favorites': 'favorites', 'Collections': 'collections', 'MASCHINE Kits': 'kits', 'Sounds': 'sounds',
   'Drums': 'drums', 'Instruments': 'instruments', 'Audio Effects': 'audio_effects',
   'MIDI Effects': 'midi_effects', 'Max for Live': 'max_for_live', 'Plug-Ins': 'plugins',
   'Clips': 'clips', 'Samples': 'samples', 'Grooves': 'grooves', 'Packs': 'packs',
@@ -188,6 +189,9 @@ var SAMPLE_EXPANSIONS = ['Favorites', 'Chromatic Fire', 'Deep Matter', 'Golden K
   'Prismatic Bliss'];
 var SAMPLE_EXPANSION = { name: 'Chromatic Fire', count: 15,
   kits: ['Black Earth Kit', 'Concrete Dubs Kit', 'Dev Breaks Kit'] };
+// Favorites (STAR): what was starred with SHIFT + STAR, in that order: a MASCHINE kit, a folder
+// (Drums > Drum Hits) and a Drums preset ([name, is a folder]).
+var SAMPLE_FAVORITES = [['Black Earth Kit', false], ['Drum Hits', true], ['Kit-House', false]];
 
 // The short name of a sample track ('1-Drums' -> 'Drums').
 function shortName(track) { return track.name.replace(/^\d+-/, ''); }
@@ -297,15 +301,24 @@ function listScreen(title, subtitle, rows, chosen) {
     MIKRO_SCROLL: rows.length > 1 ? Math.round(chosen * 126 / (rows.length - 1)) : null };
 }
 
-// Live's browser at a level: its name, the items (folders marked ' >'), the chosen one. The top
-// level ('Browser') starts each row with its icon (browserIcon); line 2 has none, as in the script.
-function browserScreen(level, items, chosen, folders) {
+// Live's browser at a level: its name, the items (folders marked ' >'), the chosen one; starred(i)
+// (optional): a starred item, a star on the right of its row ('name	★') and after its name on
+// line 2, as the script's _row / _show. The top level ('Browser') starts each row with its icon
+// (browserIcon); line 2 has none, as in the script.
+function browserScreen(level, items, chosen, folders, starred) {
+  var star = function (i) { return starred && starred(i) ? '	★' : ''; };
   var rows = items.map(function (name, i) {
-    var row = folders(i) ? name + ' >' : name;
+    var row = (folders(i) ? name + ' >' : name) + star(i);
     return level === 'Browser' ? browserIcon(name) + ' ' + row : row;
   });
-  return listScreen(level + ' ' + (chosen + 1) + '/' + items.length, items[chosen] + ' ' + (folders(chosen) ? '>' : ''),
-    rows, chosen);
+  return listScreen(level + ' ' + (chosen + 1) + '/' + items.length,
+    items[chosen] + star(chosen).replace('	', ' ') + ' ' + (folders(chosen) ? '>' : ''), rows, chosen);
+}
+
+// STAR: the browser on Favorites (SAMPLE_FAVORITES, every row starred), item `chosen`.
+function favoritesScreen(chosen) {
+  return browserScreen('Favorites', SAMPLE_FAVORITES.map(function (f) { return f[0]; }), chosen,
+    function (i) { return SAMPLE_FAVORITES[i][1]; }, function () { return true; });
 }
 
 // The kits of SAMPLE_EXPANSION, kit `chosen` (0-1: the rows shown are the known kits);
@@ -481,8 +494,16 @@ var LAYOUTS = {
     var locked = trackScreen(1, 'Keyboard  C Major', 'Octave', 'C3', 'C Major');
     locked.TITLE += ' \ue00f';
     var tracks = '1 - ' + SAMPLE_TRACKS.length + ' of ' + SAMPLE_TRACKS.length;
-    // STAR: the browser's top list on MASCHINE Kits
-    var browser = browserScreen('Browser', SAMPLE_BROWSER, 1, function () { return true; });
+    // BROWSER: the browser's top list, first opened on Favorites; STAR: Favorites itself
+    var browser = browserScreen('Browser', SAMPLE_BROWSER, 0, function () { return true; });
+    var favorites = favoritesScreen(0);
+    // SHIFT + STAR in Drums on Kit-House: the popup, then the star on its row
+    var drumsAt = function (name, star) {
+      var at = SAMPLE_BROWSER_DRUMS.indexOf(name);
+      return browserScreen('Drums', SAMPLE_BROWSER_DRUMS, at, function (i) { return i === 0; },
+        function (i) { return star && i === at; });
+    };
+    var starring = [drumsAt('Kit-House', false), popupScreen('Favorite', 'Kit-House'), drumsAt('Kit-House', true)];
     // SHIFT + BROWSER: Hot-Swap the selected device (1-Drums' Drum Rack): the popup names it, the
     // browser opens on its category (Drums, on its first item), TURN to a kit, PUSH swaps it.
     var drumFolders = function (i) { return i === 0; };
@@ -516,7 +537,7 @@ var LAYOUTS = {
         'GROUP': modeScreen('Tracks', tracks, SAMPLE_TRACKS[SAMPLE_SELECTED].name, '', tracks),
         'LOCK': locked,
         'MASCHINE': settingsScreen(),
-        'STAR': browser,
+        'STAR': favorites,
         'BROWSER': browser
       },
       // Screens for a combo hovered in a given section (section id -> combo tokens joined with
@@ -545,11 +566,13 @@ var LAYOUTS = {
         'shift-pads': { 'SHIFT+PAD 1': [drums, withBadge(drums, '\ue010')],
           'SHIFT+PAD 2': [drums, withBadge(drums, '\ue011')] },
         views: { 'SHIFT+BROWSER': hotSwap },
-        // In MASCHINE Kits: TURN scrolls the kits (previewing each), PUSH loads one, SHIFT + STAR
-        // on a kit: the favourite popup, then the star on its row.
-        browser: { '*': browser, 'TURN': [kitsScreen(0, [0]), kitsScreen(1, [0])],
+        // BROWSER: the top list; STAR: Favorites. In MASCHINE Kits: TURN scrolls the kits
+        // (previewing each), PUSH loads one. SHIFT + STAR on any item: the favourite popup, then the
+        // star on its row.
+        browser: { '*': browser, 'BROWSER': browser, 'STAR': favorites,
+          'TURN': [kitsScreen(0, [0]), kitsScreen(1, [0])],
           'PUSH': [kitsScreen(1, [0]), popupScreen('Loaded', SAMPLE_EXPANSION.kits[1])],
-          'SHIFT+STAR': [kitsScreen(1, [0]), popupScreen('Favorite', SAMPLE_EXPANSION.kits[1]), kitsScreen(1, [0, 1])] },
+          'SHIFT+STAR': starring },
         highlights: { 'PUSH': kitsScreen(0, [0]) }
       },
       stripDots: dots,

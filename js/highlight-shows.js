@@ -172,26 +172,30 @@ var HIGHLIGHT_SHOWS = (function () {
       }
     },
 
-    // Live's browser on the MIKRO's screen: scroll to Drums, open it, scroll to a kit and load it;
-    // the pads light up with the kit.
-    'STAR': {
+    // Live's browser on the MIKRO's screen: BROWSER opens it (lit while open), scroll to Drums, open
+    // it, scroll to a kit and load it (the browser closes); the pads light up with the kit. Then
+    // STAR: the browser straight on Favorites (STAR lit).
+    'BROWSER': {
       every: 700,
       loupe: true,
-      duration: 7000,
+      duration: 8500,
       tick: function (n, api) {
-        var drums = SAMPLE_BROWSER.indexOf('Drums');  // 3: after Collections, MASCHINE Kits, Sounds
-        var frame = Math.min(n, drums + 4), pushed = n === drums + 1 || n === drums + 4;
+        var drums = SAMPLE_BROWSER.indexOf('Drums');  // 4: after Favorites, Collections, MASCHINE Kits, Sounds
+        var frame = Math.min(n, drums + 6), pushed = n === drums + 1 || n === drums + 4;
+        var star = frame >= drums + 6;
+        api.outline(star ? ['STAR'] : ['BROWSER']);
         api.turn(frame <= drums ? frame : frame < drums + 4 ? frame - 1 : drums + 2);
-        api.light(pushed ? ['ENCODER'] : []);
+        api.light(star ? ['STAR'] : frame < drums + 4 ? (pushed ? ['BROWSER', 'ENCODER'] : ['BROWSER']) : pushed ? ['ENCODER'] : []);
         // Live's categories are folders; in Drums only Drum Hits is (the kits load)
         if (frame <= drums) api.screen(browserScreen('Browser', SAMPLE_BROWSER, frame, function () { return true; }));
         else if (frame < drums + 4) api.screen(browserScreen('Drums', SAMPLE_BROWSER_DRUMS, frame - drums - 1, function (i) { return i === 0; }));
-        else api.screen(popupScreen('Loaded', SAMPLE_KIT));
+        else if (!star) api.screen(popupScreen('Loaded', SAMPLE_KIT));
+        else api.screen(favoritesScreen(0));
         api.pads(frame < drums + 4 ? api.blank() : api.demo('PAD MODE'));
       }
     },
 
-    // MASCHINE Kits: STAR, open MASCHINE Kits (Favorites first), turn to an Expansion and open
+    // MASCHINE Kits: BROWSER, open MASCHINE Kits (Favorites first), turn to an Expansion and open
     // it: its kits, a favourite with a star. Turning onto a kit previews it; SHIFT + STAR makes
     // it a favourite too (popup, then its star); PUSH loads it as the selected MIDI track's Drum Rack
     // (or a new track's), the pads in the drum colours.
@@ -199,7 +203,7 @@ var HIGHLIGHT_SHOWS = (function () {
       every: 750,
       loupe: true,
       duration: 8000,
-      glow: ['STAR', 'PUSH'],
+      glow: ['BROWSER', 'PUSH'],
       tick: function (n, api) {
         var kits = SAMPLE_BROWSER.indexOf('MASCHINE Kits');
         var folders = function () { return true; };
@@ -215,10 +219,11 @@ var HIGHLIGHT_SHOWS = (function () {
           [kitsScreen(1, [0, 1]), [], kits + 2],
           [popupScreen('Loaded', SAMPLE_EXPANSION.kits[1]), ['ENCODER'], kits + 2]
         ];
-        var step = steps[Math.min(n, steps.length - 1)];
-        api.outline(step[3] || ['STAR', 'PUSH']);  // first: a new outline clears the turn arrow
+        var last = Math.min(n, steps.length - 1), step = steps[last];
+        api.outline(step[3] || ['BROWSER', 'PUSH']);  // first: a new outline clears the turn arrow
         api.screen(step[0]);
-        api.light(step[1]);
+        // BROWSER is lit while the browser is open; the load closes it
+        api.light(last < steps.length - 1 ? step[1].concat(['BROWSER']) : step[1]);
         api.turn(step[2]);
         api.pads(n < steps.length - 1 ? api.blank() : api.demo('PAD MODE'));
       }

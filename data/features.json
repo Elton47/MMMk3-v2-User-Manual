@@ -40,8 +40,8 @@
         {"combo": ["CHORDS"], "does": "A chord on every pad, always in Live's key: triads to 9ths, with voicings."},
         {"combo": ["NOTE REPEAT"], "does": "Note repeat that follows pad pressure: slide the touch strip to set its rate, or touch it while holding pads to repeat them on the spot. Plus an arpeggiator and 16 velocities, all recorded exactly on Live's grid."},
         {"combo": ["STEP"], "does": "A step sequencer on the pads, read like MASCHINE, with the playhead running across them."},
-        {"combo": ["STAR"], "does": "Live's browser on the hardware screen: find a sound and load it without touching the mouse.", "devices": ["mikro"]},
-        {"combo": ["PUSH"], "does": "MASCHINE Kits: play your Expansions in Live without the MASCHINE plug-in. STAR > MASCHINE Kits, turn to hear a kit, push to load it as a Drum Rack, pad for pad as in MASCHINE; SHIFT + STAR marks a favourite.", "devices": ["mikro"]},
+        {"combo": ["BROWSER"], "does": "Live's browser on the hardware screen: find a sound and load it without touching the mouse; STAR opens your favourites.", "devices": ["mikro"]},
+        {"combo": ["PUSH"], "does": "MASCHINE Kits: play your Expansions in Live without the MASCHINE plug-in. BROWSER > MASCHINE Kits, turn to hear a kit, push to load it as a Drum Rack, pad for pad as in MASCHINE; SHIFT + STAR marks a favourite.", "devices": ["mikro"]},
         {"combo": ["VARIATION", "PAD"], "does": "Record a variation in one press: the clip is copied below, named Bass_1, Bass_2 ..., and recorded into; the original stays untouched."},
         {"combo": ["STRIP"], "does": "The touch strip shows where the loop is, and while you record it flashes red on every click: a silent metronome."},
         {"combo": ["VOLUME"], "does": "The mixer: tap VOLUME and the pads become your tracks, glowing with their levels. Visit a track with a pad or the arrows, turn for volume, PUSH + TURN for pan and sends, slide the strip like a fader; a bar on the screen shows where it is.", "devices": ["mikro"]}
@@ -307,12 +307,11 @@
       "items": [
         {"combo": ["PERFORM"], "does": "Session / Arrangement view.", "devices": ["mikro"]},
         {"combo": ["ARRANGER"], "does": "Session / Arrangement view.", "devices": ["mk3"]},
-        {"combo": ["BROWSER"], "does": "Show / hide Live's browser."},
+        {"combo": ["BROWSER"], "does": "Show / hide Live's browser.", "devices": ["mk3"]},
         {"combo": ["SHIFT", "BROWSER"], "does": "Hot-Swap: browser on the device's category; PUSH swaps, again cancels.", "devices": ["mikro"]},
         {"combo": ["SHIFT", "BROWSER"], "does": "Hot-Swap the selected device (opens the browser on it).", "devices": ["mk3"]},
         {"combo": ["SHIFT", "PLUG-IN"], "does": "Toggle the Clip / Device detail view."},
         {"combo": ["SAMPLING"], "does": "Show the clip / sample editor."},
-        {"combo": ["SHIFT", "STAR"], "does": "Show / hide the detail view.", "devices": ["mikro"]},
         {"combo": ["SHIFT", "◀", "▶"], "does": "Select the previous / next track."},
         {"combo": ["MASCHINE"], "does": "Open the settings page (see Settings).", "devices": ["mikro"]},
         {"combo": ["ENCODER TOUCH"], "does": "Rest a finger on the encoder: the current mode's details (octave, scale, drum pad ...). Turning takes them away."}
@@ -412,17 +411,18 @@
       "id": "browser",
       "nav": "Browser",
       "title": "STAR: browse and load (MIKRO)",
-      "summary": "Live's browser on the hardware screen, in the order of Live's sidebar: Collections first (Favorites and your coloured collections), then MASCHINE Kits, the library (Sounds, Drums, Instruments ...), and the folders you added to Places. MASCHINE Kits (Live 12.1 or later, with MASCHINE Expansions or the MASCHINE library installed) lists your Expansions and their kits: PUSH on a kit loads it as a Drum Rack, pad for pad as in MASCHINE: onto the selected MIDI track, replacing its instrument (effects after it stay), or on a new MIDI track named after the kit (# Kit name, so Live numbers it) when an audio track is selected. Each pad is a Simpler in 1-Shot, so a hit rings out; long synth, vocal, FX, atmosphere and loop sounds play while held instead. The pads and the Drum Rack's chains get the drum colours by sound name (see PAD MODE). A drum-synth sound plays NI's recording of it where there is one; a sound that is a plug-in in MASCHINE (Massive, Monark ...) stays an empty pad with its name, to put your own sound on. Turning onto a kit plays NI's own preview of it through Live's preview (Cue output, preview switched on in Live's browser), like clicking a sample in Live's browser; the script puts the previews in your User Library (MASCHINE Kit Previews, as hard links: no extra disk space) the first time you open MASCHINE Kits, and picks up newly installed Expansions the same way. This is the way to play the Expansions in Live without the MASCHINE plug-in, which takes the controller away from the script (see Getting started).",
+      "summary": "Live's browser on the hardware screen, Favorites first (what you starred with SHIFT + STAR), then Live's sidebar: Collections (Live's Favorites and your coloured collections), MASCHINE Kits, the library (Sounds, Drums, Instruments ...), and the folders you added to Places. MASCHINE Kits (Live 12.1 or later, with MASCHINE Expansions or the MASCHINE library installed) lists your Expansions and their kits: PUSH on a kit loads it as a Drum Rack, pad for pad as in MASCHINE: onto the selected MIDI track, replacing its instrument (effects after it stay), or on a new MIDI track named after the kit (# Kit name, so Live numbers it) when an audio track is selected. Each pad is a Simpler in 1-Shot, so a hit rings out; long synth, vocal, FX, atmosphere and loop sounds play while held instead. The pads and the Drum Rack's chains get the drum colours by sound name (see PAD MODE). A drum-synth sound plays NI's recording of it where there is one; a sound that is a plug-in in MASCHINE (Massive, Monark ...) stays an empty pad with its name, to put your own sound on. Turning onto a kit plays NI's own preview of it through Live's preview (Cue output, preview switched on in Live's browser), like clicking a sample in Live's browser; the script puts the previews in your User Library (MASCHINE Kit Previews, as hard links: no extra disk space) the first time you open MASCHINE Kits, and picks up newly installed Expansions the same way. This is the way to play the Expansions in Live without the MASCHINE plug-in, which takes the controller away from the script (see Getting started).",
       "devices": ["mikro"],
       "items": [
-        {"combo": ["STAR"], "does": "Browser on / off."},
+        {"combo": ["BROWSER"], "does": "Browser on / off (it opens where you left it)."},
+        {"combo": ["STAR"], "does": "Your Favorites; STAR again: close."},
         {"combo": ["TURN"], "does": "Scroll (SHIFT: by 10)."},
         {"combo": ["PUSH"], "does": "Open the folder, or load the item onto the selected track (in Hot-Swap: replace the device); the browser then closes, back to the mode you came from."},
         {"combo": ["◀"], "does": "Back up one level."},
         {"combo": ["▶"], "does": "Open / load, like PUSH."},
         {"combo": ["TURN"], "context": "onto a MASCHINE kit", "does": "Hear NI's preview of it (preview on in Live's browser)."},
         {"combo": ["PUSH"], "context": "on a MASCHINE kit", "does": "Load it, replacing the selected MIDI track's instrument, or on a new track."},
-        {"combo": ["SHIFT", "STAR"], "context": "on a MASCHINE kit, browser open", "does": "Favourite / unfavourite the kit: a star on its row, Favorites listed first. Outside the browser: show / hide the detail view."}
+        {"combo": ["SHIFT", "STAR"], "context": "browser open", "does": "Star / unstar the item (a sound, preset, sample, folder or MASCHINE kit): a star on its row, listed in Favorites."}
       ]
     },
     {
@@ -466,6 +466,7 @@
     {"what": "PLAY", "v1": "Start (SHIFT: restart)", "v2": "Start / stop like MASCHINE; SHIFT + PLAY continues where it stopped; RESTART plays from the start"},
     {"what": "ERASE alone", "v1": "Deleted the focused clip / track / scene", "v2": "Does nothing (safety); SHIFT + ERASE deletes the focused item"},
     {"what": "Hot-Swap", "v1": "SHIFT + ERASE", "v2": "SHIFT + BROWSER"},
+    {"what": "BROWSER / STAR (MIKRO)", "v1": "BROWSER: Live's browser view; STAR: nothing", "v2": "BROWSER: the browser on the controller's screen; STAR: your favourites; SHIFT + STAR stars any item"},
     {"what": "Pinned note repeat", "v1": "SHIFT + NOTE REPEAT", "v2": "Tap NOTE REPEAT (SHIFT + NOTE REPEAT now switches to the arpeggiator)"},
     {"what": "Velocity 100 for notes", "v1": "SHIFT + FIXED VEL", "v2": "SHIFT + pad 3 (SHIFT + FIXED VEL is now 16 Velocities, as on MASCHINE)"},
     {"what": "FIXED VEL", "v1": "No function", "v2": "Fixed velocity on / off"},

@@ -57,10 +57,10 @@ MM.cheatsheetOverview = (function () {
         var s = section(sectionId);
         return s ? short(s.title.split(': ').slice(1).join(': ') || s.title) : null;
       },
-      // "Page left / right; SHIFT: select the previous / next track"
+      // "Page left / right; SHIFT: previous / next track"
       arrows: function () {
         var shifted = this.item('views', ['SHIFT', '◀', '▶']);
-        return shifted ? 'Page left / right; SHIFT: ' + shifted.charAt(0).toLowerCase() + shifted.slice(1) : null;
+        return shifted ? 'Page left / right; SHIFT: ' + shifted.replace(/^select the /i, '') : null;
       },
       join: function () {
         var list = Array.prototype.slice.call(arguments).filter(Boolean);
@@ -93,7 +93,7 @@ MM.cheatsheetOverview = (function () {
             return browse && D.join('BROWSER: ' + browse.toLowerCase(), star && 'STAR: ' + star.charAt(0).toLowerCase() + star.slice(1));
           } },
         { label: 'TURN · PUSH', side: 'left', targets: [{ id: 'ENCODER', via: [[137, 101]] }],
-          text: function () { return 'The encoder: scroll and change values; touch it to see the mode\'s details'; } },
+          text: function () { return 'Scroll and change values; touch it for details'; } },
         { label: '◀ ▶', side: 'left', targets: [{ id: '◀', via: [[312, 172]] }, { id: '▶', via: [[356, 172]] }],
           text: function (D) { return D.arrows(); } },
         { label: 'PITCH · MOD', side: 'left', targets: ['PITCH', 'MOD'], chain: true,
@@ -245,6 +245,7 @@ MM.cheatsheetOverview = (function () {
     var left = SIDE_W + REACH + 16, right = SIDE_W + REACH + 16;
 
     // label positions: along the side, in the order of their leaders
+    var sideEnd = {};      // where each side column ends (it can run past the drawing when full)
     ['left', 'right'].forEach(function (side) {
       var list = bySide[side];
       var at = spread(list.map(function (c) { return c.exit + c.height / 2 - LINE / 2; }), list.map(function (c) { return c.height; }), -REACH + 6, H + REACH - 6);
@@ -253,22 +254,32 @@ MM.cheatsheetOverview = (function () {
         c.textX = side === 'left' ? -REACH - 8 : W + REACH + 8;
         c.anchor = [side === 'left' ? -REACH : W + REACH, at[i] + LINE / 2];
       });
+      sideEnd[side] = list.length ? at[at.length - 1] + list[list.length - 1].height : -Infinity;
     });
+    // the bottom row moves down when a side column runs past its end into the corner above it
+    var drop = 0;
     ['top', 'bottom'].forEach(function (side) {
       var list = bySide[side];
       var at = spread(list.map(function (c) { return c.exit; }), list.map(function () { return END_W; }), -left + 10, W + right - 10);
+      if (side === 'bottom' && list.length) {
+        if (at[0] < -REACH) drop = Math.max(drop, sideEnd.left - (H + REACH - 6));
+        if (at[at.length - 1] + END_W > W + REACH) drop = Math.max(drop, sideEnd.right - (H + REACH - 6));
+      }
       list.forEach(function (c, i) {
-        c.box = { y: side === 'top' ? -REACH - 4 - c.height : H + REACH + 4 };
+        c.box = { y: side === 'top' ? -REACH - 4 - c.height : H + REACH + 4 + drop };
         c.textX = at[i] + END_W / 2;
-        c.anchor = [c.textX, side === 'top' ? -REACH : H + REACH];
+        c.anchor = [c.textX, side === 'top' ? -REACH : H + REACH + drop];
       });
     });
+    bottom += drop;
 
     // leaders and chains go under the controls: they show between them, not across them
     var under = node('g', { 'class': 'cs-leaders' });
     svg.insertBefore(under, svg.querySelector('.hw-control'));
     callouts.forEach(function (c) {
       c.leaders.forEach(function (pts) {
+        // a dropped bottom row: straight down first, so the slant stays clear of the side column
+        if (c.co.side === 'bottom' && drop > 0) pts = pts.concat([[pts[pts.length - 1][0], H + OUT + drop]]);
         pts = pts.concat([c.anchor]);
         node('polyline', { points: pts.map(function (p) { return p[0].toFixed(1) + ',' + p[1].toFixed(1); }).join(' '), 'class': 'cs-leader' }, under);
         node('circle', { cx: c.anchor[0], cy: c.anchor[1], r: 3.2, 'class': 'cs-leader-end' }, svg);

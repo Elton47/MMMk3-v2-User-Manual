@@ -196,9 +196,9 @@ var HIGHLIGHT_SHOWS = (function () {
     },
 
     // MASCHINE Kits: BROWSER, open MASCHINE Kits (Favorites first), turn to an Expansion and open
-    // it: its kits, a favourite with a star. Turning onto a kit previews it; SHIFT + STAR makes
-    // it a favourite too (popup, then its star); PUSH loads it as the selected MIDI track's Drum Rack
-    // (or a new track's), the pads in the drum colours.
+    // it: its kits, a favourite (starred in MASCHINE) with a star. Turning onto a kit previews it;
+    // PUSH loads it as the selected MIDI track's Drum Rack (or a new track's), the pads in the drum
+    // colours.
     'PUSH': {
       every: 750,
       loupe: true,
@@ -215,8 +215,6 @@ var HIGHLIGHT_SHOWS = (function () {
           [browserScreen('MASCHINE Kits', SAMPLE_EXPANSIONS, 1, folders), [], kits + 1],
           [kitsScreen(0, [0]), ['ENCODER'], kits + 1],
           [kitsScreen(1, [0]), [], kits + 2],
-          [popupScreen('Favorite', SAMPLE_EXPANSION.kits[1]), ['SHIFT', 'STAR'], kits + 2, ['SHIFT', 'STAR']],
-          [kitsScreen(1, [0, 1]), [], kits + 2],
           [popupScreen('Loaded', SAMPLE_EXPANSION.kits[1]), ['ENCODER'], kits + 2]
         ];
         var last = Math.min(n, steps.length - 1), step = steps[last];

@@ -189,8 +189,9 @@ var SAMPLE_EXPANSIONS = ['Favorites', 'Chromatic Fire', 'Deep Matter', 'Golden K
   'Prismatic Bliss'];
 var SAMPLE_EXPANSION = { name: 'Chromatic Fire', count: 15,
   kits: ['Black Earth Kit', 'Concrete Dubs Kit', 'Dev Breaks Kit'] };
-// Favorites (STAR): what was starred with SHIFT + STAR, in that order: a MASCHINE kit, a folder
-// (Drums > Drum Hits) and a Drums preset ([name, is a folder]).
+// Favorites (STAR): what was starred with SHIFT + STAR, and the kits starred in MASCHINE: a
+// MASCHINE kit, a folder (Drums > Drum Hits) and a Drums preset ([name, is a folder]). Listed by
+// name, case not counting, as the script sorts them (favoritesScreen sorts).
 var SAMPLE_FAVORITES = [['Black Earth Kit', false], ['Drum Hits', true], ['Kit-House', false]];
 
 // The short name of a sample track ('1-Drums' -> 'Drums').
@@ -315,10 +316,12 @@ function browserScreen(level, items, chosen, folders, starred) {
     items[chosen] + star(chosen).replace('	', ' ') + ' ' + (folders(chosen) ? '>' : ''), rows, chosen);
 }
 
-// STAR: the browser on Favorites (SAMPLE_FAVORITES, every row starred), item `chosen`.
+// STAR: the browser on Favorites (SAMPLE_FAVORITES by name, every row starred), item `chosen`.
 function favoritesScreen(chosen) {
-  return browserScreen('Favorites', SAMPLE_FAVORITES.map(function (f) { return f[0]; }), chosen,
-    function (i) { return SAMPLE_FAVORITES[i][1]; }, function () { return true; });
+  var key = function (f) { return f[0].toLowerCase(); };
+  var list = SAMPLE_FAVORITES.slice().sort(function (a, b) { return key(a) < key(b) ? -1 : key(a) > key(b) ? 1 : 0; });
+  return browserScreen('Favorites', list.map(function (f) { return f[0]; }), chosen,
+    function (i) { return list[i][1]; }, function () { return true; });
 }
 
 // The kits of SAMPLE_EXPANSION, kit `chosen` (0-1: the rows shown are the known kits);
@@ -497,13 +500,13 @@ var LAYOUTS = {
     // BROWSER: the browser's top list, first opened on Favorites; STAR: Favorites itself
     var browser = browserScreen('Browser', SAMPLE_BROWSER, 0, function () { return true; });
     var favorites = favoritesScreen(0);
-    // SHIFT + STAR in Drums on Kit-House: the popup, then the star on its row
+    // SHIFT + STAR in Drums on Kit-House: the star appears on its row (no popup)
     var drumsAt = function (name, star) {
       var at = SAMPLE_BROWSER_DRUMS.indexOf(name);
       return browserScreen('Drums', SAMPLE_BROWSER_DRUMS, at, function (i) { return i === 0; },
         function (i) { return star && i === at; });
     };
-    var starring = [drumsAt('Kit-House', false), popupScreen('Favorite', 'Kit-House'), drumsAt('Kit-House', true)];
+    var starring = [drumsAt('Kit-House', false), drumsAt('Kit-House', true)];
     // SHIFT + BROWSER: Hot-Swap the selected device (1-Drums' Drum Rack): the popup names it, the
     // browser opens on its category (Drums, on its first item), TURN to a kit, PUSH swaps it.
     var drumFolders = function (i) { return i === 0; };

@@ -440,7 +440,6 @@
         {"combo": ["MASCHINE"], "context": "Fixed velocity", "does": "The velocity FIXED VEL plays (1-127, 100 to start with)."},
         {"combo": ["MASCHINE"], "context": "Pad pressure", "does": "What pressing harder on a held pad sends: Poly (each pad its own aftertouch), Channel (one for all) or Off."},
         {"combo": ["MASCHINE"], "context": "Drum colours", "does": "The drum pads in their chain colours, or coloured by name (see the colour table)."},
-        {"combo": ["MASCHINE"], "context": "Playback lights", "does": "Pads light up with the notes the playing clip plays (On), or not."},
         {"combo": ["MASCHINE"], "context": "Step follows", "does": "STEP's page follows the playhead (On), or stays where you put it."},
         {"combo": ["MASCHINE"], "context": "About", "does": "The script version, its author and your Live version (◀ ▶ to show it)."}
       ]
@@ -460,7 +459,7 @@
     }
   ],
   "changes": [
-    {"what": "Setup", "v1": "Controller Editor template, MIDI mode (SHIFT + MASCHINE), choose ports in Live", "v2": "Copy one folder; the bridge starts with Live and the script loads itself"},
+    {"what": "Setup", "v1": "Controller Editor template, MIDI mode (SHIFT + MASCHINE), choose ports in Live", "v2": "Copy the script into the User Library; the bridge starts with Live. macOS: Live picks the controller by itself. Windows: the loopMIDI port pair and a one-time choice of the ports in Live"},
     {"what": "SHIFT", "v1": "RESTART acted as SHIFT", "v2": "The real SHIFT button; RESTART restarts playback"},
     {"what": "Tracks, scenes and steps on the pads", "v1": "Pad 1 (bottom left) first", "v2": "Read like text from pad 13 (A), as printed and as in MASCHINE; return tracks and Master stay on the last pads"},
     {"what": "PLAY", "v1": "Start (SHIFT: restart)", "v2": "Start / stop like MASCHINE; SHIFT + PLAY continues where it stopped; RESTART plays from the start"},

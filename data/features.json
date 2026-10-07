@@ -24,7 +24,7 @@
       "items": [
         {"combo": ["SHIFT"], "does": "The real SHIFT button: hold it for the second function printed on a button, and for the SHIFT + pad edit matrix."},
         {"combo": ["PATTERN"], "does": "Clips on the pads."},
-        {"combo": ["PAD MODE"], "does": "Drum pads (or the keyboard when the track has no Drum Rack). The controller starts here."},
+        {"combo": ["PAD MODE"], "does": "Drum pads (or the keyboard when the track has no Drum Rack). The controller starts here (MIKRO: see Start mode)."},
         {"combo": ["KEYBOARD"], "does": "Play notes in Live's current scale."},
         {"combo": ["SHIFT", "MASCHINE"], "does": "NI's own MIDI mode toggle. The screen warns when it happens; press it again to get back.", "devices": ["mikro"]}
       ]
@@ -51,7 +51,7 @@
       "id": "clip",
       "nav": "Clips",
       "title": "PATTERN: clips",
-      "summary": "A 4x4 view of Live's Session clips (4 tracks x 4 scenes). Pad colours follow the clip colours; playing clips are bright. Recording a new clip (an empty slot, or VARIATION + pad) selects its track, so Live's auto-arm arms it (the dimmed arm, which follows the track you select; tracks armed for real are disarmed), and the pads switch to the drum pads or the keyboard so you can play into it right away.",
+      "summary": "A 4x4 view of Live's Session clips (4 tracks x 4 scenes). Pad colours follow the clip colours; playing clips are bright. Recording a new clip (an empty slot, or VARIATION + pad) selects its track, so Live's auto-arm arms it (the dimmed arm, which follows the track you select; tracks armed for real are disarmed), and the pads switch to the drum pads or the keyboard so you can play into it right away. With a Record length set (REC + TURN), the new clip records exactly that many bars and then loops.",
       "items": [
         {"combo": ["PATTERN"], "does": "Tap: switch to clip mode. Hold + PAD: launch a clip, then return to the previous mode."},
         {"combo": ["PAD"], "does": "Launch the clip. On an empty slot of a MIDI track: select (arm) that track and record a new clip; the pads switch to the drum pads or keyboard to play."},
@@ -103,7 +103,7 @@
       "id": "drum",
       "nav": "Drums",
       "title": "PAD MODE: drums",
-      "summary": "The 16 visible pads of the track's Drum Rack. Hitting a pad plays it and focuses it in Live (like MASCHINE focusing a sound). Pads are coloured by chain colour or by name (see the colour table). While a clip plays, the pads of the notes it plays light up.",
+      "summary": "The 16 visible pads of the track's Drum Rack. Hitting a pad plays it and focuses it in Live (like MASCHINE focusing a sound). Pads are coloured by chain colour or by name (see the colour table). While a clip plays, the pads of the notes it plays light up. Hold a pad and turn for a quick edit, as in MASCHINE: TURN changes its volume (1 dB a click, SHIFT + TURN 0.1 dB), PUSH + TURN its tune in semitones (its Simpler or Drum Sampler). The pad still plays; the screen shows the pad and the value until you let go. Hold several pads to change them together, each from its own level; one hold is one undo step.",
       "swatches_note": "Name colours: pads use their chain colour by default; press PAD MODE again to colour them by name instead (it is remembered). A chain without a colour also gets its name colour. The name is read word by word, first word first, as sample names start with the kind of sound (Kick BlackEarth 1, ClosedHH Dev, BD_Deep_01); a word counts when it starts with one of these words, and short abbreviations (BD, SN, HH, OH ...) only as whole words. Anything else is white.",
       "swatches": [
         {"name": "Red: Kick, 808, sub, bass", "rgb": "#ff1414", "keywords": ["kick", "bassdrum", "bass", "808", "sub", "boom", "sine", "BD", "BDR", "KK"]},
@@ -134,6 +134,7 @@
         {"combo": ["ERASE", "PAD"], "does": "Erase that pad's notes in the focused clip (no clip: empty the pad)."},
         {"combo": ["DUPLICATE", "PAD", "PAD"], "does": "Copy the first pad onto the second."},
         {"combo": ["TURN"], "does": "Scroll by one row (SHIFT or PUSH + TURN: by 16 pads)."},
+        {"combo": ["PAD", "TURN"], "does": "Hold a pad: its volume (SHIFT: 0.1 dB; PUSH: tune)."},
         {"combo": ["◀", "▶"], "does": "Previous / next drum pad: focuses that sound (named on the screen; the one STEP sequences)."},
         {"combo": ["SHIFT", "PAD MODE"], "does": "Velocity curve: Linear / Soft / Hard."}
       ]
@@ -171,10 +172,11 @@
       "id": "step",
       "nav": "Step sequencer",
       "title": "STEP: step sequencer",
-      "summary": "The pads are 16 steps of the focused sound (the focused drum pad, or the last keyboard note) in the focused clip, read like text as in MASCHINE: step 1 top left (pad 13), step 16 bottom right (pad 4). The playhead runs across the pads while the clip plays, and the page follows it on longer clips (after you change the page yourself, it follows again once the playhead reaches your page).",
+      "summary": "The pads are 16 steps of the focused sound (the focused drum pad, or the last keyboard note) in the focused clip, read like text as in MASCHINE: step 1 top left (pad 13), step 16 bottom right (pad 4). The playhead runs across the pads while the clip plays, and the page follows it on longer clips (after you change the page yourself, it follows again once the playhead reaches your page). Hold a step to edit it, as in MASCHINE: the screen shows Step N and its value; TURN changes the velocity (1-127), SHIFT + TURN the length in steps, PUSH + TURN nudges the note up to 7/16 of a step earlier or later. Hold several steps to change them together; one hold is one undo step. A tap on a lit step removes it when you let go.",
       "items": [
         {"combo": ["STEP"], "does": "Switch to step mode."},
         {"combo": ["PAD"], "does": "Add / remove a note on that step. On an empty slot, the first step creates a one-bar clip."},
+        {"combo": ["PAD", "TURN"], "does": "Hold a step: velocity (SHIFT: length, PUSH: nudge)."},
         {"combo": ["TURN"], "does": "Next / previous page of 16 steps (◀ ▶ too)."},
         {"combo": ["SHIFT", "TURN"], "does": "Step size: 1/32, 1/16, 1/8, 1/4."},
         {"combo": ["SELECT", "PAD"], "does": "Choose the sound to sequence: while SELECT is held the pads show the sounds, brighter where the clip has notes, brightest for the current one. Press one (you hear it); let go and the pads are its steps.", "devices": ["mikro"]},
@@ -250,13 +252,14 @@
       "id": "transport",
       "nav": "Transport",
       "title": "Transport",
-      "summary": "MASCHINE's transport, in Live.",
+      "summary": "MASCHINE's transport, in Live. Record length: hold REC and turn to choose Free, 1, 2, 4 or 8 bars (the screen shows it; MIKRO: also in the MASCHINE settings). A pad on an empty slot in PATTERN then records exactly that long, stops recording by itself and the clip loops; Free records until you stop it. A REC tap switches session record on its release, unless you turned meanwhile.",
       "items": [
         {"combo": ["PLAY"], "does": "Start / stop (stopping keeps the position)."},
         {"combo": ["SHIFT", "PLAY"], "does": "Continue from where playback stopped (like Shift + Space in Live)."},
         {"combo": ["RESTART"], "does": "Restart from the start marker."},
         {"combo": ["SHIFT", "RESTART"], "does": "Loop on / off."},
         {"combo": ["REC"], "does": "Session record on / off (also ends Arrangement recording)."},
+        {"combo": ["REC", "TURN"], "does": "Record length: Free, 1, 2, 4 or 8 bars."},
         {"combo": ["SHIFT", "REC"], "does": "Arrangement record on / off."},
         {"combo": ["STOP"], "does": "Stop. Hold + PAD: stop that track's clips."},
         {"combo": ["SHIFT", "STOP"], "does": "Stop all clips (transport keeps running)."},
@@ -411,7 +414,7 @@
       "id": "browser",
       "nav": "Browser",
       "title": "BROWSER: browse and load (MIKRO)",
-      "summary": "Live's browser on the hardware screen, Favorites first (what you starred with SHIFT + STAR, and the kits you starred in MASCHINE), then Live's sidebar: Collections (Live's Favorites and your coloured collections), MASCHINE Kits, the library (Sounds, Drums, Instruments ...), and the folders you added to Places. MASCHINE Kits (Live 12.1 or later, with MASCHINE Expansions or the MASCHINE library installed) lists your Expansions and their kits: PUSH on a kit loads it as a Drum Rack, pad for pad as in MASCHINE: onto the selected MIDI track, replacing its instrument (effects after it stay), or on a new MIDI track named after the kit (# Kit name, so Live numbers it) when an audio track is selected. Each pad is a Simpler in 1-Shot, so a hit rings out; long synth, vocal, FX, atmosphere and loop sounds play while held instead. The pads and the Drum Rack's chains get the drum colours by sound name (see PAD MODE). A drum-synth sound plays NI's recording of it where there is one; a sound that is a plug-in in MASCHINE (Massive, Monark ...) stays an empty pad with its name, to put your own sound on. Turning onto a kit plays NI's own preview of it through Live's preview (Cue output, preview switched on in Live's browser), like clicking a sample in Live's browser; the script puts the previews in your User Library (MASCHINE Kit Previews, as hard links: no extra disk space) the first time you open MASCHINE Kits, and picks up newly installed Expansions the same way. Your MASCHINE favourites come along, in a one-way sync: the kits you star in MASCHINE show with a ★ in Favorites and in MASCHINE Kits' own Favorites folder, next to the ones you starred on the controller (a kit starred in both is listed once). Star or unstar kits in MASCHINE and the lists follow, also while Live runs (the next time the list opens). The controller only reads MASCHINE's favourites and never changes them: a kit starred in MASCHINE stays starred here (the screen says Still starred / in MASCHINE; star / unstar it in MASCHINE). Expansions you add or remove are followed: a removed Expansion's kits leave the lists, and a new one's favourites appear once MASCHINE has scanned it. Favorites lists are sorted by name, as in MASCHINE. This is the way to play the Expansions in Live without the MASCHINE plug-in, which takes the controller away from the script (see Getting started).",
+      "summary": "Live's browser on the hardware screen, Favorites first (what you starred with SHIFT + STAR, and the kits you starred in MASCHINE), then Live's sidebar: Collections (Live's Favorites and your coloured collections), MASCHINE Kits, the library (Sounds, Drums, Instruments ...), and the folders you added to Places. MASCHINE Kits (Live 12.4 or later, with MASCHINE Expansions or the MASCHINE library installed; on an older Live it is listed but only says Needs Live 12.4+) lists your Expansions and their kits: PUSH on a kit loads it as a Drum Rack, pad for pad as in MASCHINE: onto the selected MIDI track, replacing its instrument (effects after it stay), or on a new MIDI track named after the kit (# Kit name, so Live numbers it) when an audio track is selected. Each pad is a Simpler in 1-Shot, so a hit rings out; long synth, vocal, FX, atmosphere and loop sounds play while held instead. The pads and the Drum Rack's chains get the drum colours by sound name (see PAD MODE). A drum-synth sound plays NI's recording of it where there is one; a sound that is a plug-in in MASCHINE (Massive, Monark ...) stays an empty pad with its name, to put your own sound on. Turning onto a kit plays NI's own preview of it through Live's preview (Cue output, preview switched on in Live's browser), like clicking a sample in Live's browser; the script puts the previews in your User Library (MASCHINE Kit Previews, as hard links: no extra disk space) the first time you open MASCHINE Kits, and picks up newly installed Expansions the same way. Your MASCHINE favourites come along, in a one-way sync: the kits you star in MASCHINE show with a ★ in Favorites and in MASCHINE Kits' own Favorites folder, next to the ones you starred on the controller (a kit starred in both is listed once). Star or unstar kits in MASCHINE and the lists follow, also while Live runs (the next time the list opens). The controller only reads MASCHINE's favourites and never changes them: a kit starred in MASCHINE stays starred here (the screen says Still starred / in MASCHINE; star / unstar it in MASCHINE). Expansions you add or remove are followed: a removed Expansion's kits leave the lists, and a new one's favourites appear once MASCHINE has scanned it. Favorites lists are sorted by name, as in MASCHINE. This is the way to play the Expansions in Live without the MASCHINE plug-in, which takes the controller away from the script (see Getting started).",
       "devices": ["mikro"],
       "items": [
         {"combo": ["BROWSER"], "does": "Browser on / off (it opens where you left it)."},
@@ -429,18 +432,21 @@
       "id": "settings",
       "nav": "Settings",
       "title": "MASCHINE: settings (MIKRO)",
-      "summary": "Your preferences, on the controller. They are saved with Live's preferences on your computer, remembered after a restart, and take effect at once.",
+      "summary": "Your preferences, on the controller. They are saved with Live's preferences on your computer, remembered after a restart, and take effect at once (Start mode: at the next start). The screen saver only darkens the screen: the pad and button lights stay as they are, and the press, pad hit, turn or strip touch that wakes it still does its job (a pad plays). It never darkens the waiting and setup screens. Record length is the same setting as hold REC + TURN (see Transport). Start mode Pads opens on the drum pads on a track with a Drum Rack, else on the keyboard; the start mode also applies when the controller comes back from the MASCHINE plug-in.",
       "devices": ["mikro"],
       "items": [
         {"combo": ["MASCHINE"], "does": "Settings on / off. The screen lists them with their values; the bar on the right shows where you are in the list."},
         {"combo": ["TURN"], "does": "The previous / next setting."},
         {"combo": ["◀", "▶"], "does": "Change the selected setting (PUSH: the next value)."},
         {"combo": ["MASCHINE"], "context": "Screen", "does": "2 lines (the default: larger letters, like MASCHINE's screen) or 3 lines (smaller letters, more at once)."},
+        {"combo": ["MASCHINE"], "context": "Screen saver", "does": "The screen goes dark after Off, 5, 10 (default) or 30 min untouched."},
         {"combo": ["MASCHINE"], "context": "Velocity curve", "does": "How pad pressure turns into velocity: Linear, Soft or Hard."},
         {"combo": ["MASCHINE"], "context": "Fixed velocity", "does": "The velocity FIXED VEL plays (1-127, 100 to start with)."},
         {"combo": ["MASCHINE"], "context": "Pad pressure", "does": "What pressing harder on a held pad sends: Poly (each pad its own aftertouch), Channel (one for all) or Off."},
         {"combo": ["MASCHINE"], "context": "Drum colours", "does": "The drum pads in their chain colours, or coloured by name (see the colour table)."},
         {"combo": ["MASCHINE"], "context": "Step follows", "does": "STEP's page follows the playhead (On), or stays where you put it."},
+        {"combo": ["MASCHINE"], "context": "Record length", "does": "Free, 1, 2, 4 or 8 bars for a new clip (as REC + TURN)."},
+        {"combo": ["MASCHINE"], "context": "Start mode", "does": "The mode the controller opens in: Pads (default), Pattern, Scene, Step or Track."},
         {"combo": ["MASCHINE"], "context": "About", "does": "The script version, its author and your Live version (◀ ▶ to show it)."}
       ]
     },
@@ -473,7 +479,9 @@
     {"what": "Device / Clip detail view", "v1": "PLUG-IN", "v2": "SHIFT + PLUG-IN (PLUG-IN now controls device parameters)"},
     {"what": "Track mode pin", "v1": "SHIFT + GROUP", "v2": "Tap GROUP (hold: temporary)"},
     {"what": "New audio track (TRACK mode)", "v1": "SHIFT + unlit pad", "v2": "DUPLICATE + unlit pad (SHIFT + pads are the edit functions in every mode, TRACK included)"},
-    {"what": "New", "v1": "", "v2": "Chords, arpeggiator, 16 Velocities, step sequencer, hardware browser, MASCHINE Expansion kits as Drum Racks (MIKRO), parameter control, pitch / mod strip, record variations (VARIATION + pad), take undo, clip progress and parameter value on the strip (touch to jump / set), a silent metronome on the strip while recording, humanize, screen feedback, pads light instantly when played"},
+    {"what": "New", "v1": "", "v2": "Chords, arpeggiator, 16 Velocities, step sequencer, hardware browser, MASCHINE Expansion kits as Drum Racks (MIKRO), parameter control, pitch / mod strip, record variations (VARIATION + pad), take undo, clip progress and parameter value on the strip (touch to jump / set), a silent metronome on the strip while recording, fixed-length recording (REC + TURN), quick edits on a held step or drum pad, humanize, screen feedback, a screen saver and a start mode (MIKRO settings), pads light instantly when played"},
+    {"what": "Mode at start", "v1": "Always PATTERN (the clips)", "v2": "The drum pads (the keyboard without a Drum Rack); MIKRO: choose Pads, Pattern, Scene, Step or Track in the settings"},
+    {"what": "Recording a new clip", "v1": "Records until stopped", "v2": "Free as before, or exactly 1, 2, 4 or 8 bars, then it loops (REC + TURN)"},
     {"what": "MASCHINE plug-in in Live", "v1": "NI's MIDI mode: SHIFT + MASCHINE (MK3, MASCHINE+: SHIFT + CHANNEL) switches between MASCHINE and the script", "v2": "The script steps aside while a MASCHINE plug-in is in the set and comes back when it is deleted (or use v1.6.1 to switch on the fly)"}
   ]
 }

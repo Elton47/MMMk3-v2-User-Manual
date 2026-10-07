@@ -336,15 +336,35 @@ function kitsScreen(chosen, favorites) {
 }
 
 // The settings page (MASCHINE), a setting chosen by its name (default: the first one), line 2
-// 'Name: value' as the script's settings page shows it (the setup guide shows 'About').
+// 'Name: value' as the script's settings page shows it (the setup guide shows 'About'). The rows
+// in the script's order and with its defaults (surface.py _settings_items; Brightness stays hidden
+// there until more than 100 % is known for the controller).
+function settingsRows() {
+  return ['Screen\t' + MM.screenLines + ' lines', 'Screen saver\t10 min', 'Velocity curve\tLinear',
+    'Fixed velocity\t100', 'Pad pressure\tPoly', 'Drum colours\tBy chain', 'Step follows\tOn',
+    'Record length\tFree', 'Start mode\tPads', 'About\t2.0.0'];
+}
 function settingsScreen(chosenName) {
-  var lines = MM.screenLines + ' lines';
-  var rows = ['Screen\t' + lines, 'Velocity curve\tLinear', 'Fixed velocity\t100', 'Pad pressure\tPoly',
-    'Drum colours\tBy chain', 'Playback lights\tOn', 'Step follows\tOn', 'About\t2.0.0'];
+  var rows = settingsRows();
   var names = rows.map(function (row) { return row.split('\t')[0]; });
   var chosen = Math.max(0, names.indexOf(chosenName));
   return listScreen('Settings', rows[chosen].replace('\t', ': '), rows, chosen);
 }
+
+// The settings section's screens: each setting's row ('MASCHINE (Screen saver)', the item's
+// context) shows the page on that setting.
+function settingsSectionScreens() {
+  var out = { '*': settingsScreen() };
+  settingsRows().forEach(function (row) {
+    var name = row.split('\t')[0];
+    out['MASCHINE (' + name + ')'] = settingsScreen(name);
+  });
+  return out;
+}
+
+// A held button's value (REC: the record length; a held step): the display's show_held, the
+// name on line 1, the value below.
+function heldScreen(title, value) { return modeScreen(title, '', value); }
 
 // Pad number (1-16) of a list position: lists read like text, position 0 = pad 13 (top left),
 // position 3 = pad 16, position 4 = pad 9, ... position 15 = pad 4 (bottom right).
@@ -579,7 +599,16 @@ var LAYOUTS = {
           'TURN': [kitsScreen(0, [0]), kitsScreen(1, [0])],
           'PUSH': [kitsScreen(1, [0]), popupScreen('Loaded', SAMPLE_EXPANSION.kits[1])],
           'SHIFT+STAR': starring },
-        highlights: { 'PUSH': kitsScreen(0, [0]) }
+        highlights: { 'PUSH': kitsScreen(0, [0]) },
+        settings: settingsSectionScreens(),
+        // Hold REC + TURN: the record length (Free, 1, 2, 4, 8 bars).
+        transport: { 'REC+TURN': ['Free', '1 bar', '2 bars', '4 bars'].map(function (v) { return heldScreen('Record length', v); }) },
+        // Hold a step + TURN: 'Step 1' and its velocity (SHIFT: 'Length 2 steps', PUSH: 'Nudge +1/16').
+        step: { 'PAD+TURN': ['Velocity 100', 'Velocity 101', 'Velocity 102'].map(function (v) { return heldScreen('Step 1', v); }) },
+        // Hold a drum pad + TURN: its chain volume in 1 dB steps, 'Volume' in the corner, the fill bar.
+        drum: { 'PAD+TURN': [0, -1, -2].map(function (db) {
+          return withFill(trackScreen(0, 'Volume', SAMPLE_DRUMS[0], dbText(db), 'Volume'), volumeFill(db));
+        }) }
       },
       stripDots: dots,
       padDemos: padDemos('GROUP'),

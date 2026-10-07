@@ -645,13 +645,14 @@ MM.manual = (function () {
 
   // The screen for a hovered combo: in a section with its own screens (layout().sectionScreens,
   // e.g. PLUG-IN's), the combo's there; else the first token's that has one, else the selected
-  // control's. A list of states plays in turn (PUSH + TURN: page 1/2, then 2/2).
-  function updateScreen(combo, section) {
+  // control's. A list of states plays in turn (PUSH + TURN: page 1/2, then 2/2). An item with a
+  // context (the settings' rows) first looks for 'COMBO (context)' there.
+  function updateScreen(combo, section, context) {
     var spec = layout();
     clearInterval(state.screenTimer);
     if (!spec.screens) return;
     var lines = null, own = combo && section && spec.sectionScreens && spec.sectionScreens[section.id];
-    if (own) lines = own[combo.join('+')] || own['*'] || null;
+    if (own) lines = (context && own[combo.join('+') + ' (' + context + ')']) || own[combo.join('+')] || own['*'] || null;
     if (!lines) (combo || []).some(function (token) { return (lines = spec.screens[token] || null); });
     if (!lines && state.selected) lines = spec.screens[state.selected] || null;
     if (Array.isArray(lines)) {
@@ -728,7 +729,7 @@ MM.manual = (function () {
     return state.drawing.node(id);
   }
 
-  function paintHardware(combo, section) {
+  function paintHardware(combo, section, context) {
     controlIds().forEach(function (id) {
       var g = controlNode(id);
       if (!g) return;
@@ -736,7 +737,7 @@ MM.manual = (function () {
       g.classList.remove('related');
       if (g.hasAttribute('aria-pressed')) g.setAttribute('aria-pressed', String(id === state.selected));
     });
-    updateScreen(combo, section);
+    updateScreen(combo, section, context);
     paintPads(combo, section);
     var badges = el('badges');
     if (!badges) return;
@@ -777,9 +778,9 @@ MM.manual = (function () {
       comboElement(item.combo, terms),
       does
     ]);
-    li.addEventListener('mouseenter', function () { paintHardware(item.combo, section); });
+    li.addEventListener('mouseenter', function () { paintHardware(item.combo, section, item.context); });
     li.addEventListener('mouseleave', function () { paintHardware(); });
-    li.addEventListener('click', function () { paintHardware(item.combo, section); });
+    li.addEventListener('click', function () { paintHardware(item.combo, section, item.context); });
     return li;
   }
 

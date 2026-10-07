@@ -647,12 +647,19 @@ MM.manual = (function () {
   // e.g. PLUG-IN's), the combo's there; else the first token's that has one, else the selected
   // control's. A list of states plays in turn (PUSH + TURN: page 1/2, then 2/2). An item with a
   // context (the settings' rows) first looks for 'COMBO (context)' there.
+  // The section's own screen for a combo on a device (sectionScreens in layouts.js), or null.
+  // Shared with the Tour (js/highlights.js).
+  function sectionScreen(device, combo, section, context) {
+    var spec = LAYOUTS[device], own = combo && section && spec.sectionScreens && spec.sectionScreens[section.id];
+    if (!own) return null;
+    return (context && own[combo.join('+') + ' (' + context + ')']) || own[combo.join('+')] || own['*'] || null;
+  }
+
   function updateScreen(combo, section, context) {
     var spec = layout();
     clearInterval(state.screenTimer);
     if (!spec.screens) return;
-    var lines = null, own = combo && section && spec.sectionScreens && spec.sectionScreens[section.id];
-    if (own) lines = (context && own[combo.join('+') + ' (' + context + ')']) || own[combo.join('+')] || own['*'] || null;
+    var lines = sectionScreen(state.device, combo, section, context);
     if (!lines) (combo || []).some(function (token) { return (lines = spec.screens[token] || null); });
     if (!lines && state.selected) lines = spec.screens[state.selected] || null;
     if (Array.isArray(lines)) {
@@ -668,9 +675,10 @@ MM.manual = (function () {
 
   // The mode a section is about: its first single-button item (for this device) that has a pad
   // demo, e.g. PAD MODE for the drum section; null if none.
-  function sectionMode(section) {
-    var demos = layout().padDemos || {}, mode = null;
-    (section ? section.items.filter(forDevice) : []).some(function (item) {
+  function sectionMode(section, device) {
+    device = device || state.device;
+    var demos = LAYOUTS[device].padDemos || {}, mode = null;
+    (section ? section.items.filter(function (item) { return !item.devices || item.devices.indexOf(device) >= 0; }) : []).some(function (item) {
       return item.combo.length === 1 && demos[item.combo[0]] && (mode = item.combo[0]);
     });
     return mode;
@@ -686,10 +694,11 @@ MM.manual = (function () {
   // A held modifier (SOLO, MUTE, STOP, the MIKRO's SELECT) brings the tracks onto the pads after a
   // moment, as the script does (a tap leaves the pads as they are): HELD_DELAY ms.
   var HELD_DELAY = 300;
-  function paintPads(combo, section) {
-    clearTimeout(state.padTimer);
-    var demos = layout().padDemos || {}, demo = null, source = null;
-    var mode = sectionMode(section);
+  // The pad demo for a combo in a section on a device: { demo (null: none), source (the combo
+  // token it came from) }. Shared with the Tour (js/highlights.js).
+  function comboDemo(device, combo, section) {
+    var demos = LAYOUTS[device].padDemos || {}, demo = null, source = null;
+    var mode = sectionMode(section, device);
     var keep = mode && TRACK_VIEW_KEEPS.indexOf(mode) >= 0 ? mode : null, kept = false;
     var chosen = combo && section && SECTION_PADS[section.id], key = combo ? combo.join('+') : '';
     if (chosen && (key in chosen || '*' in chosen)) {
@@ -702,6 +711,13 @@ MM.manual = (function () {
       });
     }
     if (!demo && kept) demo = demos[keep];
+    return { demo: demo, source: source };
+  }
+
+  function paintPads(combo, section) {
+    clearTimeout(state.padTimer);
+    var demos = layout().padDemos || {};
+    var found = comboDemo(state.device, combo, section), demo = found.demo, source = found.source;
     var fromCombo = !!demo;
     if (!demo && state.selected) { demo = demos[state.selected] || null; source = state.selected; }
     function apply() {
@@ -1238,6 +1254,7 @@ MM.manual = (function () {
 
   return {
     init: init, show: show, setDeviceFromSetup: setDeviceFromSetup, hasSection: hasSection, updateWelcome: updateWelcome,
-    createDrawing: createDrawing, oledCanvas: oledCanvas, forDevice: function (entry, device) { return !entry.devices || entry.devices.indexOf(device) >= 0; }
+    createDrawing: createDrawing, oledCanvas: oledCanvas, forDevice: function (entry, device) { return !entry.devices || entry.devices.indexOf(device) >= 0; },
+    sectionScreen: sectionScreen, comboDemo: comboDemo, sectionMode: sectionMode
   };
 })();

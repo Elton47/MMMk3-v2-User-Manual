@@ -1,9 +1,12 @@
-// Boot and routing. Views: #setup... (the setup wizard), #highlights... (the self-playing
-// highlights tour: #highlights, #highlights/3, #highlights/mk3/3), #cheatsheet... (the printable
-// cheat sheet: #cheatsheet, #cheatsheet/mk3), the printable documents (js/print-docs.js: the
-// installation guide #setup/print, #setup/print/windows; what's new #whatsnew) and everything else (the manual: #manual, #mikro,
-// #mk3/PLUG-IN, #<section id>, a search: #manual?q=arp, #mk3?q=note%20repeat). A first visit
-// without a hash opens the setup.
+// Boot and routing. Views: #setup... (the setup wizard), the manual in two views: the Tour
+// (js/tour.js: #tour, #tour/<section>[/<step>], #tour/mk3/<section>/<step>; the old #highlights,
+// #highlights/3, #highlights/mk3/3 open its Highlights card) and the Full manual (js/manual.js:
+// #full, #full/<section>, #mikro, #mk3/PLUG-IN, a search: #manual?q=arp, #mk3?q=note%20repeat),
+// #cheatsheet... (the printable cheat sheet: #cheatsheet, #cheatsheet/mk3) and the printable
+// documents (js/print-docs.js: the installation guide #setup/print, #setup/print/windows; what's
+// new #whatsnew). #manual and #<section id> open the view the visitor chose last in the header
+// (Tour | Full manual, remembered as `manualView`; the Tour to start with), at that section. A
+// first visit without a hash opens the setup.
 (function () {
   'use strict';
 
@@ -18,10 +21,13 @@
     });
   }
 
+  // The manual view the visitor chose last in the header: 'tour' (the default) or 'full'.
+  function manualView() { return MM.store('manualView') === 'full' ? 'full' : 'tour'; }
+
   // tab: the nav tab to mark when it isn't the view's own (the cheat sheet belongs to the manual)
   function showView(name, tab) {
-    if (name !== 'highlights') MM.tour.stop();
-    ['setup', 'manual', 'highlights', 'cheatsheet', 'print'].forEach(function (view) {
+    if (name !== 'tour') MM.tour.stop();
+    ['setup', 'manual', 'tour', 'cheatsheet', 'print'].forEach(function (view) {
       el('view-' + view).hidden = view !== name;
     });
     var tabName = tab || (name === 'cheatsheet' ? 'manual' : name);
@@ -45,6 +51,31 @@
     return found;
   }
 
+  function showTour(target) {
+    showView('tour');
+    document.title = 'Tour · MASCHINE for Ableton Live';
+    MM.store('manualSeen', '1');
+    if (ready.manual) MM.tour.show(target);
+    else el('tour-cards').innerHTML = '<p class="load-error">Could not load the manual data. Reload the page to try again.</p>';
+  }
+
+  // #tour/<device>/<section>/<step>, each part optional (step 1-based).
+  function tourTarget(parts) {
+    var target = {};
+    if (LAYOUTS[parts[0]]) target.device = parts.shift();
+    if (parts[0]) target.section = decodeURIComponent(parts.shift());
+    var step = parseInt(parts[0], 10);
+    if (!isNaN(step)) target.step = step - 1;
+    return target;
+  }
+
+  function showFull(parts, query) {
+    showView('manual');
+    document.title = 'Manual · MASCHINE for Ableton Live';
+    MM.store('manualSeen', '1');
+    if (ready.manual) MM.manual.show(parts, query);
+  }
+
   function route() {
     var hash = location.hash.replace(/^#/, '');
     var queryAt = hash.indexOf('?');
@@ -57,11 +88,16 @@
       if (ready.setup) MM.setup.help();
       return;
     }
+    if (parts[0] === 'tour') {
+      showTour(tourTarget(parts.slice(1)));
+      return;
+    }
     if (parts[0] === 'highlights') {
-      showView('highlights');
-      document.title = 'Highlights · MASCHINE for Ableton Live';
-      if (ready.manual) MM.tour.show(parts.slice(1));
-      else el('tour-stage').innerHTML = '<p class="load-error">Could not load the highlights. Reload the page to try again.</p>';
+      // the highlights tour of before: the Tour's Highlights card (#highlights/mk3/3: step 3)
+      var target = tourTarget(parts.slice(1));
+      target.step = target.section ? parseInt(target.section, 10) - 1 : target.step;
+      target.section = 'highlights';
+      showTour(target);
       return;
     }
     if (parts[0] === 'setup' && parts[1] === 'print') {
@@ -91,16 +127,29 @@
       else el('setup-root').innerHTML = '<p class="load-error">Could not load the setup steps. Reload the page to try again.</p>';
       return;
     }
-    showView('manual');
-    document.title = 'Manual · MASCHINE for Ableton Live';
-    MM.store('manualSeen', '1');
-    if (ready.manual) MM.manual.show(parts, hashParam(query, 'q'));
+    if (parts[0] === 'full') {
+      showFull(parts[1] ? [decodeURIComponent(parts[1])] : ['manual'], hashParam(query, 'q'));
+      return;
+    }
+    // A controller (#mikro, #mk3/PLUG-IN) or a search belongs to the Full manual; the rest
+    // (#manual, #<section id>, no hash) opens the view chosen last, at that section.
+    var q = hashParam(query, 'q');
+    if (LAYOUTS[parts[0]] || q || manualView() === 'full') {
+      showFull(parts, q);
+      return;
+    }
+    var section = parts[0] && parts[0] !== 'manual' ? decodeURIComponent(parts[0]) : null;
+    showTour({ section: section });
   }
 
   function boot() {
     MM.initTheme();
     var bar = document.querySelector('.top-app-bar');
     window.addEventListener('scroll', function () { bar.classList.toggle('scrolled', window.scrollY > 4); }, { passive: true });
+    // the header's Tour | Full manual: the visitor's choice, remembered for #manual and sections
+    document.querySelectorAll('[data-manual-view]').forEach(function (tab) {
+      tab.addEventListener('click', function () { MM.store('manualView', tab.getAttribute('data-manual-view')); });
+    });
 
     Promise.all([
       fetchJSON('data/features.json').catch(function () { return null; }),

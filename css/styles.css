@@ -297,7 +297,7 @@ button { font: inherit; color: inherit; }
   display: inline-flex; align-items: center; gap: 8px;
   height: 40px; padding: 0 16px; border-radius: var(--md-sys-shape-full);
   color: var(--md-sys-color-on-surface-variant); text-decoration: none;
-  font-size: 14px; font-weight: 500; letter-spacing: .01em;
+  font-size: 14px; font-weight: 500; letter-spacing: .01em; white-space: nowrap;
 }
 .nav-tab::after {
   content: ""; position: absolute; inset: 0; z-index: -1; border-radius: inherit;
@@ -650,7 +650,7 @@ mark.hit {
 @keyframes pad-meter { 0%, 100% { --meter: .15; } 22% { --meter: .85; } 48% { --meter: .4; } 70% { --meter: 1; } 86% { --meter: .55; } }
 @media (prefers-reduced-motion: no-preference) {
   .hw-drawing.real .pad.demo-meter { animation: pad-meter var(--meter-period, 2.4s) ease-in-out var(--meter-delay, 0s) infinite; }
-  .hw-drawing.real .pad.demo-meter .cap, #tour-device .pad.demo-meter .cap { transition: none; }  /* the animation is the motion */
+  .hw-drawing.real .pad.demo-meter .cap, .tour-device .pad.demo-meter .cap { transition: none; }  /* the animation is the motion */
   .hw-drawing.real .pad.demo-meter.demo-dim:not(.selected):not(.related) .cap,
   .hw-drawing.real.combo-demo .pad.related.demo-meter.demo-dim:not(.selected) .cap { fill: color-mix(in srgb, var(--demo-color) calc(34% + var(--meter) * 16%), #e6e7e9); }
   .hw-drawing.real .pad.demo-meter.demo-mid:not(.selected):not(.related) .cap,
@@ -977,12 +977,24 @@ td:first-child { font-weight: 500; }
 
 .load-error { padding: 16px; border-radius: var(--md-sys-shape-md); background: var(--md-sys-color-error-container); color: var(--md-sys-color-on-error-container); }
 
-/* --- highlights tour ---------------------------------------------------------------------- */
+/* --- the Tour: a self-playing card per section (js/tour.js, js/highlights.js) -------------- */
 
 .tour { max-width: var(--page-max); margin: 0 auto; padding: 20px 16px 8px; }
 .tour-head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 12px 24px; margin: 4px 0 16px; }
 .tour-title { font-size: 32px; line-height: 40px; font-weight: 500; }
-.tour-intro { margin: 6px 0 0; color: var(--md-sys-color-on-surface-variant); font-size: 16px; line-height: 24px; }
+.tour-intro { margin: 6px 0 0; max-width: 70ch; color: var(--md-sys-color-on-surface-variant); font-size: 16px; line-height: 24px; }
+.tour-toc { margin: 0 0 8px; }
+.toc a.active { border-color: var(--md-sys-color-primary); color: var(--md-sys-color-primary); }
+.tour-toc a[hidden] { display: none; }
+
+/* a card: the section's title and a short line, the stage, the controls, the full section */
+.tour-cards { display: flex; flex-direction: column; gap: 40px; margin-top: 24px; }
+.tour-card { scroll-margin-top: 0; }  /* the page's scroll-padding-top keeps it clear of the app bar */
+.tour-card[hidden] { display: none; }
+.tour-card-head { margin: 0 0 14px; }
+.tour-card-title { font-size: 24px; line-height: 32px; font-weight: 500; }
+.tour-card-intro { margin: 4px 0 0; max-width: 80ch; color: var(--md-sys-color-on-surface-variant); font-size: 15px; line-height: 22px; }
+.tour-card-more { margin: 4px 0 0; text-align: center; }
 
 /* the stage: the controller large in a soft spotlight, the callout beside or under it */
 .tour-stage {
@@ -993,8 +1005,8 @@ td:first-child { font-weight: 500; }
   -webkit-user-select: none; user-select: none;
 }
 .tour-device-wrap { position: relative; }
-#tour-device { max-height: calc(100vh - var(--bar-height) - 300px); min-height: 160px; overflow: visible; }
-#tour-device .hw-body { filter: drop-shadow(0 18px 28px rgb(0 0 0 / .32)); }
+.tour-device { max-height: calc(100vh - var(--bar-height) - 320px); min-height: 160px; overflow: visible; }
+.tour-device .hw-body { filter: drop-shadow(0 18px 28px rgb(0 0 0 / .32)); }
 @media (min-width: 1180px) {
   /* room beside the controller for the callout */
   .tour-device-wrap { padding: 0 clamp(270px, 20vw, 380px); }
@@ -1007,13 +1019,14 @@ td:first-child { font-weight: 500; }
   animation: tour-breathe 1.8s ease-in-out infinite;
 }
 @keyframes tour-breathe { 0%, 100% { opacity: 1; } 50% { opacity: .5; } }
-.tour-stage.held .tour-outline, .tour-stage.held #tour-device .pad.demo-meter { animation-play-state: paused; }
+.tour-stage.held .tour-outline, .tour-stage.held .tour-device .pad.demo-meter,
+.tour-stage:not(.playing) .tour-outline, .tour-stage:not(.playing) .tour-device .pad.demo-meter { animation-play-state: paused; }
 .tour-turn { opacity: .95; transition: opacity .2s linear; pointer-events: none; }
 .tour-turn.tick { opacity: .6; }
 .tour-turn path { fill: none; stroke: #fff; stroke-width: 2.4; stroke-linecap: round; }
 .tour-turn polygon { fill: #fff; }
-#tour-device .knurl { transform-box: fill-box; transform-origin: center; transition: transform .4s var(--md-sys-motion-easing); }
-#tour-device .pad .cap, #tour-device .pad .sheen { transition-duration: .05s; }
+.tour-device .knurl { transform-box: fill-box; transform-origin: center; transition: transform .4s var(--md-sys-motion-easing); }
+.tour-device .pad .cap, .tour-device .pad .sheen { transition-duration: .05s; }
 /* lit buttons (PLAY while playing, REC while recording, the mode being turned) */
 .hw-drawing.real .button.tour-on .cap { fill: #56565b; }
 .hw-drawing.real .button.tour-on .label { fill: #fff; }
@@ -1046,6 +1059,13 @@ td:first-child { font-weight: 500; }
 .tour-combo .key { padding: 5px 10px; border-radius: 8px; font-size: 15px; line-height: 20px; }
 .tour-combo .plus { font-size: 15px; }
 .tour-text { margin: 12px 0 0; font-size: 16px; line-height: 24px; }
+.tour-context { font-weight: 600; }
+/* every step's combo and text stacked in one place, the current one shown: the callout keeps
+   the size of the longest, so a card doesn't jump between steps */
+.tour-stack { display: grid; grid-template-columns: minmax(0, 1fr); }
+.tour-stack > * { grid-area: 1 / 1; visibility: hidden; }
+.tour-stack > .current { visibility: visible; }
+.tour-texts > .tour-text { margin: 12px 0 0; }
 /* the MIKRO's screen, magnified (its 128 x 32 pixels; syncLoupe() in highlights.js) */
 .tour-loupe {
   display: block; box-sizing: content-box; margin-top: 14px; padding: 8px; image-rendering: pixelated;
@@ -1082,6 +1102,11 @@ td:first-child { font-weight: 500; }
   background: var(--md-sys-color-primary); transform-origin: left center; transform: scaleX(0); opacity: 0;
 }
 .tour-dot.active .tour-dot-fill { opacity: 1; }
+/* a card with many steps: narrower dots, so they fit beside the buttons on a phone */
+.tour-dots.many .tour-dot { width: 16px; }
+.tour-dots.many .tour-dot::before { width: calc(100% - 8px); }
+.tour-dots.many .tour-dot.active { width: 34px; }
+.tour-dots.many .tour-dot-fill { left: 4px; right: 4px; }
 .tour-status { min-width: 56px; color: var(--md-sys-color-on-surface-variant); font-size: 12px; line-height: 16px; font-weight: 500; font-variant-numeric: tabular-nums; }
 .tour-banner { max-width: 640px; margin: 12px auto 0; }
 .tour-more { margin: 8px 0 0; text-align: center; }
@@ -1442,7 +1467,7 @@ td:first-child { font-weight: 500; }
   .brand { flex: 1; min-height: 56px; }
   .brand-for { display: none; }
   .nav-tabs { order: 3; width: 100%; margin: 0; gap: 0; border-top: 1px solid var(--md-sys-color-outline-variant); }
-  .nav-tab { flex: 1; justify-content: center; height: 48px; border-radius: 0; }
+  .nav-tab { flex: 1; justify-content: center; gap: 6px; height: 48px; padding: 0 8px; border-radius: 0; }
   .nav-tab[aria-current="page"] { background: transparent; color: var(--md-sys-color-primary); box-shadow: inset 0 -3px 0 var(--md-sys-color-primary); }
   html { scroll-padding-top: 120px; }
   .card { scroll-margin-top: 120px; }
@@ -1471,6 +1496,13 @@ td:first-child { font-weight: 500; }
   .tour-stage { padding: 16px 10px 14px; margin: 0 -8px; border-radius: var(--md-sys-shape-lg); }
   .tour-bubble { padding: 16px; }
   .tour-text { font-size: 15px; line-height: 23px; }
+  .tour-cards { gap: 32px; }
+  .tour-card-title { font-size: 20px; line-height: 28px; }
+  .tour-card-intro { font-size: 14px; line-height: 20px; }
+  /* the sections in one line that scrolls sideways (the page itself never does) */
+  .tour-toc { flex-wrap: nowrap; overflow-x: auto; margin: 0 -16px 4px; padding: 2px 16px 6px; scrollbar-width: none; }
+  .tour-toc::-webkit-scrollbar { display: none; }
+  .tour-toc a { flex: none; }
   .manual-toolbar .search-bar { flex-basis: 200px; }
   .search-hint { display: none; }
   .search-group-head { flex-wrap: wrap; }

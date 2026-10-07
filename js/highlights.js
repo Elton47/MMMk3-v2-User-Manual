@@ -1,39 +1,122 @@
-// The highlights tour (#highlights, #highlights/3, #highlights/mk3/3): the selected controller
+// The Tour's player (MM.tourPlayer): one card of the Tour (js/tour.js), the selected controller
 // drawn large (the manual's realistic drawing, MM.manual.createDrawing), playing through the
-// items of the Highlights section of data/features.json by itself, and looping. The controls of
-// a highlight glow, the pads, the strip and the screen act it out (js/highlight-shows.js), and a
-// callout with the combo and its text points at them: beside the controller on wide windows,
-// under it on narrow ones. Pointing at the controller or the callout holds the step; previous /
-// pause / next buttons, the dots and the arrow keys are there for those who want them. The tour
-// pauses by itself while the page is hidden or the window has lost focus, and plays on when the
-// visitor is back, unless they had paused it themselves.
-MM.tour = (function () {
+// card's steps by itself and looping. A card is a section of data/features.json, a step one of
+// its items (the Highlights card: the headline items). The controls of a step glow, the pads, the
+// strip and the screen act it out (js/highlight-shows.js; a step without a choreography of its
+// own presses its combo in order and shows what the manual shows for it on hover), and a callout
+// with the combo and its text points at them: beside the controller on wide windows, under it on
+// narrow ones, the MIKRO's screen magnified in it. Pointing at the controller or the callout
+// holds the step; previous / pause / next buttons and the dots are there for those who want them.
+// Only the card in view plays (the Tour calls play() / halt()); the drawing is made the first
+// time the card comes near the window (draw()).
+
+// The choreography of a Tour step (shared with check-screens.html): MM.tourShow(step, device)
+// -> { every, duration, glow, tick(n, api) } (see the top of js/highlight-shows.js). A step is
+// { combo, does, context, values, section } from data/features.json.
+MM.tourShow = (function () {
   'use strict';
 
+  var EVERY = 500;
+
+  // The ids of the buttons (and the encoder for PUSH) a combo token presses; pads, the strip and
+  // TURN act otherwise.
+  function pressedIds(token, device) {
+    if (token === 'PUSH' || token === 'ENCODER TOUCH') return ['ENCODER'];
+    return LAYOUTS[device].controls.filter(function (c) {
+      return tokenMatches(token, c[0]) && (c[6] === 'button' || c[6] === 'knob');
+    }).map(function (c) { return c[0]; });
+  }
+
+  // A step without a choreography of its own: its combo pressed in order (the first controls
+  // held, a single button tapped and let go), then what it does, as the manual shows it on hover:
+  // the section's screen for it (a list of screens plays in turn) and its pads. Before the press,
+  // the section's mode (its screen and pads). A SHIFT combo never shows another button's own
+  // screen (SHIFT changes what the button does): the mode's screen stays. A single pad (SHIFT +
+  // PAD 5) lights up as it is pressed; TURN turns the encoder, STRIP slides along the strip.
+  function genericShow(step, device) {
+    // a highlight is about its controls, not a section's mode: its first token's screen and pads
+    var section = step.section && step.section.id !== 'highlights' ? step.section : null;
+    var spec = LAYOUTS[device];
+    var combo = step.combo, screens = spec.screens || {}, demos = spec.padDemos || {};
+    var mode = section ? MM.manual.sectionMode(section, device) : null;
+    var base = (mode && screens[mode]) || spec.screen;
+    var baseDemo = mode ? demos[mode] || null : null;
+    var result = section ? MM.manual.sectionScreen(device, combo, section, step.context) : null;
+    if (!result && (!section || combo[0] !== 'SHIFT')) combo.some(function (t) { return (result = screens[t] || null); });
+    var frames = Array.isArray(result) ? result : [result || base];
+    var demo = null;
+    if (section) demo = MM.manual.comboDemo(device, combo, section).demo;
+    else combo.some(function (t) { return (demo = demos[t] || null); });
+    if (!demo) demo = baseDemo;
+    var presses = combo.length, tap = presses === 1;
+    var pad = -1, padAt = -1;
+    combo.forEach(function (t, i) { var m = /^PAD (\d+)$/.exec(t); if (m) { pad = Number(m[1]) - 1; padAt = i; } });
+    return {
+      every: EVERY,
+      duration: Math.max(5500, Math.min(10000, 3500 + step.does.length * 40 + presses * EVERY)),
+      tick: function (n, api) {
+        var down = Math.min(n, presses), done = n >= presses, since = n - presses;
+        var ids = [];
+        combo.slice(0, down).forEach(function (token) {
+          if (tap && since >= 2) return;  // a tap: let go after a moment
+          ids = ids.concat(pressedIds(token, device));
+        });
+        api.light(ids);
+        if (combo.indexOf('TURN') >= 0 && done) api.turn(since + 1);
+        if (combo.indexOf('STRIP') >= 0) {
+          api.strip(done ? 0.5 + 0.4 * Math.sin(since * 0.7) : null, SAMPLE_TRACKS[0].color);
+        }
+        api.show(done ? frames[Math.floor(since / 3) % frames.length] : base);
+        var pads = done ? demo : baseDemo;
+        if (pad >= 0 && down > padAt) {
+          pads = (pads || api.blank()).slice();
+          pads[pad] = api.lit(SAMPLE_MASTER.color, 'bright');
+        }
+        api.pads(pads);
+      }
+    };
+  }
+
+  // The choreography of a step: its section's own (TOUR_SHOWS in js/highlight-shows.js), the
+  // Highlights' (HIGHLIGHT_SHOWS, by combo), else the generic one.
+  return function showFor(step, device) {
+    var section = step.section, key = step.combo.join('+'), show = null;
+    if (!section || section.id === 'highlights') show = HIGHLIGHT_SHOWS[key] || null;
+    else {
+      var own = TOUR_SHOWS[section.id];
+      if (typeof own === 'function') show = own(step, device);
+      else if (own) show = own[key + (step.context ? ' (' + step.context + ')' : '')] || null;
+    }
+    return show || genericShow(step, device);
+  };
+})();
+
+MM.tourPlayer = function (root, options) {
+  'use strict';
+
+  options = options || {};
   var SVG = 'http://www.w3.org/2000/svg';
-  var el = MM.el, h = MM.h;
+  var h = MM.h;
   var DURATION = 6500, EVERY = 500, FRAME = 30;
-  var CALM_SLOWER = 1.5;  // reduced motion: every highlight stays longer
+  var CALM_SLOWER = 1.5;  // reduced motion: every step stays longer
   var WIDE = '(min-width: 1180px)';
+  function find(cls) { return root.querySelector('.' + cls); }
+  var refs = {
+    stage: find('tour-stage'), bubble: find('tour-bubble'), svg: find('tour-device'), loupe: find('tour-loupe'),
+    heads: find('tour-heads'), texts: find('tour-texts'), dots: find('tour-dots'), status: find('tour-status'),
+    pause: find('tour-pause'), prev: find('tour-prev'), next: find('tour-next')
+  };
   var state = {
-    data: null, device: null, items: [], index: 0, drawing: null, ready: false,
+    device: null, steps: [], index: 0, drawing: null, drawnFor: null,
     show: null, api: null, duration: DURATION, elapsed: 0, tick: -1, last: 0, timer: null,
     hover: false, paused: false, glow: [], swap: null,
-    autoPaused: false,  // paused because the page was hidden or the window lost focus (awayChanged())
-    blurred: false,     // the window has lost focus
-    resumedAt: 0        // when coming back played the tour on (see the pause button)
+    autoPaused: false,  // paused because the page was hidden or the window lost focus (setAway())
+    resumedAt: 0        // when coming back played the card on (see the pause button)
   };
 
   function now() { return window.performance ? performance.now() : Date.now(); }
 
   // --- data --------------------------------------------------------------------------------
-
-  function highlightItems(device) {
-    var section = state.data.sections.filter(function (s) { return s.id === 'highlights'; })[0];
-    return section ? section.items.filter(function (item) { return MM.manual.forDevice(item, device); }) : [];
-  }
-
-  function keyOf(item) { return item.combo.join('+'); }
 
   function controlSpecs(token) {
     return state.drawing.layout().controls.filter(function (c) { return tokenMatches(token, c[0]); });
@@ -164,29 +247,13 @@ MM.tour = (function () {
       pads: function (list) { if (changed('pads', list || null)) drawing.paintPads(list); },
       screen: function (oled, lcd) { screen(drawing.lcd ? lcd || lcdFrom(oled) : oled); },
       screenOf: function (token) { screen((spec.screens || {})[token] || spec.screen); },
+      show: function (lines) { screen(lines || spec.screen); },
       light: light,
       turn: turn,
       strip: strip,
       outline: outline
     };
     return api;
-  }
-
-  // The choreography of an item, or the generic one: the combo glows, and the screen and the pads
-  // show the first combo token that has sample content (the screen also magnified).
-  function showFor(item) {
-    var show = HIGHLIGHT_SHOWS[keyOf(item)];
-    if (show) return show;
-    return {
-      loupe: true,
-      tick: function (n, api) {
-        var screens = api.layout.screens || {}, demos = api.layout.padDemos || {};
-        var screenToken = item.combo.filter(function (t) { return screens[t]; })[0];
-        var padToken = item.combo.filter(function (t) { return demos[t]; })[0];
-        if (screenToken) api.screenOf(screenToken);
-        api.pads(padToken ? api.demo(padToken) : null);
-      }
-    };
   }
 
   // Back to the plain controller: nothing lit, the default screen.
@@ -216,16 +283,31 @@ MM.tour = (function () {
     return wrap;
   }
 
+  // Every step's combo and text are in the callout, stacked in one place, only the current one
+  // visible: the callout keeps the size of the longest, so the card doesn't jump between steps.
+  function buildBubble() {
+    refs.heads.innerHTML = '';
+    refs.texts.innerHTML = '';
+    var label = options.label || 'Step';
+    state.steps.forEach(function (step, i) {
+      refs.heads.appendChild(h('div', { className: 'tour-step' }, [
+        h('p', { className: 'tour-count', text: label + ' ' + (i + 1) + ' of ' + state.steps.length }),
+        h(options.comboTag || 'h3', { className: 'tour-combo' }, [comboElement(step.combo)])
+      ]));
+      var text = h('p', { className: 'tour-text tour-step', text: step.does });
+      if (step.context) text.insertBefore(h('span', { className: 'tour-context', text: step.context + ': ' }), text.firstChild);
+      refs.texts.appendChild(text);
+    });
+  }
+
+  function markCurrent() {
+    [refs.heads, refs.texts].forEach(function (stack) {
+      Array.prototype.forEach.call(stack.children, function (child, i) { child.classList.toggle('current', i === state.index); });
+    });
+  }
+
   function fillBubble() {
-    var item = state.items[state.index];
-    el('tour-count').textContent = 'Highlight ' + (state.index + 1) + ' of ' + state.items.length;
-    var combo = el('tour-combo');
-    combo.innerHTML = '';
-    combo.appendChild(comboElement(item.combo));
-    var text = el('tour-text');
-    text.textContent = item.does;
-    if (item.context) text.appendChild(h('span', { className: 'context', text: ' (' + item.context + ')' }));
-    el('tour-loupe').hidden = !loupeShown();
+    markCurrent();
     syncLoupe();
   }
 
@@ -263,12 +345,14 @@ MM.tour = (function () {
     return { y: outside, x: cx, endY: outside < 0 ? top : bottom };
   }
 
+  function visible() { return !!(state.drawing && root.offsetParent !== null); }
+
   // Put the callout next to the glowing controls (wide windows: in the space beside the
   // controller, a leader line to the controls) or under the controller (narrow: its arrow points
   // at them). animate: draw the leader line in.
   function place(animate) {
-    var stage = el('tour-stage'), bubble = el('tour-bubble'), svg = state.drawing && state.drawing.svg;
-    if (!svg || el('view-highlights').hidden) return;
+    var stage = refs.stage, bubble = refs.bubble, svg = state.drawing && state.drawing.svg;
+    if (!svg || !visible()) return;
     var ctm = svg.getScreenCTM();
     var token = state.glow.filter(function (t) { return boxOf(t); })[0];
     var box = token && boxOf(token);
@@ -328,17 +412,17 @@ MM.tour = (function () {
     syncLoupe();
   }
 
-  // The MIKRO's OLED is small in the drawing: shows that use it (loupe: true) also show it
-  // magnified in the callout.
-  function loupeShown() {
-    return !!(state.show && state.show.loupe && state.drawing.oled);
-  }
+  // The MIKRO's OLED is small in the drawing: the callout shows it magnified too.
+  function loupeShown() { return !!(state.drawing && state.drawing.oled); }
 
   // The magnified screen: the same bitmap on a canvas of whole device pixels per screen pixel
   // (up to 2 CSS px each), so it stays crisp at any pixel ratio.
   function syncLoupe() {
-    var loupe = el('tour-loupe'), oled = state.drawing.oled;
-    if (!loupeShown() || !oled.img) return;
+    var loupe = refs.loupe;
+    loupe.hidden = !loupeShown();
+    if (loupe.hidden) return;
+    var oled = state.drawing.oled;
+    if (!oled.img) return;
     var ratio = window.devicePixelRatio || 1, box = loupe.parentNode, style = getComputedStyle(box);
     var room = Math.min(256, box.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight) - 16);
     if (!(room >= 32)) return;  // not laid out yet
@@ -352,22 +436,24 @@ MM.tour = (function () {
   }
 
   function go(index, byUser) {
-    var count = state.items.length;
+    var count = state.steps.length;
     if (!count) return;
     state.index = ((index % count) + count) % count;
-    var item = state.items[state.index];
+    if (options.onStep) options.onStep(state.index, byUser);
+    renderDots();
+    updateStatus();
+    if (!state.drawing) { markCurrent(); return; }  // drawn later (draw()): it starts on this step
+    var step = state.steps[state.index];
     resetDrawing();
-    state.show = showFor(item);
+    state.show = MM.tourShow(step, state.device);
     state.api = makeApi();
     state.duration = (state.show.duration || DURATION) * (state.api.calm ? CALM_SLOWER : 1);
     state.elapsed = 0;
     state.tick = 0;
     state.glow = ['-'];
-    outline(state.show.glow || item.combo);
+    outline(state.show.glow || step.combo);
     runTick(0);
-    renderDots();
-    updateStatus();
-    var stage = el('tour-stage');
+    var stage = refs.stage;
     clearTimeout(state.swap);
     if (!stage.classList.contains('shown') || MM.reducedMotion()) {
       fillBubble();
@@ -381,8 +467,8 @@ MM.tour = (function () {
         stage.classList.remove('changing');
       }, 180);
     }
-    if (byUser) el('tour-bubble').setAttribute('aria-live', 'polite');
-    else el('tour-bubble').removeAttribute('aria-live');
+    if (byUser) refs.bubble.setAttribute('aria-live', 'polite');
+    else refs.bubble.removeAttribute('aria-live');
   }
 
   function held() { return state.paused || state.hover; }
@@ -398,30 +484,35 @@ MM.tour = (function () {
       state.tick = n;
       runTick(n);
     }
-    var fill = el('tour-dots').querySelector('.active .tour-dot-fill');
+    var fill = refs.dots.querySelector('.active .tour-dot-fill');
     if (fill) fill.style.transform = 'scaleX(' + Math.min(1, state.elapsed / state.duration).toFixed(3) + ')';
     if (state.elapsed >= state.duration) go(state.index + 1, false);
   }
 
-  function start() {
-    stop();
+  // The card in view plays; the others wait where they are.
+  function play() {
+    if (state.timer) return;
     state.last = now();
     state.timer = setInterval(frame, FRAME);
+    refs.stage.classList.add('playing');
   }
 
-  function stop() {
+  function halt() {
     if (state.timer) clearInterval(state.timer);
     state.timer = null;
+    refs.stage.classList.remove('playing');
   }
 
   // --- controls ----------------------------------------------------------------------------
 
   function renderDots() {
-    var dots = el('tour-dots');
-    if (dots.children.length !== state.items.length) {
+    var dots = refs.dots;
+    if (dots.children.length !== state.steps.length) {
       dots.innerHTML = '';
-      state.items.forEach(function (item, i) {
-        var dot = h('button', { type: 'button', className: 'tour-dot', 'aria-label': 'Highlight ' + (i + 1) + ': ' + item.combo.join(' + ') },
+      dots.classList.toggle('many', state.steps.length > 9);
+      state.steps.forEach(function (step, i) {
+        var dot = h('button', { type: 'button', className: 'tour-dot',
+          'aria-label': (options.label || 'Step') + ' ' + (i + 1) + ': ' + step.combo.join(' + ') + (step.context ? ' (' + step.context + ')' : '') },
           [h('span', { className: 'tour-dot-fill', 'aria-hidden': 'true' })]);
         dot.addEventListener('click', function () { go(i, true); });
         dots.appendChild(dot);
@@ -437,22 +528,21 @@ MM.tour = (function () {
   }
 
   function updateStatus() {
-    var status = state.paused ? 'Paused' : state.hover ? 'Holding' : (state.index + 1) + ' / ' + state.items.length;
-    el('tour-status').textContent = status;
-    el('tour-stage').classList.toggle('held', held());
-    var button = el('tour-pause');
+    var status = state.paused ? 'Paused' : state.hover ? 'Holding' : (state.index + 1) + ' / ' + state.steps.length;
+    refs.status.textContent = status;
+    refs.stage.classList.toggle('held', held());
+    var button = refs.pause;
     button.setAttribute('aria-pressed', String(state.paused));
-    var label = state.paused ? 'Play the tour' : 'Pause the tour';
+    var label = state.paused ? 'Play' : 'Pause';
     button.setAttribute('title', label);
     button.querySelector('.visually-hidden').textContent = label;
-    el('tour-pause-icon').setAttribute('href', state.paused ? '#i-play' : '#i-pause');
+    button.querySelector('use').setAttribute('href', state.paused ? '#i-play' : '#i-pause');
   }
 
-  // The page hidden (another tab, minimised) or the window without focus: the tour pauses as if
+  // The page hidden (another tab, minimised) or the window without focus: the card pauses as if
   // the pause button had been pressed. Back again, it plays on only if it was playing before.
-  function awayChanged() {
-    if (!state.ready) return;
-    if (document.hidden || state.blurred) {
+  function setAway(away) {
+    if (away) {
       if (state.paused) return;  // already paused (by hand or before): stays as it is
       state.paused = true;
       state.autoPaused = true;
@@ -463,32 +553,6 @@ MM.tour = (function () {
       state.resumedAt = now();
       updateStatus();
     }
-  }
-
-  function setDevice(device, index) {
-    state.device = device;
-    MM.store('device', device);
-    document.querySelectorAll('#view-highlights .segmented button').forEach(function (b) {
-      var on = b.getAttribute('data-device') === device;
-      b.setAttribute('aria-checked', String(on));
-      b.setAttribute('tabindex', on ? '0' : '-1');
-    });
-    el('tour-unverified').hidden = state.data.devices[device].verified;
-    state.drawing.draw(device);
-    var spec = state.drawing.layout();
-    state.drawing.svg.setAttribute('aria-label', spec.title + ', showing the highlights');
-    svgNode('g', { 'class': 'tour-outlines' }, state.drawing.svg);
-    state.items = highlightItems(device);
-    el('tour-dots').innerHTML = '';
-    go(index || 0, false);
-  }
-
-  // Switching the controller keeps the same highlight when the other one has it too.
-  function switchDevice(device) {
-    if (device === state.device) return;
-    var current = state.items[state.index], key = current ? keyOf(current) : null;
-    var next = highlightItems(device).map(keyOf).indexOf(key);
-    setDevice(device, Math.max(0, next));
   }
 
   function hoverable(node) {
@@ -504,71 +568,75 @@ MM.tour = (function () {
     });
   }
 
-  function init(data) {
-    state.data = data;
-    state.drawing = MM.manual.createDrawing(el('tour-device'), { magnifier: true });
-    var buttons = Array.prototype.slice.call(document.querySelectorAll('#view-highlights .segmented button'));
-    buttons.forEach(function (b, index) {
-      b.addEventListener('click', function () { switchDevice(b.getAttribute('data-device')); });
-      b.addEventListener('keydown', function (e) {
-        var step = e.key === 'ArrowRight' || e.key === 'ArrowDown' ? 1 : e.key === 'ArrowLeft' || e.key === 'ArrowUp' ? -1 : 0;
-        if (!step) return;
-        e.preventDefault();
-        e.stopPropagation();
-        var next = buttons[(index + step + buttons.length) % buttons.length];
-        switchDevice(next.getAttribute('data-device'));
-        next.focus();
-      });
-    });
-    hoverable(el('tour-device'));
-    hoverable(el('tour-bubble'));
-    el('tour-pause').addEventListener('click', function () {
-      // a click on Play in a window without focus first focuses it, which already plays the tour
-      // on (awayChanged()): that click must not pause it again
-      if (state.resumedAt && now() - state.resumedAt < 600) { state.resumedAt = 0; return; }
-      state.resumedAt = 0;
-      state.paused = !state.paused;
-      state.autoPaused = false;
-      updateStatus();
-    });
-    // previous / next: that highlight from its start, still playing or still paused
-    el('tour-prev').addEventListener('click', function () { go(state.index - 1, true); });
-    el('tour-next').addEventListener('click', function () { go(state.index + 1, true); });
-    document.addEventListener('visibilitychange', awayChanged);
-    window.addEventListener('blur', function () { state.blurred = true; awayChanged(); });
-    window.addEventListener('focus', function () { state.blurred = false; awayChanged(); });
-    document.addEventListener('keydown', function (e) {
-      if (el('view-highlights').hidden || e.ctrlKey || e.metaKey || e.altKey) return;
-      var tag = (e.target.tagName || '').toLowerCase();
-      if (tag === 'input' || tag === 'textarea' || e.target.isContentEditable) return;
-      if (e.key === 'ArrowRight') { e.preventDefault(); go(state.index + 1, true); }
-      else if (e.key === 'ArrowLeft') { e.preventDefault(); go(state.index - 1, true); }
-    });
-    // the callout follows the drawing whenever its size changes (window, fonts, mobile toolbars)
-    var pending = null;
-    function later() {
-      if (pending) return;
-      pending = setTimeout(function () { pending = null; place(false); syncLoupe(); }, 60);
-    }
-    window.addEventListener('resize', later);
-    if (window.ResizeObserver) new ResizeObserver(later).observe(el('tour-device'));
-    if (document.fonts && document.fonts.ready) document.fonts.ready.then(later);
+  // The steps for this controller; index: the step to show (kept where it was by default).
+  function load(device, steps, index) {
+    state.device = device;
+    state.steps = steps;
+    buildBubble();
+    refs.dots.innerHTML = '';
+    if (state.drawing && state.drawnFor !== device) redraw();
+    presize();
+    go(index === undefined ? Math.min(state.index, steps.length - 1) : index, false);
   }
 
-  // parts: the hash after "highlights", split on "/": [device], [step (1-based)] or both.
-  function show(parts) {
-    var device = LAYOUTS[parts[0]] ? parts[0] : (LAYOUTS[MM.store('device')] ? MM.store('device') : 'mikro');
-    var step = parseInt(parts[LAYOUTS[parts[0]] ? 1 : 0], 10);
-    var index = isNaN(step) ? 0 : step - 1;
-    if (!state.ready || device !== state.device) {
-      state.ready = true;
-      setDevice(device, index);
-    } else if (!isNaN(step)) {
-      go(index, false);
-    }
-    start();
-    setTimeout(function () { place(false); }, 0);
+  // Not drawn yet: the card takes its final size already (the drawing's proportions, the callout
+  // beside or under it), so a jump to a card further down lands where it should.
+  function presize() {
+    if (state.drawing || !state.device) return;
+    var spec = LAYOUTS[state.device], wide = window.matchMedia(WIDE).matches;
+    refs.svg.setAttribute('viewBox', '0 0 ' + spec.width + ' ' + spec.height);
+    refs.stage.classList.toggle('wide', wide);
+    refs.stage.classList.toggle('narrow', !wide);
   }
 
-  return { init: init, show: show, stop: stop };
-})();
+  function redraw() {
+    state.drawing.draw(state.device);
+    state.drawnFor = state.device;
+    var spec = state.drawing.layout();
+    state.drawing.svg.setAttribute('aria-label', spec.title + ': ' + (options.name || 'the tour'));
+    svgNode('g', { 'class': 'tour-outlines' }, state.drawing.svg);
+    refs.stage.classList.toggle('has-loupe', !!state.drawing.oled);
+  }
+
+  // Make the drawing (the first time the card comes near the window), and show the step.
+  function draw() {
+    if (state.drawing && state.drawnFor === state.device) return;
+    if (!state.drawing) state.drawing = MM.manual.createDrawing(refs.svg, { magnifier: true });
+    redraw();
+    go(state.index, false);
+  }
+
+  // the callout follows the drawing whenever its size changes (window, fonts, mobile toolbars)
+  var pending = null;
+  function later() {
+    if (pending) return;
+    pending = setTimeout(function () { pending = null; presize(); place(false); if (state.drawing) syncLoupe(); }, 60);
+  }
+  window.addEventListener('resize', later);
+  if (window.ResizeObserver) new ResizeObserver(later).observe(refs.svg);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(later);
+
+  hoverable(refs.svg);
+  hoverable(refs.bubble);
+  refs.pause.addEventListener('click', function () {
+    // a click on Play in a window without focus first focuses it, which already plays the card
+    // on (setAway()): that click must not pause it again
+    if (state.resumedAt && now() - state.resumedAt < 600) { state.resumedAt = 0; return; }
+    state.resumedAt = 0;
+    state.paused = !state.paused;
+    state.autoPaused = false;
+    updateStatus();
+    if (options.onUser) options.onUser();
+  });
+  // previous / next: that step from its start, still playing or still paused
+  refs.prev.addEventListener('click', function () { go(state.index - 1, true); if (options.onUser) options.onUser(); });
+  refs.next.addEventListener('click', function () { go(state.index + 1, true); if (options.onUser) options.onUser(); });
+
+  return {
+    load: load, draw: draw, play: play, halt: halt, setAway: setAway, place: place,
+    go: function (index, byUser) { go(index, byUser); },
+    index: function () { return state.index; },
+    count: function () { return state.steps.length; },
+    drawn: function () { return !!state.drawing && state.drawnFor === state.device; }
+  };
+};

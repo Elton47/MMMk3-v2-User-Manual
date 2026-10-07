@@ -1,4 +1,12 @@
 {
+  "$comment": [
+    "Single source of the user guide (docs/USER-GUIDE.md, python tools/gen_user_guide.py) and of the interactive manual (data/features.json on the manual site, copied by python tools/dev.py manual). Only what is confirmed on the hardware goes in.",
+    "devices: {id: {name, verified}}. notation: how combos read. changes: the v1 -> v2 table ({what, v1, v2}).",
+    "sections: {id, nav (short name for menus), title, summary, devices (optional: only on these), notes (optional: [{title, text}] callouts), grid (optional: the SHIFT + pads matrix, top row first), swatches + swatches_note (optional: the drum name colours), tour (optional), items}. The manual's Full manual view shows a section as a card; its Tour view plays it as a card on the controller drawing, one step per item, in this order.",
+    "tour (optional, per section): {intro}: the short line under the section's title on its Tour card (default: the summary's first sentence).",
+    "items: {combo: [tokens], does, context (optional: shown in brackets, e.g. a setting's name), devices (optional), values (optional, the MASCHINE settings: the values the Tour card steps through on the screen, as the settings page writes them: the default first, then in the order the next-value button walks)}.",
+    "highlights: the few headline items of the Highlights card (Tour) and of the Full manual's Highlights section. Everything else lives in its own section."
+  ],
   "product": "MASCHINE for Ableton Live",
   "version": "2.0.0",
   "devices": {
@@ -18,6 +26,7 @@
       "nav": "Getting started",
       "title": "Getting started",
       "summary": "New here? The Set up guide walks you through it (macOS is automatic; Windows needs a one-time loopMIDI setup). After that: connect the controller and start Live. The script starts the Maschine Bridge, which takes over the hardware: no Controller Editor, no MIDI mode, a real SHIFT key. While Live loads, the screen shows Waiting for Live; when the set is ready, a rainbow wave sweeps across the pads. Your note repeat rate, arp settings, chord type and voicing, drum colours and velocity curve are remembered between Live sessions.",
+      "tour": {"intro": "Connect the controller and start Live: the Maschine Bridge takes over the hardware, with a real SHIFT key. No Controller Editor, no MIDI mode."},
       "notes": [
         {"title": "Using the MASCHINE plug-in (Expansions)", "text": "NI's MASCHINE plug-in (VST / AU) takes the controller as soon as it is anywhere in the set, and keeps it until it is deleted: selecting another track or switching the plug-in off doesn't release it. Meanwhile the script steps aside: the lights, screen and pads are MASCHINE's, and Live's status bar says so. Delete the last MASCHINE plug-in and the controller is back with Live within about a second, on the drum pads or the keyboard. To switch between the two on the fly, use v1.6.1 (in the same download) in NI's MIDI mode, where SHIFT + MASCHINE (MK3, MASCHINE+: SHIFT + CHANNEL) switches between MASCHINE and Live. Or play the Expansions' kits without the plug-in: BROWSER > MASCHINE Kits (see BROWSER: browse and load)."}
       ],
@@ -40,11 +49,7 @@
         {"combo": ["CHORDS"], "does": "A chord on every pad, always in Live's key: triads to 9ths, with voicings."},
         {"combo": ["NOTE REPEAT"], "does": "Note repeat that follows pad pressure: slide the touch strip to set its rate, or touch it while holding pads to repeat them on the spot. Plus an arpeggiator and 16 velocities, all recorded exactly on Live's grid."},
         {"combo": ["STEP"], "does": "A step sequencer on the pads, read like MASCHINE, with the playhead running across them."},
-        {"combo": ["BROWSER"], "does": "Live's browser on the hardware screen: find a sound and load it without touching the mouse; STAR opens your favourites.", "devices": ["mikro"]},
-        {"combo": ["PUSH"], "does": "MASCHINE Kits: play your Expansions in Live without the MASCHINE plug-in. BROWSER > MASCHINE Kits, turn to hear a kit, push to load it as a Drum Rack, pad for pad as in MASCHINE. One-way sync: your MASCHINE favourites come along, starred (read only; star / unstar them in MASCHINE).", "devices": ["mikro"]},
-        {"combo": ["VARIATION", "PAD"], "does": "Record a variation in one press: the clip is copied below, named Bass_1, Bass_2 ..., and recorded into; the original stays untouched."},
-        {"combo": ["STRIP"], "does": "The touch strip shows where the loop is, and while you record it flashes red on every click: a silent metronome."},
-        {"combo": ["VOLUME"], "does": "The mixer: tap VOLUME and the pads become your tracks, glowing with their levels. Visit a track with a pad or the arrows, turn for volume, PUSH + TURN for pan and sends, slide the strip like a fader; a bar on the screen shows where it is.", "devices": ["mikro"]}
+        {"combo": ["PUSH"], "does": "MASCHINE Kits: play your Expansions in Live without the MASCHINE plug-in. BROWSER > MASCHINE Kits, turn to hear a kit, push to load it as a Drum Rack, pad for pad as in MASCHINE. One-way sync: your MASCHINE favourites come along, starred (read only; star / unstar them in MASCHINE).", "devices": ["mikro"]}
       ]
     },
     {
@@ -173,6 +178,7 @@
       "nav": "Step sequencer",
       "title": "STEP: step sequencer",
       "summary": "The pads are 16 steps of the focused sound (the focused drum pad, or the last keyboard note) in the focused clip, read like text as in MASCHINE: step 1 top left (pad 13), step 16 bottom right (pad 4). The playhead runs across the pads while the clip plays, and the page follows it on longer clips (after you change the page yourself, it follows again once the playhead reaches your page). Hold a step to edit it, as in MASCHINE: the screen shows Step N and its value; TURN changes the velocity (1-127), SHIFT + TURN the length in steps, PUSH + TURN nudges the note up to 7/16 of a step earlier or later. Hold several steps to change them together; one hold is one undo step. A tap on a lit step removes it when you let go.",
+      "tour": {"intro": "16 steps of the focused sound on the pads, read like text as in MASCHINE: step 1 top left (pad 13), step 16 bottom right (pad 4)."},
       "items": [
         {"combo": ["STEP"], "does": "Switch to step mode."},
         {"combo": ["PAD"], "does": "Add / remove a note on that step. On an empty slot, the first step creates a one-bar clip."},
@@ -188,6 +194,7 @@
       "nav": "Playing",
       "title": "Playing: velocity, repeat, arp, touch strip",
       "summary": "The bridge plays the notes itself, next to the hardware, so the pads can do things one-note-per-pad MIDI can't: chords, arpeggios, note repeat that follows pressure, 16 velocities.",
+      "tour": {"intro": "The bridge plays the notes itself, next to the hardware: chords, arpeggios, note repeat that follows pressure, 16 velocities."},
       "items": [
         {"combo": ["FIXED VEL"], "does": "Fixed velocity on / off: every pad plays at the same velocity (100 unless you change it)."},
         {"combo": ["FIXED VEL", "TURN"], "does": "Set the fixed velocity (1-127): holding FIXED VEL shows it on the screen at once. Remembered next time."},
@@ -415,6 +422,7 @@
       "nav": "Browser",
       "title": "BROWSER: browse and load (MIKRO)",
       "summary": "Live's browser on the hardware screen, Favorites first (what you starred with SHIFT + STAR, and the kits you starred in MASCHINE), then Live's sidebar: Collections (Live's Favorites and your coloured collections), MASCHINE Kits, the library (Sounds, Drums, Instruments ...), and the folders you added to Places. MASCHINE Kits (Live 12.4 or later, with MASCHINE Expansions or the MASCHINE library installed; on an older Live it is listed but only says Needs Live 12.4+) lists your Expansions and their kits: PUSH on a kit loads it as a Drum Rack, pad for pad as in MASCHINE: onto the selected MIDI track, replacing its instrument (effects after it stay), or on a new MIDI track named after the kit (# Kit name, so Live numbers it) when an audio track is selected. Each pad is a Simpler in 1-Shot, so a hit rings out; long synth, vocal, FX, atmosphere and loop sounds play while held instead. The pads and the Drum Rack's chains get the drum colours by sound name (see PAD MODE). A drum-synth sound plays NI's recording of it where there is one; a sound that is a plug-in in MASCHINE (Massive, Monark ...) stays an empty pad with its name, to put your own sound on. Turning onto a kit plays NI's own preview of it through Live's preview (Cue output, preview switched on in Live's browser), like clicking a sample in Live's browser; the script puts the previews in your User Library (MASCHINE Kit Previews, as hard links: no extra disk space) the first time you open MASCHINE Kits, and picks up newly installed Expansions the same way. Your MASCHINE favourites come along, in a one-way sync: the kits you star in MASCHINE show with a ★ in Favorites and in MASCHINE Kits' own Favorites folder, next to the ones you starred on the controller (a kit starred in both is listed once). Star or unstar kits in MASCHINE and the lists follow, also while Live runs (the next time the list opens). The controller only reads MASCHINE's favourites and never changes them: a kit starred in MASCHINE stays starred here (the screen says Still starred / in MASCHINE; star / unstar it in MASCHINE). Expansions you add or remove are followed: a removed Expansion's kits leave the lists, and a new one's favourites appear once MASCHINE has scanned it. Favorites lists are sorted by name, as in MASCHINE. This is the way to play the Expansions in Live without the MASCHINE plug-in, which takes the controller away from the script (see Getting started).",
+      "tour": {"intro": "Live's browser on the hardware screen: Favorites first, then Live's sidebar, with MASCHINE Kits and your Places."},
       "devices": ["mikro"],
       "items": [
         {"combo": ["BROWSER"], "does": "Browser on / off (it opens where you left it)."},
@@ -438,16 +446,16 @@
         {"combo": ["MASCHINE"], "does": "Settings on / off. The screen lists them with their values; the bar on the right shows where you are in the list."},
         {"combo": ["TURN"], "does": "The previous / next setting."},
         {"combo": ["◀", "▶"], "does": "Change the selected setting (PUSH: the next value)."},
-        {"combo": ["MASCHINE"], "context": "Screen", "does": "2 lines (the default: larger letters, like MASCHINE's screen) or 3 lines (smaller letters, more at once)."},
-        {"combo": ["MASCHINE"], "context": "Screen saver", "does": "The screen goes dark after Off, 5, 10 (default) or 30 min untouched."},
-        {"combo": ["MASCHINE"], "context": "Velocity curve", "does": "How pad pressure turns into velocity: Linear, Soft or Hard."},
-        {"combo": ["MASCHINE"], "context": "Fixed velocity", "does": "The velocity FIXED VEL plays (1-127, 100 to start with)."},
-        {"combo": ["MASCHINE"], "context": "Pad pressure", "does": "What pressing harder on a held pad sends: Poly (each pad its own aftertouch), Channel (one for all) or Off."},
-        {"combo": ["MASCHINE"], "context": "Drum colours", "does": "The drum pads in their chain colours, or coloured by name (see the colour table)."},
-        {"combo": ["MASCHINE"], "context": "Step follows", "does": "STEP's page follows the playhead (On), or stays where you put it."},
-        {"combo": ["MASCHINE"], "context": "Record length", "does": "Free, 1, 2, 4 or 8 bars for a new clip (as REC + TURN)."},
-        {"combo": ["MASCHINE"], "context": "Start mode", "does": "The mode the controller opens in: Pads (default), Pattern, Scene, Step or Track."},
-        {"combo": ["MASCHINE"], "context": "About", "does": "The script version, its author and your Live version (◀ ▶ to show it)."}
+        {"combo": ["MASCHINE"], "context": "Screen", "does": "2 lines (the default: larger letters, like MASCHINE's screen) or 3 lines (smaller letters, more at once).", "values": ["2 lines", "3 lines"]},
+        {"combo": ["MASCHINE"], "context": "Screen saver", "does": "The screen goes dark after Off, 5, 10 (default) or 30 min untouched.", "values": ["10 min", "30 min", "Off", "5 min"]},
+        {"combo": ["MASCHINE"], "context": "Velocity curve", "does": "How pad pressure turns into velocity: Linear, Soft or Hard.", "values": ["Linear", "Soft", "Hard"]},
+        {"combo": ["MASCHINE"], "context": "Fixed velocity", "does": "The velocity FIXED VEL plays (1-127, 100 to start with).", "values": ["100", "101", "102"]},
+        {"combo": ["MASCHINE"], "context": "Pad pressure", "does": "What pressing harder on a held pad sends: Poly (each pad its own aftertouch), Channel (one for all) or Off.", "values": ["Poly", "Channel", "Off"]},
+        {"combo": ["MASCHINE"], "context": "Drum colours", "does": "The drum pads in their chain colours, or coloured by name (see the colour table).", "values": ["By chain", "By name"]},
+        {"combo": ["MASCHINE"], "context": "Step follows", "does": "STEP's page follows the playhead (On), or stays where you put it.", "values": ["On", "Off"]},
+        {"combo": ["MASCHINE"], "context": "Record length", "does": "Free, 1, 2, 4 or 8 bars for a new clip (as REC + TURN).", "values": ["Free", "1 bar", "2 bars", "4 bars", "8 bars"]},
+        {"combo": ["MASCHINE"], "context": "Start mode", "does": "The mode the controller opens in: Pads (default), Pattern, Scene, Step or Track.", "values": ["Pads", "Pattern", "Scene", "Step", "Track"]},
+        {"combo": ["MASCHINE"], "context": "About", "does": "The script version, its author and your Live version (◀ ▶ to show it).", "values": ["2.0.0"]}
       ]
     },
     {

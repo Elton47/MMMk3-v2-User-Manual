@@ -6,23 +6,35 @@
   <meta name="robots" content="noindex">
   <title>Screen check</title>
   <!-- Not part of the site: renders every reference screen of data/screens.json with
-       js/screen-render.js and compares it with the controller's own pixels. The result is in the
-       title ("screens: N/N match", N from data/screens.json) and in #result, e.g. for a headless browser's --dump-dom. -->
+       js/screen-render.js and compares it with the controller's own pixels. Then it plays every
+       step of every Tour card (both controllers) to its end and checks each MIKRO screen the
+       card shows: it draws, and the fonts have every character in it. The result is in the
+       title ("screens: N/N match; tour: S steps, K screens ok", N from data/screens.json) and in
+       #result, e.g. for a headless browser's --dump-dom. -->
   <style>
     body { margin: 16px; background: #1b1b1d; color: #e6e6e8; font: 14px/1.4 system-ui, sans-serif; }
     h1 { font-size: 18px; margin: 0 0 12px; }
+    h2 { font-size: 16px; margin: 24px 0 8px; }
     #result { font-weight: 700; margin: 0 0 16px; }
     .ok { color: #7fd67f; } .bad { color: #ff6b6b; }
     .row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin: 0 0 12px; }
     .name { width: 180px; }
     canvas { image-rendering: pixelated; width: 384px; height: 96px; background: #000; }
+    .tour-row canvas { width: 256px; height: 64px; }
   </style>
 </head>
 <body>
   <h1>MIKRO screens: the manual's renderer against the controller's</h1>
   <p id="result">running…</p>
   <div id="list"></div>
+  <h2>The Tour's screens (MIKRO), every step played to its end</h2>
+  <div id="tour-list"></div>
   <script src="js/screen-render.js"></script>
+  <script src="js/layouts.js"></script>
+  <script src="js/site.js"></script>
+  <script src="js/manual.js"></script>
+  <script src="js/highlight-shows.js"></script>
+  <script src="js/highlights.js"></script>
   <script>
     (function () {
       'use strict';
@@ -49,8 +61,9 @@
         result.className = ok ? 'ok' : 'bad';
         document.title = text;
       }
-      fetch('data/screens.json').then(function (r) { return r.json(); }).then(function (data) {
-        MM.screen.init(data);
+
+      // The reference screens against the controller's pixels.
+      function references(data) {
         var list = document.getElementById('list'), passed = 0, failed = [];
         data.samples.forEach(function (sample) {
           var mine = MM.screen.rows(MM.screen.render(sample.popup !== undefined ? { popup: sample.popup } : sample.fields, sample.lines));
@@ -72,9 +85,98 @@
           }) : null));
           list.appendChild(row);
         });
-        var total = data.samples.length;
-        report('screens: ' + passed + '/' + total + ' match' + (failed.length ? '; differ: ' + failed.join(', ') : ''),
-          passed === total);
+        return { passed: passed, total: data.samples.length, failed: failed };
+      }
+
+      // The texts of a MIKRO screen state.
+      function texts(state) {
+        var out = [];
+        ['TITLE', 'SUBTITLE', 'MIKRO_LINE3', 'MIKRO_LINE3_VALUE', 'MIKRO_CORNER', 'popup', 'badge'].forEach(function (key) {
+          if (state[key] !== undefined && state[key] !== null) out.push(String(state[key]));
+        });
+        (state.LIST_ITEM || []).forEach(function (row) { out.push(String(row)); });
+        if (state.two) out = out.concat(texts(state.two));
+        return out;
+      }
+
+      // Every Tour step played to its end with a recording controller: each MIKRO screen must
+      // draw, with every character in the fonts (a missing one would show as '?').
+      function tour(features, fonts) {
+        var steps = 0, screens = 0, problems = [], seen = {};
+        var list = document.getElementById('tour-list');
+        function forDevice(entry, device) { return !entry.devices || entry.devices.indexOf(device) >= 0; }
+        ['mikro', 'mk3'].forEach(function (device) {
+          var spec = LAYOUTS[device];
+          features.sections.filter(function (s) { return forDevice(s, device); }).forEach(function (section) {
+            section.items.filter(function (i) { return forDevice(i, device); }).forEach(function (item, index) {
+              var step = { combo: item.combo, does: item.does, context: item.context || null, values: item.values || null, section: section };
+              var where = device + ' ' + section.id + ' ' + (index + 1) + ' (' + item.combo.join(' + ') + (item.context ? ', ' + item.context : '') + ')';
+              var shown = [];
+              function record(lines) { if (lines) shown.push(lines); }
+              var api = {
+                device: device, layout: spec, calm: false,
+                blank: function () { var out = []; for (var i = 0; i < 16; i++) out.push(null); return out; },
+                lit: function (color, level, drum) { return { color: color, level: level, drum: drum || null }; },
+                demo: function (token) { var demo = (spec.padDemos || {})[token]; return demo ? demo.slice() : api.blank(); },
+                pads: function () {}, light: function () {}, turn: function () {}, strip: function () {}, outline: function () {},
+                screen: function (oled, lcd) { record(device === 'mikro' ? oled : lcd || oled); },
+                screenOf: function (token) { record((spec.screens || {})[token] || spec.screen); },
+                show: function (lines) { record(lines || spec.screen); }
+              };
+              steps++;
+              try {
+                var show = MM.tourShow(step, device);
+                var ticks = Math.ceil((show.duration || 6500) / (show.every || 500));
+                for (var n = 0; n <= ticks; n++) show.tick(n, api);
+              } catch (e) {
+                problems.push(where + ': ' + e);
+                return;
+              }
+              if (!shown.length) problems.push(where + ': no screen');
+              if (device !== 'mikro') return;
+              var row = null;
+              shown.forEach(function (state) {
+                var key = JSON.stringify(state);
+                if (seen[key]) return;
+                seen[key] = true;
+                screens++;
+                texts(state).join('').replace(/[\t\n]/g, '').split('').forEach(function (ch) {
+                  if (!fonts.small.glyphs[ch] && !fonts.large.glyphs[ch] && !fonts.small.glyphs[ch.toUpperCase()]) {
+                    problems.push(where + ': no glyph for ' + JSON.stringify(ch));
+                  }
+                });
+                try {
+                  var rows = MM.screen.rows(MM.screen.render(state));
+                  if (!row) {
+                    row = document.createElement('div');
+                    row.className = 'row tour-row';
+                    var name = document.createElement('span');
+                    name.className = 'name';
+                    name.textContent = where;
+                    row.appendChild(name);
+                    list.appendChild(row);
+                  }
+                  row.appendChild(canvas(rows));
+                } catch (e) {
+                  problems.push(where + ': ' + e);
+                }
+              });
+            });
+          });
+        });
+        return { steps: steps, screens: screens, problems: problems };
+      }
+
+      Promise.all([
+        fetch('data/screens.json').then(function (r) { return r.json(); }),
+        fetch('data/features.json').then(function (r) { return r.json(); })
+      ]).then(function (all) {
+        var data = all[0], features = all[1];
+        MM.screen.init(data);
+        var ref = references(data), walk = tour(features, data.fonts);
+        var ok = ref.passed === ref.total && !walk.problems.length;
+        report('screens: ' + ref.passed + '/' + ref.total + ' match' + (ref.failed.length ? '; differ: ' + ref.failed.join(', ') : '') +
+          '; tour: ' + walk.steps + ' steps, ' + walk.screens + ' screens ' + (walk.problems.length ? 'with problems: ' + walk.problems.join('; ') : 'ok'), ok);
       }).catch(function (e) { report('screens: error ' + e, false); });
     })();
   </script>

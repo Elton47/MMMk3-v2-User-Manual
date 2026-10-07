@@ -337,18 +337,28 @@ function kitsScreen(chosen, favorites) {
 
 // The settings page (MASCHINE), a setting chosen by its name (default: the first one), line 2
 // 'Name: value' as the script's settings page shows it (the setup guide shows 'About'). The rows
-// in the script's order and with its defaults (surface.py _settings_items; Brightness stays hidden
-// there until more than 100 % is known for the controller).
+// in the script's order and with its defaults (surface.py _settings_items; its Brightness row is
+// left out until it is confirmed on the hardware). The Tour's Settings card steps through the
+// values in features.json (`values`, checked against the script there).
 function settingsRows() {
   return ['Screen\t' + MM.screenLines + ' lines', 'Screen saver\t10 min', 'Velocity curve\tLinear',
     'Fixed velocity\t100', 'Pad pressure\tPoly', 'Drum colours\tBy chain', 'Step follows\tOn',
     'Record length\tFree', 'Start mode\tPads', 'About\t2.0.0'];
 }
-function settingsScreen(chosenName) {
-  var rows = settingsRows();
+// changed (optional): { setting name: value } shown instead of the default; Screen '3 lines'
+// draws the page in three lines, as the controller does at once.
+function settingsScreen(chosenName, changed) {
+  changed = changed || {};
+  var rows = settingsRows().map(function (row) {
+    var name = row.split('\t')[0];
+    return name in changed ? name + '\t' + changed[name] : row;
+  });
   var names = rows.map(function (row) { return row.split('\t')[0]; });
   var chosen = Math.max(0, names.indexOf(chosenName));
-  return listScreen('Settings', rows[chosen].replace('\t', ': '), rows, chosen);
+  var screen = listScreen('Settings', rows[chosen].replace('\t', ': '), rows, chosen);
+  var lines = /^(\d) lines$/.exec(changed.Screen || '');
+  if (lines) screen.MIKRO_LINES = Number(lines[1]);
+  return screen;
 }
 
 // The settings section's screens: each setting's row ('MASCHINE (Screen saver)', the item's

@@ -1,15 +1,18 @@
-// The choreography of the highlights tour (js/highlights.js): what the controller does while a
-// highlight is shown. Keyed by the item's combo in data/features.json, its tokens joined with
-// '+' ('SHIFT', 'VARIATION+PAD'). An item without an entry here still plays: its combo's
-// controls glow, and the screen and the pads show that control's sample content (the manual's
+// The choreography of the Tour's cards (js/highlights.js, js/tour.js): what the controller does
+// while a step is shown. HIGHLIGHT_SHOWS: the Highlights card's, keyed by the item's combo in
+// data/features.json, its tokens joined with '+' ('SHIFT', 'VARIATION+PAD'). TOUR_SHOWS (at the
+// end): the other cards', per section id, either { 'COMBO' or 'COMBO (context)': show } (some
+// reuse a highlight's) or a function(step, device) that returns a show or null. A step without a
+// show still plays (genericShow() in js/highlights.js): its combo is pressed in order, and the
+// screen and the pads show what the manual shows for it on hover (the manual's `sectionScreens`,
 // `screens` and `padDemos` in layouts.js).
 //
 // Each entry (all fields optional):
 //   every     ms per tick (default 500)
-//   duration  ms the highlight stays (default 6500)
+//   duration  ms the step stays (default 6500)
 //   glow      combo tokens to outline (default: the item's combo); the first one is the control
 //             the callout points at
-//   loupe     true: the callout also shows the MIKRO's screen, magnified
+//   loupe     (no longer read: the Tour always shows the MIKRO's screen magnified in the callout)
 //   tick(n, api)  draws tick n (0, 1, 2 ...). It draws the whole state for n, so a tick can be
 //             skipped or repeated: no state is kept between ticks.
 // api: device ('mikro' | 'mk3'), layout (LAYOUTS[device]), calm (the visitor prefers reduced
@@ -22,7 +25,8 @@
 // (exactly these buttons are lit), turn(steps) (the encoder has turned this many detents),
 // strip(fill, color, flash, centre) (the touch strip's LED dots as a progress bar: fill 0-1 in color,
 // or red while flash; centre: from the middle LED, as Pan / PITCH; null clears it; the strip surface
-// stays unlit), outline(tokens) (change the outlined controls).
+// stays unlit), outline(tokens) (change the outlined controls), show(lines) (a screen as the
+// layout keeps it: a MIKRO state, or { left, right } on the MK3).
 // The sample Live set (SAMPLE_TRACKS, SAMPLE_DRUMS, PAD_COLORS ...) comes from layouts.js.
 
 var HIGHLIGHT_SHOWS = (function () {
@@ -322,5 +326,95 @@ var HIGHLIGHT_SHOWS = (function () {
         api.pads(grid);
       }
     }
+  };
+})();
+
+// The section cards' own choreographies (see the top of this file). The highlights that left the
+// Highlights card play in their sections' cards.
+var TOUR_SHOWS = (function () {
+  'use strict';
+
+  var S = HIGHLIGHT_SHOWS;
+
+  // --- MASCHINE: the settings page (MIKRO) --------------------------------------------------
+  // The page as the script shows it (settingsScreen() in layouts.js), the values from
+  // features.json (an item's `values`: the default first, then as ▶ walks them; checked against
+  // the script in its repository). A change shows at once in the row and on line 2; two settings
+  // also pop up their new value for a moment (the script's notify, NOTIFY_DURATION 1.2 s).
+  var NAMES = settingsRows().map(function (row) { return row.split('\t')[0]; });
+  var POPUPS = {
+    'Velocity curve': function (value) { return popupScreen('Velocity curve', value); },
+    'Drum colours': function (value) { return popupScreen('Pad colours', value === 'By name' ? 'by name' : 'by chain colour'); }
+  };
+  var EVERY = 600, PER_VALUE = 3;  // a press, the popup's 1.2 s, then a moment on the page
+
+  function changed(name, value) { var out = {}; out[name] = value; return out; }
+
+  // A setting: a moment on the row above, one detent onto it, then ▶ through its values.
+  function valuesShow(name, values) {
+    var at = NAMES.indexOf(name);
+    if (at < 0) return null;
+    var presses = values.length - 1;
+    return {
+      every: EVERY,
+      duration: Math.max(5500, (2 + presses * PER_VALUE + 3) * EVERY),
+      glow: ['SCREEN', '◀', '▶'],
+      tick: function (n, api) {
+        if (n >= 1 && at > 0) api.turn(1);
+        var press = n < 2 || !presses ? 0 : Math.min(presses, Math.floor((n - 2) / PER_VALUE) + 1);
+        var since = press ? n - 2 - (press - 1) * PER_VALUE : -1;
+        api.light(since === 0 ? ['▶'] : []);
+        if (press && since < 2 && POPUPS[name]) api.screen(POPUPS[name](values[press]));
+        else if (n < 1 && at > 0) api.screen(settingsScreen(NAMES[at - 1]));
+        else api.screen(settingsScreen(name, changed(name, values[press])));
+      }
+    };
+  }
+
+  // TURN: down the list and back up.
+  var turnShow = {
+    every: 650,
+    tick: function (n, api) {
+      var k = n % 8, row = k <= 4 ? k : 8 - k;
+      api.turn(n);
+      api.screen(settingsScreen(NAMES[row]));
+    }
+  };
+
+  // ◀ ▶ on Record length: ▶ to 2 bars, ◀ back to the default.
+  function arrowsShow(values) {
+    var path = [0, 1, 2, 1, 0];
+    return {
+      every: 700,
+      duration: 7000,
+      tick: function (n, api) {
+        var k = Math.min(path.length - 1, Math.floor((n + 1) / 2));
+        var pressing = n % 2 === 1 && (n + 1) / 2 <= path.length - 1;
+        api.light(pressing ? [path[k] > path[k - 1] ? '▶' : '◀'] : []);
+        api.screen(settingsScreen('Record length', changed('Record length', values[path[k]])));
+      }
+    };
+  }
+
+  function settings(step) {
+    var key = step.combo.join('+');
+    if (step.context && step.values) return valuesShow(step.context, step.values);
+    if (key === 'TURN') return turnShow;
+    if (key === '◀+▶') {
+      var lengths = step.section.items.filter(function (i) { return i.context === 'Record length'; })[0];
+      return lengths && lengths.values && lengths.values.length >= 3 ? arrowsShow(lengths.values) : null;
+    }
+    return null;  // MASCHINE: the generic press, the page opens
+  }
+
+  return {
+    clip: { 'STRIP': S.STRIP },
+    events: { 'VARIATION+PAD': S['VARIATION+PAD'] },
+    mixer: { 'VOLUME': S.VOLUME },
+    browser: { 'BROWSER': S.BROWSER, 'PUSH (on a MASCHINE kit)': S.PUSH },
+    playing: { 'NOTE REPEAT': S['NOTE REPEAT'] },
+    chords: { 'PAD': S.CHORDS },
+    step: { 'STEP': S.STEP },
+    settings: settings
   };
 })();

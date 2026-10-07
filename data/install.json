@@ -55,6 +55,15 @@
       "values": {"mikro": "Mikro MK3 Live Out", "mk3": "MK3 Live Out", "plus": "Plus Live Out"}},
     "midi_mode": {"choice": "device", "generic": "[[SHIFT]] + [[MASCHINE]] (MIKRO MK3) or [[SHIFT]] + [[CHANNEL]] (MK3, MASCHINE+)",
       "values": {"mikro": "[[SHIFT]] + [[MASCHINE]]", "mk3": "[[SHIFT]] + [[CHANNEL]]", "plus": "[[SHIFT]] + [[CHANNEL]]"}},
+    "library_path": {"choice": "os", "generic": "Documents\\Ableton\\User Library (Windows) or ~/Music/Ableton/User Library (macOS)",
+      "values": {"win11": "Documents\\Ableton\\User Library", "win10": "Documents\\Ableton\\User Library",
+                 "macos": "~/Music/Ableton/User Library"}},
+    "update_copy": {"choice": "os", "generic": "Copy the new download's **Remote Scripts** folder into Live's User Library, as when installing.",
+      "values": {"win11": "Drag the new download's **Remote Scripts** folder onto Live's **User Library**, as when installing.",
+                 "win10": "Drag the new download's **Remote Scripts** folder onto Live's **User Library**, as when installing.",
+                 "macos": "Copy the three folders from the new download's **Remote Scripts** folder into it, as when installing."}},
+    "about": {"choice": "device", "generic": " On the MIKRO MK3, [[MASCHINE]] then **About** shows the new version.",
+      "values": {"mikro": " [[MASCHINE]] then **About** shows the new version.", "mk3": "", "plus": ""}},
     "scripts_path": {"choice": "os", "generic": "Documents\\Ableton\\User Library\\Remote Scripts (Windows) or ~/Music/Ableton/User Library/Remote Scripts (macOS)",
       "values": {"win11": "Documents\\Ableton\\User Library\\Remote Scripts", "win10": "Documents\\Ableton\\User Library\\Remote Scripts",
                  "macos": "~/Music/Ableton/User Library/Remote Scripts"}},
@@ -97,12 +106,19 @@
       "when": {"live": ["live12"]},
       "body": [
         {"ol": [
+          "Unzip the download. It holds a folder called **Remote Scripts**.",
+          "Drag the whole **Remote Scripts** folder onto Live's **User Library** folder, below.",
+          "Windows says a folder with that name already exists: choose to merge them, and to replace the files if it asks."
+        ], "when": {"os": ["win11", "win10"]}},
+        {"copy": [{"label": "Live's User Library", "value": "{{library_path}}"}], "when": {"os": ["win11", "win10"]}},
+        {"note": "No **Remote Scripts** folder in your User Library yet? The drag simply creates it. Either way, its three folders `_MaschineCore`, `Maschine_Mikro_MK3` and `Maschine_MK3` end up in **User Library\\Remote Scripts**, whichever controller you have.", "when": {"os": ["win11", "win10"]}},
+        {"ol": [
           "Unzip the download.",
           "Open the **Remote Scripts** folder inside it. It holds three folders: `_MaschineCore`, `Maschine_Mikro_MK3` and `Maschine_MK3`.",
           "Copy **all three** into the **Remote Scripts** folder of Live's User Library, below. If that folder doesn't exist yet, create it."
-        ]},
-        {"copy": [{"label": "Live's Remote Scripts folder", "value": "{{scripts_path}}"}]},
-        {"note": "Copy all three folders, whichever controller you have: `_MaschineCore` is shared. They go directly inside **Remote Scripts**, not into a sub-folder."},
+        ], "when": {"os": ["macos"]}},
+        {"copy": [{"label": "Live's Remote Scripts folder", "value": "{{scripts_path}}"}], "when": {"os": ["macos"]}},
+        {"note": "Copy all three folders, whichever controller you have: `_MaschineCore` is shared. They go directly inside **Remote Scripts**, not into a sub-folder.", "when": {"os": ["macos"]}},
         {"note": "Moved your User Library? Live shows where it is in **Settings → Library**."},
         {"note": "Upgrading from v1.6? v1 and v2 shouldn't run at the same time: in Live's settings, set v1's control surface to **None**."}
       ]
@@ -240,6 +256,23 @@
           {"label": "Open the manual", "href": "#{{manual}}", "primary": true},
           {"label": "What SHIFT does", "href": "#{{manual}}/SHIFT"}
         ]}
+      ]
+    },
+    {
+      "id": "update",
+      "title": "Updating to a newer version",
+      "nav": "Updating",
+      "when": {"live": ["live12"]},
+      "body": [
+        {"ol": [
+          "**Close Live.** The bridge closes with it.",
+          "In Live's **Remote Scripts** folder, below, delete the three folders `_MaschineCore`, `Maschine_Mikro_MK3` and `Maschine_MK3`. Delete them first: copying over them can leave old files behind.",
+          "{{update_copy}}",
+          "Start Live.{{about}}"
+        ]},
+        {"copy": [{"label": "Live's Remote Scripts folder", "value": "{{scripts_path}}"}]},
+        {"note": "Everything else stays: your settings and favourites, Live's control surface settings and the loopMIDI ports. Nothing to set up again.", "when": {"os": ["win11", "win10"]}},
+        {"note": "Everything else stays: your settings and favourites and Live's control surface settings. Nothing to set up again.", "when": {"os": ["macos"]}}
       ]
     }
   ],

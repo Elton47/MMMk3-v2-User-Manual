@@ -1,6 +1,7 @@
 // The setup wizard: choices first, then a stepper. Content from data/install.json (a copy of
 // docs/install.json in the script repository; the schema is described at the top of that file).
 // Deep links: #setup (the questions), #setup/<os>/<device>/<live>/<step number>.
+// #setup/print[/<choices>...] is the printable guide: every step on one page (see guide()).
 MM.setup = (function () {
   'use strict';
 
@@ -9,7 +10,9 @@ MM.setup = (function () {
   var NOTE_ICONS = { info: 'info', important: 'alert', coming: 'soon' };
   var INLINE = /\*\*(.+?)\*\*|`([^`]+)`|\[\[([^\]]+)\]\]|\[([^\]]+)\]\(([^)\s]+)\)/g;
 
-  var state = { data: null, choices: {}, steps: [], index: 0, detected: {}, focusStep: false };
+  // ctx: set while the printable guide renders ({choice id: [options still allowed]}); vars and
+  // links follow it instead of the wizard's choices.
+  var state = { data: null, choices: {}, steps: [], index: 0, detected: {}, focusStep: false, ctx: null };
 
   // --- data -------------------------------------------------------------------------------
 
@@ -48,7 +51,7 @@ MM.setup = (function () {
     return String(text).replace(/\{\{\s*([a-z0-9_]+)\s*\}\}/g, function (m, name) {
       var v = state.data.vars[name];
       if (!v) return m;
-      var value = v.values[state.choices[v.choice]];
+      var value = state.ctx ? resolveVar(name, state.ctx) : v.values[state.choices[v.choice]];
       return value !== undefined ? value : v.generic;
     });
   }
@@ -108,8 +111,10 @@ MM.setup = (function () {
   function isExternal(href) { return /^https?:/i.test(href); }
 
   function link(text, href) {
+    if (state.ctx) href = printHref(href);
     var a = h('a', { href: href });
     a.appendChild(document.createTextNode(text));
+    if (state.ctx) a.appendChild(h('span', { className: 'pd-url-inline', text: ' (' + printAddress(href) + ')' }));
     if (isExternal(href)) {
       a.setAttribute('target', '_blank');
       a.setAttribute('rel', 'noopener');
@@ -328,7 +333,10 @@ MM.setup = (function () {
 
     var summary = h('div', { className: 'wizard-summary', 'aria-label': 'Your answers' }, choiceDefs().map(function (c) {
       return h('span', { className: 'chip' }, [MM.icon(CHOICE_ICONS[c.id] || 'check'), optionLabel(c.id, state.choices[c.id])]);
-    }).concat([h('a', { className: 'btn btn-text has-icon-start', href: '#setup' }, [MM.icon('edit'), h('span', { text: 'Change' })])]));
+    }).concat([
+      h('a', { className: 'btn btn-text has-icon-start', href: '#setup' }, [MM.icon('edit'), h('span', { text: 'Change' })]),
+      h('a', { className: 'btn btn-text has-icon-start', href: routeHash().replace('#setup/', '#setup/print/') }, [MM.icon('print'), h('span', { text: 'All steps on one page' })])
+    ]));
 
     var progress = h('div', { className: 'progress' }, [
       h('div', { className: 'progress-track', role: 'progressbar', 'aria-label': 'Setup progress',
@@ -392,7 +400,8 @@ MM.setup = (function () {
     var single = total === 1;  // e.g. Live 11: one page, no stepper chrome
     if (single) card.querySelector('.step-eyebrow').textContent = 'Your setup';
     root.appendChild(h('div', { className: 'wizard' + (single ? ' single' : '') }, single ? [summary, card] : [summary, progress, nav, card]));
-    if (index === total - 1) markDone();
+    // reaching "You're set" (or the last step) finishes the setup; steps after it (updating) are extra
+    if (index === total - 1 || steps.slice(0, index + 1).some(function (s) { return s.id === 'done'; })) markDone();
     document.title = fill(step.title) + ' · Setup · MASCHINE for Ableton Live';
 
     if (state.focusStep) {
@@ -475,6 +484,263 @@ MM.setup = (function () {
     });
   }
 
+  // --- the printable guide (#setup/print...) ----------------------------------------------
+  // Every step on one page, rendered like the Markdown guide (tools/gen_install_guide.py in the
+  // script repository): the "guide" sections of install.json, narrowed by the choices in the hash
+  // (#setup/print/windows: the Windows section and the Live 11 one; #setup/print/win11/mikro/live12:
+  // one route). A var that still differs shows its generic text, or, in a copy or table block, a
+  // table with a row per option; a step, block or answer that applies to only some of the choices
+  // left open says so ("Windows 11 only", "MASCHINE+: ...").
+
+  function optionsOf(choiceId) {
+    var choice = choiceDefs().filter(function (c) { return c.id === choiceId; })[0];
+    return choice.options.map(function (o) { return o.id; });
+  }
+
+  // ctx narrowed by a 'when', or null when nothing of ctx is left
+  function narrow(when, ctx) {
+    var out = {}, empty = false;
+    Object.keys(ctx).forEach(function (id) { out[id] = ctx[id]; });
+    Object.keys(when || {}).forEach(function (id) {
+      var allowed = (ctx[id] || optionsOf(id)).filter(function (o) { return when[id].indexOf(o) >= 0; });
+      if (!allowed.length) empty = true;
+      out[id] = allowed;
+    });
+    return empty ? null : out;
+  }
+
+  // 'Windows 11' when a 'when' keeps only part of ctx; '' when it applies to all of it
+  function onlyLabel(when, ctx) {
+    var parts = [];
+    Object.keys(when || {}).forEach(function (id) {
+      var allowed = ctx[id] || optionsOf(id);
+      var kept = allowed.filter(function (o) { return when[id].indexOf(o) >= 0; });
+      if (kept.length && kept.length < allowed.length) {
+        parts.push(kept.map(function (o) { return optionLabel(id, o); }).join(', '));
+      }
+    });
+    return parts.join('; ');
+  }
+
+  // a var's value when every option still allowed gives the same one, else undefined
+  function resolveVar(name, ctx) {
+    var v = state.data.vars[name];
+    var values = (ctx[v.choice] || optionsOf(v.choice)).map(function (o) { return v.values[o]; });
+    return values.every(function (x) { return x === values[0]; }) ? values[0] : undefined;
+  }
+
+  // the choices whose vars in this text don't resolve in ctx
+  function openChoices(text, ctx) {
+    var out = [];
+    String(text).replace(/\{\{\s*([a-z0-9_]+)\s*\}\}/g, function (m, name) {
+      var v = state.data.vars[name];
+      if (v && resolveVar(name, ctx) === undefined && out.indexOf(v.choice) < 0) out.push(v.choice);
+      return m;
+    });
+    return out;
+  }
+
+  function withCtx(ctx, fn) {
+    var saved = state.ctx;
+    state.ctx = ctx;
+    try { return fn(); } finally { state.ctx = saved; }
+  }
+
+  // On paper a link shows its address, and a link into the site needs the site's address.
+  function printHref(href) {
+    return href.charAt(0) === '#' ? state.data.site.replace(/\/?$/, '/') + href : href;
+  }
+
+  function printAddress(href) { return href.replace(/^https?:\/\//, '').replace(/\/$/, ''); }
+
+  function valueTable(rows, ctx) {
+    var open = [];
+    rows.forEach(function (row) {
+      openChoices(row[1], ctx).forEach(function (id) { if (open.indexOf(id) < 0) open.push(id); });
+    });
+    if (!open.length) {
+      var dl = h('dl', { className: 'kv' });
+      rows.forEach(function (row) {
+        dl.appendChild(inline(row[0], h('dt')));
+        dl.appendChild(h('dd', { text: fill(row[1]) }));
+      });
+      return dl;
+    }
+    var id = open[0];  // one varying choice per table is enough for this data
+    var choice = choiceDefs().filter(function (c) { return c.id === id; })[0];
+    var head = h('tr', {}, [h('th', { scope: 'col', text: choice.label })].concat(rows.map(function (row) {
+      return inline(row[0], h('th', { scope: 'col' }));
+    })));
+    var body = h('tbody', {}, (ctx[id] || optionsOf(id)).map(function (option) {
+      var one = narrow({}, ctx);
+      one[id] = [option];
+      return withCtx(one, function () {
+        return h('tr', {}, [h('th', { scope: 'row', text: optionLabel(id, option) })].concat(rows.map(function (row) {
+          return h('td', { text: fill(row[1]) });
+        })));
+      });
+    }));
+    return h('div', { className: 'pd-table-wrap' }, [h('table', { className: 'pd-values' }, [h('thead', {}, [head]), body])]);
+  }
+
+  function printFaq(items, ctx) {
+    var list = items.map(function (item) {
+      var itemCtx = narrow(item.when, ctx);
+      if (!itemCtx) return null;
+      var only = onlyLabel(item.when, ctx);
+      return withCtx(itemCtx, function () {
+        var q = inline(item.q, h('p', { className: 'pd-q' }));
+        if (only) q.appendChild(h('span', { className: 'pd-only', text: only + ' only' }));
+        var answer = item.a.length > 1
+          ? h('ul', {}, item.a.map(function (a) { return inline(a, h('li')); }))
+          : inline(item.a[0], h('p'));
+        return h('div', { className: 'pd-faq-item' }, [q, answer]);
+      });
+    });
+    return h('div', { className: 'pd-faq' }, list);
+  }
+
+  function printActions(actions) {
+    return h('ul', { className: 'pd-actions' }, actions.map(function (action) {
+      var label = fill(action.label);
+      var href = printHref(fill(action.href));
+      return h('li', {}, [h('a', { href: href }, [
+        h('span', { className: 'pd-action-label', text: label }),
+        h('span', { className: 'pd-url', text: printAddress(href) })
+      ])]);
+    }));
+  }
+
+  function printBlock(b, ctx) {
+    var only = onlyLabel(b.when, ctx);
+    ctx = narrow(b.when, ctx);
+    if (!ctx) return null;
+    return withCtx(ctx, function () {
+      var node;
+      if (b.copy) node = valueTable(b.copy.map(function (c) { return [c.label, c.value]; }), ctx);
+      else if (b.table) node = valueTable(b.table, ctx);
+      else if (b.faq) node = printFaq(b.faq, ctx);
+      else if (b.actions) node = printActions(b.actions);
+      else node = block(b);
+      if (node && b.p !== undefined && /:\s*$/.test(b.p)) node.classList.add('pd-lead');  // "You need:"
+      if (!node || !only) return node;
+      var label = h('strong', { className: 'pd-only-lead', text: only + ': ' });
+      if (b.note !== undefined) node.lastChild.insertBefore(label, node.lastChild.firstChild);
+      else if (b.p !== undefined) node.insertBefore(label, node.firstChild);
+      else node = h('div', {}, [h('p', { className: 'pd-only-lead', text: only + ':' }), node]);
+      return node;
+    });
+  }
+
+  // The step's drawing (js/setup-figures.js), from its vars and its own texts, or null.
+  function stepFigure(step, ctx) {
+    if (!MM.setupFigures) return null;
+    var texts = (step.body || []).filter(function (b) { return narrow(b.when, ctx); }).map(function (b) { return JSON.stringify(b); });
+    return MM.setupFigures.figure(step, {
+      ctx: ctx,
+      text: texts.join(' '),
+      label: optionLabel,
+      value: function (name, option) {
+        var v = state.data.vars[name];
+        return v.values[option] !== undefined ? v.values[option] : v.generic;
+      }
+    });
+  }
+
+  // A hash part names options: an option id, every option whose label starts with that word
+  // ("windows": Windows 11 and Windows 10), or an alias.
+  function printOptions(part) {
+    part = String(part || '').toLowerCase();
+    var out = {};
+    choiceDefs().forEach(function (c) {
+      var hit = c.options.filter(function (o) { return o.id === part; });
+      if (!hit.length) hit = c.options.filter(function (o) { return o.label.split(' ')[0].toLowerCase() === part; });
+      if (!hit.length) hit = c.options.filter(function (o) { return (o.aliases || []).indexOf(part) >= 0; });
+      if (hit.length) out[c.id] = hit.map(function (o) { return o.id; });
+    });
+    return out;
+  }
+
+  // parts: the hash after "setup/print/". Returns { title, subtitle, site, contents, node },
+  // or null when no section of the guide fits.
+  function guide(parts) {
+    var ctx = {};
+    (parts || []).forEach(function (part) {
+      var found = printOptions(part);
+      Object.keys(found).forEach(function (id) { ctx[id] = (ctx[id] || []).concat(found[id]); });
+    });
+    var sections = (state.data.guide || []).map(function (section) {
+      return { title: section.title, ctx: narrow(section.when, ctx) };
+    }).filter(function (section) { return section.ctx; });
+    if (!sections.length) return null;
+    var contents = h('ol', { className: 'pd-contents-list' });
+    var node = h('div', { className: 'pd-guide' });
+    sections.forEach(function (section) {
+      var number = 0;
+      var groupList = contents;
+      if (sections.length > 1) {
+        groupList = h('ol');
+        contents.appendChild(h('li', { className: 'pd-contents-group' }, [h('span', { text: section.title }), groupList]));
+      }
+      var wrap = h('section', { className: 'pd-section' });
+      if (sections.length > 1) wrap.appendChild(h('h2', { className: 'pd-section-title', text: section.title }));
+      state.data.steps.forEach(function (step) {
+        var stepCtx = narrow(step.when, section.ctx);
+        if (!stepCtx) return;
+        number++;
+        var only = onlyLabel(step.when, section.ctx);
+        var body = h('div', { className: 'step-body pd-body' });
+        (step.body || []).forEach(function (b) {
+          var n = printBlock(b, stepCtx);
+          if (n) body.appendChild(n);
+        });
+        var title = withCtx(stepCtx, function () { return fill(step.title); });
+        groupList.appendChild(h('li', { text: withCtx(stepCtx, function () { return fill(step.nav || step.title); }) }));
+        // a drawing goes beside the step's instructions (up to its first list), the rest of the
+        // step under both; a wide one under the whole step
+        // (fig.besideAll: the whole text, then fig.lead under it), then fig.below
+        var fig = stepFigure(step, stepCtx);
+        var main = body;
+        // a step of text only flows in two columns on paper (not the troubleshooting answers,
+        // which have their own)
+        if (!fig && !body.querySelector('.pd-faq')) body.classList.add('pd-flow');
+        if (fig) {
+          var lead = h('div', { className: 'step-body pd-body' });
+          var list = fig.besideAll ? null : body.querySelector(':scope > ol, :scope > ul');
+          while (body.firstChild) {
+            var child = body.firstChild;
+            lead.appendChild(child);
+            if (!fig.besideAll && (child === list || !list)) break;
+          }
+          if (fig.lead) lead.appendChild(fig.lead);
+          main = h('div', {}, [h('div', { className: 'pd-step-grid' }, [lead, fig.node]),
+            body.firstChild ? body : null, fig.below ? h('div', { className: 'pd-step-wide' }, [fig.below]) : null]);
+        }
+        wrap.appendChild(h('article', { className: 'pd-step' + (fig ? ' has-figure' : '') }, [
+          h('div', { className: 'pd-step-head' }, [
+            h('span', { className: 'pd-step-num', 'aria-hidden': 'true', text: String(number) }),
+            h('h3', { className: 'pd-step-title' }, [
+              h('span', { className: 'visually-hidden', text: 'Step ' + number + ': ' }), title,
+              only ? h('span', { className: 'pd-only', text: only + ' only' }) : null
+            ])
+          ]),
+          main
+        ]));
+      });
+      node.appendChild(wrap);
+    });
+    var given = choiceDefs().filter(function (c) { return ctx[c.id]; }).map(function (c) {
+      return ctx[c.id].map(function (o) { return optionLabel(c.id, o); }).join(' and ');
+    });
+    return {
+      title: state.data.title,
+      subtitle: given.join(' · '),
+      site: state.data.site,
+      contents: contents,
+      node: node
+    };
+  }
+
   // #help: the troubleshooting step for the visitor's answers (remembered, else detected, else the
   // first option), or the first step where there is none (Live 11).
   function help() {
@@ -487,5 +753,5 @@ MM.setup = (function () {
     show(parts);
   }
 
-  return { init: init, show: show, help: help };
+  return { init: init, show: show, help: help, guide: guide };
 })();

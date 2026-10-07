@@ -48,19 +48,6 @@ MM.cheatsheet = (function () {
     return location.host + location.pathname.replace(/index\.html$/, '');
   }
 
-  // The site's logo (the app bar's), without its ids: they must stay unique on the page.
-  function logo() {
-    var source = document.querySelector('.brand .logo');
-    if (!source) return null;
-    var copy = source.cloneNode(true);
-    copy.setAttribute('class', 'cs-logo');
-    Array.prototype.forEach.call(copy.querySelectorAll('[id], [filter]'), function (n) {
-      n.removeAttribute('id');
-      n.removeAttribute('filter');
-    });
-    return copy;
-  }
-
   function render() {
     var data = state.data, device = data.devices[state.device];
     var root = el('cheatsheet');
@@ -77,7 +64,7 @@ MM.cheatsheet = (function () {
     var address = siteAddress();
     root.appendChild(h('header', { className: 'cs-head' }, [
       h('div', { className: 'cs-brand' }, [
-        h('div', { className: 'cs-title-row' }, [logo(), h('h1', { id: 'cs-title', text: data.product })]),
+        h('div', { className: 'cs-title-row' }, [MM.logo('cs-logo'), h('h1', { id: 'cs-title', text: data.product })]),
         h('p', { className: 'cs-meta' }, [
           h('strong', { text: device.name }), ' · Cheat sheet · v' + data.version,
           address ? ' · ' + address : null

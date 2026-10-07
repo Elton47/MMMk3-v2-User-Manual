@@ -335,12 +335,15 @@ function kitsScreen(chosen, favorites) {
     LIST_ITEM: rows, LIST_SELECTED: chosen - start, MIKRO_SCROLL: Math.round(chosen * 126 / (e.count - 1)) };
 }
 
-// The settings page (MASCHINE), its first setting chosen.
-function settingsScreen() {
+// The settings page (MASCHINE), a setting chosen by its name (default: the first one), line 2
+// 'Name: value' as the script's settings page shows it (the setup guide shows 'About').
+function settingsScreen(chosenName) {
   var lines = MM.screenLines + ' lines';
   var rows = ['Screen\t' + lines, 'Velocity curve\tLinear', 'Fixed velocity\t100', 'Pad pressure\tPoly',
     'Drum colours\tBy chain', 'Playback lights\tOn', 'Step follows\tOn', 'About\t2.0.0'];
-  return listScreen('Settings', 'Screen: ' + lines, rows, 0);
+  var names = rows.map(function (row) { return row.split('\t')[0]; });
+  var chosen = Math.max(0, names.indexOf(chosenName));
+  return listScreen('Settings', rows[chosen].replace('\t', ': '), rows, chosen);
 }
 
 // Pad number (1-16) of a list position: lists read like text, position 0 = pad 13 (top left),

@@ -87,6 +87,20 @@ var MM = Object.assign(window.MM || {}, (function () {
     });
   }
 
+  // A copy of the app bar's logo for a printable sheet, without its ids and glow filter (ids must
+  // stay unique on the page).
+  function logo(className) {
+    var source = document.querySelector('.brand .logo');
+    if (!source) return null;
+    var copy = source.cloneNode(true);
+    copy.setAttribute('class', className);
+    Array.prototype.forEach.call(copy.querySelectorAll('[id], [filter]'), function (n) {
+      n.removeAttribute('id');
+      n.removeAttribute('filter');
+    });
+    return copy;
+  }
+
   function scrollToEl(node, block) {
     if (!node) return;
     node.scrollIntoView({ behavior: reducedMotion && reducedMotion.matches ? 'auto' : 'smooth', block: block || 'start' });
@@ -153,7 +167,7 @@ var MM = Object.assign(window.MM || {}, (function () {
   }
 
   return {
-    store: store, storeJSON: storeJSON, el: el, h: h, icon: icon, key: key,
+    store: store, storeJSON: storeJSON, el: el, h: h, icon: icon, key: key, logo: logo,
     snackbar: snackbar, copyText: copyText, scrollToEl: scrollToEl, initTheme: initTheme,
     reducedMotion: function () { return !!(reducedMotion && reducedMotion.matches); }
   };

@@ -221,7 +221,7 @@
             "To switch between the two on the fly, use **v1.6.1** (in the same download) in NI's MIDI mode: {{midi_mode}} switches between MASCHINE and Live."
           ]},
           {"q": "I want to play the MASCHINE Expansions without the plug-in", "when": {"device": ["mikro"]}, "a": [
-            "Press [[BROWSER]] and open **MASCHINE Kits** (Live 12.4 or later; an older Live shows **Needs Live 12.4+** there): your Expansions, then their kits.",
+            "Press [[BROWSER]] and open **MASCHINE Kits**: your Expansions, then their kits. On Live 12.0 to 12.3 the kits are prepared once, in the background, the first time (**Preparing kits** with a percentage on top of the list); a kit you push before then loads by itself in a moment.",
             "Turning onto a kit plays its preview (with preview switched on in Live's browser). Pushing the encoder loads it as a Drum Rack, pad for pad as in MASCHINE: onto the selected MIDI track, or a new one when an audio track is selected. The controller stays with Live.",
             "More in [BROWSER: browse and load](#browser)."
           ]},

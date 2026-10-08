@@ -335,6 +335,14 @@ function kitsScreen(chosen, favorites) {
     LIST_ITEM: rows, LIST_SELECTED: chosen - start, MIKRO_SCROLL: Math.round(chosen * 126 / (e.count - 1)) };
 }
 
+// MASCHINE Kits on Live 12.0-12.3 the first time: the kits are listed at once, with the row
+// 'Preparing kits 42%' on top while they are prepared (it goes by itself; not a folder), as the
+// script's reference screen browser-kits-preparing (data/screens.json).
+function kitsPreparingScreen(percent) {
+  var rows = ['Preparing kits ' + percent + '%'].concat(SAMPLE_EXPANSIONS);
+  return browserScreen('MASCHINE Kits', rows, 0, function (i) { return i > 0; });
+}
+
 // The settings page (MASCHINE), a setting chosen by its name (default: the first one), line 2
 // 'Name: value' as the script's settings page shows it (the setup guide shows 'About'). The rows
 // in the script's order and with its defaults (surface.py _settings_items). The Tour's Settings
@@ -607,6 +615,10 @@ var LAYOUTS = {
         browser: { '*': browser, 'BROWSER': browser, 'STAR': favorites,
           'TURN': [kitsScreen(0, [0]), kitsScreen(1, [0])],
           'PUSH': [kitsScreen(1, [0]), popupScreen('Loaded', SAMPLE_EXPANSION.kits[1])],
+          // Live 12.0-12.3: the list with its Preparing kits row, then a kit not prepared yet:
+          // Preparing kit... with its name until it loads by itself.
+          'PUSH (on a kit still being prepared, Live 12.0 to 12.3)': [kitsPreparingScreen(42), kitsScreen(1, [0]),
+            popupScreen('Preparing kit...', SAMPLE_EXPANSION.kits[1]), popupScreen('Loaded', SAMPLE_EXPANSION.kits[1])],
           'SHIFT+STAR': starring },
         highlights: { 'PUSH': kitsScreen(0, [0]) },
         settings: settingsSectionScreens(),

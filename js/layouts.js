@@ -337,11 +337,10 @@ function kitsScreen(chosen, favorites) {
 
 // The settings page (MASCHINE), a setting chosen by its name (default: the first one), line 2
 // 'Name: value' as the script's settings page shows it (the setup guide shows 'About'). The rows
-// in the script's order and with its defaults (surface.py _settings_items; its Brightness row is
-// left out until it is confirmed on the hardware). The Tour's Settings card steps through the
-// values in features.json (`values`, checked against the script there).
+// in the script's order and with its defaults (surface.py _settings_items). The Tour's Settings
+// card steps through the values in features.json (`values`, checked against the script there).
 function settingsRows() {
-  return ['Screen\t' + MM.screenLines + ' lines', 'Screen saver\t10 min', 'Velocity curve\tLinear',
+  return ['Screen\t' + MM.screenLines + ' lines', 'Screen saver\t10 min', 'Brightness\tMax', 'Velocity curve\tLinear',
     'Fixed velocity\t100', 'Pad pressure\tPoly', 'Drum colours\tBy chain', 'Step follows\tOn',
     'Record length\tFree', 'Start mode\tPads', 'About\t2.0.0'];
 }

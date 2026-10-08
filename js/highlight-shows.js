@@ -343,7 +343,11 @@ var TOUR_SHOWS = (function () {
   // also pop up their new value for a moment (the script's notify, NOTIFY_DURATION 1.2 s).
   var NAMES = settingsRows().map(function (row) { return row.split('\t')[0]; });
   var POPUPS = {
-    'Velocity curve': function (value) { return popupScreen('Velocity curve', value); },
+    // Line 2 says what the curve does (the script's CURVE_HINTS); the row keeps the short value.
+    'Velocity curve': function (value) {
+      var hints = { Soft: 'Soft: more sensitive', Hard: 'Hard: less sensitive' };
+      return popupScreen('Velocity curve', hints[value] || value);
+    },
     'Drum colours': function (value) { return popupScreen('Pad colours', value === 'By name' ? 'by name' : 'by chain colour'); }
   };
   var EVERY = 600, PER_VALUE = 3;  // a press, the popup's 1.2 s, then a moment on the page

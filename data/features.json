@@ -141,7 +141,7 @@
         {"combo": ["TURN"], "does": "Scroll by one row (SHIFT or PUSH + TURN: by 16 pads)."},
         {"combo": ["PAD", "TURN"], "does": "Hold a pad: its volume (SHIFT: 0.1 dB; PUSH: tune)."},
         {"combo": ["◀", "▶"], "does": "Previous / next drum pad: focuses that sound (named on the screen; the one STEP sequences)."},
-        {"combo": ["SHIFT", "PAD MODE"], "does": "Velocity curve: Linear / Soft / Hard."}
+        {"combo": ["SHIFT", "PAD MODE"], "does": "Velocity curve: Linear, Soft (more sensitive: a light touch plays louder) or Hard (less sensitive: it takes a firmer touch). The screen says which."}
       ]
     },
     {
@@ -450,7 +450,7 @@
         {"combo": ["MASCHINE"], "context": "Screen", "does": "2 lines (the default: larger letters, like MASCHINE's screen) or 3 lines (smaller letters, more at once).", "values": ["2 lines", "3 lines"]},
         {"combo": ["MASCHINE"], "context": "Screen saver", "does": "The screen goes dark after Off, 5, 10 (default) or 30 min untouched.", "values": ["10 min", "30 min", "Off", "5 min"]},
         {"combo": ["MASCHINE"], "context": "Brightness", "does": "How bright the pad and button lights are: Min, 25%, 50%, 75% or Max (default); ▶ brighter, ◀ dimmer. All lights dim together; even at Min the pads stay lit and their dim and bright states stay apart.", "values": ["Max", "Min", "25%", "50%", "75%"]},
-        {"combo": ["MASCHINE"], "context": "Velocity curve", "does": "How pad pressure turns into velocity: Linear, Soft or Hard.", "values": ["Linear", "Soft", "Hard"]},
+        {"combo": ["MASCHINE"], "context": "Velocity curve", "does": "How pad pressure turns into velocity: Linear (default), Soft (more sensitive: a light touch plays louder) or Hard (less sensitive: it takes a firmer touch). The popup says which.", "values": ["Linear", "Soft", "Hard"]},
         {"combo": ["MASCHINE"], "context": "Fixed velocity", "does": "The velocity FIXED VEL plays (1-127, 100 to start with).", "values": ["100", "101", "102"]},
         {"combo": ["MASCHINE"], "context": "Pad pressure", "does": "What pressing harder on a held pad sends: Poly (each pad its own aftertouch), Channel (one for all) or Off.", "values": ["Poly", "Channel", "Off"]},
         {"combo": ["MASCHINE"], "context": "Drum colours", "does": "The drum pads in their chain colours, or coloured by name (see the colour table).", "values": ["By chain", "By name"]},

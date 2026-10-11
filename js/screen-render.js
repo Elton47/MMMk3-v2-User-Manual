@@ -14,7 +14,8 @@
 //                              a favourite kit's star)
 //   LIST_SELECTED              the highlighted row (0-2)
 //   MIKRO_SCROLL               a list's position 0-126 for its scrollbar (null: none)
-//   MIKRO_CORNER               two lines: a value at the right of line 1, when the title leaves room
+//   MIKRO_CORNER               two lines: a value at the right of line 1; it always shows, line 1's
+//                              title keeps at least 40 px beside it (a longer corner gets '…')
 //   MIKRO_FILL                 the fill bar along the bottom (the mixer, PLUG-IN): 0 empty ... 126
 //                              full; null / 127: no bar
 //   MIKRO_FILL_CENTER          1: the bar grows from the centre, with a tick there (Pan, detune ...)
@@ -23,7 +24,8 @@
 // { popup: 'Title\nValue' } is a popup (a changed value), drawn in the two-line layout.
 // badge: '\ue010' (Undo) / '\ue011' (Redo) over any state: a small arrow on a black square over
 // the start of line 1, the rest of the screen stays (the bridge's draw_notification).
-// Long text is shortened with an ellipsis (the controller scrolls it instead).
+// Long text is shortened with an ellipsis (the controller scrolls it instead); a name with a value
+// beside it keeps its last word ('Kick Black… 2').
 //
 // MM.screen.render(state, lines) -> { width, height, bits: Uint8Array (1 = lit) }
 // MM.screen.path(bitmap, x, y, px, dot) -> SVG path data: a square per lit pixel
@@ -43,6 +45,7 @@ MM.screen = (function () {
   // and 3 move up a row to keep one clear).
   var FILL_TOP_TWO = 30, FILL_TOP_THREE = 31;
   var SHOWN = 4, MUTE = 1, SOLO = 2;
+  var MIN_TITLE_BESIDE_CORNER = 40;  // pixels line 1's title keeps beside the corner (two lines)
   var STAR = '★';  // a favourite MASCHINE kit in the browser ('Kit\t★')
   var small = null, large = null;
 
@@ -151,6 +154,24 @@ MM.screen = (function () {
     return list.join('') + '…';
   }
 
+  // Shortened with the ellipsis in the middle, keeping the last word: names often differ only
+  // there ('Kick BlackEarth 1', '... 2'). One word, or a last word too long: the end goes.
+  function fitKeepingEnd(widthOf, fit, text, width) {
+    text = text || '';
+    if (widthOf(text) <= width) return text;
+    var trimmed = text.replace(/\s+$/, ''), at = trimmed.lastIndexOf(' ');
+    var head = at < 0 ? '' : trimmed.slice(0, at), tail = ' ' + (at < 0 ? trimmed : trimmed.slice(at + 1));
+    if (head.trim() && widthOf(tail) <= Math.floor(width / 2)) {
+      var room = width - widthOf(tail), list = chars(head.replace(/\s+$/, ''));
+      while (list.length && widthOf(list.join('') + '…') > room) {
+        list.pop();
+        while (list.length && /\s/.test(list[list.length - 1])) list.pop();
+      }
+      if (list.length) return list.join('') + '…' + tail;
+    }
+    return fit(text, width);
+  }
+
   function largeText(img, x, y, text, fill, bold, medium) {
     chars(text).forEach(function (ch) {
       var rows = largeGlyph(ch).rows;
@@ -255,7 +276,7 @@ MM.screen = (function () {
     var valueWidth = smallWidth(value);
     if (value) smallText(img, W - 1 - valueWidth, y, value, 1);
     var nameWidth = Math.max(0, width - valueWidth - (value ? 6 : 0));
-    smallText(img, 1, y, smallFit(text, nameWidth), 1);
+    smallText(img, 1, y, fitKeepingEnd(smallWidth, smallFit, text, nameWidth), 1);
   }
 
   function threeLines(img, state, width, fillBar) {
@@ -300,30 +321,35 @@ MM.screen = (function () {
     return x + width;
   }
 
-  // Two lines: the corner value at the right of line 1, only when it fits beside the whole
-  // title (otherwise the title has the line). Returns the width left for the title.
-  function corner(img, state, x, title) {
+  // Two lines: the corner value at the right of line 1 (KEYBOARD's key, the kit, the page count).
+  // It always shows; line 1's title gets the room left, at least MIN_TITLE_BESIDE_CORNER (a
+  // longer corner is shortened). Returns the width left for the title.
+  function corner(img, state, x) {
     var available = W - 1 - x;
-    var text = get(state, 'MIKRO_CORNER', ''), cornerWidth = largeWidth(text);
-    if (text && largeWidth(title, true) + 7 + cornerWidth <= available) {
-      largeText(img, W - 1 - cornerWidth, 3, text, 1);
-      return available - cornerWidth - 7;
-    }
-    return available;
+    var text = get(state, 'MIKRO_CORNER', '');
+    if (!text) return available;
+    text = largeFit(text, Math.max(0, available - MIN_TITLE_BESIDE_CORNER - 7));
+    var cornerWidth = largeWidth(text);
+    largeText(img, W - 1 - cornerWidth, 3, text, 1);
+    return available - cornerWidth - 7;
   }
 
-  function headerLarge(img, state) {
-    var flags = trackFlags(state), title;
+  function headerLarge(img, state, width) {
+    var flags = trackFlags(state), title, x;
     if (!(flags & SHOWN)) {
       title = get(state, 'TITLE', '');
-      largeText(img, 1, 3, largeFit(title, corner(img, state, 1, title), true), 1, true);
-      return;
+      if (!get(state, 'MIKRO_CORNER', '')) {
+        largeText(img, 1, 3, largeFit(title, width, true), 1, true);
+        return;
+      }
+      x = -2;  // the title at x = 1, on a strip of its own beside the corner
+    } else {
+      var label = get(state, 'MIKRO_TRACK_LABEL', '');
+      x = largeBox(img, 0, label, !(flags & MUTE), true, false);
+      if (flags & SOLO) x = largeBox(img, x + 2, 'S', true, false, true);
+      title = withoutLabel(get(state, 'TITLE', ''), label);
     }
-    var label = get(state, 'MIKRO_TRACK_LABEL', '');
-    var x = largeBox(img, 0, label, !(flags & MUTE), true, false);
-    if (flags & SOLO) x = largeBox(img, x + 2, 'S', true, false, true);
-    title = withoutLabel(get(state, 'TITLE', ''), label);
-    var line = new Bitmap(Math.max(1, corner(img, state, x + 3, title)), 14);
+    var line = new Bitmap(Math.max(1, corner(img, state, x + 3)), 14);
     largeText(line, 0, 3, largeFit(title, line.width - 1, true), 1, true);
     img.stamp(line, x + 3, 0);
   }
@@ -332,13 +358,15 @@ MM.screen = (function () {
     var valueWidth = largeWidth(value);
     if (value) largeText(img, 1 + width - valueWidth, y, value, 1);
     var nameWidth = Math.max(0, width - valueWidth - (value ? 7 : 0));
-    largeText(img, 1, y, largeFit(text, nameWidth), 1);
+    largeText(img, 1, y, fitKeepingEnd(largeWidth, largeFit, text, nameWidth), 1);
   }
 
   function twoLines(img, state, width) {
-    headerLarge(img, state);
+    headerLarge(img, state, width);
     var text = get(state, 'MIKRO_LINE3', '') || get(state, 'SUBTITLE', '');
-    valueLineLarge(img, 18, text, get(state, 'MIKRO_LINE3_VALUE', ''), width);
+    var value = get(state, 'MIKRO_LINE3_VALUE', '');
+    if (value) valueLineLarge(img, 18, text, value, width);
+    else largeText(img, 1, 18, largeFit(text, width), 1);  // the controller scrolls a long one
   }
 
   // Two lines of a list: the folder (or Settings) in bold, the selected row below it.

@@ -437,16 +437,19 @@ function padDemos(trackMode) {
   for (var s = 0; s < 4; s++) demos.SCENE[listPad(s) - 1] = lit(SAMPLE_SCENE_COLOR, s === 0 ? 'bright' : 'dim');
 
   // Track mode: tracks in list order, empty pads create a track, the returns and the Master on
-  // the last pads (2, 3 and 4). Colours as the script picks them: a muted track, or one silenced
-  // by another track's solo, white dim; the selected track its colour at full brightness; an
-  // armed or soloed track 'mid'; the rest dim. The Master is never muted. muted / soloed: indices
-  // into SAMPLE_TRACKS. Returns stay audible under a solo (Live's Solo in Place, the default).
+  // the last pads (2, 3 and 4). Colours as the script picks them (tracks.py _color): a muted
+  // track, or one silenced by another track's solo, white dim; the selected track its colour at
+  // full brightness; an armed track red and a soloed one its own colour, both 'mid' (the
+  // script's BRIGHT); the rest dim. The Master is never muted. muted / soloed: indices into
+  // SAMPLE_TRACKS. Returns stay audible under a solo (Live's Solo in Place, the default).
   function trackView(muted, soloed) {
     var view = pads();
     SAMPLE_TRACKS.forEach(function (track, i) {
       var silenced = muted.indexOf(i) >= 0 || (soloed.length > 0 && soloed.indexOf(i) < 0);
-      var level = i === SAMPLE_SELECTED ? 'bright' : i === SAMPLE_ARMED || soloed.indexOf(i) >= 0 ? 'mid' : 'dim';
-      view[listPad(i) - 1] = silenced ? lit(SAMPLE_MASTER.color, 'dim') : lit(track.color, level);
+      var entry = i === SAMPLE_SELECTED ? lit(track.color, 'bright')
+        : i === SAMPLE_ARMED ? lit(PAD_COLORS[15], 'mid')
+        : lit(track.color, soloed.indexOf(i) >= 0 ? 'mid' : 'dim');
+      view[listPad(i) - 1] = silenced ? lit(SAMPLE_MASTER.color, 'dim') : entry;
     });
     SAMPLE_RETURNS.concat([SAMPLE_MASTER]).forEach(function (track, i) {
       view[listPad(16 - SAMPLE_RETURNS.length - 1 + i) - 1] = lit(track.color, 'dim');
@@ -516,7 +519,13 @@ var LAYOUTS = {
     var pads = printedPads(c, step.map(function (s) { return 318.3 + s; }), step.map(function (s) { return 190.7 + s; }), 59.3, 59.3);
     var dots = [];
     for (var d = 0; d < 25; d++) dots.push([(44.5 + d * (216.25 - 44.5) / 24 - 14) * k, (291.25 - 145) * k]);
-    var pattern = modeScreen('Pattern', 'Tracks 1-4 Scenes 1-4', SAMPLE_TRACKS[SAMPLE_SELECTED].name, '', 'Scenes 1-4');
+    // PATTERN: three lines 'Pattern', what the pads show, the selected track; two lines the pads'
+    // tracks and scenes in the corner and the highlighted clip (1-Drums, scene 1) on line 2.
+    var pattern = modeScreen('Pattern', 'Tracks 1-4 Scenes 1-4', SAMPLE_TRACKS[SAMPLE_SELECTED].name);
+    pattern.two = { MIKRO_CORNER: 'T1-4 S1-4', MIKRO_LINE3: 'Drum Loop' };
+    // STEP: three lines the track, then 'Step <sound>'; two lines the sound beside the track's box.
+    var step = trackScreen(0, 'Step ' + SAMPLE_DRUMS[0], 'Page 1/2  1/16', 'C1');
+    step.two = { TITLE: SAMPLE_DRUMS[0] };
     // The script starts on the pads (PAD MODE: the drums, as 1-Drums has a Drum Rack), so that is
     // the screen with nothing selected; the track is heard (not muted).
     var drums = trackScreen(0, SAMPLE_KIT, SAMPLE_DRUMS[0], noteName(36), SAMPLE_KIT);
@@ -571,11 +580,11 @@ var LAYOUTS = {
         'PAD MODE': drums,
         'KEYBOARD': trackScreen(2, 'Keyboard  C Major', 'Octave', 'C3', 'C Major'),
         'CHORDS': trackScreen(2, 'Triad Close  C Major', 'Chord', 'Triad', 'C Major'),
-        'STEP': trackScreen(0, 'Step ' + SAMPLE_DRUMS[0], 'Page 1/2  1/16', 'C1', SAMPLE_DRUMS[0]),
+        'STEP': step,
         'SCENE': modeScreen('Scenes', scenes, SAMPLE_SCENES[0], '', scenes),
         'PATTERN': pattern,
-        'NOTE REPEAT': popupScreen('Note Repeat', '1/16 latched'),
-        'FIXED VEL': popupScreen('Fixed Velocity', 'On (100)'),
+        'NOTE REPEAT': popupScreen('Note repeat', '1/16 latched'),
+        'FIXED VEL': popupScreen('Fixed velocity', 'On (100)'),
         'EVENTS': modeScreen('Events', 'Drum Loop'),
         'GROUP': modeScreen('Tracks', tracks, SAMPLE_TRACKS[SAMPLE_SELECTED].name, '', tracks),
         'LOCK': locked,
@@ -599,12 +608,15 @@ var LAYOUTS = {
           'MUTE': [mixerVolume, mixer('Volume', -3, MM.screen.MUTE)],
           'SOLO': [mixerVolume, mixer('Volume', -3, MM.screen.SOLO)],
           '◀+▶': [mixerScreen(0, 'Volume', 0), mixerVolume, mixerScreen(MIXER_MUTED, 'Volume', -6, MM.screen.MUTE)] },
-        // VOLUME held + TURN: the selected track's volume (its name, the value); SHIFT + VOLUME:
-        // the Cue volume in 0.5 dB steps (the script's reference screen 'cue').
+        // VOLUME held + TURN: the selected track's volume, like the mixer (its box and name,
+        // 'Volume' and the value, the fill bar); SHIFT + VOLUME: the Cue volume in 0.5 dB steps
+        // (the script's reference screen 'cue').
         master: {
-          'VOLUME+TURN': ['0.0 dB', '-1.0 dB', '-2.0 dB'].map(function (v) { return modeScreen(SAMPLE_TRACKS[0].name, '', v); }),
+          'VOLUME+TURN': [0, -1, -2].map(function (db) {
+            return withFill(trackScreen(0, '', 'Volume', dbText(db)), volumeFill(db));
+          }),
           'SHIFT+VOLUME': ['-12.0 dB', '-11.5 dB', '-11.0 dB'].map(function (v) { return modeScreen('Cue', '', v); }) },
-        edit: { 'SHIFT+LOCK': popupScreen('Device lock', 'toggled') },
+        edit: { 'SHIFT+LOCK': popupScreen('Device lock', 'Toggled') },
         // SHIFT + PAD 1 / PAD 2: no popup, only the arrow badge over the screen for a second.
         'shift-pads': { 'SHIFT+PAD 1': [drums, withBadge(drums, '\ue010')],
           'SHIFT+PAD 2': [drums, withBadge(drums, '\ue011')] },

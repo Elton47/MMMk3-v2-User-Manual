@@ -148,7 +148,7 @@ var HIGHLIGHT_SHOWS = (function () {
         // the screen: the pad last hit (hitting a pad selects it), and the new rate popping up
         // for a moment (NOTIFY_DURATION in the script: 1.2 s)
         var hit = t < 400 ? 1 : t < 3900 ? 3 : 2;
-        var oled = t >= 3400 && t < 4600 ? popupScreen('Note Repeat', rate)
+        var oled = t >= 3400 && t < 4600 ? popupScreen('Note repeat', rate)
           : trackScreen(0, SAMPLE_KIT, SAMPLE_DRUMS[hit - 1], noteName(35 + hit), SAMPLE_KIT);
         api.screen(oled, side(drums.name, 'Note Repeat', rate, 'Rate'));
       }
@@ -264,7 +264,7 @@ var HIGHLIGHT_SHOWS = (function () {
         } else {
           api.outline(['VARIATION', 'PAD']);
           api.light([]);
-          api.screen(n < 2 ? popupScreen('Variation', 'Red pad: record a copy') : api.layout.screens.PATTERN, side(bass.name, 'Variation', 'Red pad', 'Record a copy of the clip above', RED));
+          api.screen(n < 2 ? popupScreen('Variation', 'Red pad: record copy') : api.layout.screens.PATTERN, side(bass.name, 'Variation', 'Red pad', 'Record a copy of the clip above', RED));
         }
         api.pads(pads);
       }
@@ -348,7 +348,7 @@ var TOUR_SHOWS = (function () {
       var hints = { Soft: 'Soft: more sensitive', Hard: 'Hard: less sensitive' };
       return popupScreen('Velocity curve', hints[value] || value);
     },
-    'Drum colours': function (value) { return popupScreen('Pad colours', value === 'By name' ? 'by name' : 'by chain colour'); }
+    'Drum colours': function (value) { return popupScreen('Pad colours', value === 'By name' ? 'By name' : 'By chain colour'); }
   };
   var EVERY = 600, PER_VALUE = 3;  // a press, the popup's 1.2 s, then a moment on the page
 

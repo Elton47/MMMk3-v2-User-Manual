@@ -34,7 +34,7 @@
         {"combo": ["SHIFT"], "does": "The real SHIFT button: hold it for the second function printed on a button, and for the SHIFT + pad edit matrix."},
         {"combo": ["PATTERN"], "does": "Clips on the pads."},
         {"combo": ["PAD MODE"], "does": "Drum pads (or the keyboard when the track has no Drum Rack). The controller starts here (MIKRO: see Start mode)."},
-        {"combo": ["KEYBOARD"], "does": "Play notes in Live's current scale."},
+        {"combo": ["KEYBOARD"], "does": "Play notes in Live's current scale (on a track with a Drum Rack: the drum pads)."},
         {"combo": ["SHIFT", "MASCHINE"], "does": "NI's own MIDI mode toggle. The screen warns when it happens; press it again to get back.", "devices": ["mikro"]}
       ]
     },
@@ -56,7 +56,7 @@
       "id": "clip",
       "nav": "Clips",
       "title": "PATTERN: clips",
-      "summary": "A 4x4 view of Live's Session clips (4 tracks x 4 scenes). Pad colours follow the clip colours; playing clips are bright. Recording a new clip (an empty slot, or VARIATION + pad) selects its track, so Live's auto-arm arms it (the dimmed arm, which follows the track you select; tracks armed for real are disarmed), and the pads switch to the drum pads or the keyboard so you can play into it right away. With a Record length set (REC + TURN), the new clip records exactly that many bars and then loops.",
+      "summary": "A 4x4 view of Live's Session clips (4 tracks x 4 scenes). Pad colours follow the clip colours; playing clips are bright, and a clip waiting to start (Live's launch quantization) blinks in its colour, red when it will record. Recording a new clip (an empty slot, or VARIATION + pad) selects its track, so Live's auto-arm arms it (the dimmed arm, which follows the track you select; tracks armed for real are disarmed), and the pads switch to the drum pads or the keyboard so you can play into it right away. With a Record length set (REC + TURN), the new clip records exactly that many bars and then loops.",
       "items": [
         {"combo": ["PATTERN"], "does": "Tap: switch to clip mode. Hold + PAD: launch a clip, then return to the previous mode."},
         {"combo": ["PAD"], "does": "Launch the clip. On an empty slot of a MIDI track: select (arm) that track and record a new clip; the pads switch to the drum pads or keyboard to play."},
@@ -73,7 +73,7 @@
       "id": "scene",
       "nav": "Scenes",
       "title": "SCENE: scenes",
-      "summary": "16 scenes on the pads, in their colours, in the order of Live's scene list: scene 1 top left (pad 13), then to the right and down. Playing scenes are bright, triggered scenes flash.",
+      "summary": "16 scenes on the pads, in their colours, in the order of Live's scene list: scene 1 top left (pad 13), then to the right and down. A triggered scene blinks in its colour until it starts; the playing scene is the brightest.",
       "items": [
         {"combo": ["SCENE"], "does": "Tap: switch to scene mode. Hold + PAD: launch a scene and return."},
         {"combo": ["PAD"], "does": "Launch the scene. An unlit pad creates a new scene."},
@@ -88,14 +88,14 @@
       "id": "track",
       "nav": "Tracks",
       "title": "TRACK: tracks on the pads",
-      "summary": "Your tracks read like text: track 1 on pad 13 (marked A), track 2 on pad 14 (B), then to the right and down. The return tracks and the Master always sit on the last pads (two returns: pads 2 and 3, Master on pad 4); TURN scrolls the other tracks. Colours follow the tracks; muted tracks are white.",
+      "summary": "Your tracks read like text: track 1 on pad 13 (marked A), track 2 on pad 14 (B), then to the right and down. The return tracks and the Master always sit on the last pads (two returns: pads 2 and 3, Master on pad 4); TURN scrolls the other tracks. Colours follow the tracks: the selected track brightest, a soloed one bright in its colour, an armed one red, a muted one (or one silenced by another's solo) dim white, a step brighter when selected, as on the drum pads.",
       "items": [
         {"combo": ["GROUP"], "does": "Tap: show tracks on the pads (latched). Hold + PAD: act on a track and return.", "devices": ["mikro"]},
         {"combo": ["SELECT"], "does": "Tap: show tracks on the pads (latched). Hold + PAD: act on a track and return.", "devices": ["mk3"]},
         {"combo": ["PAD"], "does": "Select the track. A group track folds / unfolds."},
         {"combo": ["PAD"], "context": "unlit pad", "does": "Create a new MIDI track."},
         {"combo": ["DUPLICATE", "PAD"], "context": "unlit pad", "does": "Create a new audio track."},
-        {"combo": ["SELECT", "PAD"], "does": "Arm that track and disarm the others, like Live's mixer (again: disarm). SHIFT + SELECT + PAD adds a track, to record several at once.", "devices": ["mikro"]},
+        {"combo": ["SELECT", "PAD"], "does": "Arm that track and disarm the others, like Live's mixer (again: disarm). SHIFT + SELECT + PAD adds a track, to record several at once. With ERASE or DUPLICATE also held: nothing (delete with GROUP + ERASE + PAD).", "devices": ["mikro"]},
         {"combo": ["SOLO", "PAD"], "does": "Solo / unsolo that track (works from any mode: the pads show tracks while SOLO is held)."},
         {"combo": ["MUTE", "PAD"], "does": "Mute / unmute that track (from any mode)."},
         {"combo": ["STOP", "PAD"], "does": "Stop that track's clips (from any mode)."},
@@ -108,7 +108,7 @@
       "id": "drum",
       "nav": "Drums",
       "title": "PAD MODE: drums",
-      "summary": "The 16 visible pads of the track's Drum Rack. Hitting a pad plays it and focuses it in Live (like MASCHINE focusing a sound). Pads are coloured by chain colour or by name (see the colour table). While a clip plays, the pads of the notes it plays light up. Hold a pad and turn for a quick edit, as in MASCHINE: TURN changes its volume (1 dB a click, SHIFT + TURN 0.1 dB), PUSH + TURN its tune in semitones (its Simpler or Drum Sampler). The pad still plays; the screen shows the pad and the value until you let go. Hold several pads to change them together, each from its own level; one hold is one undo step.",
+      "summary": "The 16 visible pads of the track's Drum Rack. Hitting a pad plays it and focuses it in Live (like MASCHINE focusing a sound). Pads are coloured by chain colour or by name (see the colour table); a muted pad (or one silenced by another's solo) is dim white, a step brighter when selected, as in TRACK. While a clip plays, the pads of the notes it plays light up. Hold a pad and turn for a quick edit, as in MASCHINE: TURN changes its volume (1 dB a click, SHIFT + TURN 0.1 dB), PUSH + TURN its tune in semitones (its Simpler or Drum Sampler). The pad still plays; the screen shows the pad and the value until you let go. Hold several pads to change them together, each from its own level; one hold is one undo step.",
       "swatches_note": "Name colours: pads use their chain colour by default; press PAD MODE again to colour them by name instead (it is remembered). A chain without a colour also gets its name colour. The name is read word by word, first word first, as sample names start with the kind of sound (Kick BlackEarth 1, ClosedHH Dev, BD_Deep_01); a word counts when it starts with one of these words, and short abbreviations (BD, SN, HH, OH ...) only as whole words. Anything else is white.",
       "swatches": [
         {"name": "Red: Kick, 808, sub, bass", "rgb": "#ff1414", "keywords": ["kick", "bassdrum", "bass", "808", "sub", "boom", "sine", "BD", "BDR", "KK"]},
@@ -148,9 +148,9 @@
       "id": "keyboard",
       "nav": "Keyboard",
       "title": "KEYBOARD: notes in key",
-      "summary": "The pads walk up Live's current scale (root note bright). Root and scale are Live's own, so changing them here changes Live's Scale settings and vice versa, including per-clip scales. While a clip plays, the pads of the notes it plays light up.",
+      "summary": "The pads walk up Live's current scale (root note bright). Root and scale are Live's own, so changing them here changes Live's Scale settings and vice versa, including per-clip scales. While a clip plays, the pads of the notes it plays light up. The pads are in the track's colour (with a MIDI clip selected: the clip's) and follow it at once when you recolour it. On a track with a Drum Rack, KEYBOARD gives the drum pads.",
       "items": [
-        {"combo": ["KEYBOARD"], "does": "Switch to keyboard mode."},
+        {"combo": ["KEYBOARD"], "does": "Switch to keyboard mode (on a track with a Drum Rack: the drum pads)."},
         {"combo": ["PAD"], "does": "Play the note."},
         {"combo": ["◀", "▶"], "does": "Choose the setting TURN changes: Octave, Root or Scale. The screen shows the setting and its value."},
         {"combo": ["TURN"], "does": "Change the chosen setting (Octave to start with)."},
@@ -164,9 +164,9 @@
       "id": "chords",
       "nav": "Chords",
       "title": "CHORDS: chord sets",
-      "summary": "Every pad plays a chord built from Live's scale, starting on successive scale degrees, so every chord is in key. A chord you play, or one the clip plays back, lights its own pad bright and the pads of its other notes softer (the C chord: the E and G pads), so you see its shape.",
+      "summary": "Every pad plays a chord built from Live's scale, starting on successive scale degrees, so every chord is in key. A chord you play, or one the clip plays back, lights its own pad bright and the pads of its other notes softer (the C chord: the E and G pads), so you see its shape. The pads follow the track's or MIDI clip's colour, as KEYBOARD's. On a track with a Drum Rack, CHORDS gives the drum pads.",
       "items": [
-        {"combo": ["CHORDS"], "does": "Switch to chord mode. Press again: next chord type (Triad, 7th, 9th, Sus2, Sus4, 6th, Power)."},
+        {"combo": ["CHORDS"], "does": "Switch to chord mode (on a track with a Drum Rack: the drum pads). Press again: next chord type (Triad, 7th, 9th, Sus2, Sus4, 6th, Power)."},
         {"combo": ["SHIFT", "CHORDS"], "does": "Next voicing (Close, Inversion 1, Inversion 2, Spread)."},
         {"combo": ["PAD"], "does": "Play the chord (works with note repeat and the arpeggiator)."},
         {"combo": ["◀", "▶"], "does": "Choose what TURN changes: Octave, Root, Scale, Chord or Voicing; the screen shows it with its value."},
@@ -331,7 +331,7 @@
       "id": "mixer",
       "nav": "Mixer",
       "title": "Mixer: VOLUME tap",
-      "summary": "A VOLUME tap turns the controller into a mixer. The pads show your tracks as in TRACK mode, each in its colour and glowing with its level (muted tracks dim white); the visited track's pad is white. The screen shows that track and its parameter, with a fill bar along the bottom; the encoder and the touch strip change it. Visiting a track doesn't select it in Live: you can mix one track while playing another. Values land exactly on Live's 0.1 dB steps.",
+      "summary": "A VOLUME tap turns the controller into a mixer. The pads show your tracks as in TRACK mode, each in its colour and glowing with its level (muted tracks dim white); the visited track's pad is white. The screen shows that track and its parameter, with a fill bar along the bottom; the encoder and the touch strip change it. Visiting a track doesn't select it in Live: you can mix one track while playing another. MUTE, SOLO and SELECT light for the visited track, and their taps act on it. Values land exactly on Live's 0.1 dB steps.",
       "devices": [
         "mikro"
       ],
@@ -405,13 +405,13 @@
       "id": "plugin",
       "nav": "Device parameters",
       "title": "PLUG-IN: device parameters (MIKRO)",
-      "summary": "The encoder controls one parameter of the selected device at a time. Parameters come in pages: Ableton's own banks for Live's devices (Filter, Envelope...), the visible macros of a rack, or groups of 8 for plug-ins. The screen shows the device, the page and how many there are (Macros 2/2; on two lines, the device after the track's box on line 1 and the count in the corner), and the parameter's name and value. A rack shows as many macros as it shows in Live: click the rack's + macro button for up to 16. Each device remembers where you were.",
+      "summary": "The encoder controls one parameter of the selected device at a time. Parameters come in pages: Ableton's own banks for Live's devices (Filter, Envelope...), the visible macros of a rack, or groups of 8 for plug-ins. The screen shows the device, the page and how many there are (Macros 2/2; on two lines, the device after the track's box on line 1 and the count in the corner), and the parameter's name and value. A rack has as many macros as it shows in Live (click the rack's + macro button for up to 16); a hidden macro you renamed or mapped stays reachable on a last page, and showing or hiding macros updates the pages at once. Each device remembers where you were.",
       "devices": ["mikro"],
       "items": [
-        {"combo": ["PLUG-IN"], "does": "Parameter mode on / off."},
+        {"combo": ["PLUG-IN"], "does": "Parameter mode on / off. PAD MODE, KEYBOARD or CHORDS close it and show the pads."},
         {"combo": ["TURN"], "does": "Change the parameter (SHIFT: fine)."},
         {"combo": ["◀", "▶"], "does": "Previous / next parameter."},
-        {"combo": ["PUSH", "TURN"], "does": "Previous / next page (a rack: Macros 1-8, 9-16); the screen shows e.g. 2/2."},
+        {"combo": ["PUSH", "TURN"], "does": "Previous / next page (a rack with more than 8 macros shown: Macros 1-8, 9-16); the screen shows e.g. 2/2."},
         {"combo": ["SHIFT", "◀", "▶"], "does": "Previous / next device on the track."},
         {"combo": ["PUSH"], "does": "Tap: reset the parameter to its default."},
         {"combo": ["STRIP"], "does": "The strip lights show the parameter's value in the track or chain colour (each rack macro its own, like MASCHINE's sounds); touch to set it, one undo step per touch. The screen's fill bar shows it too; a pan or a detune lights both from the centre. PITCH / MOD take the strip over while lit."}
@@ -425,7 +425,7 @@
       "tour": {"intro": "Live's browser on the hardware screen: Favorites first, then Live's sidebar, with MASCHINE Kits and your Places."},
       "devices": ["mikro"],
       "items": [
-        {"combo": ["BROWSER"], "does": "Browser on / off (it opens where you left it)."},
+        {"combo": ["BROWSER"], "does": "Browser on / off (it opens where you left it). PAD MODE, KEYBOARD or CHORDS close it and show the pads."},
         {"combo": ["STAR"], "does": "Your Favorites, by name; STAR again: close."},
         {"combo": ["TURN"], "does": "Scroll (SHIFT: by 10)."},
         {"combo": ["PUSH"], "does": "Open the folder, or load the item onto the selected track (in Hot-Swap: replace the device); the browser then closes, back to the mode you came from."},
@@ -444,7 +444,7 @@
       "summary": "Your preferences, on the controller. They are saved with Live's preferences on your computer, remembered after a restart, and take effect at once (Start mode: at the next start). The screen saver only darkens the screen: the pad and button lights stay as they are, and the press, pad hit, turn or strip touch that wakes it still does its job (a pad plays). It never darkens the waiting and setup screens. Record length is the same setting as hold REC + TURN (see Transport). Start mode Pads opens on the drum pads on a track with a Drum Rack, else on the keyboard; the start mode also applies when the controller comes back from the MASCHINE plug-in.",
       "devices": ["mikro"],
       "items": [
-        {"combo": ["MASCHINE"], "does": "Settings on / off. The screen lists them with their values; the bar on the right shows where you are in the list."},
+        {"combo": ["MASCHINE"], "does": "Settings on / off. The screen lists them with their values; the bar on the right shows where you are in the list. PAD MODE, KEYBOARD or CHORDS close them and show the pads."},
         {"combo": ["TURN"], "does": "The previous / next setting."},
         {"combo": ["◀", "▶"], "does": "Change the selected setting (PUSH: the next value)."},
         {"combo": ["MASCHINE"], "context": "Screen", "does": "2 lines (the default: larger letters, like MASCHINE's screen) or 3 lines (smaller letters, more at once).", "values": ["2 lines", "3 lines"]},
@@ -468,7 +468,7 @@
       "devices": ["mk3"],
       "items": [
         {"combo": ["MIXER"], "does": "Knobs 1-8: volumes of the 8 tracks in view."},
-        {"combo": ["PLUG-IN"], "does": "Knobs 1-8: the selected device's parameters; ◀ ▶ change the bank."},
+        {"combo": ["PLUG-IN"], "does": "Knobs 1-8: the selected device's parameters. The buttons above the screens choose the bank (1-8); PLUG-IN + ◀ ▶ step through every bank (◀ ▶ alone stay the pad mode's)."},
         {"combo": ["GROUP A-H"], "does": "Select the 8 tracks in view (lit in track colours)."},
         {"combo": ["SHIFT", "KNOB"], "does": "Fine adjustment."}
       ]

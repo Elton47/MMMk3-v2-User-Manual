@@ -408,6 +408,9 @@
       "title": "PLUG-IN: device parameters (MIKRO)",
       "summary": "The encoder controls one parameter of the selected device at a time. Parameters come in pages: Ableton's own banks for Live's devices (Filter, Envelope...), the visible macros of a rack, or groups of 8 for plug-ins. The screen shows the device, the page and how many there are (Macros 2/2; on two lines, the device after the track's box on line 1 and the count in the corner), and the parameter's name and value. A rack has as many macros as it shows in Live (click the rack's + macro button for up to 16); a hidden macro you renamed or mapped stays reachable on a last page, and showing or hiding macros updates the pages at once. Each device remembers where you were.",
       "devices": ["mikro"],
+      "notes": [
+        {"title": "Simpler", "text": "On a Simpler the first page (Main) starts with Mode: Classic, One-Shot or Slicing (turning it switches Simpler's mode in Live). Next comes Filter Freq, or in Slicing Cursor: a position in the sample, shown as a time; PUSH on it adds a slice marker there, or removes the slice marker the cursor is on. Then S Start and S Length in Classic. In One-Shot and Slicing they are Start and End, which move the sample's start and end markers (the ones you drag with the mouse). Filter Res (in Slicing also Filter Freq) comes first on the Filter page. Tip: with SNAP on in Simpler, Start and Length jump in big steps (Live snaps them to the sample's transients, with the mouse too). Turn SNAP off in Simpler to move them freely."}
+      ],
       "items": [
         {"combo": ["PLUG-IN"], "does": "Parameter mode on / off. PAD MODE, KEYBOARD or CHORDS close it and show the pads."},
         {"combo": ["TURN"], "does": "Change the parameter (SHIFT: fine). A parameter with a few choices (a filter type, a wave), or a macro mapped to one, moves one choice per click."},
@@ -415,6 +418,8 @@
         {"combo": ["PUSH", "TURN"], "does": "Previous / next page (a rack with more than 8 macros shown: Macros 1-8, 9-16); the screen shows e.g. 2/2."},
         {"combo": ["SHIFT", "◀", "▶"], "does": "Previous / next device on the track."},
         {"combo": ["PUSH"], "does": "Tap: reset the parameter to its default."},
+        {"combo": ["TURN"], "context": "Mode, on a Simpler", "does": "Switch Simpler's mode in Live: Classic, One-Shot or Slicing. The page's parameters follow the mode (see Simpler above)."},
+        {"combo": ["PUSH"], "context": "Cursor, on a Simpler in Slicing", "does": "Add a slice marker at the cursor, or remove the slice marker the cursor is on."},
         {"combo": ["STRIP"], "does": "The strip lights show the parameter's value in the track or chain colour (each rack macro its own, like MASCHINE's sounds); touch to set it, one undo step per touch. The screen's fill bar shows it too; a pan or a detune lights both from the centre. PITCH / MOD take the strip over while lit."}
       ]
     },
@@ -491,7 +496,7 @@
     {"what": "Device / Clip detail view", "v1": "PLUG-IN", "v2": "SHIFT + PLUG-IN (PLUG-IN now controls device parameters)"},
     {"what": "Track mode pin", "v1": "SHIFT + GROUP", "v2": "Tap GROUP (hold: temporary)"},
     {"what": "New audio track (TRACK mode)", "v1": "SHIFT + unlit pad", "v2": "DUPLICATE + unlit pad (SHIFT + pads are the edit functions in every mode, TRACK included)"},
-    {"what": "New", "v1": "", "v2": "Chords, arpeggiator, 16 Velocities, step sequencer, hardware browser (Live Sets open from it too), MASCHINE Expansion kits as Drum Racks (MIKRO), parameter control, pitch / mod strip, record variations (VARIATION + pad), take undo, clip progress and parameter value on the strip (touch to jump / set), a silent metronome on the strip while recording, fixed-length recording (REC + TURN), quick edits on a held step or drum pad, humanize, screen feedback, a screen saver, light brightness and a start mode (MIKRO settings), pads light instantly when played"},
+    {"what": "New", "v1": "", "v2": "Chords, arpeggiator, 16 Velocities, step sequencer, hardware browser (Live Sets open from it too), MASCHINE Expansion kits as Drum Racks (MIKRO), parameter control, Simpler's mode, sample markers and slices, pitch / mod strip, record variations (VARIATION + pad), take undo, clip progress and parameter value on the strip (touch to jump / set), a silent metronome on the strip while recording, fixed-length recording (REC + TURN), quick edits on a held step or drum pad, humanize, screen feedback, a screen saver, light brightness and a start mode (MIKRO settings), pads light instantly when played"},
     {"what": "Mode at start", "v1": "Always PATTERN (the clips)", "v2": "The drum pads (the keyboard without a Drum Rack); MIKRO: choose Pads, Pattern, Scene, Step or Track in the settings"},
     {"what": "Recording a new clip", "v1": "Records until stopped", "v2": "Free as before, or exactly 1, 2, 4 or 8 bars, then it loops (REC + TURN)"},
     {"what": "MASCHINE plug-in in Live", "v1": "NI's MIDI mode: SHIFT + MASCHINE (MK3, MASCHINE+: SHIFT + CHANNEL) switches between MASCHINE and the script", "v2": "The script steps aside while a MASCHINE plug-in is in the set and comes back when it is deleted (or use v1.6.1 to switch on the fly)"}

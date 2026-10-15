@@ -44,6 +44,10 @@
         <a href="#full" data-view="manual" data-manual-view="full" class="nav-tab">
           <svg class="icon" aria-hidden="true"><use href="#i-book"/></svg><span>Full manual</span>
         </a>
+        <!-- the licence page: shown once data/install.json has "licensing": true (release day, js/app.js) -->
+        <a href="activate.html" id="licence-tab" class="nav-tab" hidden>
+          <svg class="icon" aria-hidden="true"><use href="#i-key"/></svg><span>Licence</span>
+        </a>
       </nav>
       <a href="#help" class="icon-button" id="help-button" title="Help and troubleshooting">
         <svg class="icon" aria-hidden="true"><use href="#i-help"/></svg>
@@ -212,6 +216,7 @@
       <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></symbol>
       <symbol id="i-auto" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 3.5v17a8.5 8.5 0 0 0 0-17z" fill="currentColor" stroke="none"/></symbol>
       <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+      <symbol id="i-key" viewBox="0 0 24 24"><circle cx="8" cy="15.5" r="4"/><path d="M10.9 12.6L19 4.5M15.5 8l2.5 2.5M17.5 6l2 2"/></symbol>
       <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8.5" y="8.5" width="11" height="11" rx="2"/><path d="M15.5 8.5V6a1.5 1.5 0 0 0-1.5-1.5H6A1.5 1.5 0 0 0 4.5 6v8A1.5 1.5 0 0 0 6 15.5h2.5"/></symbol>
       <symbol id="i-close" viewBox="0 0 24 24"><path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/></symbol>
       <symbol id="i-sheet" viewBox="0 0 24 24"><path d="M7 3.5h7l4.5 4.5v11a1.5 1.5 0 0 1-1.5 1.5H7A1.5 1.5 0 0 1 5.5 19V5A1.5 1.5 0 0 1 7 3.5zM14 3.5V7a1 1 0 0 0 1 1h3.5M8.75 11.5h6.5M8.75 14.5h6.5M8.75 17.5h4"/></symbol>

@@ -465,6 +465,8 @@ MM.setup = (function () {
   }
 
   function init(data) {
+    // A step marked "licensing" waits for the release-day switch ("licensing": true at the top).
+    data.steps = (data.steps || []).filter(function (step) { return !step.licensing || data.licensing === true; });
     state.data = data;
     el('setup-intro').textContent = data.intro || '';
     detect();

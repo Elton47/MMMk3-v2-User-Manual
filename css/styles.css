@@ -304,6 +304,7 @@ button { font: inherit; color: inherit; }
   background: currentColor; opacity: 0; transition: opacity var(--md-sys-motion-short) linear;
 }
 .nav-tab:hover::after { opacity: .08; }
+.nav-tab[hidden] { display: none; }
 .nav-tab[aria-current="page"] {
   background: var(--md-sys-color-secondary-container); color: var(--md-sys-color-on-secondary-container);
 }

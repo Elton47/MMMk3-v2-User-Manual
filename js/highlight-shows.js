@@ -435,12 +435,100 @@ var TOUR_SHOWS = (function () {
     return null;  // MASCHINE: the generic press, the page opens
   }
 
+  // --- the MK3's showcases: the controller as the export ran it ------------------------------
+  // An animation of the export (img/screens/mk3/anim/, layouts.js screens[token]) with its cues: per
+  // step what the script lit and turned meanwhile (index.json `cues`: lit buttons, outlined
+  // controls, the encoder's detents, the 16 pads as the script coloured them), so the drawing and
+  // the screens come from the same run. The step's length and their number come from the index;
+  // until it has loaded the screens show the mode's still and the controls stay as they are.
+  var CUE_EVERY = 1000 / 32;
+  // The script's hue (palette.HUE_RGB) as the manual draws that hue on a pad (PAD_COLORS, sampled
+  // from the hardware): the nearest one.
+  var padColors = {};
+  function padColor(hex) {
+    if (padColors[hex]) return padColors[hex];
+    function rgb(c) { var n = parseInt(c.slice(1), 16); return [n >> 16, (n >> 8) & 255, n & 255]; }
+    var want = rgb(hex), best = hex, bestD = Infinity;
+    PAD_COLORS.concat([SAMPLE_MASTER.color]).forEach(function (c) {
+      var v = rgb(c), d = 0;
+      for (var i = 0; i < 3; i++) d += (v[i] - want[i]) * (v[i] - want[i]);
+      if (d < bestD) { bestD = d; best = c; }
+    });
+    return (padColors[hex] = best);
+  }
+  function cueShow(token, glow) {
+    var pair = null, info = function () {
+      var a = pair && pair.anim && MM.manual.lcdAnim ? MM.manual.lcdAnim(pair.anim) : null;
+      var steps = a ? (a.cues && a.cues.length) || Math.max(1, Math.round(a.frames * a.every / a.step)) : 0;
+      return { a: a, steps: steps };
+    };
+    var show = {
+      every: CUE_EVERY,
+      glow: glow,
+      tick: function (n, api) {
+        pair = (api.layout.screens || {})[token] || null;
+        var i = info();
+        if (!i.a) { api.screen(null, pair); return; }
+        var k = Math.floor(n * CUE_EVERY / i.a.step) % i.steps, cue = i.a.cues ? i.a.cues[k] : null;
+        api.screen(null, lcdFrame(pair, k));
+        if (!cue) return;
+        if (cue.lit) api.light(cue.lit);
+        if (cue.glow && cue.glow.length) api.outline(cue.glow);
+        if (typeof cue.turn === 'number') api.turn(cue.turn);
+        if (cue.pads) api.pads(cue.pads.map(function (p) { return p ? api.lit(padColor(p[0]), p[1]) : null; }));
+      }
+    };
+    // the whole animation once, or about 7 s (read when the step starts: by then the index is in)
+    Object.defineProperty(show, 'duration', { get: function () {
+      if (!pair) pair = (LAYOUTS.mk3.screens || {})[token] || null;
+      var i = info();
+      return i.a ? Math.max(5000, Math.min(16000, i.steps * i.a.step)) : 7000;
+    } });
+    return show;
+  }
+  function cueFor(token, glow) {
+    var shows = {};
+    return function (step, device) {
+      if (device !== 'mk3') return null;
+      return shows[token] || (shows[token] = cueShow(token, glow || step.combo));
+    };
+  }
+
+  // The MIKRO has no picture of the slices: the pads play them in order (slice 1 on pad 1, the
+  // track's colour, the playing slice bright), the screen stays.
+  var slicesPads = {
+    every: 250,
+    duration: 6000,
+    tick: function (n, api) {
+      var hit = n % 16, pads = [];
+      for (var i = 0; i < 16; i++) pads.push(api.lit(keys.color, i === hit ? 'bright' : 'dim'));
+      api.light(['PAD MODE']);
+      api.pads(pads);
+    }
+  };
+  var keys = SAMPLE_TRACKS[2];
+
   return {
+    'mixer-mk3': {},
+    'plugin-mk3': function (step, device) {
+      var token = { 'Simpler': 'SIMPLER', 'Simpler: Slicing': 'SLICING', 'EQ Eight': 'EQ EIGHT' }[step.context];
+      return token ? cueFor(token, ['PLUG-IN'])(step, device) : null;
+    },
+    'drum-synths': cueFor('DRUM SYNTHS'),
+    'slicing': function (step, device) {
+      if (device === 'mk3') return cueFor('SLICING', ['PAD'])(step, device);
+      return step.combo[0] === 'PAD MODE' || step.combo[0] === 'PAD' ? slicesPads : null;
+    },
+    'kits-mk3': cueFor('KITS', ['BROWSER']),
+    'section-mk3': cueFor('SECTION'),
     clip: { 'STRIP': S.STRIP },
     events: { 'VARIATION+PAD': S['VARIATION+PAD'] },
     mixer: { 'VOLUME': S.VOLUME },
     browser: { 'BROWSER': S.BROWSER, 'PUSH (on a MASCHINE kit)': S.PUSH },
-    'browser-mk3': { 'BROWSER': S.BROWSER },
+    'browser-mk3': function (step, device) {
+      var key = step.combo.join('+');
+      return key === 'BROWSER' || key === 'KNOB' ? cueFor('BROWSER TAGS', ['KNOB 2'])(step, device) : null;
+    },
     playing: { 'NOTE REPEAT': S['NOTE REPEAT'] },
     chords: { 'PAD': S.CHORDS },
     step: { 'STEP': S.STEP },

@@ -1357,6 +1357,6 @@ MM.manual = (function () {
   return {
     init: init, show: show, setDeviceFromSetup: setDeviceFromSetup, hasSection: hasSection, updateWelcome: updateWelcome,
     createDrawing: createDrawing, oledCanvas: oledCanvas, forDevice: function (entry, device) { return !entry.devices || entry.devices.indexOf(device) >= 0; },
-    sectionScreen: sectionScreen, comboDemo: comboDemo, sectionMode: sectionMode
+    sectionScreen: sectionScreen, comboDemo: comboDemo, sectionMode: sectionMode, lcdAnim: lcdAnim
   };
 })();

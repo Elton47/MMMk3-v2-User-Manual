@@ -724,7 +724,10 @@ var LAYOUTS = {
       'pattern': 'PATTERN, the clips', 'mixer': 'MIXER, the tracks', 'plugin': 'PLUG-IN, the device and its parameters',
       'browser': 'BROWSER, Live\'s browser', 'settings': 'SETTINGS', 'select': 'SELECT, the tracks',
       'note-repeat': 'NOTE REPEAT, rate and settings', 'tempo': 'Tempo', 'swing': 'Swing',
-      'variation': 'VARIATION, humanize and random'
+      'variation': 'VARIATION, humanize and random',
+      'simpler': 'PLUG-IN, Simpler and its markers', 'slicing': 'PLUG-IN, Simpler slicing, the slices on the pads',
+      'eq-eight': 'PLUG-IN, EQ Eight and its curve', 'drum-synths': 'PLUG-IN, the Drum Synths',
+      'browser-tags': 'BROWSER, the tag cloud', 'kits': 'BROWSER, MASCHINE Kits', 'section': 'the Section page'
     };
     function shot(name) {
       var alt = 'MK3 screens: ' + (SHOT_ALT[name] || name);
@@ -736,8 +739,10 @@ var LAYOUTS = {
     // loaded (or without it) a screen shows the mode's still picture. An animated pair plays by
     // itself (manual.js showScreen), or a show picks its step (lcdFrame(), js/highlight-shows.js).
     // `still`: the mode's picture without the motion.
-    function anim(name) {
-      var alt = 'MK3 screens: ' + (SHOT_ALT[name] || name), still = shot(name);
+    // (stillName: a mode's picture to show until the animation has loaded, for an animation that
+    // has no still of its own)
+    function anim(name, stillName) {
+      var alt = 'MK3 screens: ' + (SHOT_ALT[name] || name), still = shot(stillName || name);
       return { anim: name, still: still,
         left: { anim: name, side: 'left', img: still.left.img, alt: alt + ' (left)' },
         right: { anim: name, side: 'right', img: still.right.img, alt: alt + ' (right)' } };
@@ -762,7 +767,15 @@ var LAYOUTS = {
       'BROWSER': anim('browser'),
       'SETTINGS': shot('settings'),
       'SELECT': shot('select'),
-      'VARIATION': shot('variation')
+      'VARIATION': shot('variation'),
+      // the Tour's showcases (not combo tokens: js/highlight-shows.js cueShow() picks them)
+      'SIMPLER': anim('simpler', 'plugin'),
+      'SLICING': anim('slicing', 'plugin'),
+      'EQ EIGHT': anim('eq-eight', 'plugin'),
+      'DRUM SYNTHS': anim('drum-synths', 'plugin'),
+      'BROWSER TAGS': anim('browser-tags', 'browser'),
+      'KITS': anim('kits', 'browser'),
+      'SECTION': anim('section', 'pattern')
     };
     // a knob shows the plug-in page
     for (var n = 0; n < 8; n++) screens['KNOB ' + (n + 1)] = screens['PLUG-IN'];
@@ -788,7 +801,10 @@ var LAYOUTS = {
       screens: screens,
       // the MK3's own sections (data/features.json): the browser card shows the browser throughout,
       // a display button in MIXER the mixer
-      sectionScreens: { 'browser-mk3': { '*': screens.BROWSER }, 'mk3': { 'DISPLAY': screens.MIXER } },
+      sectionScreens: { 'browser-mk3': { '*': screens.BROWSER }, 'mk3': { 'DISPLAY': screens.MIXER },
+        'mixer-mk3': { '*': screens.MIXER }, 'plugin-mk3': { '*': screens['PLUG-IN'] },
+        'drum-synths': { '*': screens['DRUM SYNTHS'] }, 'kits-mk3': { '*': screens.KITS },
+        'section-mk3': { '*': screens.SECTION } },
       controls: [
         c('CHANNEL', 'CHANNEL', 26.5, 28.5, 45, 16, 'button', { sub: 'MIDI' }),
         c('PLUG-IN', 'PLUG-IN', 77.5, 28.5, 45, 16, 'button', { sub: 'Instance' }),

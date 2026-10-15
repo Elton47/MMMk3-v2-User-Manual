@@ -7,6 +7,8 @@
 // the same section in the Full manual (#full/<section>). Only the card most in view plays, and a
 // card's drawing is only made when it comes near the window, so the page stays light on a phone.
 // The page hidden or the window without focus pauses it, like the pause button.
+// A controller can have its own card order (features.json `tour_order`: the best first); the
+// sections it leaves out follow in the file's order.
 MM.tour = (function () {
   'use strict';
 
@@ -185,6 +187,7 @@ MM.tour = (function () {
     el('tour-unverified').hidden = state.data.devices[device].verified;
     if (state.active) state.active.player.halt();
     state.active = null;
+    arrange(device);
     state.cards.forEach(function (card) {
       var steps = forDevice(card.section, device) ? stepsOf(card.section, device) : [];
       card.node.hidden = !steps.length;
@@ -194,6 +197,21 @@ MM.tour = (function () {
         var keep = card.player.count() ? card.player.index() : 0;
         card.player.load(device, steps, keep < steps.length ? keep : 0);
       }
+    });
+  }
+
+  // The cards (and the contents' links) in the controller's order.
+  function arrange(device) {
+    var order = (state.data.tour_order || {})[device] || [], rank = {};
+    order.forEach(function (id, i) { rank[id] = i; });
+    var sorted = state.cards.map(function (card, i) {
+      var id = card.section.id;
+      return { card: card, key: rank.hasOwnProperty(id) ? rank[id] : order.length + i };
+    }).sort(function (a, b) { return a.key - b.key; });
+    var list = el('tour-cards'), toc = el('tour-toc');
+    sorted.forEach(function (entry) {
+      list.appendChild(entry.card.node);
+      if (entry.card.link) toc.appendChild(entry.card.link);
     });
   }
 

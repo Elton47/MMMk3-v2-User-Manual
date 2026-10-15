@@ -22,7 +22,7 @@
     "STRIP": "touch / slide on the touch strip"
   },
   "tour_order": {
-    "mk3": ["mixer-mk3", "plugin-mk3", "slicing", "kits-mk3", "browser-mk3", "section-mk3", "drum-synths", "highlights", "start", "drum", "keyboard", "chords", "step", "playing", "clip", "scene", "track", "shift-pads", "events", "transport", "master", "edit", "views", "mk3"]
+    "mk3": ["mixer-mk3", "plugin-mk3", "slicing", "kits-mk3", "browser-mk3", "section-mk3", "drum-synths", "highlights", "start", "drum", "keyboard", "chords", "step", "playing", "clip", "scene", "track", "shift-pads", "events", "transport", "master", "edit", "views", "maschine-vsti", "mk3"]
   },
   "sections": [
     {
@@ -32,7 +32,7 @@
       "summary": "New here? The Set up guide walks you through it (macOS is automatic; Windows needs a one-time loopMIDI setup). After that: connect the controller and start Live. The script starts the Maschine Bridge, which takes over the hardware: no Controller Editor, no MIDI mode, a real SHIFT key. While Live loads, the screen shows Waiting for Live; when the set is ready, a rainbow wave sweeps across the pads. Your note repeat rate, arp settings, chord type and voicing, drum colours and velocity curve are remembered between Live sessions.",
       "tour": {"intro": "Connect the controller and start Live: the Maschine Bridge takes over the hardware, with a real SHIFT key. No Controller Editor, no MIDI mode."},
       "notes": [
-        {"title": "Using the MASCHINE plug-in (Expansions)", "text": "NI's MASCHINE plug-in (VST / AU) takes the controller as soon as it is anywhere in the set, and keeps it until it is deleted: selecting another track or switching the plug-in off doesn't release it. Meanwhile the script steps aside: the lights, screen and pads are MASCHINE's, and Live's status bar says so. Delete the last MASCHINE plug-in and the controller is back with Live within about a second, on the drum pads or the keyboard. To switch between the two on the fly, use v1.6.1 (in the same download) in NI's MIDI mode, where SHIFT + MASCHINE (MK3, MASCHINE+: SHIFT + CHANNEL) switches between MASCHINE and Live. Or play the Expansions' kits without the plug-in: BROWSER > MASCHINE Kits (see BROWSER: browse and load)."}
+        {"title": "Using the MASCHINE plug-in (Expansions)", "text": "NI's MASCHINE plug-in (VST / AU) takes the controller as soon as it is anywhere in the set, and keeps it until it is deleted: selecting another track or switching the plug-in off doesn't release it. Meanwhile the script steps aside: the lights, screen and pads are MASCHINE's, and Live's status bar says so. Delete the last MASCHINE plug-in and the controller is back with Live within about a second, on the drum pads or the keyboard. To switch between the two on the fly, use v1.6.1 (in the same download) in NI's MIDI mode, where SHIFT + MASCHINE (MK3, MASCHINE+: SHIFT + CHANNEL) switches between MASCHINE and Live. Or play the Expansions' kits without the plug-in: BROWSER > MASCHINE Kits (see BROWSER: browse and load). On Windows you can also keep the plug-in in the set and the controller with Live (see MASCHINE VSTi in Live Set Support)."}
       ],
       "items": [
         {"combo": ["SHIFT"], "does": "The real SHIFT button: hold it for the second function printed on a button, and for the SHIFT + pad edit matrix."},
@@ -359,6 +359,21 @@
         {"combo": ["SHIFT", "◀", "▶"], "does": "Select the previous / next track."},
         {"combo": ["MASCHINE"], "does": "Open the settings page (see Settings).", "devices": ["mikro"]},
         {"combo": ["ENCODER TOUCH"], "does": "Rest a finger on the encoder: the current mode's details (octave, scale, drum pad ...). Turning takes them away."}
+      ]
+    },
+    {
+      "id": "maschine-vsti",
+      "nav": "MASCHINE plug-in",
+      "title": "MASCHINE VSTi in Live Set Support (Windows)",
+      "summary": "Keep NI's MASCHINE plug-in in your Live sets, and your controller stays with Live. It is a choice in MASCHINE Setup, and it is off by default. Off is how NI's software works today: the MASCHINE plug-in takes the controller as soon as it is in the set (see Getting started). On: while Live runs, NI's background helper is paused. So the MASCHINE plug-in can't take the controller. It stays with MASCHINE for Ableton Live. When Live closes, the helper starts again by itself. That also happens after a crash. Windows only for now. macOS is coming.",
+      "tour": {"intro": "Keep the MASCHINE plug-in in your Live sets, and your controller stays with Live. Windows, a choice in MASCHINE Setup."},
+      "notes": [
+        {"title": "Switch it on or off", "text": "Close Live first. Open MASCHINE Setup (the MASCHINE Setup folder in the download) and choose 2, MASCHINE VSTi in Live Set Support. It shows Now: On or Off. It explains what it does before anything changes. Type Y to go on, and Windows asks for your permission once. That lets your Windows user pause and restart one NI helper, NI Host Integration Agent. Nothing else changes: no other service, no driver and no NI setting. To switch it off again, open MASCHINE Setup and choose 2 again."},
+        {"title": "What you give up while Live runs", "text": "You can't control the MASCHINE plug-in from the controller. Its browser and its pages are mouse only. This comes back when Live closes."}
+      ],
+      "items": [
+        {"combo": ["PAD"], "does": "Select the track with the MASCHINE plug-in and play: the pads play it, in MASCHINE's own pad order. Pick the group or kit inside the plug-in, with the mouse."},
+        {"combo": ["BROWSER"], "does": "Still Live's browser, not the plug-in's. The rest of the controller works as it does without the plug-in."}
       ]
     },
     {

@@ -220,6 +220,11 @@
             "Delete the plug-in and the controller is back with Live within about a second. Selecting another track or switching the plug-in off is not enough.",
             "To switch between the two on the fly, use **v1.6.1** (in the same download) in NI's MIDI mode: {{midi_mode}} switches between MASCHINE and Live."
           ]},
+          {"q": "I want the MASCHINE plug-in in my Live sets and the controller with Live", "when": {"os": ["win11", "win10"]}, "a": [
+            "Optional, off by default: close Live, open **MASCHINE Setup** (the MASCHINE Setup folder in the download) and choose **2. MASCHINE VSTi in Live Set Support**. It explains what it does first. Windows asks for your permission once.",
+            "While Live runs, the MASCHINE plug-in can't take the controller. The pads still play it. Its browser and pages are mouse only until Live closes.",
+            "More in [MASCHINE VSTi in Live Set Support](#maschine-vsti). To switch it off, choose 2 again."
+          ]},
           {"q": "I want to play the MASCHINE Expansions without the plug-in", "when": {"device": ["mikro"]}, "a": [
             "Press [[BROWSER]] and open **MASCHINE Kits**: your Expansions, then their kits. On Live 12.0 to 12.3 the kits are prepared once, in the background, the first time (**Preparing kits** with a percentage on top of the list); a kit you push before then loads by itself in a moment.",
             "Turning onto a kit plays its preview (with preview switched on in Live's browser). Pushing the encoder loads it as a Drum Rack, pad for pad as in MASCHINE: onto the selected MIDI track, or a new one when an audio track is selected. The controller stays with Live.",

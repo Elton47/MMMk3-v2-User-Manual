@@ -730,24 +730,41 @@ var LAYOUTS = {
       var alt = 'MK3 screens: ' + (SHOT_ALT[name] || name);
       return { left: { img: name + '-left', alt: alt + ' (left)' }, right: { img: name + '-right', alt: alt + ' (right)' } };
     }
+    // The screens that move on the controller, as frame sheets (img/screens/mk3/anim/, written by
+    // the same export with the bridge's clock stepped; its anim/index.json): [frames, ms a frame,
+    // frames in the left picture, in the right one (1: that screen stays still)]. 120 BPM: STEP's
+    // and the mixer's frames are 1/16 steps, the clips' 1/8 (the 2-bar drum loop in 16 frames).
+    // An animated pair plays by itself (manual.js showScreen), or a show picks its frame
+    // (lcdFrame(), js/highlight-shows.js). `still`: the mode's picture without the motion.
+    var ANIMS = {
+      'step': [16, 125, 16, 16], 'pattern': [16, 250, 16, 16], 'events': [16, 250, 16, 16],
+      'note-repeat': [16, 250, 16, 16], 'mixer': [16, 125, 16, 1], 'plugin': [3, 650, 3, 3],
+      'tempo': [4, 650, 4, 1], 'swing': [3, 650, 3, 1], 'browser': [7, 700, 7, 7]
+    };
+    function anim(name) {
+      var a = ANIMS[name], alt = 'MK3 screens: ' + (SHOT_ALT[name] || name);
+      return { frames: a[0], every: a[1], still: shot(name),
+        left: { img: 'anim/' + name + '-left', frames: a[2], alt: alt + ' (left)' },
+        right: { img: 'anim/' + name + '-right', frames: a[3], alt: alt + ' (right)' } };
+    }
     var screens = {
-      'PLUG-IN': shot('plugin'),
-      'KNOB': shot('plugin'),
+      'PLUG-IN': anim('plugin'),
+      'KNOB': anim('plugin'),
       'LOCK': shot('plugin'),
-      'MIXER': shot('mixer'),
-      'VOLUME': shot('mixer'),
-      'PATTERN': shot('pattern'),
-      'SCENE': shot('pattern'),
-      'TEMPO': shot('tempo'),
-      'SWING': shot('swing'),
+      'MIXER': anim('mixer'),
+      'VOLUME': anim('mixer'),
+      'PATTERN': anim('pattern'),
+      'SCENE': anim('pattern'),
+      'TEMPO': anim('tempo'),
+      'SWING': anim('swing'),
       'PAD MODE': shot('pad-mode'),
       'FIXED VEL': shot('pad-mode'),
       'KEYBOARD': shot('keyboard'),
       'CHORDS': shot('chords'),
-      'STEP': shot('step'),
-      'NOTE REPEAT': shot('note-repeat'),
-      'EVENTS': shot('events'),
-      'BROWSER': shot('browser'),
+      'STEP': anim('step'),
+      'NOTE REPEAT': anim('note-repeat'),
+      'EVENTS': anim('events'),
+      'BROWSER': anim('browser'),
       'SETTINGS': shot('settings'),
       'SELECT': shot('select'),
       'VARIATION': shot('variation')
@@ -774,6 +791,9 @@ var LAYOUTS = {
       // nothing selected: the script starts on the pads (the drums), like the MIKRO
       screen: screens['PAD MODE'],
       screens: screens,
+      // the MK3's own sections (data/features.json): the browser card shows the browser throughout,
+      // a display button in MIXER the mixer
+      sectionScreens: { 'browser-mk3': { '*': screens.BROWSER }, 'mk3': { 'DISPLAY': screens.MIXER } },
       controls: [
         c('CHANNEL', 'CHANNEL', 26.5, 28.5, 45, 16, 'button', { sub: 'MIDI' }),
         c('PLUG-IN', 'PLUG-IN', 77.5, 28.5, 45, 16, 'button', { sub: 'Instance' }),
@@ -826,8 +846,19 @@ var TOKEN_ALIASES = {
   'PUSH': function (id) { return id === 'ENCODER'; },
   'ENCODER TOUCH': function (id) { return id === 'ENCODER'; },
   'GROUP A-H': function (id) { return /^GROUP [A-H]$/.test(id); },
-  'KNOB': function (id) { return /^KNOB \d$/.test(id); }
+  'KNOB': function (id) { return /^KNOB \d$/.test(id); },
+  'DISPLAY': function (id) { return /^DISPLAY \d$/.test(id); }
 };
+
+// An animated pair of MK3 screens (layouts.js anim()) at frame k: a show's own clock (the pads'
+// step) picks it. Anything else passes as it is.
+function lcdFrame(pair, k) {
+  if (!pair || !pair.every) return pair;
+  var out = {};
+  Object.keys(pair).forEach(function (key) { out[key] = pair[key]; });
+  out.frame = k;
+  return out;
+}
 
 function tokenMatches(token, id) {
   if (TOKEN_ALIASES[token]) return TOKEN_ALIASES[token](id);

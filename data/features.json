@@ -49,7 +49,8 @@
         {"combo": ["CHORDS"], "does": "A chord on every pad, always in Live's key: triads to 9ths, with voicings."},
         {"combo": ["NOTE REPEAT"], "does": "Note repeat that follows pad pressure: slide the touch strip to set its rate, or touch it while holding pads to repeat them on the spot. Plus an arpeggiator and 16 velocities, all recorded exactly on Live's grid."},
         {"combo": ["STEP"], "does": "A step sequencer on the pads, read like MASCHINE, with the playhead running across them."},
-        {"combo": ["PUSH"], "does": "MASCHINE Kits: play your Expansions in Live without the MASCHINE plug-in. BROWSER > MASCHINE Kits, turn to hear a kit, push to load it as a Drum Rack, pad for pad as in MASCHINE. One-way sync: your MASCHINE favourites come along, starred (read only; star / unstar them in MASCHINE).", "devices": ["mikro"]}
+        {"combo": ["PUSH"], "does": "MASCHINE Kits: play your Expansions in Live without the MASCHINE plug-in. BROWSER > MASCHINE Kits, turn to hear a kit, push to load it as a Drum Rack, pad for pad as in MASCHINE. One-way sync: your MASCHINE favourites come along, starred (read only; star / unstar them in MASCHINE).", "devices": ["mikro"]},
+        {"combo": ["BROWSER"], "does": "MASCHINE's browser on the two screens, on Live's browser: knob 1 the category, the 4-D encoder scrolls, LOAD loads. MASCHINE Kits: play your Expansions in Live without the MASCHINE plug-in, a turn onto a kit plays its preview and a load makes it a Drum Rack, pad for pad as in MASCHINE.", "devices": ["mk3"]}
       ]
     },
     {
@@ -475,9 +476,31 @@
       "devices": ["mk3"],
       "items": [
         {"combo": ["MIXER"], "does": "Knobs 1-8: volumes of the 8 tracks in view."},
+        {"combo": ["MIXER"], "context": "with the screens", "does": "MASCHINE's mixer on the two screens: 8 channel strips with the tracks' names in their colours, the meters moving with the set, the volume, pan, mute and solo. Knobs 1-8 set the volumes (PUSH: the knobs switch to pan). ◀ ▶: the next 8 strips (the returns and the Master come last)."},
+        {"combo": ["DISPLAY"], "context": "MIXER", "does": "Select that strip's track. Hold MUTE or SOLO and press a display button: mute / solo that track."},
         {"combo": ["PLUG-IN"], "does": "Knobs 1-8: the selected device's parameters. The buttons above the screens choose the bank (1-8); PLUG-IN + ◀ ▶ step through every bank (◀ ▶ alone stay the pad mode's)."},
+        {"combo": ["PLUG-IN"], "context": "with the screens", "does": "MASCHINE's Control page: the track's devices on the left, the selected device on the right (Live's own devices drawn as a picture, such as a filter's curve), and its 8 parameters on the knobs with their values and bars. Turn a knob: the value, its bar and the picture follow. PLUG-IN held + a display button: bank 1-8."},
+        {"combo": ["KNOB"], "does": "Touch a knob: its name lights up. A parameter with a few choices shows them in a list while you turn."},
+        {"combo": ["SETTINGS"], "does": "The settings (the same as the MIKRO's, see Settings) in panels on the knobs: a knob changes its setting. Display buttons 5 / 6: the previous / next panel."},
         {"combo": ["GROUP A-H"], "does": "Select the 8 tracks in view (lit in track colours)."},
         {"combo": ["SHIFT", "KNOB"], "does": "Fine adjustment."}
+      ]
+    },
+    {
+      "id": "browser-mk3",
+      "nav": "Browser",
+      "title": "BROWSER: MASCHINE's browser (MK3)",
+      "summary": "With the screens, BROWSER is MASCHINE's browser on Live's browser: the left screen shows where you are (the category and its folders as tiles), the right one the results. The same lists as on the MIKRO (see BROWSER: browse and load): Favorites, Live's sidebar, MASCHINE Kits, Live Sets, the library and your Places. Turning onto a MASCHINE kit plays its preview, and a load closes the browser, back to the page you came from.",
+      "tour": {"intro": "Live's browser on the two screens, as MASCHINE's: categories, folders and results, with MASCHINE Kits and your favourites."},
+      "devices": ["mk3"],
+      "items": [
+        {"combo": ["BROWSER"], "does": "Browser on / off (it opens where you left it)."},
+        {"combo": ["TURN"], "does": "Scroll the results (tilt the 4-D up / down too)."},
+        {"combo": ["PUSH"], "does": "Open the folder, or load the item onto the selected track (tilt the 4-D right too; left: back up one level)."},
+        {"combo": ["KNOB 1"], "does": "The category: Favorites, Live Sets, Sounds, Drums, Instruments ..."},
+        {"combo": ["KNOB"], "does": "Knobs 2-4 in Live's tagged categories (Sounds, Drums, Instruments, effects ...): TYPE, SUBTYPE and CHARACTER, as MASCHINE's tag filters. Elsewhere the knobs are the folder levels."},
+        {"combo": ["DISPLAY"], "does": "PREVIOUS / NEXT load the previous / next result, ★ shows Favorites (SHIFT: star / unstar the result), LOAD loads it."},
+        {"combo": ["SHIFT", "BROWSER"], "does": "Hot-Swap the selected device: the browser on its category, a load replaces it."}
       ]
     }
   ],

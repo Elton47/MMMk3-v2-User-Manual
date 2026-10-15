@@ -37,8 +37,12 @@ var HIGHLIGHT_SHOWS = (function () {
   var drums = SAMPLE_TRACKS[0], bass = SAMPLE_TRACKS[1], keys = SAMPLE_TRACKS[2];
 
   // The MK3's two screens for a mode: the pictures the layout keeps (rendered by the bridge's MK3
-  // renderer, see drawLcd() in manual.js); undefined on the MIKRO (its screen is the state).
-  function mk3(api, token) { return (api.layout.screens || {})[token]; }
+  // renderer, see drawLcd() in manual.js); undefined on the MIKRO (its screen is the state). An
+  // animated pair plays by itself unless the show picks its frame: mk3(api, token, k).
+  function mk3(api, token, k) {
+    var pair = (api.layout.screens || {})[token];
+    return typeof k === 'number' ? lcdFrame(pair, k) : pair;
+  }
 
   // Live's tempo, swing and a device parameter, as the encoder changes them.
   var TURNS = [
@@ -55,6 +59,25 @@ var HIGHLIGHT_SHOWS = (function () {
   ];
 
   var STEP_NOTES = [1, 5, 8, 11, 13];  // the kick pattern of the manual's STEP demo
+
+  // The MK3's browser (MASCHINE's, on both screens): BROWSER opens it, the 4-D turns down the
+  // categories to Drums, PUSH opens it, two turns onto a kit (its preview plays); PUSH loads it, the
+  // browser closes and the pads light with the kit. The frames as the export renders them
+  // (anim/browser: frame 0 open, 1-3 turns, 4 the push, 5-6 turns).
+  var MK3_BROWSER = [
+    // [frame, lit buttons, encoder detents]
+    [0, ['BROWSER'], 0], [1, ['BROWSER'], 1], [2, ['BROWSER'], 2], [3, ['BROWSER'], 3],
+    [4, ['BROWSER', 'ENCODER'], 3], [5, ['BROWSER'], 4], [6, ['BROWSER'], 5], [6, ['BROWSER', 'ENCODER'], 5]
+  ];
+  function mk3Browser(n, api) {
+    var last = Math.min(n, MK3_BROWSER.length), step = MK3_BROWSER[Math.min(last, MK3_BROWSER.length - 1)];
+    var loaded = n >= MK3_BROWSER.length;
+    api.outline(['BROWSER']);
+    api.turn(step[2]);
+    api.light(loaded ? [] : step[1]);
+    api.screen(null, loaded ? mk3(api, 'PAD MODE') : mk3(api, 'BROWSER', step[0]));
+    api.pads(loaded ? api.demo('PAD MODE') : api.blank());
+  }
 
   // The MIKRO's screens below are what the script shows (the screen helpers in layouts.js).
   var CHORDS_SCREEN = trackScreen(2, 'Triad Close  C Major', 'Chord', 'Triad', 'C Major');
@@ -91,12 +114,15 @@ var HIGHLIGHT_SHOWS = (function () {
         var turn = TURNS[n % TURNS.length], value = turn[1];
         api.turn(n);
         api.light([turn[0]]);
+        // the MK3's frames are these values (tools/export_manual_screens.py: 120-123 BPM, 10-20 %,
+        // 2.40-3.60 kHz)
+        var k = TURNS.slice(0, n % TURNS.length + 1).filter(function (t) { return t[0] === turn[0]; }).length - 1;
         if (turn[0] === 'TEMPO') {
-          api.screen(popupScreen('Tempo', value.toFixed(2) + ' BPM'), mk3(api, 'TEMPO'));
+          api.screen(popupScreen('Tempo', value.toFixed(2) + ' BPM'), mk3(api, 'TEMPO', k));
         } else if (turn[0] === 'SWING') {
-          api.screen(popupScreen('Swing', value + ' %'), mk3(api, 'SWING'));
+          api.screen(popupScreen('Swing', value + ' %'), mk3(api, 'SWING', k));
         } else {
-          api.screen(frequencyScreen(value), mk3(api, 'PLUG-IN'));
+          api.screen(frequencyScreen(value), mk3(api, 'PLUG-IN', k));
         }
       }
     },
@@ -142,7 +168,8 @@ var HIGHLIGHT_SHOWS = (function () {
         var hit = t < 400 ? 1 : t < 3900 ? 3 : 2;
         var oled = t >= 3400 && t < 4600 ? popupScreen('Note repeat', rate)
           : trackScreen(0, SAMPLE_KIT, SAMPLE_DRUMS[hit - 1], noteName(35 + hit), SAMPLE_KIT);
-        api.screen(oled, mk3(api, 'NOTE REPEAT'));
+        // the MK3: the clip plays behind the repeat's page, its playhead an 1/8 a frame
+        api.screen(oled, mk3(api, 'NOTE REPEAT', Math.floor(t / 250)));
       }
     },
 
@@ -164,7 +191,10 @@ var HIGHLIGHT_SHOWS = (function () {
         }
         api.pads(pads);
         api.light(playing ? ['PLAY'] : []);
-        api.screenOf('STEP');
+        // the MK3's screens: the page as it is, then its playhead with the pads' (frame k: step k + 1)
+        var page = mk3(api, 'STEP');
+        if (page && page.every) api.screen(null, playing ? lcdFrame(page, playhead - 1) : page.still);
+        else api.screenOf('STEP');
       }
     },
 
@@ -176,6 +206,7 @@ var HIGHLIGHT_SHOWS = (function () {
       loupe: true,
       duration: 8500,
       tick: function (n, api) {
+        if (api.device === 'mk3') return mk3Browser(n, api);
         var drums = SAMPLE_BROWSER.indexOf('Drums');  // 4: after Favorites, Collections, MASCHINE Kits, Sounds
         var frame = Math.min(n, drums + 6), pushed = n === drums + 1 || n === drums + 4;
         var star = frame >= drums + 6;
@@ -311,7 +342,7 @@ var HIGHLIGHT_SHOWS = (function () {
         api.light(recording ? ['PLAY', 'REC'] : ['PLAY']);
         var position = 'Bar ' + bar + '  Beat ' + beat;
         // the MIKRO's screen stays on PATTERN
-        api.screen(api.layout.screens.PATTERN, mk3(api, 'PATTERN'));
+        api.screen(api.layout.screens.PATTERN, mk3(api, 'PATTERN', Math.floor((since % loop) / 250)));
         var grid = api.demo('PATTERN');
         if (recording) grid[9] = api.lit(bass.color, 'bright');
         api.pads(grid);
@@ -409,6 +440,7 @@ var TOUR_SHOWS = (function () {
     events: { 'VARIATION+PAD': S['VARIATION+PAD'] },
     mixer: { 'VOLUME': S.VOLUME },
     browser: { 'BROWSER': S.BROWSER, 'PUSH (on a MASCHINE kit)': S.PUSH },
+    'browser-mk3': { 'BROWSER': S.BROWSER },
     playing: { 'NOTE REPEAT': S['NOTE REPEAT'] },
     chords: { 'PAD': S.CHORDS },
     step: { 'STEP': S.STEP },

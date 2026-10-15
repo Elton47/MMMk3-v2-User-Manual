@@ -1,0 +1,56 @@
+{
+ "browser": {
+  "every": 700,
+  "frames": 7,
+  "left": 7,
+  "right": 7
+ },
+ "events": {
+  "every": 250,
+  "frames": 16,
+  "left": 16,
+  "right": 16
+ },
+ "mixer": {
+  "every": 125,
+  "frames": 16,
+  "left": 16,
+  "right": 1
+ },
+ "note-repeat": {
+  "every": 250,
+  "frames": 16,
+  "left": 16,
+  "right": 16
+ },
+ "pattern": {
+  "every": 250,
+  "frames": 16,
+  "left": 16,
+  "right": 16
+ },
+ "plugin": {
+  "every": 650,
+  "frames": 3,
+  "left": 3,
+  "right": 3
+ },
+ "step": {
+  "every": 125,
+  "frames": 16,
+  "left": 16,
+  "right": 16
+ },
+ "swing": {
+  "every": 650,
+  "frames": 3,
+  "left": 3,
+  "right": 1
+ },
+ "tempo": {
+  "every": 650,
+  "frames": 4,
+  "left": 4,
+  "right": 1
+ }
+}

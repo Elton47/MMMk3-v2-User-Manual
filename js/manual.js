@@ -265,17 +265,38 @@ MM.manual = (function () {
   // One colour screen (480 x 272 units, like the MK3's displays): a picture of what the controller
   // shows there, rendered by the bridge's own MK3 renderer from what the script sends (the script
   // repository's tools/export_manual_screens.py writes img/screens/mk3/). side: { img, alt }.
+  // An animated screen (side.frames > 1): its frames side by side in one picture (the export's
+  // sheet in img/screens/mk3/anim/), one shown at a time through a window (a nested svg's
+  // viewBox); frame: which one.
   var XLINK = 'http://www.w3.org/1999/xlink';
-  function drawLcd(g, side) {
+  function drawLcd(g, side, frame) {
     if (!side || !side.img) return;
     var href = 'img/screens/mk3/' + side.img + '.png';
-    if (g.getAttribute('data-img') === href) return;
-    g.setAttribute('data-img', href);
-    g.innerHTML = '';
-    var image = node('image', { x: 0, y: 0, width: 480, height: 272, preserveAspectRatio: 'none', 'class': 'lcd-image' }, g);
-    image.setAttribute('href', href);
-    image.setAttributeNS(XLINK, 'xlink:href', href);  // older Safari
-    if (side.alt) node('title', {}, image).textContent = side.alt;
+    var count = side.frames || 1;
+    if (g.getAttribute('data-img') !== href) {
+      g.setAttribute('data-img', href);
+      g.innerHTML = '';
+      var holder = count > 1 ? node('svg', { x: 0, y: 0, width: 480, height: 272, viewBox: '0 0 480 272', preserveAspectRatio: 'none', overflow: 'hidden' }, g) : g;
+      var image = node('image', { x: 0, y: 0, width: 480 * count, height: 272, preserveAspectRatio: 'none', 'class': 'lcd-image' }, holder);
+      image.setAttribute('href', href);
+      image.setAttributeNS(XLINK, 'xlink:href', href);  // older Safari
+      if (side.alt) node('title', {}, image).textContent = side.alt;
+      g.lcdWindow = count > 1 ? holder : null;
+      g.lcdFrame = 0;
+    }
+    if (g.lcdWindow) {
+      var k = ((Math.floor(frame || 0) % count) + count) % count;
+      if (k !== g.lcdFrame) {
+        g.lcdFrame = k;
+        g.lcdWindow.setAttribute('viewBox', (k * 480) + ' 0 480 272');
+      }
+    }
+  }
+
+  // The frame an animated pair shows now when nothing drives it (the manual, a Tour step without a
+  // choreography of its own): one clock for all, so screens with the same pace move together.
+  function lcdClockFrame(lines) {
+    return Math.floor(Date.now() / lines.every);
   }
 
   // A drawing of a layout in an <svg>: the manual's (#device, the controls are buttons) and the
@@ -296,13 +317,30 @@ MM.manual = (function () {
 
     // The screens show `lines`: the OLED a screen state (see js/screen-render.js), the colour
     // screens { left, right } (a side that is left out shows the layout's default).
+    // An animated pair (lines.every: ms a frame) shows lines.frame when a show gives one (in time
+    // with its pads), else it plays by itself while the drawing is on screen; with reduced motion
+    // it stays on its first frame.
     drawing.showScreen = function (lines) {
       var lcd = drawing.lcd;
       if (lcd && lines && lcd.content !== lines) {
         lcd.content = lines;
+        var driven = typeof lines.frame === 'number', calm = MM.reducedMotion();
+        var frame = !lines.every || calm ? 0 : driven ? lines.frame : lcdClockFrame(lines);
         Object.keys(lcd.sides).forEach(function (name) {
-          drawLcd(lcd.sides[name], lines[name] || drawing.layout().screen[name]);
+          drawLcd(lcd.sides[name], lines[name] || drawing.layout().screen[name], frame);
         });
+        clearInterval(lcd.timer);
+        lcd.timer = null;
+        if (lines.every && !driven && !calm) {
+          lcd.timer = setInterval(function () {
+            var box = svg.getBoundingClientRect();  // only while it is in view
+            if (document.hidden || !box.width || box.bottom < 0 || box.top > window.innerHeight) return;
+            var now = lcdClockFrame(lines);
+            Object.keys(lcd.sides).forEach(function (name) {
+              drawLcd(lcd.sides[name], lines[name] || drawing.layout().screen[name], now);
+            });
+          }, Math.max(60, lines.every / 2));
+        }
       }
       // The OLED: a screen state (the fields the script sends), drawn pixel for pixel by the
       // controller's own layout and fonts (js/screen-render.js).
@@ -495,6 +533,7 @@ MM.manual = (function () {
       drawing.device = device;
       hideMagnifier();
       drawing.oled = null;
+      if (drawing.lcd) clearInterval(drawing.lcd.timer);
       drawing.lcd = null;
       drawing.dots = [];
       var spec = drawing.layout();

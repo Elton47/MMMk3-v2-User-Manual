@@ -193,7 +193,7 @@ var HIGHLIGHT_SHOWS = (function () {
         api.light(playing ? ['PLAY'] : []);
         // the MK3's screens: the page as it is, then its playhead with the pads' (frame k: step k + 1)
         var page = mk3(api, 'STEP');
-        if (page && page.every) api.screen(null, playing ? lcdFrame(page, playhead - 1) : page.still);
+        if (page && page.anim) api.screen(null, playing ? lcdFrame(page, playhead - 1) : page.still);
         else api.screenOf('STEP');
       }
     },

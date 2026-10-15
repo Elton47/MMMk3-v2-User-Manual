@@ -730,22 +730,17 @@ var LAYOUTS = {
       var alt = 'MK3 screens: ' + (SHOT_ALT[name] || name);
       return { left: { img: name + '-left', alt: alt + ' (left)' }, right: { img: name + '-right', alt: alt + ' (right)' } };
     }
-    // The screens that move on the controller, as frame sheets (img/screens/mk3/anim/, written by
-    // the same export with the bridge's clock stepped; its anim/index.json): [frames, ms a frame,
-    // frames in the left picture, in the right one (1: that screen stays still)]. 120 BPM: STEP's
-    // and the mixer's frames are 1/16 steps, the clips' 1/8 (the 2-bar drum loop in 16 frames).
-    // An animated pair plays by itself (manual.js showScreen), or a show picks its frame
-    // (lcdFrame(), js/highlight-shows.js). `still`: the mode's picture without the motion.
-    var ANIMS = {
-      'step': [16, 125, 16, 16], 'pattern': [16, 250, 16, 16], 'events': [16, 250, 16, 16],
-      'note-repeat': [16, 250, 16, 16], 'mixer': [16, 125, 16, 1], 'plugin': [3, 650, 3, 3],
-      'tempo': [4, 650, 4, 1], 'swing': [3, 650, 3, 1], 'browser': [7, 700, 7, 7]
-    };
+    // The screens that move on the controller (img/screens/mk3/anim/, written by the same export
+    // with the bridge's clock stepped): each animation's frames, timing and pieces come from
+    // anim/index.json (manual.js lcdAnim()), so a new export needs no change here. Until it has
+    // loaded (or without it) a screen shows the mode's still picture. An animated pair plays by
+    // itself (manual.js showScreen), or a show picks its step (lcdFrame(), js/highlight-shows.js).
+    // `still`: the mode's picture without the motion.
     function anim(name) {
-      var a = ANIMS[name], alt = 'MK3 screens: ' + (SHOT_ALT[name] || name);
-      return { frames: a[0], every: a[1], still: shot(name),
-        left: { img: 'anim/' + name + '-left', frames: a[2], alt: alt + ' (left)' },
-        right: { img: 'anim/' + name + '-right', frames: a[3], alt: alt + ' (right)' } };
+      var alt = 'MK3 screens: ' + (SHOT_ALT[name] || name), still = shot(name);
+      return { anim: name, still: still,
+        left: { anim: name, side: 'left', img: still.left.img, alt: alt + ' (left)' },
+        right: { anim: name, side: 'right', img: still.right.img, alt: alt + ' (right)' } };
     }
     var screens = {
       'PLUG-IN': anim('plugin'),
@@ -850,10 +845,11 @@ var TOKEN_ALIASES = {
   'DISPLAY': function (id) { return /^DISPLAY \d$/.test(id); }
 };
 
-// An animated pair of MK3 screens (layouts.js anim()) at frame k: a show's own clock (the pads'
-// step) picks it. Anything else passes as it is.
+// An animated pair of MK3 screens (layouts.js anim()) at step k: a show's own clock (the pads'
+// step, anim/index.json `step` ms: a 1/16 for STEP) picks it, and the screens move on smoothly
+// within that step. Anything else passes as it is.
 function lcdFrame(pair, k) {
-  if (!pair || !pair.every) return pair;
+  if (!pair || !pair.anim) return pair;
   var out = {};
   Object.keys(pair).forEach(function (key) { out[key] = pair[key]; });
   out.frame = k;

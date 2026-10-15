@@ -265,38 +265,107 @@ MM.manual = (function () {
   // One colour screen (480 x 272 units, like the MK3's displays): a picture of what the controller
   // shows there, rendered by the bridge's own MK3 renderer from what the script sends (the script
   // repository's tools/export_manual_screens.py writes img/screens/mk3/). side: { img, alt }.
-  // An animated screen (side.frames > 1): its frames side by side in one picture (the export's
-  // sheet in img/screens/mk3/anim/), one shown at a time through a window (a nested svg's
-  // viewBox); frame: which one.
+  // An animated screen (side.anim, side.side: layouts.js anim()): once anim/index.json and the
+  // animation's picture have loaded (lcdAnim()), the picture's base for that screen with the pieces
+  // of frame `frame` laid over it (each a window on the picture: a nested svg's viewBox), so a frame
+  // changes only the few small pieces that move; until then the still picture (side.img).
   var XLINK = 'http://www.w3.org/1999/xlink';
+  function lcdImage(parent, href, w, h, alt) {
+    var image = node('image', { x: 0, y: 0, width: w, height: h, preserveAspectRatio: 'none', 'class': 'lcd-image' }, parent);
+    image.setAttribute('href', href);
+    image.setAttributeNS(XLINK, 'xlink:href', href);  // older Safari
+    if (alt) node('title', {}, image).textContent = alt;
+    return image;
+  }
+  function lcdPiece(parent, a, rect, x, y) {
+    var holder = node('svg', { x: x, y: y, width: rect[2], height: rect[3], viewBox: rect.join(' '), preserveAspectRatio: 'none', overflow: 'hidden' }, parent);
+    lcdImage(holder, LCD_ANIM_DIR + a.image, a.size[0], a.size[1]);
+    return holder;
+  }
   function drawLcd(g, side, frame) {
     if (!side || !side.img) return;
-    var href = 'img/screens/mk3/' + side.img + '.png';
-    var count = side.frames || 1;
-    if (g.getAttribute('data-img') !== href) {
-      g.setAttribute('data-img', href);
+    var a = side.anim ? lcdAnim(side.anim) : null, part = a && a[side.side];
+    var key = part ? LCD_ANIM_DIR + a.image + '#' + side.side : 'img/screens/mk3/' + side.img + '.png';
+    if (g.getAttribute('data-img') !== key) {
+      g.setAttribute('data-img', key);
       g.innerHTML = '';
-      var holder = count > 1 ? node('svg', { x: 0, y: 0, width: 480, height: 272, viewBox: '0 0 480 272', preserveAspectRatio: 'none', overflow: 'hidden' }, g) : g;
-      var image = node('image', { x: 0, y: 0, width: 480 * count, height: 272, preserveAspectRatio: 'none', 'class': 'lcd-image' }, holder);
-      image.setAttribute('href', href);
-      image.setAttributeNS(XLINK, 'xlink:href', href);  // older Safari
-      if (side.alt) node('title', {}, image).textContent = side.alt;
-      g.lcdWindow = count > 1 ? holder : null;
-      g.lcdFrame = 0;
-    }
-    if (g.lcdWindow) {
-      var k = ((Math.floor(frame || 0) % count) + count) % count;
-      if (k !== g.lcdFrame) {
-        g.lcdFrame = k;
-        g.lcdWindow.setAttribute('viewBox', (k * 480) + ' 0 480 272');
+      g.lcdAnim = null;
+      if (part) {
+        lcdPiece(g, a, a.patches[part.base], 0, 0);
+        if (side.alt) node('title', {}, g).textContent = side.alt;
+        g.lcdAnim = part.frames ? { a: a, frames: part.frames, pool: [], frame: -1 } : null;
+      } else {
+        lcdImage(g, key, 480, 272, side.alt);
       }
     }
+    var s = g.lcdAnim;
+    if (!s) return;
+    var count = s.frames.length, k = ((Math.floor(frame || 0) % count) + count) % count;
+    if (k === s.frame) return;  // only a new frame is drawn
+    s.frame = k;
+    var items = s.frames[k], used = 0;
+    for (var i = 0; i < items.length; i += 3, used++) {
+      var rect = s.a.patches[items[i]], holder = s.pool[used];
+      if (!holder) {
+        s.pool.push(lcdPiece(g, s.a, rect, items[i + 1], items[i + 2]));
+        continue;
+      }
+      holder.setAttribute('x', items[i + 1]);
+      holder.setAttribute('y', items[i + 2]);
+      holder.setAttribute('width', rect[2]);
+      holder.setAttribute('height', rect[3]);
+      holder.setAttribute('viewBox', rect.join(' '));
+      holder.removeAttribute('display');
+    }
+    for (; used < s.pool.length; used++) s.pool[used].setAttribute('display', 'none');
   }
 
-  // The frame an animated pair shows now when nothing drives it (the manual, a Tour step without a
-  // choreography of its own): one clock for all, so screens with the same pace move together.
-  function lcdClockFrame(lines) {
-    return Math.floor(Date.now() / lines.every);
+  // The animations' index (anim/index.json, written with the pictures by the export: per animation
+  // its frames, `every` ms a frame, `step` ms a show's step, the picture and its pieces). Loaded
+  // once, with every animation's picture, when a screen first needs one; the drawings that waited
+  // are drawn again then. lcdAnim(name): the animation, or null until it is ready (or never, when
+  // the index can't load: the still pictures stay).
+  var LCD_ANIM_DIR = 'img/screens/mk3/anim/';
+  var lcdAnims = { index: null, ready: {}, state: 'idle', waiting: [] };
+  function lcdAnim(name) {
+    if (lcdAnims.state === 'idle') loadLcdAnims();
+    var a = lcdAnims.index && lcdAnims.index[name];
+    return a && lcdAnims.ready[name] ? a : null;
+  }
+  function loadLcdAnims() {
+    lcdAnims.state = 'loading';
+    if (typeof fetch !== 'function') { lcdAnims.state = 'failed'; return; }
+    fetch(LCD_ANIM_DIR + 'index.json').then(function (r) {
+      if (!r.ok) throw new Error(r.status);
+      return r.json();
+    }).then(function (index) {
+      lcdAnims.index = index;
+      lcdAnims.state = 'loaded';
+      Object.keys(index).forEach(function (name) {
+        var img = new Image();  // preloaded and decoded before a screen shows it: no blank frame
+        img.onload = function () {
+          var done = function () { lcdAnims.ready[name] = true; lcdAnimsArrived(); };
+          if (img.decode) img.decode().then(done, done); else done();
+        };
+        img.src = LCD_ANIM_DIR + index[name].image;
+      });
+    }).catch(function () { lcdAnims.state = 'failed'; });
+  }
+  function lcdAnimsArrived() {
+    lcdAnims.waiting.forEach(function (drawing) { if (drawing.repaintLcd) drawing.repaintLcd(); });
+  }
+
+  // The frame an animated pair shows at `now` (performance.now()): a show's step (lcd.anchor: the
+  // step it gave and when) moves on by the clock within that step, never into the next one (the
+  // show gives that); nothing driving it (the manual, a Tour step without a choreography of its
+  // own): one clock for all, so screens with the same pace move together. Reduced motion: the first.
+  function lcdFrameAt(lcd, a, now) {
+    if (!a || MM.reducedMotion()) return 0;
+    if (lcd.anchor) {
+      var per = Math.max(1, Math.round(a.step / a.every));
+      return lcd.anchor.step * per + Math.min(per - 1, Math.max(0, Math.floor((now - lcd.anchor.at) / a.every)));
+    }
+    return Math.floor(Date.now() / a.every);
   }
 
   // A drawing of a layout in an <svg>: the manual's (#device, the controls are buttons) and the
@@ -315,32 +384,59 @@ MM.manual = (function () {
       return svg.querySelector('[data-id="' + id.replace(/"/g, '\\"') + '"]');
     };
 
+    // The colour screens at the frame for `now`, then on with the animation while it moves.
+    function paintLcd(lcd, now) {
+      var lines = lcd.content, a = lines && lines.anim ? lcdAnim(lines.anim) : null;
+      var frame = lcdFrameAt(lcd, a, now);
+      Object.keys(lcd.sides).forEach(function (name) {
+        drawLcd(lcd.sides[name], (lines && lines[name]) || drawing.layout().screen[name], frame);
+      });
+      if (lines && lines.anim && !a && lcdAnims.waiting.indexOf(drawing) < 0) lcdAnims.waiting.push(drawing);
+      // still moving: plays by itself, or within a show's step that has frames to go
+      if (!a || MM.reducedMotion() || !(a.left.frames || a.right.frames)) return false;
+      if (!lcd.anchor) return true;
+      var per = Math.round(a.step / a.every);
+      return per > 1 && now - lcd.anchor.at < (per - 1) * a.every;
+    }
+    drawing.repaintLcd = function () {
+      var lcd = drawing.lcd;
+      if (!lcd) return;
+      var moving = paintLcd(lcd, performance.now());
+      if (!moving || lcd.raf || !drawing.visible || document.hidden) return;
+      lcd.raf = requestAnimationFrame(function tick(now) {
+        lcd.raf = null;
+        if (drawing.lcd !== lcd || !drawing.visible || document.hidden) return;  // resumes when seen
+        if (paintLcd(lcd, now)) lcd.raf = requestAnimationFrame(tick);
+      });
+    };
+    // on screen? (IntersectionObserver: no layout reads while it plays)
+    drawing.visible = true;
+    if (typeof IntersectionObserver === 'function') {
+      new IntersectionObserver(function (entries) {
+        drawing.visible = entries[entries.length - 1].isIntersecting;
+        if (drawing.visible) drawing.repaintLcd();
+      }).observe(svg);
+    }
+    document.addEventListener('visibilitychange', function () {
+      if (!document.hidden) drawing.repaintLcd();
+    });
+
     // The screens show `lines`: the OLED a screen state (see js/screen-render.js), the colour
     // screens { left, right } (a side that is left out shows the layout's default).
-    // An animated pair (lines.every: ms a frame) shows lines.frame when a show gives one (in time
-    // with its pads), else it plays by itself while the drawing is on screen; with reduced motion
-    // it stays on its first frame.
+    // An animated pair (lines.anim) shows the step a show gives (lines.frame, in time with its
+    // pads) and moves on within it, else it plays by itself; either only while the drawing is on
+    // screen and the page visible (one requestAnimationFrame loop that draws only a new frame);
+    // with reduced motion it stays on its first frame.
     drawing.showScreen = function (lines) {
       var lcd = drawing.lcd;
       if (lcd && lines && lcd.content !== lines) {
         lcd.content = lines;
-        var driven = typeof lines.frame === 'number', calm = MM.reducedMotion();
-        var frame = !lines.every || calm ? 0 : driven ? lines.frame : lcdClockFrame(lines);
-        Object.keys(lcd.sides).forEach(function (name) {
-          drawLcd(lcd.sides[name], lines[name] || drawing.layout().screen[name], frame);
-        });
-        clearInterval(lcd.timer);
-        lcd.timer = null;
-        if (lines.every && !driven && !calm) {
-          lcd.timer = setInterval(function () {
-            var box = svg.getBoundingClientRect();  // only while it is in view
-            if (document.hidden || !box.width || box.bottom < 0 || box.top > window.innerHeight) return;
-            var now = lcdClockFrame(lines);
-            Object.keys(lcd.sides).forEach(function (name) {
-              drawLcd(lcd.sides[name], lines[name] || drawing.layout().screen[name], now);
-            });
-          }, Math.max(60, lines.every / 2));
+        var driven = !!lines.anim && typeof lines.frame === 'number';
+        if (!driven) lcd.anchor = null;
+        else if (!lcd.anchor || lcd.anchor.anim !== lines.anim || lcd.anchor.step !== lines.frame) {
+          lcd.anchor = { anim: lines.anim, step: lines.frame, at: performance.now() };
         }
+        drawing.repaintLcd();
       }
       // The OLED: a screen state (the fields the script sends), drawn pixel for pixel by the
       // controller's own layout and fonts (js/screen-render.js).
@@ -533,7 +629,7 @@ MM.manual = (function () {
       drawing.device = device;
       hideMagnifier();
       drawing.oled = null;
-      if (drawing.lcd) clearInterval(drawing.lcd.timer);
+      if (drawing.lcd && drawing.lcd.raf) cancelAnimationFrame(drawing.lcd.raf);
       drawing.lcd = null;
       drawing.dots = [];
       var spec = drawing.layout();

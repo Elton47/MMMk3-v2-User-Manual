@@ -262,53 +262,20 @@ MM.manual = (function () {
     }
   }
 
-  function svgText(parent, x, y, cls, text) {
-    var t = node('text', { x: x, y: y, 'class': cls }, parent);
-    t.textContent = text;
-    return t;
-  }
-
-  // One colour screen (480 x 272 units, like the MK3's displays), in the layout of the script's
-  // screens: labels for the display buttons, a header with an accent bar, a big value or a list,
-  // and 4 knob cells at the bottom.
+  // One colour screen (480 x 272 units, like the MK3's displays): a picture of what the controller
+  // shows there, rendered by the bridge's own MK3 renderer from what the script sends (the script
+  // repository's tools/export_manual_screens.py writes img/screens/mk3/). side: { img, alt }.
+  var XLINK = 'http://www.w3.org/1999/xlink';
   function drawLcd(g, side) {
+    if (!side || !side.img) return;
+    var href = 'img/screens/mk3/' + side.img + '.png';
+    if (g.getAttribute('data-img') === href) return;
+    g.setAttribute('data-img', href);
     g.innerHTML = '';
-    var accent = side.accent || '#ff8000';
-    var top = 6;
-    if (side.buttons) {
-      side.buttons.forEach(function (label, i) {
-        if (label) svgText(g, 60 + i * 120, 18, 'lcd-button', label.toUpperCase());
-      });
-      node('rect', { x: 0, y: 34, width: 480, height: 1.5, 'class': 'lcd-rule' }, g);
-      top = 42;
-    }
-    node('rect', { x: 0, y: top, width: 6, height: 54, fill: accent }, g);
-    svgText(g, 18, top + 17, 'lcd-title', side.title || '');
-    if (side.sub) svgText(g, 18, top + 43, 'lcd-sub', side.sub);
-    var knobs = side.knobs || [];
-    if (side.center) {
-      svgText(g, 240, knobs.length ? 140 : 156, 'lcd-center', side.center);
-      if (side.small) svgText(g, 240, knobs.length ? 176 : 200, 'lcd-small', side.small);
-    }
-    (side.list || []).forEach(function (item, i) {
-      var y = top + 68 + i * 28, chosen = i === side.selected;
-      if (chosen) node('rect', { x: 8, y: y, width: 464, height: 26, rx: 2, fill: accent }, g);
-      var chip = item[2] ? drumColor(item[2], item[1]) : item[1];
-      if (chip) node('rect', { x: 16, y: y + 6, width: 9, height: 14, fill: chip, 'class': 'lcd-chip' }, g);
-      svgText(g, item[1] ? 34 : 18, y + 13, 'lcd-list' + (chosen ? ' chosen' : ''), item[0]);
-    });
-    if (!knobs.length) return;
-    node('rect', { x: 0, y: 194, width: 480, height: 1.5, 'class': 'lcd-rule' }, g);
-    knobs.forEach(function (knob, i) {
-      var x0 = i * 120, touched = i === side.touched;
-      if (touched) node('rect', { x: x0 + 2, y: 197, width: 116, height: 75, 'class': 'lcd-touched' }, g);
-      svgText(g, x0 + 60, 213, 'lcd-knob-name', knob[0]);
-      if (knob[1] !== null && knob[1] !== undefined) {
-        node('rect', { x: x0 + 12, y: 226, width: 96, height: 7, 'class': 'lcd-track' }, g);
-        node('rect', { x: x0 + 12, y: 226, width: 96 * knob[1], height: 7, fill: knob[3] || accent }, g);
-      }
-      svgText(g, x0 + 60, 254, 'lcd-knob-value' + (touched ? ' touched' : ''), knob[2] || '');
-    });
+    var image = node('image', { x: 0, y: 0, width: 480, height: 272, preserveAspectRatio: 'none', 'class': 'lcd-image' }, g);
+    image.setAttribute('href', href);
+    image.setAttributeNS(XLINK, 'xlink:href', href);  // older Safari
+    if (side.alt) node('title', {}, image).textContent = side.alt;
   }
 
   // A drawing of a layout in an <svg>: the manual's (#device, the controls are buttons) and the

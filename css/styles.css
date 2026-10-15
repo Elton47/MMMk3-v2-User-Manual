@@ -574,20 +574,6 @@ mark.hit {
 .hw-drawing.real .encoder .knurl, .hw-drawing.real .encoder .knob-cap { pointer-events: none; }
 .hw-drawing.real .screen .lcd { fill: #0c0c0e; stroke: #232327; stroke-width: 1; }
 .hw-drawing.real .screen text { dominant-baseline: middle; font-family: var(--md-ref-typeface); }
-.hw-drawing.real .lcd-rule { fill: #1e1f23; }
-.hw-drawing.real .lcd-touched { fill: #1e1f23; }
-.hw-drawing.real .lcd-track { fill: #3c3e44; }
-.hw-drawing.real .lcd-chip { stroke: #0c0c0e; stroke-width: 1.5; }
-.hw-drawing.real .lcd-button { fill: #e2e2e6; font-size: 19px; font-weight: 600; text-anchor: middle; }
-.hw-drawing.real .lcd-title { fill: #e2e2e6; font-size: 30px; font-weight: 600; }
-.hw-drawing.real .lcd-sub { fill: #8f9199; font-size: 22px; font-weight: 500; }
-.hw-drawing.real .lcd-center { fill: #e2e2e6; font-size: 50px; font-weight: 600; text-anchor: middle; }
-.hw-drawing.real .lcd-small { fill: #8f9199; font-size: 23px; font-weight: 500; text-anchor: middle; }
-.hw-drawing.real .lcd-list { fill: #e2e2e6; font-size: 21px; font-weight: 500; }
-.hw-drawing.real .lcd-list.chosen { fill: #0c0c0e; font-weight: 700; }
-.hw-drawing.real .lcd-knob-name { fill: #e2e2e6; font-size: 20px; font-weight: 600; text-anchor: middle; }
-.hw-drawing.real .lcd-knob-value { fill: #8f9199; font-size: 23px; font-weight: 500; text-anchor: middle; }
-.hw-drawing.real .lcd-knob-value.touched { fill: #fff; }
 /* MK3 group buttons are always lit dimly in their track colour, the selected track brighter */
 .hw-drawing.real .button.lit .cap { fill: color-mix(in srgb, var(--lit-color) 30%, #2a2a2d); }
 .hw-drawing.real .button.lit.lit-bright .cap { fill: color-mix(in srgb, var(--lit-color) 78%, #2a2a2d); }

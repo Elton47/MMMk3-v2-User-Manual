@@ -715,77 +715,45 @@ var LAYOUTS = {
     // the four direction dots around the encoder
     var marks = [[75, 241], [45, 271], [106, 271], [75, 301]].map(function (m) { return [(m[0] - 11.5) * k, (m[1] - 11.5) * k, 1.8]; });
 
-    // Sample content for the two colour screens (480 x 272 each), in the style of the script's MK3
-    // screens. Per side: title, sub, accent (header bar colour), center + small (a big value),
-    // buttons (labels over the display buttons), knobs ([name, value 0-1 or null, text, colour]),
-    // list ([name, colour]) with selected, touched (the knob cell being touched). A side that is
-    // left out shows the default content.
-    var tracks = SAMPLE_TRACKS.map(function (t) { return [t.name, t.color]; });
-    var volumes = [[0.85, '0.0 dB'], [0.78, '-3.0 dB'], [0.7, '-6.0 dB'], [0.6, '-10 dB'],
-      [0.74, '-4.5 dB'], [0.81, '-1.5 dB'], [0.55, '-12 dB'], [0.66, '-7.5 dB']];
-    function volumeKnobs(from) {
-      return tracks.slice(from, from + 4).map(function (t, j) {
-        return [t[0].split('-')[1], volumes[from + j][0], volumes[from + j][1], t[1]];
-      });
-    }
-    function side(title, sub, center, small, accent) {
-      return { title: title, sub: sub, center: center, small: small, accent: accent || tracks[0][1] };
-    }
-    var firstFour = SAMPLE_TRACKS.slice(0, 4).map(shortName).join('  ');
-    var clips = {
-      left: { title: tracks[0][0], sub: 'Clips', center: 'Clips 1-4', small: 'Scene 1  ' + firstFour, accent: tracks[0][1], knobs: volumeKnobs(0) },
-      right: { title: 'Volume', sub: 'Mixer', knobs: volumeKnobs(4) }
+    // The two colour screens per mode: pictures rendered by the bridge's MK3 renderer from what the
+    // script sends for the sample set (img/screens/mk3/<name>-left.png / -right.png, made by the
+    // script repository's tools/export_manual_screens.py; manual.js drawLcd()).
+    var SHOT_ALT = {
+      'pad-mode': 'PAD MODE, the Drum Rack on the pads', 'keyboard': 'KEYBOARD, the scale on the pads',
+      'chords': 'CHORDS, a chord on every pad', 'step': 'STEP, the step sequencer', 'events': 'EVENTS, the notes',
+      'pattern': 'PATTERN, the clips', 'mixer': 'MIXER, the tracks', 'plugin': 'PLUG-IN, the device and its parameters',
+      'browser': 'BROWSER, Live\'s browser', 'settings': 'SETTINGS', 'select': 'SELECT, the tracks',
+      'note-repeat': 'NOTE REPEAT, rate and settings', 'tempo': 'Tempo', 'swing': 'Swing',
+      'variation': 'VARIATION, humanize and random'
     };
-    var plugin = {
-      left: { title: 'Auto Filter', sub: tracks[1][0], accent: tracks[1][1], knobs: [
-        ['Frequency', 0.62, '2.40 kHz'], ['Resonance', 0.32, '32 %'], ['Drive', 0.2, '3.0 dB'], ['LFO Amt', 0.18, '18 %']] },
-      right: { title: 'Filter', sub: 'Device', accent: tracks[1][1], knobs: [
-        ['Env Amt', 0.5, '0.0'], ['Morph', 0, '0 %'], ['Dry/Wet', 1, '100 %'], ['Output', 0.5, '0.0 dB']] }
-    };
-    var mutes = ['Mute', 'Mute', 'Mute', 'Mute'];
+    function shot(name) {
+      var alt = 'MK3 screens: ' + (SHOT_ALT[name] || name);
+      return { left: { img: name + '-left', alt: alt + ' (left)' }, right: { img: name + '-right', alt: alt + ' (right)' } };
+    }
     var screens = {
-      'PLUG-IN': plugin,
-      'KNOB': plugin,
-      'MIXER': {
-        left: { title: 'Mixer', sub: 'Tracks 1-8', buttons: mutes, knobs: volumeKnobs(0) },
-        right: { title: 'Volume', sub: 'Mixer', buttons: mutes, knobs: volumeKnobs(4) }
-      },
-      'PATTERN': clips,
-      'TEMPO': { left: side('Tempo', 'Master', '120.00', 'BPM') },
-      'SWING': { left: side('Swing', 'Master', '25 %', 'Repeat and arp follow') },
-      'VOLUME': { left: side(tracks[MIXER_VISITED][0], 'Mixer ' + (MIXER_VISITED + 1) + '/' + MIXER_TRACKS.length, '-3.0 dB', 'Volume', tracks[MIXER_VISITED][1]) },
-      'PAD MODE': {
-        left: side(tracks[0][0], 'Drums', SAMPLE_KIT, 'Pad 1  ' + SAMPLE_DRUMS[0]),
-        // list entries [name, colour, drum name]: manual.js colours a drum by its name colour
-        right: { title: 'Drum Rack', sub: SAMPLE_KIT, selected: 0, list: SAMPLE_DRUMS.slice(0, 6).map(function (name) {
-          return [name, tracks[0][1], name];
-        }) }
-      },
-      'KEYBOARD': { left: side(tracks[2][0], 'Keyboard', 'C Major', 'Octave C3', tracks[2][1]) },
-      'CHORDS': { left: side(tracks[2][0], 'Chords', 'Triad', 'C Major  Close', tracks[2][1]) },
-      'STEP': { left: side(tracks[0][0], 'Step', SAMPLE_DRUMS[0], 'Page 1  1/16') },
-      'SCENE': { left: side(tracks[0][0], 'Scenes', 'Scenes 1-4', 'Scene 1 playing', SAMPLE_SCENE_COLOR) },
-      'SELECT': { left: side(tracks[0][0], 'Tracks', 'Tracks 1-8', '2 returns and the Master') },
-      'NOTE REPEAT': { left: side('1-Drums', 'Note Repeat', '1/16', 'Rate') },
-      'FIXED VEL': { left: side('1-Drums', 'Fixed Velocity', '100', 'Velocity') },
-      'EVENTS': { left: side(tracks[0][0], 'Events', 'Drum Loop', SAMPLE_DRUMS[0] + ' selected') },
-      'LOCK': { left: side(tracks[1][0], 'Locked', 'Auto Filter', 'Device lock', tracks[1][1]) },
-      'ARRANGER': { left: side(tracks[0][0], 'View', 'Arrangement', 'Session / Arrangement') },
-      'BROWSER': {
-        left: { title: 'Browser', sub: 'Drums', selected: 1, accent: '#8f8f96',
-          list: SAMPLE_BROWSER_DRUMS.slice(1, 6).map(function (name) { return [name]; }) }
-      },
-      'GROUP A-H': { left: side(tracks[0][0], 'Tracks', 'Tracks 1-8', 'Group buttons select') }
+      'PLUG-IN': shot('plugin'),
+      'KNOB': shot('plugin'),
+      'LOCK': shot('plugin'),
+      'MIXER': shot('mixer'),
+      'VOLUME': shot('mixer'),
+      'PATTERN': shot('pattern'),
+      'SCENE': shot('pattern'),
+      'TEMPO': shot('tempo'),
+      'SWING': shot('swing'),
+      'PAD MODE': shot('pad-mode'),
+      'FIXED VEL': shot('pad-mode'),
+      'KEYBOARD': shot('keyboard'),
+      'CHORDS': shot('chords'),
+      'STEP': shot('step'),
+      'NOTE REPEAT': shot('note-repeat'),
+      'EVENTS': shot('events'),
+      'BROWSER': shot('browser'),
+      'SETTINGS': shot('settings'),
+      'SELECT': shot('select'),
+      'VARIATION': shot('variation')
     };
-    tracks.forEach(function (t, j) {
-      screens['GROUP ' + 'ABCDEFGH'.charAt(j)] = { left: side(t[0], 'Selected track', 'Tracks 1-8', 'Track ' + (j + 1) + ' of 8', t[1]) };
-    });
-    // a knob shows the plug-in page with its cell touched
-    for (var n = 0; n < 8; n++) {
-      var page = { left: Object.assign({}, plugin.left), right: Object.assign({}, plugin.right) };
-      page[n < 4 ? 'left' : 'right'].touched = n % 4;
-      screens['KNOB ' + (n + 1)] = page;
-    }
+    // a knob shows the plug-in page
+    for (var n = 0; n < 8; n++) screens['KNOB ' + (n + 1)] = screens['PLUG-IN'];
 
     return {
       title: 'MASCHINE MK3',

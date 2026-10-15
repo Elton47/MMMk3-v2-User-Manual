@@ -20,8 +20,8 @@
 // level 'dim' | 'mid' | 'bright'), demo(token) (a copy of the layout's pad demo), pads(list) (16
 // entries in pad order, pad 1 first; listPad() turns a reading position into a pad number),
 // screen(oled, lcd) (a screen state on the MIKRO, made with the screen helpers in layouts.js:
-// trackScreen, pluginScreen, modeScreen, popupScreen, browserScreen ...; colour screens { left, right } on the
-// MK3; without lcd the MK3 shows the state's text), screenOf(token) (the layout's sample screen), light(ids)
+// trackScreen, pluginScreen, modeScreen, popupScreen, browserScreen ...; on the MK3 lcd: its two
+// screens { left, right } (the layout's pictures, layouts.js); without lcd the MK3's screens stay), screenOf(token) (the layout's sample screen), light(ids)
 // (exactly these buttons are lit), turn(steps) (the encoder has turned this many detents),
 // strip(fill, color, flash, centre) (the touch strip's LED dots as a progress bar: fill 0-1 in color,
 // or red while flash; centre: from the middle LED, as Pan / PITCH; null clears it; the strip surface
@@ -36,10 +36,9 @@ var HIGHLIGHT_SHOWS = (function () {
   var WHITE = SAMPLE_MASTER.color;
   var drums = SAMPLE_TRACKS[0], bass = SAMPLE_TRACKS[1], keys = SAMPLE_TRACKS[2];
 
-  // A colour screen side in the style of the script's MK3 screens (see drawLcd() in manual.js).
-  function side(title, sub, center, small, accent) {
-    return { left: { title: title, sub: sub, center: center, small: small, accent: accent || drums.color } };
-  }
+  // The MK3's two screens for a mode: the pictures the layout keeps (rendered by the bridge's MK3
+  // renderer, see drawLcd() in manual.js); undefined on the MIKRO (its screen is the state).
+  function mk3(api, token) { return (api.layout.screens || {})[token]; }
 
   // Live's tempo, swing and a device parameter, as the encoder changes them.
   var TURNS = [
@@ -93,17 +92,11 @@ var HIGHLIGHT_SHOWS = (function () {
         api.turn(n);
         api.light([turn[0]]);
         if (turn[0] === 'TEMPO') {
-          api.screen(popupScreen('Tempo', value.toFixed(2) + ' BPM'), side('Tempo', 'Master', value.toFixed(2), 'BPM'));
+          api.screen(popupScreen('Tempo', value.toFixed(2) + ' BPM'), mk3(api, 'TEMPO'));
         } else if (turn[0] === 'SWING') {
-          api.screen(popupScreen('Swing', value + ' %'), side('Swing', 'Master', value + ' %', 'Repeat and arp follow'));
+          api.screen(popupScreen('Swing', value + ' %'), mk3(api, 'SWING'));
         } else {
-          var text = value.toFixed(2) + ' kHz', page = api.layout.screens['PLUG-IN'], lcd = null;
-          if (page && page.left && page.left.knobs) {
-            lcd = { left: Object.assign({}, page.left, {
-              touched: 0, knobs: [['Frequency', 0.5 + (value - 2.4) / 3, text]].concat(page.left.knobs.slice(1))
-            }), right: page.right };
-          }
-          api.screen(frequencyScreen(value), lcd);
+          api.screen(frequencyScreen(value), mk3(api, 'PLUG-IN'));
         }
       }
     },
@@ -121,8 +114,7 @@ var HIGHLIGHT_SHOWS = (function () {
           pads[chord.pad + 3] = api.lit(keys.color, 'mid');
         }
         api.pads(pads);
-        api.screen(CHORDS_SCREEN,
-          side(keys.name, 'Chords', chord.name, 'Triad  ' + chord.degree, keys.color));
+        api.screen(CHORDS_SCREEN, mk3(api, 'CHORDS'));
       }
     },
 
@@ -150,7 +142,7 @@ var HIGHLIGHT_SHOWS = (function () {
         var hit = t < 400 ? 1 : t < 3900 ? 3 : 2;
         var oled = t >= 3400 && t < 4600 ? popupScreen('Note repeat', rate)
           : trackScreen(0, SAMPLE_KIT, SAMPLE_DRUMS[hit - 1], noteName(35 + hit), SAMPLE_KIT);
-        api.screen(oled, side(drums.name, 'Note Repeat', rate, 'Rate'));
+        api.screen(oled, mk3(api, 'NOTE REPEAT'));
       }
     },
 
@@ -191,10 +183,10 @@ var HIGHLIGHT_SHOWS = (function () {
         api.turn(frame <= drums ? frame : frame < drums + 4 ? frame - 1 : drums + 2);
         api.light(star ? ['STAR'] : frame < drums + 4 ? (pushed ? ['BROWSER', 'ENCODER'] : ['BROWSER']) : pushed ? ['ENCODER'] : []);
         // Live's categories are folders; in Drums only Drum Hits is (the kits load)
-        if (frame <= drums) api.screen(browserScreen('Browser', SAMPLE_BROWSER, frame, function () { return true; }));
-        else if (frame < drums + 4) api.screen(browserScreen('Drums', SAMPLE_BROWSER_DRUMS, frame - drums - 1, function (i) { return i === 0; }));
-        else if (!star) api.screen(popupScreen('Loaded', SAMPLE_KIT));
-        else api.screen(favoritesScreen(0));
+        if (frame <= drums) api.screen(browserScreen('Browser', SAMPLE_BROWSER, frame, function () { return true; }), mk3(api, 'BROWSER'));
+        else if (frame < drums + 4) api.screen(browserScreen('Drums', SAMPLE_BROWSER_DRUMS, frame - drums - 1, function (i) { return i === 0; }), mk3(api, 'BROWSER'));
+        else if (!star) api.screen(popupScreen('Loaded', SAMPLE_KIT), mk3(api, 'PAD MODE'));
+        else api.screen(favoritesScreen(0), mk3(api, 'BROWSER'));
         api.pads(frame < drums + 4 ? api.blank() : api.demo('PAD MODE'));
       }
     },
@@ -223,7 +215,7 @@ var HIGHLIGHT_SHOWS = (function () {
         ];
         var last = Math.min(n, steps.length - 1), step = steps[last];
         api.outline(step[3] || ['BROWSER', 'PUSH']);  // first: a new outline clears the turn arrow
-        api.screen(step[0]);
+        api.screen(step[0], mk3(api, last < steps.length - 1 ? 'BROWSER' : 'PAD MODE'));
         // BROWSER is lit while the browser is open; the load closes it
         api.light(last < steps.length - 1 ? step[1].concat(['BROWSER']) : step[1]);
         api.turn(step[2]);
@@ -260,11 +252,11 @@ var HIGHLIGHT_SHOWS = (function () {
           pads[target] = api.lit(bass.color, api.calm || n % 2 === 0 ? 'bright' : 'mid');
           api.outline(['VARIATION', 'PAD 10']);
           api.light(['REC']);
-          api.screen(n < 6 ? popupScreen('Variation', 'Recording the copy') : api.layout.screens.PATTERN, side(bass.name, 'Variation', 'Bass_1', 'Recording the copy', bass.color));
+          api.screen(n < 6 ? popupScreen('Variation', 'Recording the copy') : api.layout.screens.PATTERN, mk3(api, 'PATTERN'));
         } else {
           api.outline(['VARIATION', 'PAD']);
           api.light([]);
-          api.screen(n < 2 ? popupScreen('Variation', 'Red pad: record copy') : api.layout.screens.PATTERN, side(bass.name, 'Variation', 'Red pad', 'Record a copy of the clip above', RED));
+          api.screen(n < 2 ? popupScreen('Variation', 'Red pad: record copy') : api.layout.screens.PATTERN, mk3(api, 'VARIATION'));
         }
         api.pads(pads);
       }
@@ -299,7 +291,7 @@ var HIGHLIGHT_SHOWS = (function () {
         api.turn(step[3]);
         api.strip(screen.MIKRO_FILL / 126, SAMPLE_TRACKS[MIXER_VISITED].color, false, screen.MIKRO_FILL_CENTER === 1);
         api.pads(api.demo('VOLUME'));
-        api.screen(screen);
+        api.screen(screen, mk3(api, 'MIXER'));
       }
     },
 
@@ -319,8 +311,7 @@ var HIGHLIGHT_SHOWS = (function () {
         api.light(recording ? ['PLAY', 'REC'] : ['PLAY']);
         var position = 'Bar ' + bar + '  Beat ' + beat;
         // the MIKRO's screen stays on PATTERN
-        if (recording) api.screen(api.layout.screens.PATTERN, side(bass.name, 'Recording', position, 'Bass_1', bass.color));
-        else api.screen(api.layout.screens.PATTERN, side(drums.name, 'Playing', position, 'Drum Loop'));
+        api.screen(api.layout.screens.PATTERN, mk3(api, 'PATTERN'));
         var grid = api.demo('PATTERN');
         if (recording) grid[9] = api.lit(bass.color, 'bright');
         api.pads(grid);
@@ -335,6 +326,8 @@ var TOUR_SHOWS = (function () {
   'use strict';
 
   var S = HIGHLIGHT_SHOWS;
+  // The MK3's two screens for a mode (as in HIGHLIGHT_SHOWS); undefined on the MIKRO.
+  function mk3(api, token) { return (api.layout.screens || {})[token]; }
 
   // --- MASCHINE: the settings page (MIKRO) --------------------------------------------------
   // The page as the script shows it (settingsScreen() in layouts.js), the values from
@@ -368,9 +361,9 @@ var TOUR_SHOWS = (function () {
         var press = n < 2 || !presses ? 0 : Math.min(presses, Math.floor((n - 2) / PER_VALUE) + 1);
         var since = press ? n - 2 - (press - 1) * PER_VALUE : -1;
         api.light(since === 0 ? ['▶'] : []);
-        if (press && since < 2 && POPUPS[name]) api.screen(POPUPS[name](values[press]));
-        else if (n < 1 && at > 0) api.screen(settingsScreen(NAMES[at - 1]));
-        else api.screen(settingsScreen(name, changed(name, values[press])));
+        if (press && since < 2 && POPUPS[name]) api.screen(POPUPS[name](values[press]), mk3(api, 'SETTINGS'));
+        else if (n < 1 && at > 0) api.screen(settingsScreen(NAMES[at - 1]), mk3(api, 'SETTINGS'));
+        else api.screen(settingsScreen(name, changed(name, values[press])), mk3(api, 'SETTINGS'));
       }
     };
   }
@@ -381,7 +374,7 @@ var TOUR_SHOWS = (function () {
     tick: function (n, api) {
       var k = n % 8, row = k <= 4 ? k : 8 - k;
       api.turn(n);
-      api.screen(settingsScreen(NAMES[row]));
+      api.screen(settingsScreen(NAMES[row]), mk3(api, 'SETTINGS'));
     }
   };
 
@@ -395,7 +388,7 @@ var TOUR_SHOWS = (function () {
         var k = Math.min(path.length - 1, Math.floor((n + 1) / 2));
         var pressing = n % 2 === 1 && (n + 1) / 2 <= path.length - 1;
         api.light(pressing ? [path[k] > path[k - 1] ? '▶' : '◀'] : []);
-        api.screen(settingsScreen('Record length', changed('Record length', values[path[k]])));
+        api.screen(settingsScreen('Record length', changed('Record length', values[path[k]])), mk3(api, 'SETTINGS'));
       }
     };
   }

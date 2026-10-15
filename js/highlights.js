@@ -218,12 +218,10 @@ MM.tourPlayer = function (root, options) {
     });
   }
 
-  // A colour screen side for a MIKRO screen state (shows that give no MK3 screens of their own).
+  // The MK3's screens for a show that gives the MIKRO's only: a pair { left, right } passes (a
+  // layout's screen on the MK3); a MIKRO state leaves the screens as they are (null).
   function lcdFrom(oled) {
-    var o = oled || {}, text = o.popup !== undefined ? String(o.popup).split('\n') : null;
-    if (text) return { left: { title: text[0], center: text[1] || '', accent: SAMPLE_TRACKS[0].color } };
-    var line3 = [o.MIKRO_LINE3, o.MIKRO_LINE3_VALUE].filter(Boolean).join('  ');
-    return { left: { title: o.TITLE || '', sub: o.SUBTITLE || '', center: line3, accent: SAMPLE_TRACKS[0].color } };
+    return oled && (oled.left || oled.right) ? oled : null;
   }
 
   function makeApi() {

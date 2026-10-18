@@ -40,6 +40,23 @@
 
 .act-help { color: var(--md-sys-color-on-surface-variant); font-size: 14px; line-height: 20px; margin: 0; }
 
+/* "Use the MK3 screens in Live": the confirmation, in the page (never the browser's confirm()). */
+.act-scrim {
+  position: fixed; inset: 0; z-index: 50; display: flex; align-items: flex-start; justify-content: center;
+  padding: 24px 16px; box-sizing: border-box; overflow-y: auto; background: rgb(0 0 0 / .45);
+}
+.act-dialog {
+  width: 100%; max-width: 640px; box-sizing: border-box; padding: 24px; margin: auto 0;
+  background: var(--md-sys-color-surface-container-high); color: var(--md-sys-color-on-surface);
+  border-radius: var(--md-sys-shape-xl); box-shadow: var(--md-sys-elevation-3);
+}
+.act-dialog h2 { margin: 0 0 8px; font-size: 24px; line-height: 32px; font-weight: 400; }
+.act-dialog h3 { margin: 20px 0 4px; font-size: 16px; line-height: 24px; font-weight: 500; }
+.act-dialog p { margin: 0 0 6px; font-size: 16px; line-height: 24px; max-width: 62ch; }
+.act-dialog .act-hash { font-family: var(--md-ref-typeface-mono); font-size: 12px; line-height: 18px; overflow-wrap: anywhere; color: var(--md-sys-color-on-surface-variant); }
+.act-dialog .act-row { justify-content: flex-end; margin-top: 24px; }
+body.act-dialog-open { overflow: hidden; }
+
 @media (max-width: 480px) {
   .act-facts { grid-template-columns: 1fr; gap: 0; }
   .act-facts dd { margin-bottom: 8px; }

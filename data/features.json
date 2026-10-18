@@ -32,7 +32,8 @@
       "summary": "New here? The Set up guide walks you through it (macOS is automatic; Windows needs a one-time loopMIDI setup). After that: connect the controller and start Live. The script starts the Maschine Bridge, which takes over the hardware: no Controller Editor, no MIDI mode, a real SHIFT key. While Live loads, the screen shows Waiting for Live; when the set is ready, a rainbow wave sweeps across the pads. Your note repeat rate, arp settings, chord type and voicing, drum colours and velocity curve are remembered between Live sessions.",
       "tour": {"intro": "Connect the controller and start Live: the Maschine Bridge takes over the hardware, with a real SHIFT key. No Controller Editor, no MIDI mode."},
       "notes": [
-        {"title": "Using the MASCHINE plug-in (Expansions)", "text": "NI's MASCHINE plug-in (VST / AU) takes the controller as soon as it is anywhere in the set, and keeps it until it is deleted: selecting another track or switching the plug-in off doesn't release it. Meanwhile the script steps aside: the lights, screen and pads are MASCHINE's, and Live's status bar says so. Delete the last MASCHINE plug-in and the controller is back with Live within about a second, on the drum pads or the keyboard. To switch between the two on the fly, use v1.6.1 (in the same download) in NI's MIDI mode, where SHIFT + MASCHINE (MK3, MASCHINE+: SHIFT + CHANNEL) switches between MASCHINE and Live. Or play the Expansions' kits without the plug-in: BROWSER > MASCHINE Kits (see BROWSER: browse and load). On Windows you can also keep the plug-in in the set and the controller with Live (see MASCHINE VSTi in Live Set Support)."}
+        {"title": "Using the MASCHINE plug-in (Expansions)", "text": "NI's MASCHINE plug-in (VST / AU) takes the controller as soon as it is anywhere in the set, and keeps it until it is deleted: selecting another track or switching the plug-in off doesn't release it. Meanwhile the script steps aside: the lights, screen and pads are MASCHINE's, and Live's status bar says so. Delete the last MASCHINE plug-in and the controller is back with Live within about a second, on the drum pads or the keyboard. To switch between the two on the fly, use v1.6.1 (in the same download) in NI's MIDI mode, where SHIFT + MASCHINE (MK3, MASCHINE+: SHIFT + CHANNEL) switches between MASCHINE and Live. Or play the Expansions' kits without the plug-in: BROWSER > MASCHINE Kits (see BROWSER: browse and load). On Windows you can also keep the plug-in in the set and the controller with Live (see MASCHINE VSTi in Live Set Support)."},
+        {"title": "Activate once on each computer", "text": "Until this computer is activated, the controller shows the activation pages and Live doesn't connect. Press the encoder: the activation page opens in your browser. Your browser may ask whether this page may talk to apps on this computer: choose Allow. That lets the page reach MASCHINE for Ableton Live on this computer, and nothing else. Enter the licence key from your purchase email and the email you bought with, then Activate. Within a few seconds the controller works and Live connects. There are two editions. MIKRO MK3 covers the MIKRO MK3. MK3, MASCHINE+ & MIKRO MK3 covers all three controllers. A key works on 3 computers. Moving to another one? Open the same page and choose Deactivate this computer first. Once activated, it works offline too. It checks itself online now and then, and a computer that stays offline for 90 days is asked to go online once."}
       ],
       "items": [
         {"combo": ["SHIFT"], "does": "The real SHIFT button: hold it for the second function printed on a button, and for the SHIFT + pad edit matrix."},
@@ -89,7 +90,8 @@
         {"combo": ["TURN"], "does": "Scroll the scenes by one (SHIFT: by 16)."},
         {"combo": ["SHIFT", "SCENE"], "does": "Capture and insert scene (copies what is playing into a new scene).", "devices": ["mikro"]},
         {"combo": ["STRIP"], "does": "The strip lights show the playing clip's progress in the scene's colour. Touch the strip to jump all playing clips within their loops."},
-        {"combo": ["DISPLAY"], "context": "SCENE", "does": "Button 2 CAPTURE: capture and insert a scene. (SHIFT + SCENE opens the Section page.)", "devices": ["mk3"]}
+        {"combo": ["DISPLAY"], "context": "SCENE", "does": "Button 2 CAPTURE: capture and insert a scene. The buttons light for SCENE: SCENE bright, CAPTURE dim. (SHIFT + SCENE opens the Section page.)", "devices": ["mk3"]},
+        {"combo": ["SCENE"], "context": "pressed twice, with the screens", "does": "Over PLUG-IN or MIXER, SCENE again goes back to that page, as PATTERN does.", "devices": ["mk3"]}
       ]
     },
     {
@@ -159,7 +161,7 @@
       "nav": "Slices",
       "title": "Slices on the pads",
       "summary": "On a track whose instrument is a Simpler in Slicing mode, the pads play its slices: slice 1 on pad 1, lit in the track's colour, the selected slice bright. The track switches the pads by itself, as a Drum Rack track does. A Drum Rack always wins: a Simpler inside a drum pad stays a drum pad.",
-      "tour": {"intro": "A sliced Simpler's slices on the pads, as on MASCHINE and Push."},
+      "tour": {"intro": "A sliced Simpler's slices on the pads, as on MASCHINE."},
       "items": [
         {"combo": ["PAD MODE"], "does": "The slices on the pads (KEYBOARD and CHORDS on such a track land on them too, as on a Drum Rack)."},
         {"combo": ["PAD"], "does": "Play the slice and select it in Simpler."},
@@ -314,11 +316,12 @@
       "id": "master",
       "nav": "Tempo, swing, volume",
       "title": "Tempo, swing, volume",
-      "summary": "Hold the button: the screen shows the value at once; turn the encoder to change it, and let go to go back. A quick tap shows the value for a moment.",
+      "summary": "Hold the button: the screen shows the value at once. Turn the encoder to change it, and let go to go back. A quick tap shows the value for a moment. While you hold, the encoder's push belongs to the hold too, so the mode underneath gets nothing. Everything you change in one hold is one undo step in Live.",
       "items": [
         {"combo": ["TEMPO", "TURN"], "does": "Tempo ±1 BPM (SHIFT: ±0.1). Tap TEMPO: show the tempo."},
         {"combo": ["SWING", "TURN"], "does": "Swing ±1 % (SHIFT: ±10 %). Tap SWING: show the swing."},
-        {"combo": ["VOLUME", "TURN"], "does": "Selected track volume ±1 dB (SHIFT: ±0.1 dB)."},
+        {"combo": ["VOLUME", "TURN"], "does": "Selected track volume ±1 dB (SHIFT: ±0.1 dB). The value shows as you turn (MK3: on the left screen, for example Volume -3.0 dB)."},
+        {"combo": ["VOLUME", "PUSH"], "does": "Selected track volume back to 0.0 dB."},
         {"combo": ["VOLUME"], "does": "Tap: the mixer on the pads, the encoder and the screen (see Mixer); tap again: back. Holding VOLUME to turn leaves everything else as it is."},
         {"combo": ["SHIFT", "VOLUME"], "does": "Cue volume, the level of the previews (and headphones on cue): hold and turn, or tap to keep it on (0.5 dB steps) until SHIFT + VOLUME again or another mode.", "devices": ["mikro"]}
       ]
@@ -352,7 +355,7 @@
         {"combo": ["PERFORM"], "does": "Session / Arrangement view.", "devices": ["mikro"]},
         {"combo": ["ARRANGER"], "does": "Session / Arrangement view.", "devices": ["mk3"]},
         {"combo": ["BROWSER"], "does": "Without the screens: show / hide Live's browser. With them it is MASCHINE's browser (see BROWSER: MASCHINE's browser).", "devices": ["mk3"]},
-        {"combo": ["SHIFT", "BROWSER"], "does": "Hot-Swap: browser on the device's category; PUSH swaps, again cancels.", "devices": ["mikro"]},
+        {"combo": ["SHIFT", "BROWSER"], "does": "Hot-Swap: the browser lands on the selected device (or where its last swap left it). PUSH swaps. SHIFT + BROWSER again cancels, back where you were.", "devices": ["mikro"]},
         {"combo": ["SHIFT", "BROWSER"], "does": "Hot-Swap the selected device (opens the browser on it).", "devices": ["mk3"]},
         {"combo": ["SHIFT", "PLUG-IN"], "does": "Toggle the Clip / Device detail view."},
         {"combo": ["SAMPLING"], "does": "Show the clip / sample editor."},
@@ -365,10 +368,11 @@
       "id": "maschine-vsti",
       "nav": "MASCHINE plug-in",
       "title": "MASCHINE VSTi in Live Set Support (Windows)",
-      "summary": "Keep NI's MASCHINE plug-in in your Live sets, and your controller stays with Live. It is a choice in MASCHINE Setup, and it is off by default. Off is how NI's software works today: the MASCHINE plug-in takes the controller as soon as it is in the set (see Getting started). On: while Live runs, NI's background helper is paused. So the MASCHINE plug-in can't take the controller. It stays with MASCHINE for Ableton Live. When Live closes, the helper starts again by itself. That also happens after a crash. Windows only for now. macOS is coming.",
-      "tour": {"intro": "Keep the MASCHINE plug-in in your Live sets, and your controller stays with Live. Windows, a choice in MASCHINE Setup."},
+      "summary": "Keep NI's MASCHINE plug-in in your Live sets, and your controller stays with Live. You switch it on from the controller: NI VSTi support, on the settings page. It is off by default. Off is how NI's software works today: the MASCHINE plug-in takes the controller as soon as it is in the set (see Getting started). On: while Live runs, NI's background helper is paused. So the MASCHINE plug-in can't take the controller. It stays with MASCHINE for Ableton Live. When Live closes, the helper starts again by itself. That also happens after a crash. Windows only for now. macOS is coming.",
+      "tour": {"intro": "Keep the MASCHINE plug-in in your Live sets, and your controller stays with Live. Windows, switched on from the controller."},
       "notes": [
-        {"title": "Switch it on or off", "text": "Close Live first. Open MASCHINE Setup (the MASCHINE Setup folder in the download) and choose 2, MASCHINE VSTi in Live Set Support. It shows Now: On or Off. It explains what it does before anything changes. Type Y to go on, and Windows asks for your permission once. That lets your Windows user pause and restart one NI helper, NI Host Integration Agent. Nothing else changes: no other service, no driver and no NI setting. To switch it off again, open MASCHINE Setup and choose 2 again."},
+        {"title": "Switch it on or off", "text": "Live can stay open. On the MK3 press SETTINGS and open the Setup tab. On the MIKRO press MASCHINE and turn to NI VSTi support, just before About. Turn its knob (MIKRO: press ◀ or ▶). A dialog explains what it does, with CANCEL highlighted. Choose CONFIRM, and Windows asks for your permission once. The value shows the new state at once. That lets your Windows user pause and restart one NI helper, NI Host Integration Agent. Nothing else changes: no other service, no driver and no NI setting. To switch it off, do the same again. MASCHINE Setup (in the download, choice 2, with Live closed) still does the same, if you ever need it."},
+        {"title": "MK3 screens and NI VSTi support", "text": "Switch the MK3 screens back to MASCHINE while NI VSTi support is on, and the screens go black: NI's helper is paused while Live runs. When Live closes, MASCHINE and Komplete Kontrol show the screens again."},
         {"title": "What you give up while Live runs", "text": "You can't control the MASCHINE plug-in from the controller. Its browser and its pages are mouse only. This comes back when Live closes."}
       ],
       "items": [
@@ -475,7 +479,7 @@
       "id": "browser",
       "nav": "Browser",
       "title": "BROWSER: browse and load (MIKRO)",
-      "summary": "Live's browser on the hardware screen, Favorites first (what you starred with SHIFT + STAR, and the kits you starred in MASCHINE), then Live's sidebar: Collections (Live's Favorites and your coloured collections), MASCHINE Kits, Live Sets, the library (Sounds, Drums, Instruments ...), and the folders you added to Places. Live Sets lists the sets in your User Library, your Places and the current project, newest first; PUSH on one opens it at once, as a double click on the file would (Live asks to save your changes first, as usual). MASCHINE Kits (with MASCHINE Expansions or the MASCHINE library installed; any Live 12) lists your Expansions and their kits: PUSH on a kit loads it as a Drum Rack, pad for pad as in MASCHINE: onto the selected MIDI track, replacing its instrument (effects after it stay), or on a new MIDI track named after the kit (# Kit name, so Live numbers it) when an audio track is selected. Each pad is a Simpler in 1-Shot, so a hit rings out; long synth, vocal, FX, atmosphere and loop sounds play while held instead. The pads and the Drum Rack's chains get the drum colours by sound name (see PAD MODE). A drum-synth sound plays NI's recording of it where there is one; a sound that is a plug-in in MASCHINE (Massive, Monark ...) stays an empty pad with its name, to put your own sound on. Turning onto a kit plays NI's own preview of it through Live's preview (Cue output, preview switched on in Live's browser), like clicking a sample in Live's browser; the script puts the previews in your User Library (MASCHINE Kit Previews, as hard links: no extra disk space) the first time you open MASCHINE Kits, and picks up newly installed Expansions the same way. On Live 12.0 to 12.3 the kits are prepared once, in the background, the first time MASCHINE Kits opens: they are listed at once, with a Preparing kits 42% row on top that counts up and goes by itself (after a Live restart it carries on where it stopped). A kit you push before it is ready is prepared first and loads by itself in a moment. You'll also see the kits in Live's browser, under User Library > MASCHINE Kit Presets. Your MASCHINE favourites come along, in a one-way sync: the kits you star in MASCHINE show with a ★ in Favorites and in MASCHINE Kits' own Favorites folder, next to the ones you starred on the controller (a kit starred in both is listed once). Star or unstar kits in MASCHINE and the lists follow, also while Live runs (the next time the list opens). The controller only reads MASCHINE's favourites and never changes them: a kit starred in MASCHINE stays starred here (the screen says Still starred / in MASCHINE; star / unstar it in MASCHINE). Expansions you add or remove are followed: a removed Expansion's kits leave the lists, and a new one's favourites appear once MASCHINE has scanned it. Favorites lists are sorted by name, as in MASCHINE. This is the way to play the Expansions in Live without the MASCHINE plug-in, which takes the controller away from the script (see Getting started).",
+      "summary": "Live's browser on the hardware screen, Favorites first (what you starred with SHIFT + STAR, and the kits you starred in MASCHINE), then Live's sidebar: Collections (Live's Favorites and your coloured collections), MASCHINE Kits, Live Sets, the library (Sounds, Drums, Instruments ...), and the folders you added to Places. Live Sets opens at once and lists the sets in your User Library, your Places and the current project, newest first; PUSH on one opens it at once, as a double click on the file would (Live asks to save your changes first, as usual). MASCHINE Kits (with MASCHINE Expansions or the MASCHINE library installed; any Live 12) lists your Expansions and their kits: PUSH on a kit loads it as a Drum Rack, pad for pad as in MASCHINE: onto the selected MIDI track, replacing its instrument (effects after it stay), or on a new MIDI track named after the kit (# Kit name, so Live numbers it) when an audio track is selected. Each pad is a Simpler in 1-Shot, so a hit rings out; long synth, vocal, FX, atmosphere and loop sounds play while held instead. The pads and the Drum Rack's chains get the drum colours by sound name (see PAD MODE). A drum-synth sound plays NI's recording of it where there is one; a sound that is a plug-in in MASCHINE (Massive, Monark ...) stays an empty pad with its name, to put your own sound on. Turning onto a kit plays NI's own preview of it through Live's preview (Cue output, preview switched on in Live's browser), like clicking a sample in Live's browser; the script puts the previews in your User Library (MASCHINE Kit Previews, as hard links: no extra disk space) the first time you open MASCHINE Kits, and picks up newly installed Expansions the same way. On Live 12.0 to 12.3 the kits are prepared once, in the background, the first time MASCHINE Kits opens: they are listed at once, with a Preparing kits 42% row on top that counts up and goes by itself (after a Live restart it carries on where it stopped). A kit you push before it is ready is prepared first and loads by itself in a moment. You'll also see the kits in Live's browser, under User Library > MASCHINE Kit Presets. Your MASCHINE favourites come along, in a one-way sync: the kits you star in MASCHINE show with a ★ in Favorites and in MASCHINE Kits' own Favorites folder, next to the ones you starred on the controller (a kit starred in both is listed once). Star or unstar kits in MASCHINE and the lists follow, also while Live runs (the next time the list opens). The controller only reads MASCHINE's favourites and never changes them: a kit starred in MASCHINE stays starred here (the screen says Still starred / in MASCHINE; star / unstar it in MASCHINE). Expansions you add or remove are followed: a removed Expansion's kits leave the lists, and a new one's favourites appear once MASCHINE has scanned it. Favorites lists are sorted by name, as in MASCHINE. This is the way to play the Expansions in Live without the MASCHINE plug-in, which takes the controller away from the script (see Getting started).",
       "tour": {"intro": "Live's browser on the hardware screen: Favorites first, then Live's sidebar, with MASCHINE Kits and your Places."},
       "devices": ["mikro"],
       "items": [
@@ -496,7 +500,7 @@
       "id": "settings",
       "nav": "Settings",
       "title": "MASCHINE: settings (MIKRO)",
-      "summary": "Your preferences, on the controller. They are saved with Live's preferences on your computer, remembered after a restart, and take effect at once (Start mode: at the next start). The screen saver only darkens the screen: the pad and button lights stay as they are, and the press, pad hit, turn or strip touch that wakes it still does its job (a pad plays). It never darkens the waiting and setup screens. Record length is the same setting as hold REC + TURN (see Transport). Start mode Pads opens on the drum pads on a track with a Drum Rack, else on the keyboard; the start mode also applies when the controller comes back from the MASCHINE plug-in.",
+      "summary": "Your preferences, on the controller. They are saved with Live's preferences on your computer, remembered after a restart, and take effect at once (Start mode: at the next start). The screen saver only darkens the screen: the pad and button lights stay as they are, and the press, pad hit, turn or strip touch that wakes it still does its job (a pad plays). It never darkens the waiting and setup screens. Record length is the same setting as hold REC + TURN (see Transport). Start mode Pads opens on the drum pads on a track with a Drum Rack, else on the keyboard; the start mode also applies when the controller comes back from the MASCHINE plug-in. On Windows the list ends with NI VSTi support (see MASCHINE VSTi in Live Set Support), then About. A switch like that asks first, in the popup: CANCEL or CONFIRM, the highlighted one in brackets, CANCEL first. Turn to move, PUSH to choose.",
       "devices": ["mikro"],
       "items": [
         {"combo": ["MASCHINE"], "does": "Settings on / off. The screen lists them with their values; the bar on the right shows where you are in the list. PAD MODE, KEYBOARD or CHORDS close them and show the pads."},
@@ -522,11 +526,13 @@
       "summary": "Built from the hardware protocol; not yet tested on a real MK3.",
       "devices": ["mk3"],
       "items": [
-        {"combo": ["SETTINGS"], "does": "The settings (the same as the MIKRO's, see Settings) in panels on the knobs: a knob changes its setting. Display buttons 5 / 6: the previous / next panel."},
+        {"combo": ["SETTINGS"], "does": "The settings (the same as the MIKRO's, see Settings) in four tabs on the knobs: Hardware, Pads, General and Setup. A knob changes its setting. Display buttons 5 / 6 (or the 4-D left / right): the previous / next tab."},
+        {"combo": ["SETTINGS"], "context": "Setup tab", "does": "The one-time switches: the screens item (MK3 screens on Windows, Mac screens on macOS) gives the screens back to MASCHINE, and NI VSTi support (Windows, see MASCHINE VSTi in Live Set Support). Turning one opens a dialog: CANCEL or CONFIRM, CANCEL highlighted first. Turn or tilt the 4-D to move the highlight, PUSH to choose, or press button 7 (CANCEL) or 8 (CONFIRM). The value shows the new state at once.", "devices": ["mk3"]},
+        {"combo": ["SETTINGS"], "context": "the screens still MASCHINE's", "does": "Our pages on the two screens, switched on from the controller. On the first Live start, Live's status bar says how. Press SETTINGS once: the status bar explains. Press it twice quickly: the screens are Live's, no restart. macOS: at once, and MASCHINE and Komplete Kontrol get them back when Live quits (also after a force quit). Windows: Windows asks for your permission once (the status bar may ask you to switch the controller off and on once), and the screens stay Live's until you give them back in the Setup tab. The choice is remembered.", "devices": ["mk3"]},
         {"combo": ["GROUP A-H"], "does": "Select the 8 tracks in view (lit in track colours). An unlit one makes a new MIDI track (with DUPLICATE held: an audio track)."},
         {"combo": ["SHIFT", "GROUP A-H"], "does": "Group banks: the next 8 tracks on A-H."},
         {"combo": ["MUTE", "GROUP A-H"], "does": "Mute / unmute that track. With SOLO: solo it. Several buttons solo them all."},
-        {"combo": ["SOLO"], "context": "held, with the screens", "does": "SELECT, SOLO, MUTE or STOP held: the tracks of A-H and the pads' tracks as tiles, muted ones grey. In PAD MODE the tiles are the drum pads. Let go and the page comes back."},
+        {"combo": ["SOLO"], "context": "held, with the screens", "does": "SELECT, SOLO, MUTE or STOP held: the tracks of A-H and the pads' tracks as tiles, muted ones grey. In PAD MODE the tiles are the drum pads. The held button lights. Let go and the page comes back."},
         {"combo": ["MACRO"], "does": "The rack's macros on the knobs, with names and values. Tap: the page stays. Hold: only while held. ◀ ▶: macros 9-16."},
         {"combo": ["SHIFT", "KNOB"], "does": "Fine adjustment."},
         {"combo": ["SETTINGS"], "context": "Brightness", "does": "The Brightness setting dims the two screens too, with the pads and the buttons."}
@@ -536,7 +542,7 @@
       "id": "mixer-mk3",
       "nav": "Mixer",
       "title": "MIXER: MASCHINE's mixer (MK3)",
-      "summary": "MIXER is MASCHINE's mixer on the two screens: a channel strip for each of the 8 tracks in view, with its name in its colour, its meter moving with the set, its volume, pan, mute and solo. The knobs are the 8 volumes.",
+      "summary": "MIXER is MASCHINE's mixer on the two screens: a channel strip for each of the 8 tracks in view, with its name in its colour (vivid: a track and a Drum Rack chain of the same colour in Live look the same), its meter moving with the set, its volume, pan, mute and solo. The knobs are the 8 volumes.",
       "tour": {"intro": "MASCHINE's mixer on the two screens: 8 strips with live meters, the knobs on the volumes."},
       "devices": ["mk3"],
       "items": [
@@ -551,7 +557,7 @@
       "id": "plugin-mk3",
       "nav": "Plug-in",
       "title": "PLUG-IN: devices as pictures (MK3)",
-      "summary": "PLUG-IN is MASCHINE's Control page: the track's devices on the left screen, the selected device on the right, drawn as a picture of what it does, and its 8 parameters on the knobs. Turn a knob: its value, its bar and the picture follow.",
+      "summary": "PLUG-IN is MASCHINE's Control page: the track's devices on the left screen, the selected device on the right, drawn as a picture of what it does, and its 8 parameters on the knobs. Turn a knob: its value, its bar and the picture follow. Slanted lines and curves are drawn smooth, straight lines stay sharp.",
       "tour": {"intro": "The selected device on the knobs, drawn as a picture that moves as you turn: Simpler, its slices, EQ Eight."},
       "devices": ["mk3"],
       "items": [
@@ -561,9 +567,10 @@
         {"combo": ["PLUG-IN"], "context": "Simpler: Slicing", "does": "Simpler in Slicing mode: the slices' markers on the waveform. Knob 2 moves the cursor across them, and its value shows the slice's number (632 ms #4). Display button 7 (+ MARKER / - MARKER) adds a slice at the cursor or removes the one there."},
         {"combo": ["PLUG-IN"], "context": "EQ Eight", "does": "EQ Eight drawn as its curve, with a dot for each band. Turn a band's frequency or gain: the dot and the curve follow."},
         {"combo": ["KNOB"], "does": "Touch a knob: its name lights up. A parameter with a few choices shows them in a list while you turn."},
-        {"combo": ["DISPLAY"], "context": "PLUG-IN", "does": "Buttons 1-3: MASTER, TRACK or PAD (the focused drum pad's chain). Buttons 5 / 6: the previous / next track or pad. Button 8: Hot-Swap the device. SHIFT + button 3: INSERT, an Audio Effect after the device."},
-        {"combo": ["TURN"], "context": "4-D left / right", "does": "The previous / next device."},
-        {"combo": ["KNOB"], "context": "PLUG-IN", "does": "Each value has a bar in the track's colour. A red dot by the name means Live has automation on it."}
+        {"combo": ["DISPLAY"], "context": "PLUG-IN", "does": "Buttons 1-3: MASTER, TRACK or PAD (the focused drum pad's chain, an empty pad too). Buttons 5 / 6: the previous / next track or pad. Button 8: Hot-Swap the device. Hold SHIFT: its functions light up at once. SHIFT + button 3: INSERT, an Audio Effect after the device (on an empty drum pad: the browser's top list, to load an instrument, a sample or a drum into it). SHIFT + button 7: BYPASS, the device off / on."},
+        {"combo": ["TURN"], "context": "4-D left / right", "does": "The previous / next device. Right past the last device: the + tile, and PUSH on it inserts a device there (as SHIFT + button 3). A track with no devices shows only the +."},
+        {"combo": ["KNOB"], "context": "PLUG-IN", "does": "Each value has a bar in the track's colour. A red dot by the name means Live has automation on it."},
+        {"combo": ["KNOB"], "context": "a plug-in with no parameters", "does": "No parameters over knob 1, and Configure in Live. Live gives the controller only the plug-in parameters you add in its device view (Configure). Add them there, and they come 8 to a bank.", "devices": ["mk3"]}
       ]
     },
     {
@@ -603,6 +610,7 @@
       "items": [
         {"combo": ["SHIFT", "SCENE"], "does": "The Section page on / off (hold SCENE: only while held)."},
         {"combo": ["PAD"], "does": "Jump to that locator (Live's jump: on the beat while it plays). The pads are the locators in the selected track's colour, the playing one white, the picked one bright."},
+        {"combo": ["SHIFT", "PAD"], "does": "The SHIFT functions, as in every mode (undo, redo, quantize, copy ...). Plain pads stay the locators."},
         {"combo": ["TURN"], "does": "Tilt the 4-D left / right to pick the previous / next locator (framed white). Push: jump to it."}
       ]
     },
@@ -620,8 +628,8 @@
         {"combo": ["KNOB 1"], "does": "The category: Favorites, Live Sets, Sounds, Drums, Instruments ..."},
         {"combo": ["KNOB"], "does": "Knobs 2-4 in Live's tagged categories (Sounds, Drums, Instruments, effects ...): TYPE, SUBTYPE and CHARACTER, as MASCHINE's tag filters. Touch or turn one: its tags pop up as a cloud. Elsewhere the knobs are the folder levels."},
         {"combo": ["DISPLAY"], "does": "PREVIOUS / NEXT load the previous / next result, ★ shows Favorites (SHIFT: star / unstar the result), LOAD loads it."},
-        {"combo": ["SHIFT", "BROWSER"], "does": "Hot-Swap the selected device: the browser on its category, a load replaces it."},
-        {"combo": ["DISPLAY"], "context": "button 4", "does": "PREHEAR on / off (SHIFT + LOAD too). A result plays only when you scroll onto it."},
+        {"combo": ["SHIFT", "BROWSER"], "does": "Hot-Swap the selected device (PLUG-IN's button 8 too). The browser opens as your last swap of that device left it: the same filters on, the loaded result highlighted, nothing playing until you turn. A load replaces the device. SHIFT + BROWSER again cancels."},
+        {"combo": ["DISPLAY"], "context": "button 4", "does": "In a Hot-Swap: CANCEL. Nothing loads, and the browser closes, back to the page you came from. In plain browsing it is empty. SHIFT + LOAD: PREHEAR on / off. A result plays only when you scroll onto it."},
         {"combo": ["KNOB"], "context": "knobs 4 and 7", "does": "Knob 4 CHARACTER (SHIFT: GENRE). Knob 7 sorts Live Sets by name or newest first."},
         {"combo": ["BROWSER"], "context": "close or load", "does": "The page you were on comes back."}
       ]
@@ -645,6 +653,8 @@
     {"what": "New", "v1": "", "v2": "Chords, arpeggiator, 16 Velocities, step sequencer, hardware browser (Live Sets open from it too), MASCHINE Expansion kits as Drum Racks (MIKRO), parameter control, Simpler's mode, sample markers and slices, pitch / mod strip, record variations (VARIATION + pad), take undo, clip progress and parameter value on the strip (touch to jump / set), a silent metronome on the strip while recording, fixed-length recording (REC + TURN), quick edits on a held step or drum pad, humanize, screen feedback, a screen saver, light brightness and a start mode (MIKRO settings), pads light instantly when played"},
     {"what": "Mode at start", "v1": "Always PATTERN (the clips)", "v2": "The drum pads (the keyboard without a Drum Rack); MIKRO: choose Pads, Pattern, Scene, Step or Track in the settings"},
     {"what": "Recording a new clip", "v1": "Records until stopped", "v2": "Free as before, or exactly 1, 2, 4 or 8 bars, then it loops (REC + TURN)"},
-    {"what": "MASCHINE plug-in in Live", "v1": "NI's MIDI mode: SHIFT + MASCHINE (MK3, MASCHINE+: SHIFT + CHANNEL) switches between MASCHINE and the script", "v2": "The script steps aside while a MASCHINE plug-in is in the set and comes back when it is deleted (or use v1.6.1 to switch on the fly)"}
+    {"what": "MASCHINE plug-in in Live", "v1": "NI's MIDI mode: SHIFT + MASCHINE (MK3, MASCHINE+: SHIFT + CHANNEL) switches between MASCHINE and the script", "v2": "The script steps aside while a MASCHINE plug-in is in the set and comes back when it is deleted (or use v1.6.1 to switch on the fly). Windows: with NI VSTi support on (on the controller), the plug-in stays in the set and the controller stays with Live"},
+    {"what": "MK3 screens", "v1": "NI's MIDI mode pages", "v2": "MASCHINE's pages for Live on both screens (mixer, devices as pictures, browser, Section page ...). Switched on from the controller: SETTINGS twice, no restart, on macOS and Windows"},
+    {"what": "Settings", "v1": "None (MK3: SETTINGS did nothing)", "v2": "On the controller: MIKRO MASCHINE (a list), MK3 SETTINGS (four tabs on the knobs). A switch that changes something outside Live asks first: CANCEL or CONFIRM"}
   ]
 }

@@ -7,11 +7,13 @@
     "steps: {id, title, nav (short title for the step list, optional), when, body: [blocks]}. Step order is the order here.",
     "blocks (one type key each, plus an optional 'when'): p, h (sub-heading), ol / ul (list of strings), note + optional kind (info | important | coming), copy (list of {label, value}: exact strings with a copy button), table (list of [label, value]), faq (list of {q, a: [strings], when}), actions (list of {label, href, primary}).",
     "Inline markup in any string: **bold**, `code`, [text](href), [[BUTTON]] (a hardware button), {{var}}. An href starting with # points into the manual site.",
-    "guide: the sections of the Markdown guide, one per route, each with the 'when' that picks its steps."
+    "guide: the sections of the Markdown guide, one per route, each with the 'when' that picks its steps.",
+    "licensing: the release-day switch (docs/LICENSING-SETUP.md). While it is false, steps marked \"licensing\": true are left out of the wizard and the Markdown guide, and the manual site's header shows no Licence link."
   ],
   "version": 1,
   "product": "MASCHINE for Ableton Live",
   "site": "https://elton47.github.io/MMMk3-v2-User-Manual/",
+  "licensing": false,
   "title": "Install and set up",
   "intro": "Three quick questions, then a few short steps. It takes about five minutes, and Live remembers everything afterwards.",
   "choices": [
@@ -132,7 +134,8 @@
           "Connect your controller and start Live.",
           "That's it: Live selects the control surface by itself, and the controller's screen and pads light up."
         ]},
-        {"note": "If macOS asks for permission for **MaschineBridge** (Input Monitoring), allow it."}
+        {"note": "If macOS asks for permission for **MaschineBridge** (Input Monitoring), allow it."},
+        {"note": "The bridge isn't notarised by Apple. A downloaded zip carries macOS's download flag (quarantine), which would block the bridge the first time. So before Live starts the bridge, the script removes that flag from the bridge's own files in `_MaschineCore/bridge`. It changes nothing else on your Mac and needs no password. Live's log notes how many files it cleared. If macOS still says it can't verify **MaschineBridge**, open **System Settings → Privacy & Security** and click **Open Anyway**."}
       ]
     },
     {
@@ -187,6 +190,46 @@
       ]
     },
     {
+      "id": "activate",
+      "title": "Activate your licence",
+      "nav": "Activate",
+      "licensing": true,
+      "when": {"live": ["live12"]},
+      "body": [
+        {"p": "Until this computer is activated, the controller shows **Activate your key**. You do this only once per computer."},
+        {"ol": [
+          "Press the encoder on the controller. The activation page opens in your browser.",
+          "Enter the licence key from your purchase email, and the email you bought with. Click **Activate**.",
+          "The controller says **Activated**, and Live connects within a few seconds."
+        ]},
+        {"actions": [{"label": "Open the activation page", "href": "https://elton47.github.io/MMMk3-v2-User-Manual/activate.html", "primary": true}]},
+        {"note": "Your browser may ask whether the page may talk to apps or devices on this computer. Choose **Allow**: that lets the page reach MASCHINE for Ableton Live on this computer, and nothing else. Without it the page can't activate."},
+        {"note": "Your key is checked once with the store you bought from. The page talks only to MASCHINE for Ableton Live on this computer. If your browser can't reach it, use the page on this computer instead: **127.0.0.1:47923** (the controller shows it too)."},
+        {"h": "Editions"},
+        {"ul": ["**MIKRO MK3**: for the MASCHINE MIKRO MK3.", "**MK3, MASCHINE+ & MIKRO MK3**: for all three controllers."]},
+        {"p": "Once activated, it works offline too. It checks itself online now and then. A computer that stays offline for 90 days is asked to go online once."},
+        {"h": "Moving to another computer"},
+        {"p": "While Live is running, open the activation page, click **Connect**, then **Deactivate this computer**. That frees its place for the new computer. A key works on 3 computers."}
+      ]
+    },
+    {
+      "id": "screens",
+      "title": "Our pages on the MK3's screens",
+      "nav": "MK3 screens",
+      "when": {"device": ["mk3", "plus"], "live": ["live12"]},
+      "body": [
+        {"p": "At first the screens still show MASCHINE's own pages. You switch them to Live once, on the controller. On the first Live start, Live's status bar says how."},
+        {"ol": [
+          "Press [[SETTINGS]] once. Live's status bar explains what happens.",
+          "Press [[SETTINGS]] twice quickly. The screens switch to Live. No restart needed."
+        ]},
+        {"note": "Close MASCHINE, Komplete Kontrol and Native Access first. Windows asks for your permission once. If Live's status bar asks you to, switch the controller off and on once (or replug it). The screens then stay with Live until you give them back.", "when": {"os": ["win11", "win10"]}},
+        {"note": "It happens at once. When Live quits, MASCHINE and Komplete Kontrol get the screens back by themselves, even after a force quit.", "when": {"os": ["macos"]}},
+        {"p": "Live remembers the choice. To give the screens back to MASCHINE, press [[SETTINGS]], open the **Setup** tab and turn **MK3 screens** (on a Mac: **Mac screens**). A dialog asks first: choose **CONFIRM**."},
+        {"note": "MASCHINE Setup (in the download) can still switch the screens with Live closed, if you ever need it.", "when": {"os": ["win11", "win10"]}}
+      ]
+    },
+    {
       "id": "check",
       "title": "Check that it works",
       "nav": "Check it works",
@@ -221,9 +264,9 @@
             "To switch between the two on the fly, use **v1.6.1** (in the same download) in NI's MIDI mode: {{midi_mode}} switches between MASCHINE and Live."
           ]},
           {"q": "I want the MASCHINE plug-in in my Live sets and the controller with Live", "when": {"os": ["win11", "win10"]}, "a": [
-            "Optional, off by default: close Live, open **MASCHINE Setup** (the MASCHINE Setup folder in the download) and choose **2. MASCHINE VSTi in Live Set Support**. It explains what it does first. Windows asks for your permission once.",
+            "Optional, off by default, and switched on the controller. MK3: press [[SETTINGS]] and open the **Setup** tab. MIKRO MK3: press [[MASCHINE]] and turn to **NI VSTi support**, just before **About**. Change it: a dialog explains what it does first. Choose **CONFIRM**, and Windows asks for your permission once. Live can stay open.",
             "While Live runs, the MASCHINE plug-in can't take the controller. The pads still play it. Its browser and pages are mouse only until Live closes.",
-            "More in [MASCHINE VSTi in Live Set Support](#maschine-vsti). To switch it off, choose 2 again."
+            "More in [MASCHINE VSTi in Live Set Support](#maschine-vsti). To switch it off, do the same again. MASCHINE Setup (in the download, choice 2, with Live closed) still works too, if you ever need it."
           ]},
           {"q": "I want to play the MASCHINE Expansions without the plug-in", "when": {"device": ["mikro"]}, "a": [
             "Press [[BROWSER]] and open **MASCHINE Kits**: your Expansions, then their kits. On Live 12.0 to 12.3 the kits are prepared once, in the background, the first time (**Preparing kits** with a percentage on top of the list); a kit you push before then loads by itself in a moment.",

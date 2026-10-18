@@ -6,6 +6,10 @@
 // Changes (activate, check, deactivate) need the one-time token the bridge gives this page: the
 // controller's encoder opens activate.html#t=<token>, and the Connect button goes to the bridge,
 // which sends the browser back here with a new one. The token lives only in this page's memory.
+//
+// "Use the MK3 screens in Live" (Windows): shown while the bridge offers it (status.screens, with the texts
+// to show: one source with the bridge's own page). The button opens a confirmation in the page; only its
+// Continue asks the bridge (POST /api/screens, then Windows' permission prompt), Cancel asks nothing.
 (function () {
   'use strict';
 
@@ -157,6 +161,7 @@
       h('p', { className: 'act-small', text: 'That page is at 127.0.0.1:' + port + ' and works while Live is running.' })
     ]);
     el('act-actions').hidden = true;
+    el('act-screens').hidden = true;
     helpLine(null);
   }
 
@@ -212,6 +217,7 @@
     }
     fill(state, parts);
     showActions(status);
+    showScreens(status);
     helpLine(status);
   }
 
@@ -272,16 +278,84 @@
 
   function setBusy(on) {
     busy = on;
-    el('act-actions').querySelectorAll('button, input').forEach(function (node) { node.disabled = on; });
+    ['act-actions', 'act-screens'].forEach(function (id) {
+      el(id).querySelectorAll('button, input').forEach(function (node) { node.disabled = on; });
+    });
   }
 
-  function act(action, body, waiting) {
+  // --- "Use the MK3 screens in Live" (Windows) ----------------------------------------------------------
+
+  var SCREENS_WAIT = 360;  // seconds: Windows' prompt waits for the customer, then the screens open
+
+  function showScreens(status) {
+    var box = el('act-screens');
+    var screens = status && status.screens;
+    if (!screens || !screens.title) { box.hidden = true; fill(box, []); return; }
+    var licence = status.licence || {};
+    var parts = [
+      h('h2', {}, [icon('screens'), h('span', { text: screens.title })]),
+      h('p', { text: screens.short + (licence.licensed ? '' : ' ' + (screens.short_locked || '')) })
+    ];
+    if (screens.busy) {
+      parts.push(h('p', { className: 'note' }, [icon('info'), h('span', { text: 'Windows is already asking. Look for its window: it may be behind this one.' })]));
+    } else if (!status.token_ok) {
+      parts.push(h('p', { className: 'act-small', text: 'To use it, first connect this page to MASCHINE for Ableton Live on this computer.' }));
+      parts.push(h('div', { className: 'act-row' }, [
+        h('a', { className: 'btn btn-outlined', href: BRIDGE + '/connect', rel: 'noreferrer' }, [h('span', { text: 'Connect' })])
+      ]));
+    } else {
+      parts.push(h('div', { className: 'act-row' }, [
+        h('button', { type: 'button', className: 'btn btn-tonal', onclick: function () { confirmScreens(screens); } },
+          [h('span', { text: screens.title })])
+      ]));
+    }
+    fill(box, parts);
+    box.hidden = false;
+  }
+
+  // The confirmation: everything explained first. Only Continue asks the bridge.
+  function confirmScreens(screens) {
+    if (busy || document.querySelector('.act-scrim')) return;
+    var opener = document.activeElement;
+    var scrim = null;
+    function close() {
+      document.removeEventListener('keydown', onKey);
+      if (scrim && scrim.parentNode) scrim.parentNode.removeChild(scrim);
+      document.body.classList.remove('act-dialog-open');
+      if (opener && opener.focus) opener.focus();
+    }
+    function onKey(event) { if (event.key === 'Escape') close(); }
+    var body = [h('h2', { id: 'act-dialog-title', text: screens.confirm_title })];
+    (screens.sections || []).forEach(function (section) {
+      body.push(h('h3', { text: String(section[0]) }));
+      (section[1] || []).forEach(function (line) { body.push(h('p', { text: String(line) })); });
+      if (String(section[0]).indexOf('Why Windows') === 0 && screens.script) {
+        body.push(h('p', {}, [h('a', { href: BRIDGE + screens.script, rel: 'noreferrer', target: '_blank', text: screens.script_link })]));
+        body.push(h('p', { className: 'act-hash', text: 'SHA-256: ' + (screens.sha256 || '') }));
+      }
+    });
+    var cancel = h('button', { type: 'button', className: 'btn btn-outlined', onclick: close }, [h('span', { text: screens.cancel })]);
+    var go = h('button', { type: 'button', className: 'btn btn-filled', onclick: function () {
+      close();
+      act('screens', {}, screens.waiting, SCREENS_WAIT);
+    } }, [h('span', { text: screens['continue'] })]);
+    body.push(h('div', { className: 'act-row' }, [cancel, go]));
+    scrim = h('div', { className: 'act-scrim', onclick: function (event) { if (event.target === scrim) close(); } }, [
+      h('div', { className: 'act-dialog', role: 'dialog', 'aria-modal': 'true', 'aria-labelledby': 'act-dialog-title' }, body)
+    ]);
+    document.body.appendChild(scrim);
+    document.body.classList.add('act-dialog-open');
+    document.addEventListener('keydown', onKey);
+    cancel.focus();
+  }
+
+  function act(action, body, waiting, seconds) {
     if (busy) return;
     setBusy(true);
     typed = action === 'activate' ? { key: body.key, email: body.email } : null;
     message('');
     fill(el('act-message'), [h('p', { className: 'note' }, [icon('info'), h('span', { text: waiting })])]);
-    ask('/api/' + action, body, 60).then(function (answer) {
+    ask('/api/' + action, body, seconds || 60).then(function (answer) {
       setBusy(false);
       if (answer.status === 401) {
         token = '';

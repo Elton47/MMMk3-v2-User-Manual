@@ -119,6 +119,7 @@
 
   var current = null;  // the bridge's last status answer (this visit only)
   var busy = false;
+  var typed = null;  // the key and email typed before a refusal (kept in the boxes)
 
   function message(text, ok) {
     var box = el('act-message');
@@ -196,7 +197,7 @@
       if (licence.edition_id === 'mikro') {
         var link = storeLink(status, 'store');
         parts.push(h('p', { className: 'act-small' }, [
-          'Have a MASCHINE MK3 or MASCHINE+ too? The ' + (status.full_edition || 'MK3 & MASCHINE+') + ' edition covers all three controllers.',
+          'Have a MASCHINE MK3 or MASCHINE+ too? The ' + (status.full_edition || 'MK3, MASCHINE+ & MIKRO MK3') + ' edition covers all three controllers.',
           link ? ' Get it at the ' : null, link, link ? '.' : null
         ]));
       }
@@ -234,6 +235,7 @@
     if (!licence.licensed) {
       var key = h('input', { id: 'act-key', name: 'key', className: 'mono', autocomplete: 'off', autocapitalize: 'characters', spellcheck: 'false', required: true });
       var email = h('input', { id: 'act-email', name: 'email', type: 'email', autocomplete: 'email', required: true });
+      if (typed) { key.value = typed.key || ''; email.value = typed.email || ''; }
       var form = h('form', { className: 'act-form', novalidate: true, onsubmit: function (event) {
         event.preventDefault();
         if (!key.value.trim() || email.value.indexOf('@') < 0) {
@@ -276,6 +278,7 @@
   function act(action, body, waiting) {
     if (busy) return;
     setBusy(true);
+    typed = action === 'activate' ? { key: body.key, email: body.email } : null;
     message('');
     fill(el('act-message'), [h('p', { className: 'note' }, [icon('info'), h('span', { text: waiting })])]);
     ask('/api/' + action, body, 60).then(function (answer) {
@@ -290,6 +293,7 @@
         message('Something went wrong. Please reload the page and try again.', false);
         return refresh();
       }
+      if (answer.data.ok === true) typed = null;
       message(answer.data.message, answer.data.ok === true);
       current = answer.data;
       showState(answer.data);

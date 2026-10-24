@@ -13,6 +13,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,400..700&display=swap">
   <link rel="stylesheet" href="css/styles.css">
+  <!-- the day's colour (one of MASCHINE's pad colours, a new one at noon): after the styles, so it wins -->
+  <script src="js/day-colour.js"></script>
   <script>
     // Apply the remembered theme before the first paint (no flash).
     try {
@@ -27,7 +29,7 @@
   <header class="top-app-bar">
     <div class="top-app-bar-inner">
       <a class="brand" href="#manual" aria-label="MASCHINE for Ableton Live: manual">
-        <svg class="logo" viewBox="0 0 32 32" aria-hidden="true"><defs><filter id="logo-glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="1.4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><rect width="32" height="32" rx="3" fill="#0f0f10"/><rect x="3" y="3" width="11.5" height="11.5" rx="1" fill="#d24dff" filter="url(#logo-glow)"/><rect x="17.5" y="3" width="11.5" height="11.5" rx="1" fill="#a4333d"/><rect x="3" y="17.5" width="11.5" height="11.5" rx="1" fill="#ff692d" filter="url(#logo-glow)"/><rect x="17.5" y="17.5" width="11.5" height="11.5" rx="1" fill="#a49025"/><path d="M13.4 1.4H18.6L16.6 4.4V30H15.4V4.4Z" fill="#f4ece9" stroke="#0f0f10" stroke-width=".5" paint-order="stroke" stroke-linejoin="round"/></svg>
+        <svg class="logo" viewBox="0 0 32 32" aria-hidden="true"><defs><filter id="logo-glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="1.4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><rect width="32" height="32" rx="3" fill="#0f0f10"/><rect x="3" y="3" width="11.5" height="11.5" rx="1" fill="#d24dff" style="fill: var(--day-pad, #d24dff)" filter="url(#logo-glow)"/><rect x="17.5" y="3" width="11.5" height="11.5" rx="1" fill="#a4333d" style="fill: var(--day-pad-dim, #a4333d)"/><rect x="3" y="17.5" width="11.5" height="11.5" rx="1" fill="#ff692d" style="fill: var(--day-pad, #ff692d)" filter="url(#logo-glow)"/><rect x="17.5" y="17.5" width="11.5" height="11.5" rx="1" fill="#a49025" style="fill: var(--day-pad-dim, #a49025)"/><path d="M13.4 1.4H18.6L16.6 4.4V30H15.4V4.4Z" fill="#f4ece9" stroke="#0f0f10" stroke-width=".5" paint-order="stroke" stroke-linejoin="round"/></svg>
         <span class="brand-text">
           <span class="brand-title">MASCHINE <span class="brand-for">for Ableton Live</span></span>
           <span class="brand-sub" id="version">Manual</span>
@@ -54,14 +56,27 @@
         <span class="visually-hidden">Help and troubleshooting</span>
       </a>
       <div class="theme-menu">
-        <button type="button" id="theme-button" class="icon-button" aria-haspopup="menu" aria-expanded="false" aria-controls="theme-list" title="Theme">
+        <button type="button" id="theme-button" class="icon-button" aria-haspopup="dialog" aria-expanded="false" aria-controls="theme-list" title="Theme and colour">
           <svg class="icon" aria-hidden="true"><use id="theme-icon" href="#i-auto"/></svg>
-          <span class="visually-hidden">Theme</span>
+          <span class="visually-hidden">Theme and colour</span>
         </button>
-        <div id="theme-list" class="menu" role="menu" aria-label="Theme" hidden>
-          <button type="button" role="menuitemradio" data-theme-choice="system"><svg class="icon" aria-hidden="true"><use href="#i-auto"/></svg>System</button>
-          <button type="button" role="menuitemradio" data-theme-choice="light"><svg class="icon" aria-hidden="true"><use href="#i-sun"/></svg>Light</button>
-          <button type="button" role="menuitemradio" data-theme-choice="dark"><svg class="icon" aria-hidden="true"><use href="#i-moon"/></svg>Dark</button>
+        <!-- the theme (System / Light / Dark) and the accent colour: Auto (a new colour every day at
+             noon) or one of MASCHINE's 16 pad colours, laid out like the pads (js/site.js) -->
+        <div id="theme-list" class="menu theme-popover" role="dialog" aria-label="Theme and colour" hidden>
+          <p class="menu-label" id="theme-label">Theme</p>
+          <div class="theme-choices" role="radiogroup" aria-labelledby="theme-label">
+            <button type="button" role="radio" data-theme-choice="system"><svg class="icon" aria-hidden="true"><use href="#i-auto"/></svg>System</button>
+            <button type="button" role="radio" data-theme-choice="light"><svg class="icon" aria-hidden="true"><use href="#i-sun"/></svg>Light</button>
+            <button type="button" role="radio" data-theme-choice="dark"><svg class="icon" aria-hidden="true"><use href="#i-moon"/></svg>Dark</button>
+          </div>
+          <p class="menu-label" id="colour-label">Colour</p>
+          <div class="colour-choices" role="radiogroup" aria-labelledby="colour-label">
+            <button type="button" role="radio" class="colour-auto" data-colour="auto">
+              <span class="colour-auto-swatch" aria-hidden="true"></span>
+              <span class="colour-auto-text"><span>Auto</span><span class="colour-auto-sub">A new colour every day at noon</span></span>
+            </button>
+            <div class="colour-pads" id="colour-pads"></div>
+          </div>
         </div>
       </div>
     </div>

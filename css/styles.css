@@ -73,6 +73,7 @@
   --hw-related: #ffb694;
 
   --focus-ring: 3px solid var(--md-sys-color-secondary);
+  --ring-edge: rgb(0 0 0 / .8); /* the dark line round the white ring of a chosen colour pad */
   --bar-height: 64px;
   --page-max: 1840px; /* widest page container (app bar, toolbar, manual, footer) */
 }
@@ -81,6 +82,7 @@
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     color-scheme: dark;
+    --ring-edge: rgb(0 0 0 / .5);
     --md-sys-color-primary: #ffb694;
     --md-sys-color-on-primary: #571f00;
     --md-sys-color-primary-container: #ef6712;
@@ -119,6 +121,7 @@
 
 :root[data-theme="dark"] {
   color-scheme: dark;
+  --ring-edge: rgb(0 0 0 / .5);
   --md-sys-color-primary: #ffb694;
   --md-sys-color-on-primary: #571f00;
   --md-sys-color-primary-container: #ef6712;
@@ -329,6 +332,41 @@ button { font: inherit; color: inherit; }
 .menu button:focus-visible { outline: none; }
 .menu button[aria-checked="true"] { background: var(--md-sys-color-secondary-container); color: var(--md-sys-color-on-secondary-container); }
 .menu button[aria-checked="true"] .icon { color: inherit; }
+
+/* the theme and colour popover: the theme as rows, then Auto and the 16 pad colours as MASCHINE's
+   pads (pad 1 bottom left). The chosen pad (and under Auto, Auto and today's pad) get a white ring
+   with a small gap, and a thin dark line outside it so it shows on light surfaces too. */
+.theme-popover { min-width: 232px; padding: 8px 0 16px; }
+.menu-label {
+  margin: 8px 16px 4px; font-size: 12px; line-height: 16px; font-weight: 500; letter-spacing: .04em;
+  color: var(--md-sys-color-on-surface-variant);
+}
+.menu-label[hidden], .colour-choices[hidden] { display: none; }
+.theme-popover .theme-choices button { height: 44px; }
+.colour-choices { padding: 4px 16px 0; }
+.menu .colour-auto {
+  height: auto; min-height: 48px; padding: 8px 12px 8px 8px; margin: 0 0 12px; gap: 12px;
+  border-radius: var(--r); background: var(--md-sys-color-surface-container-high);
+}
+.menu .colour-auto::after { border-radius: inherit; }
+.colour-auto-swatch {
+  width: 32px; height: 32px; flex: none; border-radius: var(--r-s);
+  background: var(--pad, #888);
+}
+.colour-auto-text { display: flex; flex-direction: column; line-height: 18px; }
+.colour-auto-text > :first-child { font-weight: 500; }
+.colour-auto-sub { font-size: 12px; line-height: 16px; color: var(--md-sys-color-on-surface-variant); }
+.colour-pads { display: grid; grid-template-columns: repeat(4, 40px); gap: 8px; justify-content: start; }
+.menu .colour-pad, .menu .colour-pad[aria-checked="true"] {
+  display: block; width: 40px; height: 40px; padding: 0; border: 0; cursor: pointer;
+  border-radius: var(--r-s); background: var(--pad, #888);
+}
+.menu .colour-pad::after { border-radius: inherit; background: #fff; }
+.menu .colour-pad:focus-visible, .menu .colour-auto:focus-visible { outline: 2px solid var(--md-sys-color-on-surface); outline-offset: 6px; }
+.menu .colour-pad[aria-checked="true"], .menu .colour-pad.is-today, .menu .colour-auto[aria-checked="true"] {
+  box-shadow: 0 0 0 2px var(--md-sys-color-surface-container), 0 0 0 4px #fff, 0 0 0 5.5px var(--ring-edge);
+}
+.menu .colour-auto[aria-checked="true"] { background: var(--md-sys-color-surface-container-high); color: var(--md-sys-color-on-surface); }
 
 /* --- shared surfaces -------------------------------------------------------------------- */
 

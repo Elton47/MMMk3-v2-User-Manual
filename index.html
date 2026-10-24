@@ -56,24 +56,22 @@
         <span class="visually-hidden">Help and troubleshooting</span>
       </a>
       <div class="theme-menu">
-        <button type="button" id="theme-button" class="icon-button" aria-haspopup="dialog" aria-expanded="false" aria-controls="theme-list" title="Theme and colour">
+        <button type="button" id="theme-button" class="icon-button" aria-haspopup="dialog" aria-expanded="false" aria-controls="theme-list" title="Theme and accent colour">
           <svg class="icon" aria-hidden="true"><use id="theme-icon" href="#i-auto"/></svg>
-          <span class="visually-hidden">Theme and colour</span>
+          <span class="visually-hidden">Theme and accent colour</span>
         </button>
         <!-- the theme (System / Light / Dark) and the accent colour: Auto (a new colour every day at
              noon) or one of MASCHINE's 16 pad colours, laid out like the pads (js/site.js) -->
-        <div id="theme-list" class="menu theme-popover" role="dialog" aria-label="Theme and colour" hidden>
-          <p class="menu-label" id="theme-label">Theme</p>
-          <div class="theme-choices" role="radiogroup" aria-labelledby="theme-label">
+        <div id="theme-list" class="menu theme-popover" role="dialog" aria-label="Theme and accent colour" hidden>
+          <div class="theme-choices" role="radiogroup" aria-label="Theme">
             <button type="button" role="radio" data-theme-choice="system"><svg class="icon" aria-hidden="true"><use href="#i-auto"/></svg>System</button>
             <button type="button" role="radio" data-theme-choice="light"><svg class="icon" aria-hidden="true"><use href="#i-sun"/></svg>Light</button>
             <button type="button" role="radio" data-theme-choice="dark"><svg class="icon" aria-hidden="true"><use href="#i-moon"/></svg>Dark</button>
           </div>
-          <p class="menu-label" id="colour-label">Colour</p>
+          <p class="menu-label" id="colour-label">Accent colour</p>
           <div class="colour-choices" role="radiogroup" aria-labelledby="colour-label">
             <button type="button" role="radio" class="colour-auto" data-colour="auto">
-              <span class="colour-auto-swatch" aria-hidden="true"></span>
-              <span class="colour-auto-text"><span>Auto</span><span class="colour-auto-sub">A new colour every day at noon</span></span>
+              <span>Auto</span><span class="colour-auto-sub">A new colour every day</span>
             </button>
             <div class="colour-pads" id="colour-pads"></div>
           </div>

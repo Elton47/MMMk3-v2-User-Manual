@@ -119,7 +119,7 @@ var MM = Object.assign(window.MM || {}, (function () {
     if (choice === 'system') document.documentElement.removeAttribute('data-theme');
     else document.documentElement.setAttribute('data-theme', choice);
     el('theme-icon').setAttribute('href', '#i-' + THEME_ICONS[choice]);
-    el('theme-button').setAttribute('title', 'Theme and colour');
+    el('theme-button').setAttribute('title', 'Theme and accent colour');
     document.querySelectorAll('[data-theme-choice]').forEach(function (item) {
       item.setAttribute('aria-checked', String(item.getAttribute('data-theme-choice') === choice));
     });
@@ -154,8 +154,10 @@ var MM = Object.assign(window.MM || {}, (function () {
     var pinned = day.choice(), today = day.autoIndex();
     var auto = group.querySelector('.colour-auto');
     auto.setAttribute('aria-checked', String(pinned === null));
-    auto.querySelector('.colour-auto-swatch').style.setProperty('--pad', day.hex(palette[today]));
-    auto.title = 'Auto: today ' + (day.NAMES[today] || '');
+    // the Auto tile is filled with today's colour, its text black or white, whichever reads better
+    auto.style.setProperty('--pad', day.hex(palette[today]));
+    auto.style.setProperty('--on-pad', day.hex(day.onColor(palette[today])));
+    auto.setAttribute('aria-label', 'Auto: a new colour every day. Today: ' + (day.NAMES[today] || ''));
     Array.prototype.forEach.call(grid.children, function (pad) {
       var index = Number(pad.getAttribute('data-colour'));
       pad.setAttribute('aria-checked', String(pinned === index));
@@ -202,25 +204,28 @@ var MM = Object.assign(window.MM || {}, (function () {
       var pad = e.target.closest && e.target.closest('.colour-pad');
       if (pad && window.MMDay) window.MMDay.pick(Number(pad.getAttribute('data-colour')));
     });
-    // arrows: within the themes; Auto; the pads as a 4 x 4 grid (up from the top row: Auto)
+    // arrows move spatially: the theme rows on top, then Auto, then the pads as a 4 x 4 grid
+    // (up = higher pad numbers)
     menu.addEventListener('keydown', function (e) {
       if (e.key === 'Escape') { e.preventDefault(); close(true); return; }
-      var t = e.target, next = null, all = pads();
+      var t = e.target, next = null, all = pads(), colours = !auto.parentNode.hidden && all.length;
       var ti = themes.indexOf(t), pi = all.indexOf(t);
       if (ti >= 0) {
-        if (e.key === 'ArrowDown' || e.key === 'ArrowRight') next = ti < themes.length - 1 ? themes[ti + 1] : (e.key === 'ArrowDown' && !auto.parentNode.hidden ? auto : themes[0]);
-        else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') next = themes[(ti + themes.length - 1) % themes.length];
+        if (e.key === 'ArrowDown') next = ti < themes.length - 1 ? themes[ti + 1] : (colours ? auto : null);
+        else if (e.key === 'ArrowUp') next = ti > 0 ? themes[ti - 1] : null;
+        else if (e.key === 'Home') next = themes[0];
+        else if (e.key === 'End') next = themes[themes.length - 1];
       } else if (t === auto) {
-        if (e.key === 'ArrowDown' || e.key === 'ArrowRight') next = all[0];
-        else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') next = themes[themes.length - 1];
+        if (e.key === 'ArrowDown') next = all[0];
+        else if (e.key === 'ArrowUp') next = themes[themes.length - 1];
       } else if (pi >= 0) {
         var row = Math.floor(pi / 4);
-        if (e.key === 'ArrowRight') next = all[Math.min(all.length - 1, pi + 1)];
-        else if (e.key === 'ArrowLeft') next = pi > 0 ? all[pi - 1] : auto;
-        else if (e.key === 'ArrowDown') next = all[Math.min(all.length - 1, pi + 4)];
+        if (e.key === 'ArrowRight' && pi % 4 < 3) next = all[pi + 1];
+        else if (e.key === 'ArrowLeft' && pi % 4 > 0) next = all[pi - 1];
         else if (e.key === 'ArrowUp') next = row > 0 ? all[pi - 4] : auto;
+        else if (e.key === 'ArrowDown' && row < 3) next = all[pi + 4];
         else if (e.key === 'Home') next = all[row * 4];
-        else if (e.key === 'End') next = all[Math.min(all.length - 1, row * 4 + 3)];
+        else if (e.key === 'End') next = all[row * 4 + 3];
       }
       if (next) { e.preventDefault(); next.focus(); }
     });

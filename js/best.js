@@ -7,11 +7,16 @@
 //
 // Which pages, in which order (pages()):
 //   1. items with a `best` rank in features.json, lowest first: `"best": 3`, or per controller
-//      `"best": {"mikro": 3, "mk3": 5}`. When any item has one, only ranked items are pages.
+//      `"best": {"mikro": 3, "mk3": 5}`. When any item has one, every item gets a page: the ranked
+//      ones in rank order, then the unranked ones, section by section in the Tour's order for that
+//      controller (each section's items in the file's order). Getting started is left out.
 //   2. until then: the Highlights section's items, then every other section in the Tour's order
 //      for that controller (`tour_order`, the best first; else the file's order), its first
 //      PER_SECTION items (a section lists its main use first). Getting started is left out.
 // An item's optional `headline` is the page's title, else the first sentence of its text.
+// The jump list groups the pages by mode (a run of pages from one section is one group). With
+// `best_of` in features.json ({"mikro": 25, "mk3": 25}), the first that many pages are one group
+// of their own, "The best of it", whichever modes they come from (jumpGroups()).
 // Only the MIKRO MK3 and the MK3 are shown (SITE_DEVICES): entries for any other controller are
 // skipped.
 MM.best = (function () {
@@ -53,20 +58,20 @@ MM.best = (function () {
       });
     });
     var ranked = all.filter(function (p) { return rankOf(p.item, device) !== null; });
+    var sorted = tourSections(data, sections, device);
     if (ranked.length) {
+      var unranked = [];
+      sorted.forEach(function (section) {
+        unranked = unranked.concat(all.filter(function (p) { return p.section === section && rankOf(p.item, device) === null; }));
+      });
       return ranked.map(function (p, i) { return { p: p, i: i }; }).sort(function (a, b) {
         return rankOf(a.p.item, device) - rankOf(b.p.item, device) || a.i - b.i;
-      }).map(function (x) { return x.p; });
+      }).map(function (x) { return x.p; }).concat(unranked);
     }
-    var order = ((data.tour_order || {})[device] || []).slice(), rank = {};
-    order.forEach(function (id, i) { rank[id] = i; });
-    var sorted = sections.map(function (s, i) { return { s: s, key: rank.hasOwnProperty(s.id) ? rank[s.id] : order.length + i }; })
-      .sort(function (a, b) { return a.key - b.key; }).map(function (x) { return x.s; });
     // the Highlights section first, whatever the Tour's order says
     sorted = sorted.filter(function (s) { return s.id === 'highlights'; }).concat(sorted.filter(function (s) { return s.id !== 'highlights'; }));
     var out = [];
     sorted.forEach(function (section) {
-      if (SKIP.indexOf(section.id) >= 0) return;
       var mine = all.filter(function (p) { return p.section === section; });
       out = out.concat(section.id === 'highlights' ? mine : mine.slice(0, PER_SECTION));
     });
@@ -84,6 +89,37 @@ MM.best = (function () {
     return h('button', { type: 'button', className: 'icon-button ' + cls, title: label }, [
       MM.icon(icon), h('span', { className: 'visually-hidden', text: label })
     ]);
+  }
+
+  // The Tour's section order for a controller (tour_order, then the file's order), Getting started
+  // left out.
+  function tourSections(data, sections, device) {
+    var order = ((data.tour_order || {})[device] || []).slice(), rank = {};
+    order.forEach(function (id, i) { rank[id] = i; });
+    return sections.map(function (s, i) { return { s: s, key: rank.hasOwnProperty(s.id) ? rank[s.id] : order.length + i }; })
+      .sort(function (a, b) { return a.key - b.key; }).map(function (x) { return x.s; })
+      .filter(function (s) { return SKIP.indexOf(s.id) < 0; });
+  }
+
+  // How many pages open the jump list as "The best of it" (0: none, the pages go by mode).
+  function bestOf(data, device) {
+    var n = (data.best_of || {})[device];
+    return typeof n === 'number' && isFinite(n) && n > 0 ? Math.floor(n) : 0;
+  }
+
+  // The jump list's groups: [{ name, section (null for The best of it), start (0-based index of its
+  // first page), pages }].
+  function jumpGroups(list, best) {
+    var groups = [], group = null;
+    list.forEach(function (p, i) {
+      var top = i < best;
+      if (!group || (top ? !group.top : group.top || group.section !== p.section)) {
+        group = { name: top ? 'The best of it' : sectionName(p.section), section: top ? null : p.section, top: top, start: i, pages: [] };
+        groups.push(group);
+      }
+      group.pages.push(p);
+    });
+    return groups.map(function (g) { return { name: g.name, section: g.section, start: g.start, pages: g.pages }; });
   }
 
   function sectionName(section) {
@@ -134,33 +170,33 @@ MM.best = (function () {
     state.built = true;
   }
 
-  // The jump list: every page, grouped by mode, in page order.
+  // The jump list: every page, in page order, The best of it first, then grouped by mode.
   function buildJump() {
     var list = el('best-jump-list');
     list.innerHTML = '';
-    var group = null, current = null;
-    state.pages.forEach(function (p, i) {
-      if (p.section !== current) {
-        current = p.section;
-        group = h('ol', { className: 'best-jump-group', start: String(i + 1) });
-        list.appendChild(h('li', { className: 'best-jump-mode' }, [
-          h('h3', { className: 'best-jump-name', text: sectionName(p.section) }), group
-        ]));
-      }
-      var link = h('a', { href: hashFor(i), className: 'best-jump-link', 'data-page': String(i) }, [
-        h('span', { className: 'best-jump-num', text: String(i + 1) }),
-        h('span', { className: 'best-jump-text', text: p.title })
-      ]);
-      link.addEventListener('click', function (e) {
-        e.preventDefault();
-        go(i, true);
-        var details = el('best-jump');
-        if (details && window.matchMedia('(max-width: 1099px)').matches) details.open = false;
-        var title = el('best-title');
-        if (title) { title.focus({ preventScroll: true }); el('best-page').scrollIntoView({ block: 'start' }); }
-      });
-      group.appendChild(h('li', {}, [link]));
+    jumpGroups(state.pages, bestOf(state.data, state.device)).forEach(function (g) {
+      var group = h('ol', { className: 'best-jump-group', start: String(g.start + 1) });
+      list.appendChild(h('li', { className: 'best-jump-mode' }, [
+        h('h3', { className: 'best-jump-name', text: g.name }), group
+      ]));
+      g.pages.forEach(function (p, k) { group.appendChild(h('li', {}, [jumpLink(p, g.start + k)])); });
     });
+  }
+
+  function jumpLink(p, i) {
+    var link = h('a', { href: hashFor(i), className: 'best-jump-link', 'data-page': String(i) }, [
+      h('span', { className: 'best-jump-num', text: String(i + 1) }),
+      h('span', { className: 'best-jump-text', text: p.title })
+    ]);
+    link.addEventListener('click', function (e) {
+      e.preventDefault();
+      go(i, true);
+      var details = el('best-jump');
+      if (details && window.matchMedia('(max-width: 1099px)').matches) details.open = false;
+      var title = el('best-title');
+      if (title) { title.focus({ preventScroll: true }); el('best-page').scrollIntoView({ block: 'start' }); }
+    });
+    return link;
   }
 
   function hashFor(index) {
@@ -260,5 +296,5 @@ MM.best = (function () {
 
   function stop() { if (state.player) state.player.halt(); }
 
-  return { init: init, show: show, stop: stop, pages: pages, SITE_DEVICES: SITE_DEVICES };
+  return { init: init, show: show, stop: stop, pages: pages, jumpGroups: jumpGroups, bestOf: bestOf, SITE_DEVICES: SITE_DEVICES };
 })();

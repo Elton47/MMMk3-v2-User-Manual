@@ -21,7 +21,7 @@
 .act-field { display: flex; flex-direction: column; gap: 6px; font-size: 14px; line-height: 20px; font-weight: 500; }
 .act-field input {
   box-sizing: border-box; width: 100%; min-height: 48px; padding: 12px 14px;
-  border: 1px solid var(--md-sys-color-outline); border-radius: var(--md-sys-shape-xs);
+  border: 1px solid var(--md-sys-color-outline); border-radius: var(--r);
   background: transparent; color: var(--md-sys-color-on-surface);
   font: inherit; font-size: 16px; font-weight: 400; letter-spacing: normal;
 }
@@ -48,7 +48,7 @@
 .act-dialog {
   width: 100%; max-width: 640px; box-sizing: border-box; padding: 24px; margin: auto 0;
   background: var(--md-sys-color-surface-container-high); color: var(--md-sys-color-on-surface);
-  border-radius: var(--md-sys-shape-xl); box-shadow: var(--md-sys-elevation-3);
+  border-radius: var(--r); box-shadow: var(--md-sys-elevation-3);
 }
 .act-dialog h2 { margin: 0 0 8px; font-size: 24px; line-height: 32px; font-weight: 400; }
 .act-dialog h3 { margin: 20px 0 4px; font-size: 16px; line-height: 24px; font-weight: 500; }

@@ -1135,7 +1135,58 @@ td:first-child { font-weight: 500; }
 .tour-link { margin: 0 0 12px; }
 
 /* --- cheat sheet ------------------------------------------------------------------------- */
-/* On screen a sheet of paper (white in both themes, like the print); printed by @media print. */
+/* On screen a sheet of paper (white in both themes, like the print); printed by /* --- Highlights (js/best.js): one page at a time, the jump list beside it ------------------- */
+
+.best { max-width: var(--page-max); margin: 0 auto; padding: 20px 16px 8px; }
+.best-layout { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; margin-top: 16px; align-items: start; }
+@media (min-width: 1100px) {
+  .best-layout { grid-template-columns: 300px minmax(0, 1fr); gap: 24px; }
+  .best-jump { position: sticky; top: calc(var(--bar-height) + 16px); max-height: calc(100vh - var(--bar-height) - 32px); overflow: auto; }
+  .best-jump-head { pointer-events: none; }
+  .best-jump-chev { display: none; }
+  .best-jump-head::-webkit-details-marker { display: none; }
+}
+.best-jump { padding: 8px 0; }
+.best-jump-head {
+  display: flex; align-items: center; gap: 8px; padding: 8px 16px; cursor: pointer;
+  font-size: 14px; line-height: 20px; font-weight: 600; color: var(--md-sys-color-on-surface); list-style: none;
+}
+.best-jump-head::-webkit-details-marker { display: none; }
+.best-jump-head .icon { color: var(--md-sys-color-primary); }
+.best-jump-head .best-jump-chev { margin-left: auto; color: var(--md-sys-color-on-surface-variant); transition: transform var(--md-sys-motion-short) var(--md-sys-motion-easing); }
+.best-jump[open] .best-jump-chev { transform: rotate(180deg); }
+.best-jump-list { list-style: none; margin: 0; padding: 0 8px 8px; }
+.best-jump-mode { margin: 8px 0 0; }
+.best-jump-name {
+  margin: 0; padding: 6px 8px 2px; font-size: 12px; line-height: 16px; font-weight: 600; letter-spacing: .04em;
+  color: var(--md-sys-color-on-surface-variant);
+}
+.best-jump-group { list-style: none; margin: 0; padding: 0; }
+.best-jump-link {
+  display: flex; gap: 10px; align-items: baseline; padding: 6px 8px; border-radius: var(--r-s);
+  color: var(--md-sys-color-on-surface); text-decoration: none; font-size: 13px; line-height: 18px;
+}
+.best-jump-link:hover { background: var(--md-sys-color-surface-container-high); }
+.best-jump-link.active { background: var(--md-sys-color-secondary-container); color: var(--md-sys-color-on-secondary-container); }
+.best-jump-num { flex: none; min-width: 22px; text-align: right; font-variant-numeric: tabular-nums; color: var(--md-sys-color-on-surface-variant); }
+.best-jump-link.active .best-jump-num { color: inherit; font-weight: 600; }
+.best-page { min-width: 0; scroll-margin-top: calc(var(--bar-height) + 8px); }
+.best-page-head { margin: 0 0 14px; }
+.best-page-head .eyebrow { margin: 0 0 4px; }
+.best-title { font-size: 24px; line-height: 32px; font-weight: 500; max-width: 60ch; outline: none; }
+.best .tour-dots { display: none; }
+/* only the current page's callout text takes room (the Tour keeps the longest step's size) */
+.best .tour-stack > :not(.current) { display: none; }
+.best-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px 12px; margin: 4px 0 0; }
+@media (max-width: 600px) {
+  .best-title { font-size: 20px; line-height: 28px; }
+}
+/* four tabs on a phone: the icon above the label */
+@media (max-width: 480px) {
+  .nav-tab { flex-direction: column; gap: 2px; height: 56px; padding: 0 4px; font-size: 12px; line-height: 16px; }
+}
+
+@media print. */
 
 .cs-toolbar {
   display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px;
@@ -1492,6 +1543,8 @@ td:first-child { font-weight: 500; }
   .nav-tab { flex: 1; justify-content: center; gap: 6px; height: 48px; padding: 0 8px; border-radius: 0; }
   .nav-tab[aria-current="page"] { background: transparent; color: var(--md-sys-color-primary); box-shadow: inset 0 -3px 0 var(--md-sys-color-primary); }
   html { scroll-padding-top: 120px; }
+  .best { padding-top: 16px; }
+  .best .tour-title { font-size: 26px; line-height: 32px; }
   .card { scroll-margin-top: 120px; }
   .hardware { top: auto; }
   .setup { padding-top: 16px; }

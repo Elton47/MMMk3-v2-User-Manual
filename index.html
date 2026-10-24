@@ -39,6 +39,9 @@
         <a href="#setup" data-view="setup" class="nav-tab">
           <svg class="icon" aria-hidden="true"><use href="#i-setup"/></svg><span>Set up</span>
         </a>
+        <a href="#highlights" data-view="highlights" class="nav-tab">
+          <svg class="icon" aria-hidden="true"><use href="#i-star"/></svg><span>Highlights</span>
+        </a>
         <!-- the manual's two views (Tour | Full manual): the choice is remembered (js/app.js) -->
         <a href="#tour" data-view="tour" data-manual-view="tour" class="nav-tab">
           <svg class="icon" aria-hidden="true"><use href="#i-spark"/></svg><span>Tour</span>
@@ -164,6 +167,35 @@
       </div>
     </section>
 
+    <!-- Highlights (js/best.js): the features one page at a time, the best first, with a jump list
+         by mode; each page plays its step on the controller drawing (the Tour's player) -->
+    <section id="view-highlights" class="view" aria-labelledby="best-heading" hidden>
+      <div class="best">
+        <header class="tour-head">
+          <div class="tour-heading">
+            <p class="eyebrow">Highlights</p>
+            <h1 id="best-heading" class="tour-title">The best of it, one page at a time</h1>
+            <p class="tour-intro">The best comes first. Use the arrows to turn the pages, or pick one from the list. <span id="best-total"></span></p>
+          </div>
+          <div class="segmented" role="radiogroup" aria-label="Controller">
+            <button type="button" role="radio" data-device="mikro"><svg class="icon check" aria-hidden="true"><use href="#i-check"/></svg>MIKRO MK3</button>
+            <button type="button" role="radio" data-device="mk3"><svg class="icon check" aria-hidden="true"><use href="#i-check"/></svg>MK3 / MASCHINE+</button>
+          </div>
+        </header>
+        <p id="best-unverified" class="banner tour-banner" hidden>
+          <svg class="icon" aria-hidden="true"><use href="#i-info"/></svg>
+          <span>MK3 / MASCHINE+ support is built from the hardware protocol and not yet tested on a real unit.</span>
+        </p>
+        <div class="best-layout">
+          <details id="best-jump" class="best-jump card" open>
+            <summary class="best-jump-head"><svg class="icon" aria-hidden="true"><use href="#i-sheet"/></svg>Jump to a page<svg class="icon best-jump-chev" aria-hidden="true"><use href="#i-down"/></svg></summary>
+            <ol id="best-jump-list" class="best-jump-list"></ol>
+          </details>
+          <article id="best-page" class="best-page" aria-labelledby="best-title"></article>
+        </div>
+      </div>
+    </section>
+
     <!-- The Tour (js/tour.js; each card a player from js/highlights.js, choreography in
          js/highlight-shows.js): a self-playing card per section of data/features.json -->
     <section id="view-tour" class="view" aria-labelledby="tour-title" hidden>
@@ -220,7 +252,7 @@
   </main>
 
   <footer class="footer">
-    <p>Elton47 · <a href="https://payhip.com/b/h4tva">Get the script</a> · <a href="#setup">Set up</a> · <a href="#tour">Tour</a> · <a href="https://elton47.github.io/MMMk3-User-Manual/">v1.6.1 manual (Live 11)</a></p>
+    <p>Elton47 · <a href="https://payhip.com/b/h4tva">Get the script</a> · <a href="#setup">Set up</a> · <a href="#highlights">Highlights</a> · <a href="#tour">Tour</a> · <a href="https://elton47.github.io/MMMk3-User-Manual/">v1.6.1 manual (Live 11)</a></p>
     <p>Not affiliated with Native Instruments or Ableton.</p>
   </footer>
 
@@ -253,6 +285,7 @@
       <symbol id="i-computer" viewBox="0 0 24 24"><rect x="3.5" y="4.5" width="17" height="11.5" rx="1.5"/><path d="M9 20h6M12 16v4"/></symbol>
       <symbol id="i-pads" viewBox="0 0 24 24"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></symbol>
       <symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 3.5l1.9 5.6 5.6 1.9-5.6 1.9L12 18.5l-1.9-5.6L4.5 11l5.6-1.9z"/><path d="M18.5 15.5l.7 2 2 .7-2 .7-.7 2-.7-2-2-.7 2-.7z"/></symbol>
+      <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 3.8l2.5 5.2 5.7.8-4.1 4 1 5.6L12 16.7l-5.1 2.7 1-5.6-4.1-4 5.7-.8z"/></symbol>
       <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5.5v13l10.5-6.5z"/></symbol>
       <symbol id="i-pause" viewBox="0 0 24 24"><path d="M8.5 5.5v13M15.5 5.5v13"/></symbol>
       <symbol id="i-live" viewBox="0 0 24 24"><path d="M5 5v14M9 5v14M13 5v14M15.5 19L19 5"/></symbol>
@@ -271,6 +304,7 @@
   <script src="js/highlight-shows.js"></script>
   <script src="js/highlights.js"></script>
   <script src="js/tour.js"></script>
+  <script src="js/best.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>

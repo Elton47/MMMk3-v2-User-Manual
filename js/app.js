@@ -1,6 +1,6 @@
-// Boot and routing. Views: #setup... (the setup wizard), the manual in two views: the Tour
-// (js/tour.js: #tour, #tour/<section>[/<step>], #tour/mk3/<section>/<step>; the old #highlights,
-// #highlights/3, #highlights/mk3/3 open its Highlights card) and the Full manual (js/manual.js:
+// Boot and routing. Views: #setup... (the setup wizard), Highlights (js/best.js: #highlights,
+// #highlights/<page>, #highlights/mk3/<page>, pages from 1), the manual in two views: the Tour
+// (js/tour.js: #tour, #tour/<section>[/<step>], #tour/mk3/<section>/<step>) and the Full manual (js/manual.js:
 // #full, #full/<section>, #mikro, #mk3/PLUG-IN, a search: #manual?q=arp, #mk3?q=note%20repeat),
 // #cheatsheet... (the printable cheat sheet: #cheatsheet, #cheatsheet/mk3) and the printable
 // documents (js/print-docs.js: the installation guide #setup/print, #setup/print/windows; what's
@@ -27,7 +27,8 @@
   // tab: the nav tab to mark when it isn't the view's own (the cheat sheet belongs to the manual)
   function showView(name, tab) {
     if (name !== 'tour') MM.tour.stop();
-    ['setup', 'manual', 'tour', 'cheatsheet', 'print'].forEach(function (view) {
+    if (name !== 'highlights') MM.best.stop();
+    ['setup', 'highlights', 'manual', 'tour', 'cheatsheet', 'print'].forEach(function (view) {
       el('view-' + view).hidden = view !== name;
     });
     var tabName = tab || (name === 'cheatsheet' ? 'manual' : name);
@@ -93,11 +94,16 @@
       return;
     }
     if (parts[0] === 'highlights') {
-      // the highlights tour of before: the Tour's Highlights card (#highlights/mk3/3: step 3)
-      var target = tourTarget(parts.slice(1));
-      target.step = target.section ? parseInt(target.section, 10) - 1 : target.step;
-      target.section = 'highlights';
-      showTour(target);
+      // #highlights, #highlights/3, #highlights/mk3/3: that page (from 1)
+      var rest = parts.slice(1), target = {};
+      if (LAYOUTS[rest[0]]) target.device = rest.shift();
+      var page = parseInt(rest[0], 10);
+      if (!isNaN(page)) target.page = page - 1;
+      showView('highlights');
+      document.title = 'Highlights · MASCHINE for Ableton Live';
+      MM.store('manualSeen', '1');
+      if (ready.manual) MM.best.show(target);
+      else el('best-page').innerHTML = '<p class="load-error">Could not load the manual data. Reload the page to try again.</p>';
       return;
     }
     if (parts[0] === 'setup' && parts[1] === 'print') {
@@ -163,6 +169,7 @@
         MM.manual.init(features);
         MM.cheatsheet.init(features);
         MM.tour.init(features);
+        MM.best.init(features);
         ready.manual = true;
       } else {
         el('sections').innerHTML = '<p class="empty">Could not load the manual data (open the page through a web server).</p>';

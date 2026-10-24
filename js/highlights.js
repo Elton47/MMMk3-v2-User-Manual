@@ -484,7 +484,8 @@ MM.tourPlayer = function (root, options) {
     }
     var fill = refs.dots.querySelector('.active .tour-dot-fill');
     if (fill) fill.style.transform = 'scaleX(' + Math.min(1, state.elapsed / state.duration).toFixed(3) + ')';
-    if (state.elapsed >= state.duration) go(state.index + 1, false);
+    // options.stay (the Highlights pages): the step plays again instead of moving on
+    if (state.elapsed >= state.duration) go(options.stay ? state.index : state.index + 1, false);
   }
 
   // The card in view plays; the others wait where they are.

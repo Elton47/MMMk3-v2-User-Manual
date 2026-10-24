@@ -1172,14 +1172,23 @@ td:first-child { font-weight: 500; }
 .best-jump-link.active .best-jump-num { color: inherit; font-weight: 600; }
 .best-page { min-width: 0; scroll-margin-top: calc(var(--bar-height) + 8px); }
 .best-page-head { margin: 0 0 14px; }
-.best-page-head .eyebrow { margin: 0 0 4px; }
-.best-title { font-size: 24px; line-height: 32px; font-weight: 500; max-width: 60ch; outline: none; }
+.best-page-head .eyebrow { margin: 0 0 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+/* the heading keeps one height on every page (2 lines, 3 on a phone; a longer title ends in an
+   ellipsis, the full text in its tooltip), so the previous / next buttons never move */
+.best-title {
+  font-size: 24px; line-height: 32px; font-weight: 500; max-width: 60ch; outline: none;
+  display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; overflow: hidden;
+  height: 64px;
+}
 .best .tour-dots { display: none; }
+/* the buttons in the stage, right under the drawing and above the callout */
+.best .best-controls { position: relative; z-index: 2; margin-top: 16px; }
+.best .tour-status { width: 64px; min-width: 0; }
 /* only the current page's callout text takes room (the Tour keeps the longest step's size) */
 .best .tour-stack > :not(.current) { display: none; }
 .best-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px 12px; margin: 4px 0 0; }
 @media (max-width: 600px) {
-  .best-title { font-size: 20px; line-height: 28px; }
+  .best-title { font-size: 20px; line-height: 28px; -webkit-line-clamp: 3; line-clamp: 3; height: 84px; }
 }
 /* four tabs on a phone: the icon above the label */
 @media (max-width: 480px) {

@@ -127,7 +127,10 @@ MM.best = (function () {
   }
 
   // The page: its heading, the stage (the Tour's markup, so the player and its styles fit), the
-  // previous / next buttons and the links.
+  // previous / next buttons and the links. The buttons stay on the same spot on every page: the
+  // heading has a fixed height (the title clamped to its lines, the full text in its tooltip), and
+  // the buttons sit in the stage right under the drawing, above the callout (whose height follows
+  // the text, under the drawing on narrow windows).
   function build() {
     var device = svgNode('svg', { id: 'best-device', 'class': 'tour-device hw-drawing', role: 'img', 'aria-label': 'Controller' });
     var leader = svgNode('svg', { 'class': 'tour-leader', 'aria-hidden': 'true', focusable: 'false' });
@@ -142,21 +145,21 @@ MM.best = (function () {
     ]));
     page.appendChild(h('div', { className: 'tour-stage' }, [
       h('div', { className: 'tour-device-wrap' }, [device]),
+      h('div', { className: 'tour-controls best-controls' }, [
+        h('div', { className: 'tour-buttons' }, [
+          iconButton('tour-prev', 'Previous page', 'left'),
+          iconButton('tour-pause', 'Pause', 'pause'),
+          iconButton('tour-next', 'Next page', 'right')
+        ]),
+        h('div', { className: 'tour-dots', 'aria-hidden': 'true' }),
+        h('span', { className: 'tour-status', 'aria-hidden': 'true' })
+      ]),
       leader,
       h('div', { className: 'tour-bubble' }, [
         h('div', { className: 'tour-stack tour-heads' }),
         h('canvas', { className: 'tour-loupe', 'aria-hidden': 'true', hidden: true }),
         h('div', { className: 'tour-stack tour-texts' })
       ])
-    ]));
-    page.appendChild(h('div', { className: 'tour-controls best-controls' }, [
-      h('div', { className: 'tour-buttons' }, [
-        iconButton('tour-prev', 'Previous page', 'left'),
-        iconButton('tour-pause', 'Pause', 'pause'),
-        iconButton('tour-next', 'Next page', 'right')
-      ]),
-      h('div', { className: 'tour-dots', 'aria-hidden': 'true' }),
-      h('span', { className: 'tour-status', 'aria-hidden': 'true' })
     ]));
     page.appendChild(h('p', { className: 'best-links' }, [
       h('a', { className: 'btn btn-text has-icon-start', id: 'best-full' }, [MM.icon('book'), 'Read the full section']),
@@ -209,6 +212,7 @@ MM.best = (function () {
     if (!p) return;
     el('best-mode').textContent = sectionName(p.section);
     el('best-title').textContent = p.title;
+    el('best-title').setAttribute('title', p.title);
     el('best-full').setAttribute('href', '#full/' + p.section.id);
     el('best-tour').setAttribute('href', '#tour/' + (state.device === 'mk3' ? 'mk3/' : '') + p.section.id + '/' + (p.step + 1));
     Array.prototype.forEach.call(document.querySelectorAll('.best-jump-link'), function (link) {

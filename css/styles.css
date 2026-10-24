@@ -333,20 +333,17 @@ button { font: inherit; color: inherit; }
 .menu button[aria-checked="true"] { background: var(--md-sys-color-secondary-container); color: var(--md-sys-color-on-secondary-container); }
 .menu button[aria-checked="true"] .icon { color: inherit; }
 
-/* the theme and accent colour popover: the theme rows (as the menu was), then Auto and the 16
-   pad colours as MASCHINE's pads (pad 1 bottom left, no text on them). The chosen pad (and under
-   Auto, Auto and today's pad) get a white ring with a small gap, and a dark line outside it so it
-   shows on light surfaces too. */
-.theme-popover { width: 232px; padding: 8px 0 16px; }
-.menu-label {
-  margin: 12px 16px 8px; font-size: 12px; line-height: 16px; font-weight: 500; letter-spacing: .04em;
-  color: var(--md-sys-color-on-surface-variant);
-}
-.menu-label[hidden], .colour-choices[hidden] { display: none; }
-.colour-choices { padding: 0 16px; }
+/* the accent colour popover (the pads button beside the theme button): Auto and the 16 pad
+   colours as MASCHINE's pads (pad 1 bottom left, no text on them), 16 px all round. The chosen pad
+   (and under Auto, Auto and today's pad) get a white ring with a small gap, and a dark line
+   outside it so it shows on light surfaces too. */
+.accent-icon rect { fill: none; }
+.accent-icon .accent-icon-lit { fill: var(--day-pad, currentColor); stroke: var(--day-pad, currentColor); }
+.theme-menu[hidden] { display: none; }
+.accent-popover { min-width: 0; padding: 16px; }
 .menu .colour-auto, .menu .colour-auto[aria-checked="true"] {
   flex-direction: column; align-items: flex-start; justify-content: center; gap: 0;
-  height: auto; min-height: 52px; padding: 6px 12px; margin: 0 0 12px;
+  width: 100%; height: auto; min-height: 52px; padding: 6px 12px; margin: 0 0 12px;
   border-radius: var(--r); background: var(--pad, var(--md-sys-color-primary)); color: var(--on-pad, var(--md-sys-color-on-primary));
   font-weight: 600; line-height: 20px;
 }

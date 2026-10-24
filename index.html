@@ -55,26 +55,31 @@
         <svg class="icon" aria-hidden="true"><use href="#i-help"/></svg>
         <span class="visually-hidden">Help and troubleshooting</span>
       </a>
-      <div class="theme-menu">
-        <button type="button" id="theme-button" class="icon-button" aria-haspopup="dialog" aria-expanded="false" aria-controls="theme-list" title="Theme and accent colour">
-          <svg class="icon" aria-hidden="true"><use id="theme-icon" href="#i-auto"/></svg>
-          <span class="visually-hidden">Theme and accent colour</span>
+      <div class="theme-menu accent-menu">
+        <button type="button" id="accent-button" class="icon-button" aria-haspopup="dialog" aria-expanded="false" aria-controls="accent-list" title="Accent colour">
+          <svg class="icon accent-icon" viewBox="0 0 24 24" aria-hidden="true"><rect class="accent-icon-lit" x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></svg>
+          <span class="visually-hidden">Accent colour</span>
         </button>
-        <!-- the theme (System / Light / Dark) and the accent colour: Auto (a new colour every day at
-             noon) or one of MASCHINE's 16 pad colours, laid out like the pads (js/site.js) -->
-        <div id="theme-list" class="menu theme-popover" role="dialog" aria-label="Theme and accent colour" hidden>
-          <div class="theme-choices" role="radiogroup" aria-label="Theme">
-            <button type="button" role="radio" data-theme-choice="system"><svg class="icon" aria-hidden="true"><use href="#i-auto"/></svg>System</button>
-            <button type="button" role="radio" data-theme-choice="light"><svg class="icon" aria-hidden="true"><use href="#i-sun"/></svg>Light</button>
-            <button type="button" role="radio" data-theme-choice="dark"><svg class="icon" aria-hidden="true"><use href="#i-moon"/></svg>Dark</button>
-          </div>
-          <p class="menu-label" id="colour-label">Accent colour</p>
-          <div class="colour-choices" role="radiogroup" aria-labelledby="colour-label">
+        <!-- the accent colour: Auto (a new colour every day at noon) or one of MASCHINE's 16 pad
+             colours, laid out like the pads, pad 1 bottom left (js/site.js, js/day-colour.js) -->
+        <div id="accent-list" class="menu accent-popover" role="dialog" aria-label="Accent colour" hidden>
+          <div class="colour-choices" role="radiogroup" aria-label="Accent colour">
             <button type="button" role="radio" class="colour-auto" data-colour="auto">
               <span>Auto</span><span class="colour-auto-sub">A new colour every day</span>
             </button>
             <div class="colour-pads" id="colour-pads"></div>
           </div>
+        </div>
+      </div>
+      <div class="theme-menu">
+        <button type="button" id="theme-button" class="icon-button" aria-haspopup="menu" aria-expanded="false" aria-controls="theme-list" title="Theme">
+          <svg class="icon" aria-hidden="true"><use id="theme-icon" href="#i-auto"/></svg>
+          <span class="visually-hidden">Theme</span>
+        </button>
+        <div id="theme-list" class="menu" role="menu" aria-label="Theme" hidden>
+          <button type="button" role="menuitemradio" data-theme-choice="system"><svg class="icon" aria-hidden="true"><use href="#i-auto"/></svg>System</button>
+          <button type="button" role="menuitemradio" data-theme-choice="light"><svg class="icon" aria-hidden="true"><use href="#i-sun"/></svg>Light</button>
+          <button type="button" role="menuitemradio" data-theme-choice="dark"><svg class="icon" aria-hidden="true"><use href="#i-moon"/></svg>Dark</button>
         </div>
       </div>
     </div>

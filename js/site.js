@@ -106,25 +106,12 @@ var MM = Object.assign(window.MM || {}, (function () {
     node.scrollIntoView({ behavior: reducedMotion && reducedMotion.matches ? 'auto' : 'smooth', block: block || 'start' });
   }
 
-  // --- theme and colour: the popover of the header's theme button -----------------------
-  // The theme: System (default) / Light / Dark, stored as `theme`. The colour (js/day-colour.js,
-  // MMDay): Auto (a new pad colour every day at noon) or one of the 16 pad colours, pinned, laid
-  // out like MASCHINE's pads (pad 1 bottom left). The pinned pad has a white ring; under Auto the
-  // Auto tile and today's pad both have it. Keys: arrows move, Enter / Space choose, Esc closes.
-
-  var THEME_ICONS = { system: 'auto', light: 'sun', dark: 'moon' };
-
-  function applyTheme(choice) {
-    if (choice !== 'light' && choice !== 'dark') choice = 'system';
-    if (choice === 'system') document.documentElement.removeAttribute('data-theme');
-    else document.documentElement.setAttribute('data-theme', choice);
-    el('theme-icon').setAttribute('href', '#i-' + THEME_ICONS[choice]);
-    el('theme-button').setAttribute('title', 'Theme and accent colour');
-    document.querySelectorAll('[data-theme-choice]').forEach(function (item) {
-      item.setAttribute('aria-checked', String(item.getAttribute('data-theme-choice') === choice));
-    });
-    return choice;
-  }
+  // --- accent colour: the popover of the header's pads button ----------------------------
+  // Auto (a new pad colour every day at noon, js/day-colour.js MMDay) or one of the 16 pad colours,
+  // pinned, laid out like MASCHINE's pads: colour N on pad N, pad 1 bottom left, pad 16 top right.
+  // No text on the pads (a label for screen readers only). The chosen pad has a white ring; under
+  // Auto the Auto tile and today's pad both have it. Arrows move spatially (up = higher pad
+  // numbers), Enter / Space choose, Esc closes.
 
   // The 16 pads, top row first (pads 13-16), each a palette index.
   function buildPads(grid) {
@@ -144,15 +131,15 @@ var MM = Object.assign(window.MM || {}, (function () {
     }
   }
 
-  function syncColours() {
+  function syncAccent() {
     var day = window.MMDay, palette = day && day.palette(), grid = el('colour-pads');
-    var group = document.querySelector('.colour-choices'), label = el('colour-label');
-    if (!grid) return;
-    group.hidden = label.hidden = !palette;
+    var button = el('accent-button');
+    if (!grid || !button) return;
+    button.parentNode.hidden = !palette;
     if (!palette) return;
     buildPads(grid);
     var pinned = day.choice(), today = day.autoIndex();
-    var auto = group.querySelector('.colour-auto');
+    var auto = el('accent-list').querySelector('.colour-auto');
     auto.setAttribute('aria-checked', String(pinned === null));
     // the Auto tile is filled with today's colour, its text black or white, whichever reads better
     auto.style.setProperty('--pad', day.hex(palette[today]));
@@ -163,25 +150,23 @@ var MM = Object.assign(window.MM || {}, (function () {
       pad.setAttribute('aria-checked', String(pinned === index));
       pad.classList.toggle('is-today', pinned === null && index === today);
     });
+    var current = pinned === null ? today : pinned;
+    button.setAttribute('title', 'Accent colour: ' + (pinned === null ? 'Auto, today ' : '') + (day.NAMES[current] || ''));
   }
 
-  function initTheme() {
-    var button = el('theme-button');
-    var menu = el('theme-list');
-    var themes = Array.prototype.slice.call(menu.querySelectorAll('[data-theme-choice]'));
+  function initAccent() {
+    var button = el('accent-button'), menu = el('accent-list'), grid = el('colour-pads');
+    if (!button || !menu) return;
     var auto = menu.querySelector('.colour-auto');
-    var grid = el('colour-pads');
-    applyTheme(store('theme'));
-    syncColours();
-    if (window.MMDay) window.MMDay.onChange(syncColours);
-
+    syncAccent();
+    if (window.MMDay) window.MMDay.onChange(syncAccent);
     function pads() { return Array.prototype.slice.call(grid.children); }
-    function checked(list) { return list.filter(function (i) { return i.getAttribute('aria-checked') === 'true'; })[0] || list[0]; }
     function open() {
-      syncColours();
+      syncAccent();
       menu.hidden = false;
       button.setAttribute('aria-expanded', 'true');
-      checked(themes).focus();
+      var pinned = window.MMDay ? window.MMDay.choice() : null;
+      (pinned === null ? auto : grid.querySelector('[data-colour="' + pinned + '"]') || auto).focus();
     }
     function close(focusButton) {
       if (menu.hidden) return;
@@ -193,31 +178,16 @@ var MM = Object.assign(window.MM || {}, (function () {
     button.addEventListener('keydown', function (e) {
       if (e.key === 'ArrowDown' || e.key === 'ArrowUp') { e.preventDefault(); open(); }
     });
-    themes.forEach(function (item) {
-      item.addEventListener('click', function () {
-        var choice = applyTheme(item.getAttribute('data-theme-choice'));
-        store('theme', choice === 'system' ? null : choice);
-      });
-    });
     auto.addEventListener('click', function () { if (window.MMDay) window.MMDay.pick(null); });
     grid.addEventListener('click', function (e) {
       var pad = e.target.closest && e.target.closest('.colour-pad');
       if (pad && window.MMDay) window.MMDay.pick(Number(pad.getAttribute('data-colour')));
     });
-    // arrows move spatially: the theme rows on top, then Auto, then the pads as a 4 x 4 grid
-    // (up = higher pad numbers)
     menu.addEventListener('keydown', function (e) {
       if (e.key === 'Escape') { e.preventDefault(); close(true); return; }
-      var t = e.target, next = null, all = pads(), colours = !auto.parentNode.hidden && all.length;
-      var ti = themes.indexOf(t), pi = all.indexOf(t);
-      if (ti >= 0) {
-        if (e.key === 'ArrowDown') next = ti < themes.length - 1 ? themes[ti + 1] : (colours ? auto : null);
-        else if (e.key === 'ArrowUp') next = ti > 0 ? themes[ti - 1] : null;
-        else if (e.key === 'Home') next = themes[0];
-        else if (e.key === 'End') next = themes[themes.length - 1];
-      } else if (t === auto) {
+      var t = e.target, next = null, all = pads(), pi = all.indexOf(t);
+      if (t === auto) {
         if (e.key === 'ArrowDown') next = all[0];
-        else if (e.key === 'ArrowUp') next = themes[themes.length - 1];
       } else if (pi >= 0) {
         var row = Math.floor(pi / 4);
         if (e.key === 'ArrowRight' && pi % 4 < 3) next = all[pi + 1];
@@ -232,6 +202,67 @@ var MM = Object.assign(window.MM || {}, (function () {
     // focus leaving the popover (Tab past its end) or a click outside closes it
     menu.addEventListener('focusout', function (e) {
       if (e.relatedTarget && !menu.contains(e.relatedTarget) && e.relatedTarget !== button) close(false);
+    });
+    document.addEventListener('click', function (e) {
+      if (!menu.hidden && !menu.contains(e.target) && !button.contains(e.target)) close(false);
+    });
+  }
+
+  // --- theme: System (default) / Light / Dark --------------------------------------------
+
+  var THEME_ICONS = { system: 'auto', light: 'sun', dark: 'moon' };
+
+  function applyTheme(choice) {
+    if (choice !== 'light' && choice !== 'dark') choice = 'system';
+    if (choice === 'system') document.documentElement.removeAttribute('data-theme');
+    else document.documentElement.setAttribute('data-theme', choice);
+    el('theme-icon').setAttribute('href', '#i-' + THEME_ICONS[choice]);
+    el('theme-button').setAttribute('title', 'Theme: ' + choice.charAt(0).toUpperCase() + choice.slice(1));
+    document.querySelectorAll('[data-theme-choice]').forEach(function (item) {
+      item.setAttribute('aria-checked', String(item.getAttribute('data-theme-choice') === choice));
+    });
+    return choice;
+  }
+
+  function initTheme() {
+    var button = el('theme-button');
+    var menu = el('theme-list');
+    var items = Array.prototype.slice.call(menu.querySelectorAll('[role="menuitemradio"]'));
+    applyTheme(store('theme'));
+    initAccent();
+
+    function open() {
+      menu.hidden = false;
+      button.setAttribute('aria-expanded', 'true');
+      var checked = items.filter(function (i) { return i.getAttribute('aria-checked') === 'true'; })[0] || items[0];
+      checked.focus();
+    }
+    function close(focusButton) {
+      if (menu.hidden) return;
+      menu.hidden = true;
+      button.setAttribute('aria-expanded', 'false');
+      if (focusButton) button.focus();
+    }
+    button.addEventListener('click', function () { if (menu.hidden) open(); else close(false); });
+    button.addEventListener('keydown', function (e) {
+      if (e.key === 'ArrowDown' || e.key === 'ArrowUp') { e.preventDefault(); open(); }
+    });
+    items.forEach(function (item, index) {
+      item.addEventListener('click', function () {
+        var choice = applyTheme(item.getAttribute('data-theme-choice'));
+        store('theme', choice === 'system' ? null : choice);
+        close(true);
+      });
+      item.addEventListener('keydown', function (e) {
+        var next = null;
+        if (e.key === 'ArrowDown') next = items[(index + 1) % items.length];
+        else if (e.key === 'ArrowUp') next = items[(index + items.length - 1) % items.length];
+        else if (e.key === 'Home') next = items[0];
+        else if (e.key === 'End') next = items[items.length - 1];
+        else if (e.key === 'Escape') { e.preventDefault(); close(true); return; }
+        else if (e.key === 'Tab') { close(false); return; }
+        if (next) { e.preventDefault(); next.focus(); }
+      });
     });
     document.addEventListener('click', function (e) {
       if (!menu.hidden && !menu.contains(e.target) && !button.contains(e.target)) close(false);

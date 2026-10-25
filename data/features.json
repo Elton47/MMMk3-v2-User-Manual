@@ -25,7 +25,7 @@
   "tour_order": {
     "mk3": ["mixer-mk3", "plugin-mk3", "slicing", "kits-mk3", "browser-mk3", "section-mk3", "drum-synths", "highlights", "start", "drum", "keyboard", "chords", "step", "playing", "clip", "scene", "track", "shift-pads", "events", "transport", "master", "edit", "views", "maschine-vsti", "mk3"]
   },
-  "best_of": {"mikro": 25, "mk3": 25},
+  "best_of": {"mikro": 25, "mk3": 31},
   "sections": [
     {
       "id": "start",
@@ -51,13 +51,13 @@
       "title": "Highlights",
       "summary": "The best of it in a minute. Each one is explained in its own section below.",
       "items": [
-        {"combo": ["SHIFT"], "does": "A real controller, not a template: a real SHIFT key and Live's colours on the pads. No Controller Editor, no MIDI mode.", "headline": "A real controller, not a template: drag and drop, open Live, play", "best": {"mikro": 1, "mk3": 1}},
-        {"combo": ["TURN"], "does": "The screen shows almost anything: the mode and track, tempo, swing and volume as you change them, and device parameters with their names and values.", "best": {"mikro": 7, "mk3": 25}, "headline": "A screen that shows what you play and turn"},
-        {"combo": ["CHORDS"], "does": "A chord on every pad, always in Live's key: triads to 9ths, with voicings.", "best": {"mikro": 6, "mk3": 11}},
+        {"combo": ["SHIFT"], "does": "A real controller, not a template: a real SHIFT key and Live's colours on the pads. No Controller Editor, no MIDI mode.", "headline": "A real controller, not a template: drag and drop, open Live, play", "best": 1},
+        {"combo": ["TURN"], "does": "The screen shows almost anything: the mode and track, tempo, swing and volume as you change them, and device parameters with their names and values.", "best": {"mikro": 10, "mk3": 13}, "headline": "A screen that shows what you play and turn"},
+        {"combo": ["CHORDS"], "does": "A chord on every pad, always in Live's key: triads to 9ths, with voicings.", "best": {"mikro": 7, "mk3": 10}},
         {"combo": ["NOTE REPEAT"], "does": "Note repeat that follows pad pressure: slide the touch strip to set its rate, or touch it while holding pads to repeat them on the spot. Plus an arpeggiator, all recorded exactly on Live's grid.", "best": {"mikro": 2, "mk3": 5}, "headline": "Note repeat and an arpeggiator that follow pad pressure"},
-        {"combo": ["STEP"], "does": "A step sequencer on the pads, read like MASCHINE, with the playhead running across them.", "best": {"mikro": 8, "mk3": 12}},
-        {"combo": ["PUSH"], "does": "MASCHINE Kits: play your Expansions in Live without the MASCHINE plug-in. BROWSER > MASCHINE Kits, turn to hear a kit, push to load it as a Drum Rack, pad for pad as in MASCHINE. One-way sync: your MASCHINE favourites come along, starred (read only; star / unstar them in MASCHINE).", "devices": ["mikro"], "best": {"mikro": 3, "mk3": 4}},
-        {"combo": ["BROWSER"], "does": "MASCHINE's browser on the two screens, on Live's browser: knob 1 the category, the 4-D encoder scrolls, LOAD loads. MASCHINE Kits: play your Expansions in Live without the MASCHINE plug-in, a turn onto a kit plays its preview and a load makes it a Drum Rack, pad for pad as in MASCHINE.", "devices": ["mk3"], "best": {"mikro": 5, "mk3": 6}, "headline": "MASCHINE Kits and MASCHINE's browser on the two screens"}
+        {"combo": ["STEP"], "does": "A step sequencer on the pads, read like MASCHINE, with the playhead running across them.", "best": {"mikro": 8, "mk3": 11}},
+        {"combo": ["PUSH"], "does": "MASCHINE Kits: play your Expansions in Live without the MASCHINE plug-in. BROWSER > MASCHINE Kits, turn to hear a kit, push to load it as a Drum Rack, pad for pad as in MASCHINE. One-way sync: your MASCHINE favourites come along, starred (read only; star / unstar them in MASCHINE).", "devices": ["mikro"], "best": 3},
+        {"combo": ["BROWSER"], "does": "MASCHINE's browser on the two screens, on Live's browser: knob 1 the category, the 4-D encoder scrolls, LOAD loads. MASCHINE Kits: play your Expansions in Live without the MASCHINE plug-in, a turn onto a kit plays its preview and a load makes it a Drum Rack, pad for pad as in MASCHINE.", "devices": ["mk3"], "best": 6, "headline": "MASCHINE Kits and MASCHINE's browser on the two screens"}
       ]
     },
     {
@@ -144,18 +144,18 @@
         {"name": "White: Loop, break, fill", "rgb": "#ebebeb", "keywords": ["loop", "break", "drum", "groove", "fill"]}
       ],
       "items": [
-        {"combo": ["PAD MODE"], "does": "Switch to drum mode. Press again: switch between chain colours and name colours.", "best": {"mikro": 35, "mk3": 48}},
-        {"combo": ["PAD"], "does": "Play and select the drum pad. Velocity and pressure (aftertouch) are sent.", "best": {"mikro": 5, "mk3": 10}, "headline": "Your Drum Rack on the pads, with velocity and pressure"},
+        {"combo": ["PAD MODE"], "does": "Switch to drum mode. Press again: switch between chain colours and name colours.", "best": {"mikro": 35, "mk3": 42}},
+        {"combo": ["PAD"], "does": "Play and select the drum pad. Velocity and pressure (aftertouch) are sent.", "best": {"mikro": 4, "mk3": 7}, "headline": "Your Drum Rack on the pads, with velocity and pressure"},
         {"combo": ["SELECT", "PAD"], "does": "Select the drum pad without playing it.", "devices": ["mikro"], "best": 43},
-        {"combo": ["MUTE", "PAD"], "does": "Mute / unmute the drum pad.", "best": {"mikro": 38, "mk3": 51}},
-        {"combo": ["SOLO", "PAD"], "does": "Solo / unsolo the drum pad.", "best": {"mikro": 39, "mk3": 52}},
-        {"combo": ["ERASE", "PAD"], "does": "Erase that pad's notes in the focused clip (no clip: empty the pad).", "best": {"mikro": 41, "mk3": 54}},
-        {"combo": ["DUPLICATE", "PAD", "PAD"], "does": "Copy the first pad onto the second.", "best": {"mikro": 40, "mk3": 53}},
-        {"combo": ["TURN"], "does": "Scroll by one row (SHIFT or PUSH + TURN: by 16 pads).", "best": {"mikro": 42, "mk3": 55}},
-        {"combo": ["PAD", "TURN"], "does": "Hold a pad: its volume (SHIFT: 0.1 dB; PUSH: tune).", "best": {"mikro": 13, "mk3": 18}, "headline": "Hold a drum pad and turn: its volume or tune"},
-        {"combo": ["◀", "▶"], "does": "Previous / next drum pad: focuses that sound (named on the screen; the one STEP sequences).", "best": {"mikro": 37, "mk3": 50}, "headline": "Previous / next drum pad: the sound in focus"},
-        {"combo": ["SHIFT", "PAD MODE"], "does": "Velocity curve: Linear, Soft (more sensitive: a light touch plays louder) or Hard (less sensitive: it takes a firmer touch). The screen says which.", "best": {"mikro": 36, "mk3": 49}, "headline": "Velocity curve: Linear, Soft or Hard"},
-        {"combo": ["PAD MODE"], "context": "select a track", "does": "Select a track with a Drum Rack and the drum pads come up by themselves. Select a synth track and the keyboard comes back.", "best": {"mikro": 23, "mk3": 47}}
+        {"combo": ["MUTE", "PAD"], "does": "Mute / unmute the drum pad.", "best": {"mikro": 38, "mk3": 45}},
+        {"combo": ["SOLO", "PAD"], "does": "Solo / unsolo the drum pad.", "best": {"mikro": 39, "mk3": 46}},
+        {"combo": ["ERASE", "PAD"], "does": "Erase that pad's notes in the focused clip (no clip: empty the pad).", "best": {"mikro": 41, "mk3": 48}},
+        {"combo": ["DUPLICATE", "PAD", "PAD"], "does": "Copy the first pad onto the second.", "best": {"mikro": 40, "mk3": 47}},
+        {"combo": ["TURN"], "does": "Scroll by one row (SHIFT or PUSH + TURN: by 16 pads).", "best": {"mikro": 42, "mk3": 49}},
+        {"combo": ["PAD", "TURN"], "does": "Hold a pad: its volume (SHIFT: 0.1 dB; PUSH: tune).", "best": {"mikro": 13, "mk3": 16}, "headline": "Hold a drum pad and turn: its volume or tune"},
+        {"combo": ["◀", "▶"], "does": "Previous / next drum pad: focuses that sound (named on the screen; the one STEP sequences).", "best": {"mikro": 37, "mk3": 44}, "headline": "Previous / next drum pad: the sound in focus"},
+        {"combo": ["SHIFT", "PAD MODE"], "does": "Velocity curve: Linear, Soft (more sensitive: a light touch plays louder) or Hard (less sensitive: it takes a firmer touch). The screen says which.", "best": {"mikro": 36, "mk3": 43}, "headline": "Velocity curve: Linear, Soft or Hard"},
+        {"combo": ["PAD MODE"], "context": "select a track", "does": "Select a track with a Drum Rack and the drum pads come up by themselves. Select a synth track and the keyboard comes back.", "best": {"mikro": 24, "mk3": 30}}
       ]
     },
     {
@@ -165,11 +165,11 @@
       "summary": "On a track whose instrument is a Simpler in Slicing mode, the pads play its slices: slice 1 on pad 1, lit in the track's colour, the selected slice bright. The track switches the pads by itself, as a Drum Rack track does. A Drum Rack always wins: a Simpler inside a drum pad stays a drum pad.",
       "tour": {"intro": "A sliced Simpler's slices on the pads, as on MASCHINE."},
       "items": [
-        {"combo": ["PAD MODE"], "does": "The slices on the pads (KEYBOARD and CHORDS on such a track land on them too, as on a Drum Rack).", "best": {"mikro": 4, "mk3": 8}, "headline": "Simpler's slices on the pads, ready to play"},
-        {"combo": ["PAD"], "does": "Play the slice and select it in Simpler.", "best": {"mikro": 44, "mk3": 32}},
-        {"combo": ["◀", "▶"], "does": "The previous / next 16 slices.", "best": {"mikro": 45, "mk3": 34}},
-        {"combo": ["TURN"], "does": "Scroll by one row of slices.", "best": {"mikro": 46, "mk3": 35}},
-        {"combo": ["PLUG-IN"], "context": "Slicing", "does": "The Slicing picture follows the slice you play.", "devices": ["mk3"], "best": 33}
+        {"combo": ["PAD MODE"], "does": "The slices on the pads (KEYBOARD and CHORDS on such a track land on them too, as on a Drum Rack).", "best": {"mikro": 5, "mk3": 8}, "headline": "Simpler's slices on the pads, ready to play"},
+        {"combo": ["PAD"], "does": "Play the slice and select it in Simpler.", "best": {"mikro": 44, "mk3": 50}},
+        {"combo": ["◀", "▶"], "does": "The previous / next 16 slices.", "best": {"mikro": 45, "mk3": 52}},
+        {"combo": ["TURN"], "does": "Scroll by one row of slices.", "best": {"mikro": 46, "mk3": 53}},
+        {"combo": ["PLUG-IN"], "context": "Slicing", "does": "The Slicing picture follows the slice you play.", "devices": ["mk3"], "best": 51}
       ]
     },
     {
@@ -178,15 +178,15 @@
       "title": "KEYBOARD: notes in key",
       "summary": "The pads walk up Live's current scale (root note bright). Root and scale are Live's own, so changing them here changes Live's Scale settings and vice versa, including per-clip scales. While a clip plays, the pads of the notes it plays light up. The pads are in the track's colour (with a MIDI clip selected: the clip's) and follow it at once when you recolour it. On a track with a Drum Rack, KEYBOARD gives the drum pads.",
       "items": [
-        {"combo": ["KEYBOARD"], "does": "Switch to keyboard mode (on a track with a Drum Rack: the drum pads).", "best": {"mikro": 82, "mk3": 94}},
-        {"combo": ["PAD"], "does": "Play the note.", "best": {"mikro": 75, "mk3": 86}},
-        {"combo": ["◀", "▶"], "does": "Choose the setting TURN changes: Octave, Root or Scale. The screen shows the setting and its value.", "best": {"mikro": 79, "mk3": 91}},
-        {"combo": ["TURN"], "does": "Change the chosen setting (Octave to start with).", "best": {"mikro": 80, "mk3": 92}},
-        {"combo": ["SHIFT", "TURN"], "does": "Change the scale (Live's scale list).", "best": {"mikro": 77, "mk3": 89}},
-        {"combo": ["PUSH", "TURN"], "does": "Change the root note.", "best": {"mikro": 78, "mk3": 90}},
-        {"combo": ["SHIFT", "KEYBOARD"], "does": "In key / chromatic layout (Live's Scale Mode).", "best": {"mikro": 76, "mk3": 88}},
-        {"combo": ["ERASE", "PAD"], "does": "Erase that note's events in the focused clip.", "best": {"mikro": 81, "mk3": 93}},
-        {"combo": ["KNOB"], "context": "KEYBOARD", "does": "Root note, scale, octave and layout. Buttons 5 / 6: octave down / up. Buttons 7 / 8: a semitone down / up. A keyboard strip shows the scale.", "devices": ["mk3"], "best": 87, "headline": "Root, scale, octave and layout on the knobs"}
+        {"combo": ["KEYBOARD"], "does": "Switch to keyboard mode (on a track with a Drum Rack: the drum pads).", "best": {"mikro": 90, "mk3": 96}},
+        {"combo": ["PAD"], "does": "Play the note.", "best": {"mikro": 83, "mk3": 88}},
+        {"combo": ["◀", "▶"], "does": "Choose the setting TURN changes: Octave, Root or Scale. The screen shows the setting and its value.", "best": {"mikro": 87, "mk3": 93}},
+        {"combo": ["TURN"], "does": "Change the chosen setting (Octave to start with).", "best": {"mikro": 88, "mk3": 94}},
+        {"combo": ["SHIFT", "TURN"], "does": "Change the scale (Live's scale list).", "best": {"mikro": 85, "mk3": 91}},
+        {"combo": ["PUSH", "TURN"], "does": "Change the root note.", "best": {"mikro": 86, "mk3": 92}},
+        {"combo": ["SHIFT", "KEYBOARD"], "does": "In key / chromatic layout (Live's Scale Mode).", "best": {"mikro": 84, "mk3": 90}},
+        {"combo": ["ERASE", "PAD"], "does": "Erase that note's events in the focused clip.", "best": {"mikro": 89, "mk3": 95}},
+        {"combo": ["KNOB"], "context": "KEYBOARD", "does": "Root note, scale, octave and layout. Buttons 5 / 6: octave down / up. Buttons 7 / 8: a semitone down / up. A keyboard strip shows the scale.", "devices": ["mk3"], "best": 89, "headline": "Root, scale, octave and layout on the knobs"}
       ]
     },
     {
@@ -195,12 +195,12 @@
       "title": "CHORDS: chord sets",
       "summary": "Every pad plays a chord built from Live's scale, starting on successive scale degrees, so every chord is in key. A chord you play, or one the clip plays back, lights its own pad bright and the pads of its other notes softer (the C chord: the E and G pads), so you see its shape. The pads follow the track's or MIDI clip's colour, as KEYBOARD's. On a track with a Drum Rack, CHORDS gives the drum pads.",
       "items": [
-        {"combo": ["CHORDS"], "does": "Switch to chord mode (on a track with a Drum Rack: the drum pads). Press again: next chord type (Triad, 7th, 9th, Sus2, Sus4, 6th, Power).", "best": {"mikro": 71, "mk3": 81}},
-        {"combo": ["SHIFT", "CHORDS"], "does": "Next voicing (Close, Inversion 1, Inversion 2, Spread).", "best": {"mikro": 72, "mk3": 82}},
-        {"combo": ["PAD"], "does": "Play the chord (works with note repeat and the arpeggiator).", "best": {"mikro": 70, "mk3": 80}},
-        {"combo": ["◀", "▶"], "does": "Choose what TURN changes: Octave, Root, Scale, Chord or Voicing; the screen shows it with its value.", "best": {"mikro": 74, "mk3": 85}, "headline": "Choose what TURN changes for the chords"},
-        {"combo": ["TURN"], "does": "Change the chosen setting (Octave to start with); SHIFT + TURN: scale; PUSH + TURN: root note.", "best": {"mikro": 73, "mk3": 84}, "headline": "Change the chord setting, the scale or the root"},
-        {"combo": ["CHORDS"], "context": "with the screens", "does": "The pads show their chord names (Am7, Bm7b5). The chord you play lights on the strip.", "devices": ["mk3"], "best": 83, "headline": "The chord names on the pads (Am7, Bm7b5)"}
+        {"combo": ["CHORDS"], "does": "Switch to chord mode (on a track with a Drum Rack: the drum pads). Press again: next chord type (Triad, 7th, 9th, Sus2, Sus4, 6th, Power).", "best": {"mikro": 79, "mk3": 83}},
+        {"combo": ["SHIFT", "CHORDS"], "does": "Next voicing (Close, Inversion 1, Inversion 2, Spread).", "best": {"mikro": 80, "mk3": 84}},
+        {"combo": ["PAD"], "does": "Play the chord (works with note repeat and the arpeggiator).", "best": {"mikro": 78, "mk3": 82}},
+        {"combo": ["◀", "▶"], "does": "Choose what TURN changes: Octave, Root, Scale, Chord or Voicing; the screen shows it with its value.", "best": {"mikro": 82, "mk3": 87}, "headline": "Choose what TURN changes for the chords"},
+        {"combo": ["TURN"], "does": "Change the chosen setting (Octave to start with); SHIFT + TURN: scale; PUSH + TURN: root note.", "best": {"mikro": 81, "mk3": 86}, "headline": "Change the chord setting, the scale or the root"},
+        {"combo": ["CHORDS"], "context": "with the screens", "does": "The pads show their chord names (Am7, Bm7b5). The chord you play lights on the strip.", "devices": ["mk3"], "best": 85, "headline": "The chord names on the pads (Am7, Bm7b5)"}
       ]
     },
     {
@@ -210,16 +210,16 @@
       "summary": "The pads are 16 steps of the focused sound (the focused drum pad, or the last keyboard note) in the focused clip, read like text as in MASCHINE: step 1 top left (pad 13), step 16 bottom right (pad 4). The playhead runs across the pads while the clip plays, and the page follows it on longer clips (after you change the page yourself, it follows again once the playhead reaches your page). Hold a step to edit it, as in MASCHINE: the screen shows Step N and its value; TURN changes the velocity (1-127), SHIFT + TURN the length in steps, PUSH + TURN nudges the note up to 7/16 of a step earlier or later. Hold several steps to change them together; one hold is one undo step. A tap on a lit step removes it when you let go. On a Drum Rack the steps light in the selected drum pad's colour and follow when you pick another pad; on an instrument track, in the clip's colour.",
       "tour": {"intro": "16 steps of the focused sound on the pads, read like text as in MASCHINE: step 1 top left (pad 13), step 16 bottom right (pad 4)."},
       "items": [
-        {"combo": ["STEP"], "does": "Switch to step mode.", "best": {"mikro": 90, "mk3": 79}},
-        {"combo": ["PAD"], "does": "Add / remove a note on that step. On an empty slot, the first step creates a clip of 16 steps at the step size (1/16: one bar).", "best": {"mikro": 83, "mk3": 71}},
-        {"combo": ["PAD", "TURN"], "does": "Hold a step: velocity (SHIFT: length, PUSH: nudge).", "best": {"mikro": 84, "mk3": 72}},
-        {"combo": ["TURN"], "does": "Next / previous page of 16 steps.", "best": {"mikro": 88, "mk3": 78}},
-        {"combo": ["SHIFT", "TURN"], "does": "Step size: 1/32, 1/16, 1/8, 1/4.", "best": {"mikro": 87, "mk3": 77}},
-        {"combo": ["SELECT", "PAD"], "does": "Choose the sound to sequence: while SELECT is held the pads show the sounds, brighter where the clip has notes, brightest for the current one. Press one (you hear it); let go and the pads are its steps.", "best": {"mikro": 85, "mk3": 74}, "headline": "Choose the sound to sequence"},
-        {"combo": ["PUSH", "TURN"], "does": "Next / previous sound: the next drum pad (named on the screen), or the next note of the scale.", "best": {"mikro": 86, "mk3": 76}, "headline": "Next / previous sound to sequence"},
-        {"combo": ["◀", "▶"], "does": "Previous / next sound, as PUSH + TURN (dark at the ends).", "devices": ["mikro"], "best": 89},
-        {"combo": ["STEP"], "context": "with the screens", "does": "On a Drum Rack the left screen names the sounds beside their rows, in their pads' colours, as MASCHINE's pattern view. The step sound's row is inverted.", "devices": ["mk3"], "best": 73, "headline": "The step sounds named beside their rows, as in MASCHINE"},
-        {"combo": ["DISPLAY"], "context": "STEP", "does": "◀ PAD ▶ picks the sound. DOUBLE doubles the clip. GRID sets the step size. FOLLOW follows the playhead. ◀ ZOOM ▶ shows 16 steps up to 8 bars.", "devices": ["mk3"], "best": 75, "headline": "STEP's display buttons: sound, DOUBLE, GRID, FOLLOW, ZOOM"}
+        {"combo": ["STEP"], "does": "Switch to step mode.", "best": {"mikro": 77, "mk3": 81}},
+        {"combo": ["PAD"], "does": "Add / remove a note on that step. On an empty slot, the first step creates a clip of 16 steps at the step size (1/16: one bar).", "best": {"mikro": 70, "mk3": 73}},
+        {"combo": ["PAD", "TURN"], "does": "Hold a step: velocity (SHIFT: length, PUSH: nudge).", "best": {"mikro": 71, "mk3": 74}},
+        {"combo": ["TURN"], "does": "Next / previous page of 16 steps.", "best": {"mikro": 75, "mk3": 80}},
+        {"combo": ["SHIFT", "TURN"], "does": "Step size: 1/32, 1/16, 1/8, 1/4.", "best": {"mikro": 74, "mk3": 79}},
+        {"combo": ["SELECT", "PAD"], "does": "Choose the sound to sequence: while SELECT is held the pads show the sounds, brighter where the clip has notes, brightest for the current one. Press one (you hear it); let go and the pads are its steps.", "best": {"mikro": 72, "mk3": 76}, "headline": "Choose the sound to sequence"},
+        {"combo": ["PUSH", "TURN"], "does": "Next / previous sound: the next drum pad (named on the screen), or the next note of the scale.", "best": {"mikro": 73, "mk3": 78}, "headline": "Next / previous sound to sequence"},
+        {"combo": ["◀", "▶"], "does": "Previous / next sound, as PUSH + TURN (dark at the ends).", "devices": ["mikro"], "best": 76},
+        {"combo": ["STEP"], "context": "with the screens", "does": "On a Drum Rack the left screen names the sounds beside their rows, in their pads' colours, as MASCHINE's pattern view. The step sound's row is inverted.", "devices": ["mk3"], "best": 75, "headline": "The step sounds named beside their rows, as in MASCHINE"},
+        {"combo": ["DISPLAY"], "context": "STEP", "does": "◀ PAD ▶ picks the sound. DOUBLE doubles the clip. GRID sets the step size. FOLLOW follows the playhead. ◀ ZOOM ▶ shows 16 steps up to 8 bars.", "devices": ["mk3"], "best": 77, "headline": "STEP's display buttons: sound, DOUBLE, GRID, FOLLOW, ZOOM"}
       ]
     },
     {
@@ -229,18 +229,18 @@
       "summary": "The bridge plays the notes itself, next to the hardware, so the pads can do things one-note-per-pad MIDI can't: chords, arpeggios, note repeat that follows pressure.",
       "tour": {"intro": "The bridge plays the notes itself, next to the hardware: chords, arpeggios, note repeat that follows pressure."},
       "items": [
-        {"combo": ["FIXED VEL"], "does": "Fixed velocity on / off: every pad plays at the same velocity (100 unless you change it).", "best": {"mikro": 22, "mk3": 42}, "headline": "Fixed velocity: every pad at the same velocity"},
-        {"combo": ["FIXED VEL", "TURN"], "does": "Set the fixed velocity (1-127): holding FIXED VEL shows it on the screen at once. Remembered next time.", "best": {"mikro": 31, "mk3": 43}, "headline": "Hold FIXED VEL and turn: the fixed velocity"},
-        {"combo": ["NOTE REPEAT"], "does": "Hold: note repeat while held. Tap: latch on / off. From clip or scene mode it brings up the drum pads or keyboard until repeat stops. The pads flash with the notes. Repeats and arp notes follow Live's beat and land exactly on its grid when you record (Live's Record Quantization follows the rate meanwhile); 100 % gate, like MASCHINE.", "best": {"mikro": 26, "mk3": 36}, "headline": "Note repeat: hold it, or tap to latch"},
-        {"combo": ["SHIFT", "NOTE REPEAT"], "does": "Switch NOTE REPEAT between Note Repeat and the Arpeggiator (the screen says which); holding or tapping works the same for both.", "best": {"mikro": 28, "mk3": 39}, "headline": "Switch between Note Repeat and the Arpeggiator"},
-        {"combo": ["NOTE REPEAT", "TURN"], "does": "While NOTE REPEAT is held the screen shows its setting: the rate (1/2 to 1/64, triplets too), or the arp setting chosen with ◀ ▶. Turn to change it.", "best": {"mikro": 29, "mk3": 40}, "headline": "Hold NOTE REPEAT and turn: the rate or the arp setting"},
-        {"combo": ["NOTE REPEAT", "◀", "▶"], "does": "Arpeggiator: choose what TURN changes: Rate; Type (Up, Down, Up/Down, Down/Up, As Played, Random, Chord); Octaves (1-4); Gate (100 % fills the step); Latch (On: it keeps playing after you let go; new pads replace the notes).", "best": {"mikro": 30, "mk3": 41}, "headline": "Arpeggiator settings: rate, type, octaves, gate and latch"},
-        {"combo": ["NOTE REPEAT", "PAD"], "does": "The arpeggiator: 1. SHIFT + NOTE REPEAT (the screen says Arpeggiator). 2. Hold NOTE REPEAT and a chord on the pads. 3. Still holding, ◀ ▶ picks Rate, Type, Octaves, Gate or Latch, TURN changes it. 4. Tap NOTE REPEAT to keep it on hands-free; tap again to stop.", "best": {"mikro": 9, "mk3": 37}, "headline": "An arpeggiator on the pads: hold a chord, pick its type and rate"},
-        {"combo": ["STRIP"], "does": "Note repeat rate: touch the strip for note repeat while you touch it; the screen shows the rate. Otherwise the strip lights show the selected track's playing clip, flashing red on every metronome click while it records; a new recording fills it over 4 bars, then each new bar starts at 3/4. In PATTERN, SCENE and PLUG-IN the strip has its own job.", "best": {"mikro": 27, "mk3": 38}, "headline": "Touch the strip: note repeat at the rate it shows"},
-        {"combo": ["PITCH"], "does": "Touch strip becomes a pitch bend (springs back when released). Press again: back to rate.", "best": {"mikro": 33, "mk3": 45}},
-        {"combo": ["MOD"], "does": "Touch strip becomes the mod wheel. Press again: back to rate.", "best": {"mikro": 34, "mk3": 46}},
-        {"combo": ["SWING", "TURN"], "does": "Live's swing amount; note repeat and the arpeggiator follow it.", "best": {"mikro": 32, "mk3": 44}, "headline": "Swing: note repeat and the arpeggiator follow it"},
-        {"combo": ["NOTE REPEAT"], "context": "with the screens", "does": "Tap: the page stays. NOTE RPT and ARP tabs, the rate buttons, and the arp's settings on the knobs with a picture of its type.", "devices": ["mk3"], "best": 22, "headline": "NOTE REPEAT and ARP on the screens, with a picture of the arp"}
+        {"combo": ["FIXED VEL"], "does": "Fixed velocity on / off: every pad plays at the same velocity (100 unless you change it).", "best": {"mikro": 23, "mk3": 29}, "headline": "Fixed velocity: every pad at the same velocity"},
+        {"combo": ["FIXED VEL", "TURN"], "does": "Set the fixed velocity (1-127): holding FIXED VEL shows it on the screen at once. Remembered next time.", "best": {"mikro": 31, "mk3": 38}, "headline": "Hold FIXED VEL and turn: the fixed velocity"},
+        {"combo": ["NOTE REPEAT"], "does": "Hold: note repeat while held. Tap: latch on / off. From clip or scene mode it brings up the drum pads or keyboard until repeat stops. The pads flash with the notes. Repeats and arp notes follow Live's beat and land exactly on its grid when you record (Live's Record Quantization follows the rate meanwhile); 100 % gate, like MASCHINE.", "best": {"mikro": 26, "mk3": 33}, "headline": "Note repeat: hold it, or tap to latch"},
+        {"combo": ["SHIFT", "NOTE REPEAT"], "does": "Switch NOTE REPEAT between Note Repeat and the Arpeggiator (the screen says which); holding or tapping works the same for both.", "best": {"mikro": 28, "mk3": 35}, "headline": "Switch between Note Repeat and the Arpeggiator"},
+        {"combo": ["NOTE REPEAT", "TURN"], "does": "While NOTE REPEAT is held the screen shows its setting: the rate (1/2 to 1/64, triplets too), or the arp setting chosen with ◀ ▶. Turn to change it.", "best": {"mikro": 29, "mk3": 36}, "headline": "Hold NOTE REPEAT and turn: the rate or the arp setting"},
+        {"combo": ["NOTE REPEAT", "◀", "▶"], "does": "Arpeggiator: choose what TURN changes: Rate; Type (Up, Down, Up/Down, Down/Up, As Played, Random, Chord); Octaves (1-4); Gate (100 % fills the step); Latch (On: it keeps playing after you let go; new pads replace the notes).", "best": {"mikro": 30, "mk3": 37}, "headline": "Arpeggiator settings: rate, type, octaves, gate and latch"},
+        {"combo": ["NOTE REPEAT", "PAD"], "does": "The arpeggiator: 1. SHIFT + NOTE REPEAT (the screen says Arpeggiator). 2. Hold NOTE REPEAT and a chord on the pads. 3. Still holding, ◀ ▶ picks Rate, Type, Octaves, Gate or Latch, TURN changes it. 4. Tap NOTE REPEAT to keep it on hands-free; tap again to stop.", "best": {"mikro": 12, "mk3": 15}, "headline": "An arpeggiator on the pads: hold a chord, pick its type and rate"},
+        {"combo": ["STRIP"], "does": "Note repeat rate: touch the strip for note repeat while you touch it; the screen shows the rate. Otherwise the strip lights show the selected track's playing clip, flashing red on every metronome click while it records; a new recording fills it over 4 bars, then each new bar starts at 3/4. In PATTERN, SCENE and PLUG-IN the strip has its own job.", "best": {"mikro": 27, "mk3": 34}, "headline": "Touch the strip: note repeat at the rate it shows"},
+        {"combo": ["PITCH"], "does": "Touch strip becomes a pitch bend (springs back when released). Press again: back to rate.", "best": {"mikro": 33, "mk3": 40}},
+        {"combo": ["MOD"], "does": "Touch strip becomes the mod wheel. Press again: back to rate.", "best": {"mikro": 34, "mk3": 41}},
+        {"combo": ["SWING", "TURN"], "does": "Live's swing amount; note repeat and the arpeggiator follow it.", "best": {"mikro": 32, "mk3": 39}, "headline": "Swing: note repeat and the arpeggiator follow it"},
+        {"combo": ["NOTE REPEAT"], "context": "with the screens", "does": "Tap: the page stays. NOTE RPT and ARP tabs, the rate buttons, and the arp's settings on the knobs with a picture of its type.", "devices": ["mk3"], "best": 32, "headline": "NOTE REPEAT and ARP on the screens, with a picture of the arp"}
       ]
     },
     {
@@ -255,22 +255,22 @@
         ["Undo", "Redo", "Velocity 100", "Select all / none"]
       ],
       "items": [
-        {"combo": ["SHIFT", "PAD 1"], "does": "Undo (an arrow in the screen's corner). A recording from the controller (an empty slot, VARIATION + pad) is undone as one take; while it still records, the take goes and recording goes on.", "best": {"mikro": 19, "mk3": 105}, "headline": "Undo a whole take in one step"},
-        {"combo": ["SHIFT", "PAD 2"], "does": "Redo (an arrow shows in the screen's corner).", "best": {"mikro": 99, "mk3": 108}, "headline": "Redo"},
-        {"combo": ["SHIFT", "PAD 3"], "does": "Set note velocities to 100.", "best": {"mikro": 107, "mk3": 116}},
-        {"combo": ["SHIFT", "PAD 4"], "does": "Select all notes / select none.", "best": {"mikro": 108, "mk3": 117}},
-        {"combo": ["SHIFT", "PAD 5"], "does": "Quantize to the clip grid.", "best": {"mikro": 97, "mk3": 106}},
-        {"combo": ["SHIFT", "PAD 6"], "does": "Quantize 50% (half way to the grid).", "best": {"mikro": 98, "mk3": 107}},
-        {"combo": ["SHIFT", "PAD 7"], "does": "Nudge notes one grid step earlier.", "best": {"mikro": 109, "mk3": 118}},
-        {"combo": ["SHIFT", "PAD 8"], "does": "Nudge notes one grid step later.", "best": {"mikro": 110, "mk3": 119}},
-        {"combo": ["SHIFT", "PAD 9"], "does": "Clear notes.", "best": {"mikro": 111, "mk3": 120}},
-        {"combo": ["SHIFT", "PAD 10"], "does": "Clear the clip's automation envelopes (red when it has some).", "best": {"mikro": 106, "mk3": 115}},
-        {"combo": ["SHIFT", "PAD 11"], "does": "Copy notes.", "best": {"mikro": 100, "mk3": 109}},
-        {"combo": ["SHIFT", "PAD 12"], "does": "Paste the copied notes after the copied range (again: further on).", "best": {"mikro": 101, "mk3": 110}},
-        {"combo": ["SHIFT", "PAD 13"], "does": "Transpose down one scale step (semitone in chromatic).", "best": {"mikro": 102, "mk3": 111}},
-        {"combo": ["SHIFT", "PAD 14"], "does": "Transpose up one scale step.", "best": {"mikro": 103, "mk3": 112}},
-        {"combo": ["SHIFT", "PAD 15"], "does": "Transpose down an octave.", "best": {"mikro": 104, "mk3": 113}},
-        {"combo": ["SHIFT", "PAD 16"], "does": "Transpose up an octave.", "best": {"mikro": 105, "mk3": 114}}
+        {"combo": ["SHIFT", "PAD 1"], "does": "Undo (an arrow in the screen's corner). A recording from the controller (an empty slot, VARIATION + pad) is undone as one take; while it still records, the take goes and recording goes on.", "best": {"mikro": 20, "mk3": 26}, "headline": "Undo a whole take in one step"},
+        {"combo": ["SHIFT", "PAD 2"], "does": "Redo (an arrow shows in the screen's corner).", "best": {"mikro": 99, "mk3": 109}, "headline": "Redo"},
+        {"combo": ["SHIFT", "PAD 3"], "does": "Set note velocities to 100.", "best": {"mikro": 107, "mk3": 117}},
+        {"combo": ["SHIFT", "PAD 4"], "does": "Select all notes / select none.", "best": {"mikro": 108, "mk3": 118}},
+        {"combo": ["SHIFT", "PAD 5"], "does": "Quantize to the clip grid.", "best": {"mikro": 97, "mk3": 107}},
+        {"combo": ["SHIFT", "PAD 6"], "does": "Quantize 50% (half way to the grid).", "best": {"mikro": 98, "mk3": 108}},
+        {"combo": ["SHIFT", "PAD 7"], "does": "Nudge notes one grid step earlier.", "best": {"mikro": 109, "mk3": 119}},
+        {"combo": ["SHIFT", "PAD 8"], "does": "Nudge notes one grid step later.", "best": {"mikro": 110, "mk3": 120}},
+        {"combo": ["SHIFT", "PAD 9"], "does": "Clear notes.", "best": {"mikro": 111, "mk3": 121}},
+        {"combo": ["SHIFT", "PAD 10"], "does": "Clear the clip's automation envelopes (red when it has some).", "best": {"mikro": 106, "mk3": 116}},
+        {"combo": ["SHIFT", "PAD 11"], "does": "Copy notes.", "best": {"mikro": 100, "mk3": 110}},
+        {"combo": ["SHIFT", "PAD 12"], "does": "Paste the copied notes after the copied range (again: further on).", "best": {"mikro": 101, "mk3": 111}},
+        {"combo": ["SHIFT", "PAD 13"], "does": "Transpose down one scale step (semitone in chromatic).", "best": {"mikro": 102, "mk3": 112}},
+        {"combo": ["SHIFT", "PAD 14"], "does": "Transpose up one scale step.", "best": {"mikro": 103, "mk3": 113}},
+        {"combo": ["SHIFT", "PAD 15"], "does": "Transpose down an octave.", "best": {"mikro": 104, "mk3": 114}},
+        {"combo": ["SHIFT", "PAD 16"], "does": "Transpose up an octave.", "best": {"mikro": 105, "mk3": 115}}
       ]
     },
     {
@@ -279,15 +279,15 @@
       "title": "EVENTS: select notes",
       "summary": "Hold EVENTS: the pads show the drum pads or keyboard of the mode underneath; lit pads have notes in the focused clip.",
       "items": [
-        {"combo": ["EVENTS", "PAD"], "does": "Select that pad's notes (again: deselect). While EVENTS is held, the pads with notes light in their own colours, selected ones brightest.", "best": {"mikro": 92, "mk3": 100}},
+        {"combo": ["EVENTS", "PAD"], "does": "Select that pad's notes (again: deselect). While EVENTS is held, the pads with notes light in their own colours, selected ones brightest.", "best": {"mikro": 92, "mk3": 102}},
         {"combo": ["EVENTS"], "does": "Tap: select all notes / none.", "devices": ["mikro"], "best": 96, "headline": "Tap EVENTS: select all notes / none"},
-        {"combo": ["EVENTS", "TURN"], "does": "Scroll the layout underneath (octave, drum rows; SHIFT: scale; PUSH: root).", "best": {"mikro": 95, "mk3": 104}, "headline": "Scroll the layout underneath"},
-        {"combo": ["ERASE", "EVENTS"], "does": "Clear every note of the focused clip (one undo step).", "best": {"mikro": 94, "mk3": 103}},
-        {"combo": ["VARIATION"], "does": "Tap: humanize, small random changes to timing and velocity. Holding it and letting go without a pad changes nothing.", "best": {"mikro": 91, "mk3": 98}, "headline": "Humanize: small random changes to timing and velocity"},
-        {"combo": ["VARIATION", "PAD"], "does": "Record a variation, in any mode: while VARIATION is held the pads show the clips, and the free slot below each clip on a MIDI track lights red. Press one (or the clip): the clip is copied there, its track selected and armed, and the copy recorded into (overdub) while the original stays as it was; with Live stopped, Live counts in first. A full column gets a new scene. The copy is named with the next number (Bass → Bass_1 → Bass_2; unnamed: 1, 2 ...).", "best": {"mikro": 16, "mk3": 23}, "headline": "Record a variation of a clip next to it, from any mode"},
-        {"combo": ["SHIFT", "VARIATION"], "does": "Randomize velocities (60-127).", "best": {"mikro": 93, "mk3": 102}},
-        {"combo": ["EVENTS"], "context": "with the screens", "does": "Tap: the page stays. The clip's notes as a piano roll, or as drum lanes on a Drum Rack, with the playhead.", "devices": ["mk3"], "best": 99, "headline": "The clip's notes as a piano roll on the screens"},
-        {"combo": ["VARIATION"], "context": "held, with the screens", "does": "HUMANIZE or RANDOM, the amounts on the knobs. APPLY (button 8) applies it. A tap still humanizes.", "devices": ["mk3"], "best": 101}
+        {"combo": ["EVENTS", "TURN"], "does": "Scroll the layout underneath (octave, drum rows; SHIFT: scale; PUSH: root).", "best": {"mikro": 95, "mk3": 106}, "headline": "Scroll the layout underneath"},
+        {"combo": ["ERASE", "EVENTS"], "does": "Clear every note of the focused clip (one undo step).", "best": {"mikro": 94, "mk3": 105}},
+        {"combo": ["VARIATION"], "does": "Tap: humanize, small random changes to timing and velocity. Holding it and letting go without a pad changes nothing.", "best": {"mikro": 91, "mk3": 100}, "headline": "Humanize: small random changes to timing and velocity"},
+        {"combo": ["VARIATION", "PAD"], "does": "Record a variation, in any mode: while VARIATION is held the pads show the clips, and the free slot below each clip on a MIDI track lights red. Press one (or the clip): the clip is copied there, its track selected and armed, and the copy recorded into (overdub) while the original stays as it was; with Live stopped, Live counts in first. A full column gets a new scene. The copy is named with the next number (Bass → Bass_1 → Bass_2; unnamed: 1, 2 ...).", "best": {"mikro": 17, "mk3": 22}, "headline": "Record a variation of a clip next to it, from any mode"},
+        {"combo": ["SHIFT", "VARIATION"], "does": "Randomize velocities (60-127).", "best": {"mikro": 93, "mk3": 104}},
+        {"combo": ["EVENTS"], "context": "with the screens", "does": "Tap: the page stays. The clip's notes as a piano roll, or as drum lanes on a Drum Rack, with the playhead.", "devices": ["mk3"], "best": 101, "headline": "The clip's notes as a piano roll on the screens"},
+        {"combo": ["VARIATION"], "context": "held, with the screens", "does": "HUMANIZE or RANDOM, the amounts on the knobs. APPLY (button 8) applies it. A tap still humanizes.", "devices": ["mk3"], "best": 103}
       ]
     },
     {
@@ -301,7 +301,7 @@
         {"combo": ["RESTART"], "does": "Restart from the start marker.", "best": {"mikro": 119, "mk3": 129}},
         {"combo": ["SHIFT", "RESTART"], "does": "Loop on / off.", "best": {"mikro": 120, "mk3": 130}},
         {"combo": ["REC"], "does": "Session record on / off (also ends Arrangement recording).", "best": {"mikro": 113, "mk3": 123}},
-        {"combo": ["REC", "TURN"], "does": "Record length: Free, 1, 2, 4 or 8 bars.", "best": {"mikro": 18, "mk3": 121}, "headline": "Record exactly 1, 2, 4 or 8 bars, then the clip loops"},
+        {"combo": ["REC", "TURN"], "does": "Record length: Free, 1, 2, 4 or 8 bars.", "best": {"mikro": 19, "mk3": 25}, "headline": "Record exactly 1, 2, 4 or 8 bars, then the clip loops"},
         {"combo": ["SHIFT", "REC"], "does": "Arrangement record on / off.", "best": {"mikro": 121, "mk3": 131}},
         {"combo": ["STOP"], "does": "Stop. Hold + PAD: stop that track's clips.", "best": {"mikro": 116, "mk3": 126}, "headline": "STOP: stop, or hold + pad"},
         {"combo": ["SHIFT", "STOP"], "does": "Stop all clips (transport keeps running).", "best": {"mikro": 124, "mk3": 134}},
@@ -324,7 +324,7 @@
         {"combo": ["SWING", "TURN"], "does": "Swing ±1 % (SHIFT: ±10 %). Tap SWING: show the swing.", "best": {"mikro": 128, "mk3": 138}, "headline": "Swing on the encoder"},
         {"combo": ["VOLUME", "TURN"], "does": "Selected track volume ±1 dB (SHIFT: ±0.1 dB). The value shows as you turn (MK3: on the left screen, for example Volume -3.0 dB).", "best": {"mikro": 129, "mk3": 139}, "headline": "Track volume on the encoder"},
         {"combo": ["VOLUME", "PUSH"], "does": "Selected track volume back to 0.0 dB.", "best": {"mikro": 131, "mk3": 140}},
-        {"combo": ["VOLUME"], "does": "Tap: the mixer on the pads, the encoder and the screen (see Mixer); tap again: back. Holding VOLUME to turn leaves everything else as it is.", "devices": ["mikro"], "best": 130, "headline": "Tap VOLUME: the mixer"},
+        {"combo": ["VOLUME"], "does": "Tap: the mixer on the pads, the encoder and the screen (see Mixer); tap again: back to the page you were on (PLUG-IN and the browser too). Holding VOLUME to turn leaves everything else as it is.", "devices": ["mikro"], "best": 130, "headline": "Tap VOLUME: the mixer"},
         {"combo": ["SHIFT", "VOLUME"], "does": "Cue volume, the level of the previews (and headphones on cue): hold and turn, or tap to keep it on (0.5 dB steps) until SHIFT + VOLUME again or another mode.", "devices": ["mikro"], "best": 132, "headline": "Cue volume for the previews and headphones"}
       ]
     },
@@ -337,16 +337,16 @@
         {"title": "Held buttons and combos", "text": "Hold ERASE, DUPLICATE, EVENTS, SOLO, MUTE or SELECT and press another button: that is a combo. Letting go of the held button then does nothing, so a combo never ends in an extra tap. SHIFT and STOP are not affected."}
       ],
       "items": [
-        {"combo": ["DUPLICATE"], "does": "Tap: duplicate the focused clip (TRACK mode: the track; SCENE mode: the scene).", "best": {"mikro": 135, "mk3": 153}, "headline": "Duplicate the focused clip, track or scene"},
-        {"combo": ["SHIFT", "DUPLICATE"], "does": "Double the focused MIDI clip's loop.", "best": {"mikro": 134, "mk3": 152}},
-        {"combo": ["ERASE"], "does": "Hold + PAD to erase. On its own it does nothing, so a stray press never deletes your work.", "best": {"mikro": 137, "mk3": 155}, "headline": "ERASE alone never deletes your work"},
-        {"combo": ["SHIFT", "ERASE"], "does": "Delete the focused clip (TRACK mode: the track; SCENE mode: the scene).", "best": {"mikro": 136, "mk3": 154}, "headline": "Delete the focused clip, track or scene"},
-        {"combo": ["SOLO"], "does": "Tap: solo the selected track (SHIFT: add to the solo).", "best": {"mikro": 138, "mk3": 156}, "headline": "SOLO: solo the selected track"},
-        {"combo": ["MUTE"], "does": "Tap: mute the selected track.", "best": {"mikro": 139, "mk3": 157}, "headline": "MUTE: mute the selected track"},
-        {"combo": ["SHIFT", "MUTE"], "does": "Unmute and unsolo every track.", "best": {"mikro": 140, "mk3": 158}},
+        {"combo": ["DUPLICATE"], "does": "Tap: duplicate the focused clip (TRACK mode: the track; SCENE mode: the scene).", "best": {"mikro": 135, "mk3": 143}, "headline": "Duplicate the focused clip, track or scene"},
+        {"combo": ["SHIFT", "DUPLICATE"], "does": "Double the focused MIDI clip's loop.", "best": {"mikro": 134, "mk3": 142}},
+        {"combo": ["ERASE"], "does": "Hold + PAD to erase. On its own it does nothing, so a stray press never deletes your work.", "best": {"mikro": 137, "mk3": 145}, "headline": "ERASE alone never deletes your work"},
+        {"combo": ["SHIFT", "ERASE"], "does": "Delete the focused clip (TRACK mode: the track; SCENE mode: the scene).", "best": {"mikro": 136, "mk3": 144}, "headline": "Delete the focused clip, track or scene"},
+        {"combo": ["SOLO"], "does": "Tap: solo the selected track (SHIFT: add to the solo).", "best": {"mikro": 138, "mk3": 146}, "headline": "SOLO: solo the selected track"},
+        {"combo": ["MUTE"], "does": "Tap: mute the selected track.", "best": {"mikro": 139, "mk3": 147}, "headline": "MUTE: mute the selected track"},
+        {"combo": ["SHIFT", "MUTE"], "does": "Unmute and unsolo every track.", "best": {"mikro": 140, "mk3": 148}},
         {"combo": ["SELECT"], "does": "Tap: arm the selected track (SHIFT: without disarming others).", "devices": ["mikro"], "best": 141, "headline": "SELECT: arm the selected track"},
-        {"combo": ["LOCK"], "does": "Lock the controller to the current track; a pin shows after its name on the screen while it is locked.", "best": {"mikro": 15, "mk3": 21}, "headline": "LOCK: keep the controller on one track"},
-        {"combo": ["SHIFT", "LOCK"], "does": "Lock to the selected device.", "best": {"mikro": 133, "mk3": 151}}
+        {"combo": ["LOCK"], "does": "Lock the controller to the current track; a pin shows after its name on the screen while it is locked.", "best": {"mikro": 16, "mk3": 21}, "headline": "LOCK: keep the controller on one track"},
+        {"combo": ["SHIFT", "LOCK"], "does": "Lock to the selected device.", "best": {"mikro": 133, "mk3": 141}}
       ]
     },
     {
@@ -357,7 +357,7 @@
         {"combo": ["PERFORM"], "does": "Session / Arrangement view.", "devices": ["mikro"], "best": 173},
         {"combo": ["ARRANGER"], "does": "Session / Arrangement view.", "devices": ["mk3"], "best": 193},
         {"combo": ["BROWSER"], "does": "Without the screens: show / hide Live's browser. With them it is MASCHINE's browser (see BROWSER: MASCHINE's browser).", "devices": ["mk3"], "best": 195},
-        {"combo": ["SHIFT", "BROWSER"], "does": "Hot-Swap: the browser lands on the selected device (or where its last swap left it). PUSH swaps. SHIFT + BROWSER again cancels, back where you were.", "devices": ["mikro"], "best": 20, "headline": "Hot-Swap a device from the controller"},
+        {"combo": ["SHIFT", "BROWSER"], "does": "Hot-Swap: the browser lands on the selected device (or where its last swap left it). PUSH swaps. SHIFT + BROWSER again cancels, back where you were.", "devices": ["mikro"], "best": 21, "headline": "Hot-Swap a device from the controller"},
         {"combo": ["SHIFT", "BROWSER"], "does": "Hot-Swap the selected device (opens the browser on it).", "devices": ["mk3"], "best": 189},
         {"combo": ["SHIFT", "PLUG-IN"], "does": "Toggle the Clip / Device detail view.", "best": {"mikro": 171, "mk3": 191}},
         {"combo": ["SAMPLING"], "does": "Show the clip / sample editor.", "best": {"mikro": 172, "mk3": 192}},
@@ -378,7 +378,7 @@
         {"title": "What you give up while Live runs", "text": "You can't control the MASCHINE plug-in from the controller. Its browser and its pages are mouse only. This comes back when Live closes."}
       ],
       "items": [
-        {"combo": ["PAD"], "does": "Select the track with the MASCHINE plug-in and play: the pads play it, in MASCHINE's own pad order. Pick the group or kit inside the plug-in, with the mouse.", "best": 24, "headline": "Keep the MASCHINE plug-in in your Live sets"},
+        {"combo": ["PAD"], "does": "Select the track with the MASCHINE plug-in and play: the pads play it, in MASCHINE's own pad order. Pick the group or kit inside the plug-in, with the mouse.", "best": {"mikro": 25, "mk3": 31}, "headline": "Keep the MASCHINE plug-in in your Live sets"},
         {"combo": ["BROWSER"], "does": "Still Live's browser, not the plug-in's. The rest of the controller works as it does without the plug-in.", "best": {"mikro": 190, "mk3": 196}}
       ]
     },
@@ -391,16 +391,16 @@
         "mikro"
       ],
       "items": [
-        {"combo": ["VOLUME"], "does": "Mixer on / off; it and PLUG-IN switch each other off.", "best": 10, "headline": "Tap VOLUME: the mixer on the pads, the encoder and the screen"},
-        {"combo": ["PAD"], "does": "Visit that track (Live's selection stays).", "best": 54},
-        {"combo": ["◀", "▶"], "does": "Visit the previous / next track: the tracks (a folded group is one), the returns, the Master.", "best": 55, "headline": "Visit the previous / next track, the returns, the Master"},
-        {"combo": ["TURN"], "does": "Change the parameter: volume and sends ±1 dB, pan in Live's steps (SHIFT: fine, ±0.1 dB).", "best": 52, "headline": "Turn: volume, pan and sends"},
-        {"combo": ["PUSH", "TURN"], "does": "Choose the parameter: Volume, Pan, Send A, Send B ...", "best": 53},
-        {"combo": ["PUSH"], "does": "Tap: reset it (volume 0.0 dB, pan centre, a send to its default).", "best": 56, "headline": "Reset to the default (0.0 dB, pan centre)"},
-        {"combo": ["STRIP"], "does": "The fader: shows the parameter in the track's colour (Pan from the centre, as PITCH), as the screen's fill bar does; touch to set it (0.1 dB steps, pan in whole steps), one undo step per touch.", "best": 25, "headline": "The touch strip as the mixer's fader"},
-        {"combo": ["MUTE"], "does": "Tap: mute / unmute the visited track. Hold + PAD: that pad's track.", "best": 57, "headline": "MUTE: mute the visited track"},
-        {"combo": ["SOLO"], "does": "Tap: solo / unsolo the visited track. Hold + PAD: that pad's track.", "best": 58, "headline": "SOLO: solo the visited track"},
-        {"combo": ["STOP", "PAD"], "does": "Stop that pad's track.", "best": 59}
+        {"combo": ["VOLUME"], "does": "Mixer on / off; it and PLUG-IN switch each other off.", "best": 9, "headline": "Tap VOLUME: the mixer on the pads, the encoder and the screen"},
+        {"combo": ["PAD"], "does": "Visit that track (Live's selection stays).", "best": 55},
+        {"combo": ["◀", "▶"], "does": "Visit the previous / next track: the tracks (a folded group is one), the returns, the Master.", "best": 56, "headline": "Visit the previous / next track, the returns, the Master"},
+        {"combo": ["TURN"], "does": "Change the parameter: volume and sends ±1 dB, pan in Live's steps (SHIFT: fine, ±0.1 dB).", "best": 53, "headline": "Turn: volume, pan and sends"},
+        {"combo": ["PUSH", "TURN"], "does": "Choose the parameter: Volume, Pan, Send A, Send B ...", "best": 54},
+        {"combo": ["PUSH"], "does": "Tap: reset it (volume 0.0 dB, pan centre, a send to its default).", "best": 57, "headline": "Reset to the default (0.0 dB, pan centre)"},
+        {"combo": ["STRIP"], "does": "The fader: shows the parameter in the track's colour (Pan from the centre, as PITCH), as the screen's fill bar does; touch to set it (0.1 dB steps, pan in whole steps), one undo step per touch.", "best": 52, "headline": "The touch strip as the mixer's fader"},
+        {"combo": ["MUTE"], "does": "Tap: mute / unmute the visited track. Hold + PAD: that pad's track.", "best": 58, "headline": "MUTE: mute the visited track"},
+        {"combo": ["SOLO"], "does": "Tap: solo / unsolo the visited track. Hold + PAD: that pad's track.", "best": 59, "headline": "SOLO: solo the visited track"},
+        {"combo": ["STOP", "PAD"], "does": "Stop that pad's track.", "best": 60}
       ]
     },
     {
@@ -419,9 +419,9 @@
         {"combo": ["PUSH", "TURN"], "does": "Previous / next page (a rack with more than 8 macros shown: Macros 1-8, 9-16); the screen shows e.g. 2/2.", "best": 49, "headline": "Previous / next parameter page"},
         {"combo": ["SHIFT", "◀", "▶"], "does": "Previous / next device on the track.", "best": 50},
         {"combo": ["PUSH"], "does": "Tap: reset the parameter to its default.", "best": 51, "headline": "Reset a parameter to its default"},
-        {"combo": ["TURN"], "context": "Mode, on a Simpler", "does": "Switch Simpler's mode in Live: Classic, One-Shot or Slicing. The page's parameters follow the mode (see Simpler above).", "best": 21, "headline": "Switch Simpler between Classic, One-Shot and Slicing"},
-        {"combo": ["PUSH"], "context": "Cursor, on a Simpler in Slicing", "does": "Add a slice marker at the cursor, or remove the slice marker the cursor is on.", "best": 14, "headline": "Chop a sample: add or remove Simpler's slice markers"},
-        {"combo": ["STRIP"], "does": "The strip lights show the parameter's value in the track or chain colour (each rack macro its own, like MASCHINE's sounds); touch to set it, one undo step per touch. The screen's fill bar shows it too; a pan or a detune lights both from the centre. PITCH / MOD take the strip over while lit.", "best": 12, "headline": "The touch strip as a fader for any parameter"}
+        {"combo": ["TURN"], "context": "Mode, on a Simpler", "does": "Switch Simpler's mode in Live: Classic, One-Shot or Slicing. The page's parameters follow the mode (see Simpler above).", "best": 22, "headline": "Switch Simpler between Classic, One-Shot and Slicing"},
+        {"combo": ["PUSH"], "context": "Cursor, on a Simpler in Slicing", "does": "Add a slice marker at the cursor, or remove the slice marker the cursor is on.", "best": 6, "headline": "Chop a sample: add or remove Simpler's slice markers"},
+        {"combo": ["STRIP"], "does": "The strip lights show the parameter's value in the track or chain colour (each rack macro its own, like MASCHINE's sounds); touch to set it, one undo step per touch. The screen's fill bar shows it too; a pan or a detune lights both from the centre. PITCH / MOD take the strip over while lit.", "best": 15, "headline": "The touch strip as a fader for any parameter"}
       ]
     },
     {
@@ -432,15 +432,15 @@
       "tour": {"intro": "Live's browser on the hardware screen: Favorites first, then Live's sidebar, with MASCHINE Kits and your Places."},
       "devices": ["mikro"],
       "items": [
-        {"combo": ["BROWSER"], "does": "Browser on / off (it opens where you left it). PAD MODE, KEYBOARD or CHORDS close it and show the pads.", "best": 17, "headline": "Live's browser on the controller's screen"},
+        {"combo": ["BROWSER"], "does": "Browser on / off (it opens where you left it). PAD MODE, KEYBOARD or CHORDS close it and show the pads.", "best": 18, "headline": "Live's browser on the controller's screen"},
         {"combo": ["STAR"], "does": "Your Favorites, by name; STAR again: close.", "best": 63, "headline": "STAR: your Favorites, by name"},
         {"combo": ["TURN"], "does": "Scroll (SHIFT: by 10).", "best": 66, "headline": "Scroll the browser"},
         {"combo": ["PUSH"], "does": "Open the folder, or load the item onto the selected track (in Hot-Swap: replace the device); the browser then closes, back to the mode you came from.", "best": 64, "headline": "Open a folder or load an item"},
         {"combo": ["◀"], "does": "Back up one level.", "best": 67},
         {"combo": ["▶"], "does": "Open / load, like PUSH.", "best": 68},
-        {"combo": ["TURN"], "context": "onto a MASCHINE kit", "does": "Hear NI's preview of it (preview on in Live's browser). Only a turn starts one: opening a folder, going back or STAR stop what plays.", "best": 60, "headline": "Hear a MASCHINE kit's preview as you turn"},
+        {"combo": ["TURN"], "context": "onto a MASCHINE kit", "does": "Hear NI's preview of it (preview on in Live's browser). Only a turn starts one: opening a folder, going back or STAR stop what plays.", "best": 61, "headline": "Hear a MASCHINE kit's preview as you turn"},
         {"combo": ["PUSH"], "context": "on a Live Set", "does": "Open it at once (Opening and its name on the screen).", "best": 65, "headline": "Open a Live Set from the controller"},
-        {"combo": ["PUSH"], "context": "on a MASCHINE kit", "does": "Load it, replacing the selected MIDI track's instrument, or on a new track.", "best": 61, "headline": "Load a MASCHINE kit as a Drum Rack"},
+        {"combo": ["PUSH"], "context": "on a MASCHINE kit", "does": "Load it, replacing the selected MIDI track's instrument, or on a new track.", "best": 14, "headline": "Load a MASCHINE kit as a Drum Rack"},
         {"combo": ["PUSH"], "context": "on a kit still being prepared, Live 12.0 to 12.3", "does": "Preparing kit... with its name, then it loads by itself in a moment (Kit not ready / Try again if it takes too long).", "best": 69, "headline": "A kit still being prepared loads by itself"},
         {"combo": ["SHIFT", "STAR"], "context": "browser open", "does": "Star / unstar the item (a sound, preset, sample, folder or MASCHINE kit): the ★ shows on its row, listed in Favorites. Kits starred in MASCHINE: change them there.", "best": 62, "headline": "Star any item into your Favorites"}
       ]
@@ -475,16 +475,16 @@
       "summary": "Built from the hardware protocol; not yet tested on a real MK3.",
       "devices": ["mk3"],
       "items": [
-        {"combo": ["SETTINGS"], "does": "The settings (the same as the MIKRO's, see Settings) in four tabs on the knobs: Hardware, Pads, General and Setup. A knob changes its setting. Display buttons 5 / 6 (or the 4-D left / right): the previous / next tab.", "best": 148, "headline": "The settings in four tabs on the knobs"},
-        {"combo": ["SETTINGS"], "context": "Setup tab", "does": "The one-time switches: the screens item (MK3 screens on Windows, Mac screens on macOS) gives the screens back to MASCHINE, and NI VSTi support (Windows, see MASCHINE VSTi in Live Set Support). Turning one opens a dialog: CANCEL or CONFIRM, CANCEL highlighted first. Turn or tilt the 4-D to move the highlight, PUSH to choose, or press button 7 (CANCEL) or 8 (CONFIRM). The value shows the new state at once.", "devices": ["mk3"], "best": 149, "headline": "Setup tab: the one-time switches"},
-        {"combo": ["SETTINGS"], "context": "the screens still MASCHINE's", "does": "Our pages on the two screens, switched on from the controller. On the first Live start, Live's status bar says how. Press SETTINGS once: the status bar explains. Press it twice quickly: the screens are Live's, no restart. macOS: at once, and MASCHINE and Komplete Kontrol get them back when Live quits (also after a force quit). Windows: Windows asks for your permission once (the status bar may ask you to switch the controller off and on once), and the screens stay Live's until you give them back in the Setup tab. The choice is remembered.", "devices": ["mk3"], "best": 147},
-        {"combo": ["GROUP A-H"], "does": "Select the 8 tracks in view (lit in track colours). An unlit one makes a new MIDI track (with DUPLICATE held: an audio track).", "best": 143},
-        {"combo": ["SHIFT", "GROUP A-H"], "does": "Group banks: the next 8 tracks on A-H.", "best": 145},
-        {"combo": ["MUTE", "GROUP A-H"], "does": "Mute / unmute that track. With SOLO: solo it. Several buttons solo them all.", "best": 144},
-        {"combo": ["SOLO"], "context": "held, with the screens", "does": "SELECT, SOLO, MUTE or STOP held: the tracks of A-H and the pads' tracks as tiles, muted ones grey. In PAD MODE the tiles are the drum pads. The held button lights. Let go and the page comes back.", "best": 142, "headline": "Hold SELECT, SOLO, MUTE or STOP: the tracks as tiles"},
-        {"combo": ["MACRO"], "does": "The rack's macros on the knobs, with names and values. Tap: the page stays. Hold: only while held. ◀ ▶: macros 9-16.", "best": 141},
-        {"combo": ["SHIFT", "KNOB"], "does": "Fine adjustment.", "best": 146, "headline": "SHIFT + knob: fine adjustment"},
-        {"combo": ["SETTINGS"], "context": "Brightness", "does": "The Brightness setting dims the two screens too, with the pads and the buttons.", "best": 150}
+        {"combo": ["SETTINGS"], "does": "The settings (the same as the MIKRO's, see Settings) in four tabs on the knobs: Hardware, Pads, General and Setup. A knob changes its setting. Display buttons 5 / 6 (or the 4-D left / right): the previous / next tab.", "best": 156, "headline": "The settings in four tabs on the knobs"},
+        {"combo": ["SETTINGS"], "context": "Setup tab", "does": "The one-time switches: the screens item (MK3 screens on Windows, Mac screens on macOS) gives the screens back to MASCHINE, and NI VSTi support (Windows, see MASCHINE VSTi in Live Set Support). Turning one opens a dialog: CANCEL or CONFIRM, CANCEL highlighted first. Turn or tilt the 4-D to move the highlight, PUSH to choose, or press button 7 (CANCEL) or 8 (CONFIRM). The value shows the new state at once.", "devices": ["mk3"], "best": 157, "headline": "Setup tab: the one-time switches"},
+        {"combo": ["SETTINGS"], "context": "the screens still MASCHINE's", "does": "Our pages on the two screens, switched on from the controller. On the first Live start, Live's status bar says how. Press SETTINGS once: the status bar explains. Press it twice quickly: the screens are Live's, no restart. macOS: at once, and MASCHINE and Komplete Kontrol get them back when Live quits (also after a force quit). Windows: Windows asks for your permission once (the status bar may ask you to switch the controller off and on once), and the screens stay Live's until you give them back in the Setup tab. The choice is remembered.", "devices": ["mk3"], "best": 155},
+        {"combo": ["GROUP A-H"], "does": "Select the 8 tracks in view (lit in track colours). An unlit one makes a new MIDI track (with DUPLICATE held: an audio track).", "best": 151},
+        {"combo": ["SHIFT", "GROUP A-H"], "does": "Group banks: the next 8 tracks on A-H.", "best": 153},
+        {"combo": ["MUTE", "GROUP A-H"], "does": "Mute / unmute that track. With SOLO: solo it. Several buttons solo them all.", "best": 152},
+        {"combo": ["SOLO"], "context": "held, with the screens", "does": "SELECT, SOLO, MUTE or STOP held: the tracks of A-H and the pads' tracks as tiles, muted ones grey. In PAD MODE the tiles are the drum pads. The held button lights. Let go and the page comes back.", "best": 150, "headline": "Hold SELECT, SOLO, MUTE or STOP: the tracks as tiles"},
+        {"combo": ["MACRO"], "does": "The rack's macros on the knobs, with names and values. Tap: the page stays. Hold: only while held. ◀ ▶: macros 9-16.", "best": 149},
+        {"combo": ["SHIFT", "KNOB"], "does": "Fine adjustment.", "best": 154, "headline": "SHIFT + knob: fine adjustment"},
+        {"combo": ["SETTINGS"], "context": "Brightness", "does": "The Brightness setting dims the two screens too, with the pads and the buttons.", "best": 158}
       ]
     },
     {
@@ -495,11 +495,11 @@
       "tour": {"intro": "MASCHINE's mixer on the two screens: 8 strips with live meters, the knobs on the volumes."},
       "devices": ["mk3"],
       "items": [
-        {"combo": ["MIXER"], "does": "Knobs 1-8: volumes of the 8 tracks in view.", "best": 59},
-        {"combo": ["MIXER"], "context": "with the screens", "does": "MASCHINE's mixer on the two screens: 8 channel strips with the tracks' names in their colours, the meters moving with the set, the volume, pan, mute and solo. Knobs 1-8 set the volumes (PUSH: the knobs switch to pan). ◀ ▶: the next 8 strips (the returns and the Master come last).", "best": {"mikro": 8, "mk3": 9}, "headline": "MASCHINE's mixer on the two screens, with moving meters"},
+        {"combo": ["MIXER"], "does": "Knobs 1-8: volumes of the 8 tracks in view. MIXER again closes the mixer: back to exactly the page you were on (PLUG-IN, BROWSER, SETTINGS, a pad mode's page, PATTERN, SCENE, SECTION, MACRO ...), as MASCHINE does.", "best": 59},
+        {"combo": ["MIXER"], "context": "with the screens", "does": "MASCHINE's mixer on the two screens: 8 channel strips with the tracks' names in their colours, the meters moving with the set, the volume, pan, mute and solo. Knobs 1-8 set the volumes (PUSH: the knobs switch to pan). ◀ ▶: the next 8 strips (the returns and the Master come last).", "best": 12, "headline": "MASCHINE's mixer on the two screens, with moving meters"},
         {"combo": ["DISPLAY"], "context": "MIXER", "does": "Select that strip's track. Hold MUTE or SOLO and press a display button: mute / solo that track.", "best": 61},
         {"combo": ["TURN"], "does": "Tilt the 4-D left / right to pick a strip. Turn it for that strip's volume (SHIFT: 0.1 dB). A strip that clips shows a red cap for about 3 s.", "best": 60},
-        {"combo": ["TURN"], "context": "4-D down", "does": "On a Drum Rack track: its pads as strips, with hit meters. 4-D up: the tracks again.", "best": 13, "headline": "A Drum Rack's pads as mixer strips, with hit meters"}
+        {"combo": ["TURN"], "context": "4-D down", "does": "On a Drum Rack track: its pads as strips, with hit meters. 4-D up: the tracks again.", "best": 17, "headline": "A Drum Rack's pads as mixer strips, with hit meters"}
       ]
     },
     {
@@ -510,16 +510,16 @@
       "tour": {"intro": "The selected device on the knobs, drawn as a picture that moves as you turn: Simpler, its slices, EQ Eight."},
       "devices": ["mk3"],
       "items": [
-        {"combo": ["PLUG-IN"], "does": "Knobs 1-8: the selected device's parameters. ◀ ▶ page through its banks. (Without the screens the buttons above them choose the bank 1-8, and PLUG-IN + ◀ ▶ step through every bank.)", "best": 27, "headline": "Knobs 1-8: the selected device's parameters"},
-        {"combo": ["PLUG-IN"], "context": "with the screens", "does": "MASCHINE's Control page: the track's devices on the left, the selected device on the right (Live's own devices drawn as a picture, such as a filter's curve), and its 8 parameters on the knobs with their values and bars. Turn a knob: the value, its bar and the picture follow. PLUG-IN held + a display button: bank 1-8.", "best": {"mikro": 1, "mk3": 2}, "headline": "Live's devices drawn on the screens, moving as you turn"},
-        {"combo": ["PLUG-IN"], "context": "Simpler", "does": "Simpler drawn as its sample: the waveform with its Start and End markers. Knobs 3 and 4 (Start, End): the marker moves on the waveform as you turn.", "best": 26},
-        {"combo": ["PLUG-IN"], "context": "Simpler: Slicing", "does": "Simpler in Slicing mode: the slices' markers on the waveform. Knob 2 moves the cursor across them, and its value shows the slice's number (632 ms #4). Display button 7 (+ MARKER / - MARKER) adds a slice at the cursor or removes the one there.", "best": {"mikro": 6, "mk3": 7}, "headline": "Chop a sample: Simpler's slices on the waveform"},
-        {"combo": ["PLUG-IN"], "context": "EQ Eight", "does": "EQ Eight drawn as its curve, with a dot for each band. Turn a band's frequency or gain: the dot and the curve follow.", "best": 14},
-        {"combo": ["KNOB"], "does": "Touch a knob: its name lights up. A parameter with a few choices shows them in a list while you turn.", "best": 28},
-        {"combo": ["DISPLAY"], "context": "PLUG-IN", "does": "Buttons 1-3: MASTER, TRACK or PAD (the focused drum pad's chain, an empty pad too). Buttons 5 / 6: the previous / next track or pad. Button 8: Hot-Swap the device. Hold SHIFT: its functions light up at once. SHIFT + button 3: INSERT, an Audio Effect after the device (on an empty drum pad: the browser's top list, to load an instrument, a sample or a drum into it). SHIFT + button 7: BYPASS, the device off / on.", "best": 29, "headline": "Display buttons: MASTER, TRACK, PAD, Hot-Swap, INSERT, BYPASS"},
-        {"combo": ["TURN"], "context": "4-D left / right", "does": "The previous / next device. Right past the last device: the + tile, and PUSH on it inserts a device there (as SHIFT + button 3). A track with no devices shows only the +.", "best": 30, "headline": "Tilt the 4-D: the previous / next device, or insert one"},
-        {"combo": ["KNOB"], "context": "PLUG-IN", "does": "Each value has a bar in the track's colour. A red dot by the name means Live has automation on it.", "best": 19, "headline": "Value bars in the track's colour, a red dot where there is automation"},
-        {"combo": ["KNOB"], "context": "a plug-in with no parameters", "does": "No parameters over knob 1, and Configure in Live. Live gives the controller only the plug-in parameters you add in its device view (Configure). Add them there, and they come 8 to a bank.", "devices": ["mk3"], "best": 31, "headline": "Other plug-ins: add their parameters with Configure"}
+        {"combo": ["PLUG-IN"], "does": "Knobs 1-8: the selected device's parameters. ◀ ▶ page through its banks. (Without the screens the buttons above them choose the bank 1-8, and PLUG-IN + ◀ ▶ step through every bank.)", "best": 14, "headline": "Knobs 1-8: the selected device's parameters"},
+        {"combo": ["PLUG-IN"], "context": "with the screens", "does": "MASCHINE's Control page: the track's devices on the left, the selected device on the right (Live's own devices drawn as a picture, such as a filter's curve), and its 8 parameters on the knobs with their values and bars. Turn a knob: the value, its bar and the picture follow. PLUG-IN held + a display button: bank 1-8.", "best": 2, "headline": "Live's devices drawn on the screens, moving as you turn"},
+        {"combo": ["PLUG-IN"], "context": "Simpler", "does": "Simpler drawn as its sample: the waveform with its Start and End markers. Knobs 3 and 4 (Start, End): the marker moves on the waveform as you turn.", "best": 28},
+        {"combo": ["PLUG-IN"], "context": "Simpler: Slicing", "does": "Simpler in Slicing mode: the slices' markers on the waveform. Knob 2 moves the cursor across them, and its value shows the slice's number (632 ms #4). Display button 7 (+ MARKER / - MARKER) adds a slice at the cursor or removes the one there.", "best": 9, "headline": "Chop a sample: Simpler's slices on the waveform"},
+        {"combo": ["PLUG-IN"], "context": "EQ Eight", "does": "EQ Eight drawn as its curve, with a dot for each band. Turn a band's frequency or gain: the dot and the curve follow.", "best": 18},
+        {"combo": ["KNOB"], "does": "Touch a knob: its name lights up. A parameter with a few choices shows them in a list while you turn.", "best": 55},
+        {"combo": ["DISPLAY"], "context": "PLUG-IN", "does": "Buttons 1-3: MASTER, TRACK or PAD (the focused drum pad's chain, an empty pad too). Buttons 5 / 6: the previous / next track or pad. Button 8: Hot-Swap the device. Hold SHIFT: its functions light up at once. SHIFT + button 3: INSERT, an Audio Effect after the device (on an empty drum pad: the browser's top list, to load an instrument, a sample or a drum into it). SHIFT + button 7: BYPASS, the device off / on.", "best": 56, "headline": "Display buttons: MASTER, TRACK, PAD, Hot-Swap, INSERT, BYPASS"},
+        {"combo": ["TURN"], "context": "4-D left / right", "does": "The previous / next device. Right past the last device: the + tile, and PUSH on it inserts a device there (as SHIFT + button 3). A track with no devices shows only the +.", "best": 57, "headline": "Tilt the 4-D: the previous / next device, or insert one"},
+        {"combo": ["KNOB"], "context": "PLUG-IN", "does": "Each value has a bar in the track's colour. A red dot by the name means Live has automation on it.", "best": 54, "headline": "Value bars in the track's colour, a red dot where there is automation"},
+        {"combo": ["KNOB"], "context": "a plug-in with no parameters", "does": "No parameters over knob 1, and Configure in Live. Live gives the controller only the plug-in parameters you add in its device view (Configure). Add them there, and they come 8 to a bank.", "devices": ["mk3"], "best": 58, "headline": "Other plug-ins: add their parameters with Configure"}
       ]
     },
     {
@@ -530,9 +530,9 @@
       "tour": {"intro": "Live's Drum Synths drawn on the screen, each with its own card and icon. Hit a pad and its drawing plays."},
       "devices": ["mk3"],
       "items": [
-        {"combo": ["PLUG-IN"], "does": "On a Drum Synth: its card. DS Kick, DS Snare, DS HH, DS Cymbal, DS Tom, DS Clap, DS Clang, DS FM and DS Sampler each have their own drawing and icon.", "best": {"mikro": 2, "mk3": 3}, "headline": "Each Drum Synth on a card of its own, with a drawing and an icon"},
-        {"combo": ["PAD"], "does": "Hit the pad: its Drum Synth's drawing plays the hit, as loud as you played it. Another pad focuses its own synth.", "best": {"mikro": 3, "mk3": 4}},
-        {"combo": ["KNOB"], "does": "Turn a knob: the drawing and its decay line follow the sound.", "best": 15}
+        {"combo": ["PLUG-IN"], "does": "On a Drum Synth: its card. DS Kick, DS Snare, DS HH, DS Cymbal, DS Tom, DS Clap, DS Clang, DS FM and DS Sampler each have their own drawing and icon.", "best": 3, "headline": "Each Drum Synth on a card of its own, with a drawing and an icon"},
+        {"combo": ["PAD"], "does": "Hit the pad: its Drum Synth's drawing plays the hit, as loud as you played it. Another pad focuses its own synth.", "best": 4},
+        {"combo": ["KNOB"], "does": "Turn a knob: the drawing and its decay line follow the sound.", "best": 19}
       ]
     },
     {
@@ -543,10 +543,10 @@
       "tour": {"intro": "Your MASCHINE Expansions in Live, no plug-in: browse, hear, load a kit as a Drum Rack."},
       "devices": ["mk3"],
       "items": [
-        {"combo": ["BROWSER"], "does": "Open the browser. Knob 1 (or a turn on the top list): MASCHINE Kits.", "best": 58, "headline": "Open MASCHINE Kits in the browser"},
-        {"combo": ["PUSH"], "does": "Open an Expansion: its kits on the right screen.", "best": 57},
-        {"combo": ["TURN"], "does": "Turn onto a kit: its preview plays.", "best": 56},
-        {"combo": ["PUSH"], "context": "on a kit", "does": "Load the kit as a Drum Rack on the selected track. The browser closes and the pads light in the kit's colours.", "best": 16, "headline": "Load a kit as a Drum Rack, the pads in its colours"}
+        {"combo": ["BROWSER"], "does": "Open the browser. Knob 1 (or a turn on the top list): MASCHINE Kits.", "best": 64, "headline": "Open MASCHINE Kits in the browser"},
+        {"combo": ["PUSH"], "does": "Open an Expansion: its kits on the right screen.", "best": 63},
+        {"combo": ["TURN"], "does": "Turn onto a kit: its preview plays.", "best": 62},
+        {"combo": ["PUSH"], "context": "on a kit", "does": "Load the kit as a Drum Rack on the selected track. The browser closes and the pads light in the kit's colours.", "best": 20, "headline": "Load a kit as a Drum Rack, the pads in its colours"}
       ]
     },
     {
@@ -557,10 +557,10 @@
       "tour": {"intro": "Live's Arrangement as MASCHINE's Section page: the song on the screens, the locators on the pads."},
       "devices": ["mk3"],
       "items": [
-        {"combo": ["SHIFT", "SCENE"], "does": "The Section page on / off (hold SCENE: only while held).", "best": 95, "headline": "SHIFT + SCENE: the Section page"},
-        {"combo": ["PAD"], "does": "Jump to that locator (Live's jump: on the beat while it plays). The pads are the locators in the selected track's colour, the playing one white, the picked one bright.", "best": 20, "headline": "Your song's locators on the pads: jump on the beat"},
-        {"combo": ["SHIFT", "PAD"], "does": "The SHIFT functions, as in every mode (undo, redo, quantize, copy ...). Plain pads stay the locators.", "best": 97},
-        {"combo": ["TURN"], "does": "Tilt the 4-D left / right to pick the previous / next locator (framed white). Push: jump to it.", "best": 96, "headline": "Tilt the 4-D: the previous / next locator"}
+        {"combo": ["SHIFT", "SCENE"], "does": "The Section page on / off (hold SCENE: only while held).", "best": 97, "headline": "SHIFT + SCENE: the Section page"},
+        {"combo": ["PAD"], "does": "Jump to that locator (Live's jump: on the beat while it plays). The pads are the locators in the selected track's colour, the playing one white, the picked one bright.", "best": 24, "headline": "Your song's locators on the pads: jump on the beat"},
+        {"combo": ["SHIFT", "PAD"], "does": "The SHIFT functions, as in every mode (undo, redo, quantize, copy ...). Plain pads stay the locators.", "best": 99},
+        {"combo": ["TURN"], "does": "Tilt the 4-D left / right to pick the previous / next locator (framed white). Push: jump to it.", "best": 98, "headline": "Tilt the 4-D: the previous / next locator"}
       ]
     },
     {
@@ -571,16 +571,16 @@
       "tour": {"intro": "Live's browser on the two screens, as MASCHINE's: categories, folders and results, with MASCHINE Kits and your favourites."},
       "devices": ["mk3"],
       "items": [
-        {"combo": ["BROWSER"], "does": "Browser on / off (it opens where you left it).", "best": 67},
-        {"combo": ["TURN"], "does": "Scroll the results (tilt the 4-D up / down too).", "best": 65},
-        {"combo": ["PUSH"], "does": "Open the folder, or load the item onto the selected track (tilt the 4-D right too; left: back up one level).", "best": 66, "headline": "Open a folder or load the item"},
-        {"combo": ["KNOB 1"], "does": "The category: Favorites, Live Sets, Sounds, Drums, Instruments ...", "best": 63, "headline": "Knob 1: the category"},
-        {"combo": ["KNOB"], "does": "Knobs 2-4 in Live's tagged categories (Sounds, Drums, Instruments, effects ...): TYPE, SUBTYPE and CHARACTER, as MASCHINE's tag filters. Touch or turn one: its tags pop up as a cloud. Elsewhere the knobs are the folder levels.", "best": 17, "headline": "Browse by Live's tags on the knobs, as MASCHINE's tag filters"},
-        {"combo": ["DISPLAY"], "does": "PREVIOUS / NEXT load the previous / next result, ★ shows Favorites (SHIFT: star / unstar the result), LOAD loads it.", "best": 64, "headline": "PREVIOUS, NEXT, Favorites and LOAD on the display buttons"},
-        {"combo": ["SHIFT", "BROWSER"], "does": "Hot-Swap the selected device (PLUG-IN's button 8 too). The browser opens as your last swap of that device left it: the same filters on, the loaded result highlighted, nothing playing until you turn. A load replaces the device. SHIFT + BROWSER again cancels.", "best": 62, "headline": "Hot-Swap the selected device, where your last swap left it"},
-        {"combo": ["DISPLAY"], "context": "button 4", "does": "In a Hot-Swap: CANCEL. Nothing loads, and the browser closes, back to the page you came from. In plain browsing it is empty. SHIFT + LOAD: PREHEAR on / off. A result plays only when you scroll onto it.", "best": 68, "headline": "CANCEL a Hot-Swap, PREHEAR on / off"},
-        {"combo": ["KNOB"], "context": "knobs 4 and 7", "does": "Knob 4 CHARACTER (SHIFT: GENRE). Knob 7 sorts Live Sets by name or newest first.", "best": 69, "headline": "Genre, and Live Sets sorted by name or date"},
-        {"combo": ["BROWSER"], "context": "close or load", "does": "The page you were on comes back.", "best": 70, "headline": "Close or load: back to the page you were on"}
+        {"combo": ["BROWSER"], "does": "Browser on / off (it opens where you left it).", "best": 69},
+        {"combo": ["TURN"], "does": "Scroll the results (tilt the 4-D up / down too).", "best": 67},
+        {"combo": ["PUSH"], "does": "Open the folder, or load the item onto the selected track (tilt the 4-D right too; left: back up one level).", "best": 68, "headline": "Open a folder or load the item"},
+        {"combo": ["KNOB 1"], "does": "The category: Favorites, Live Sets, Sounds, Drums, Instruments ...", "best": 65, "headline": "Knob 1: the category"},
+        {"combo": ["KNOB"], "does": "Knobs 2-4 in Live's tagged categories (Sounds, Drums, Instruments, effects ...): TYPE, SUBTYPE and CHARACTER, as MASCHINE's tag filters. Touch or turn one: its tags pop up as a cloud. Elsewhere the knobs are the folder levels.", "best": 23, "headline": "Browse by Live's tags on the knobs, as MASCHINE's tag filters"},
+        {"combo": ["DISPLAY"], "does": "PREVIOUS / NEXT load the previous / next result, ★ shows Favorites (SHIFT: star / unstar the result), LOAD loads it.", "best": 66, "headline": "PREVIOUS, NEXT, Favorites and LOAD on the display buttons"},
+        {"combo": ["SHIFT", "BROWSER"], "does": "Hot-Swap the selected device (PLUG-IN's button 8 too). The browser opens as your last swap of that device left it: the same filters on, the loaded result highlighted, nothing playing until you turn. A load replaces the device. SHIFT + BROWSER again cancels.", "best": 27, "headline": "Hot-Swap the selected device, where your last swap left it"},
+        {"combo": ["DISPLAY"], "context": "button 4", "does": "In a Hot-Swap: CANCEL. Nothing loads, and the browser closes, back to the page you came from. In plain browsing it is empty. SHIFT + LOAD: PREHEAR on / off. A result plays only when you scroll onto it.", "best": 70, "headline": "CANCEL a Hot-Swap, PREHEAR on / off"},
+        {"combo": ["KNOB"], "context": "knobs 4 and 7", "does": "Knob 4 CHARACTER (SHIFT: GENRE). Knob 7 sorts Live Sets by name or newest first.", "best": 71, "headline": "Genre, and Live Sets sorted by name or date"},
+        {"combo": ["BROWSER"], "context": "close or load", "does": "The page you were on comes back.", "best": 72, "headline": "Close or load: back to the page you were on"}
       ]
     }
   ],

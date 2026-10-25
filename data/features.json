@@ -51,13 +51,13 @@
       "title": "Highlights",
       "summary": "The best of it in a minute. Each one is explained in its own section below.",
       "items": [
-        {"combo": ["SHIFT"], "does": "A real controller, not a template: a real SHIFT key and Live's colours on the pads. No Controller Editor, no MIDI mode.", "best": {"mikro": 1, "mk3": 9}},
+        {"combo": ["SHIFT"], "does": "A real controller, not a template: a real SHIFT key and Live's colours on the pads. No Controller Editor, no MIDI mode.", "headline": "A real controller, not a template: drag and drop, open Live, play", "best": {"mikro": 1, "mk3": 1}},
         {"combo": ["TURN"], "does": "The screen shows almost anything: the mode and track, tempo, swing and volume as you change them, and device parameters with their names and values.", "best": {"mikro": 7, "mk3": 25}, "headline": "A screen that shows what you play and turn"},
         {"combo": ["CHORDS"], "does": "A chord on every pad, always in Live's key: triads to 9ths, with voicings.", "best": {"mikro": 6, "mk3": 11}},
-        {"combo": ["NOTE REPEAT"], "does": "Note repeat that follows pad pressure: slide the touch strip to set its rate, or touch it while holding pads to repeat them on the spot. Plus an arpeggiator, all recorded exactly on Live's grid.", "best": {"mikro": 2, "mk3": 4}, "headline": "Note repeat and an arpeggiator that follow pad pressure"},
+        {"combo": ["NOTE REPEAT"], "does": "Note repeat that follows pad pressure: slide the touch strip to set its rate, or touch it while holding pads to repeat them on the spot. Plus an arpeggiator, all recorded exactly on Live's grid.", "best": {"mikro": 2, "mk3": 5}, "headline": "Note repeat and an arpeggiator that follow pad pressure"},
         {"combo": ["STEP"], "does": "A step sequencer on the pads, read like MASCHINE, with the playhead running across them.", "best": {"mikro": 8, "mk3": 12}},
-        {"combo": ["PUSH"], "does": "MASCHINE Kits: play your Expansions in Live without the MASCHINE plug-in. BROWSER > MASCHINE Kits, turn to hear a kit, push to load it as a Drum Rack, pad for pad as in MASCHINE. One-way sync: your MASCHINE favourites come along, starred (read only; star / unstar them in MASCHINE).", "devices": ["mikro"], "best": 3},
-        {"combo": ["BROWSER"], "does": "MASCHINE's browser on the two screens, on Live's browser: knob 1 the category, the 4-D encoder scrolls, LOAD loads. MASCHINE Kits: play your Expansions in Live without the MASCHINE plug-in, a turn onto a kit plays its preview and a load makes it a Drum Rack, pad for pad as in MASCHINE.", "devices": ["mk3"], "best": 5, "headline": "MASCHINE Kits and MASCHINE's browser on the two screens"}
+        {"combo": ["PUSH"], "does": "MASCHINE Kits: play your Expansions in Live without the MASCHINE plug-in. BROWSER > MASCHINE Kits, turn to hear a kit, push to load it as a Drum Rack, pad for pad as in MASCHINE. One-way sync: your MASCHINE favourites come along, starred (read only; star / unstar them in MASCHINE).", "devices": ["mikro"], "best": {"mikro": 3, "mk3": 4}},
+        {"combo": ["BROWSER"], "does": "MASCHINE's browser on the two screens, on Live's browser: knob 1 the category, the 4-D encoder scrolls, LOAD loads. MASCHINE Kits: play your Expansions in Live without the MASCHINE plug-in, a turn onto a kit plays its preview and a load makes it a Drum Rack, pad for pad as in MASCHINE.", "devices": ["mk3"], "best": {"mikro": 5, "mk3": 6}, "headline": "MASCHINE Kits and MASCHINE's browser on the two screens"}
       ]
     },
     {
@@ -165,7 +165,7 @@
       "summary": "On a track whose instrument is a Simpler in Slicing mode, the pads play its slices: slice 1 on pad 1, lit in the track's colour, the selected slice bright. The track switches the pads by itself, as a Drum Rack track does. A Drum Rack always wins: a Simpler inside a drum pad stays a drum pad.",
       "tour": {"intro": "A sliced Simpler's slices on the pads, as on MASCHINE."},
       "items": [
-        {"combo": ["PAD MODE"], "does": "The slices on the pads (KEYBOARD and CHORDS on such a track land on them too, as on a Drum Rack).", "best": {"mikro": 4, "mk3": 7}, "headline": "Simpler's slices on the pads, ready to play"},
+        {"combo": ["PAD MODE"], "does": "The slices on the pads (KEYBOARD and CHORDS on such a track land on them too, as on a Drum Rack).", "best": {"mikro": 4, "mk3": 8}, "headline": "Simpler's slices on the pads, ready to play"},
         {"combo": ["PAD"], "does": "Play the slice and select it in Simpler.", "best": {"mikro": 44, "mk3": 32}},
         {"combo": ["◀", "▶"], "does": "The previous / next 16 slices.", "best": {"mikro": 45, "mk3": 34}},
         {"combo": ["TURN"], "does": "Scroll by one row of slices.", "best": {"mikro": 46, "mk3": 35}},
@@ -496,7 +496,7 @@
       "devices": ["mk3"],
       "items": [
         {"combo": ["MIXER"], "does": "Knobs 1-8: volumes of the 8 tracks in view.", "best": 59},
-        {"combo": ["MIXER"], "context": "with the screens", "does": "MASCHINE's mixer on the two screens: 8 channel strips with the tracks' names in their colours, the meters moving with the set, the volume, pan, mute and solo. Knobs 1-8 set the volumes (PUSH: the knobs switch to pan). ◀ ▶: the next 8 strips (the returns and the Master come last).", "best": 8, "headline": "MASCHINE's mixer on the two screens, with moving meters"},
+        {"combo": ["MIXER"], "context": "with the screens", "does": "MASCHINE's mixer on the two screens: 8 channel strips with the tracks' names in their colours, the meters moving with the set, the volume, pan, mute and solo. Knobs 1-8 set the volumes (PUSH: the knobs switch to pan). ◀ ▶: the next 8 strips (the returns and the Master come last).", "best": {"mikro": 8, "mk3": 9}, "headline": "MASCHINE's mixer on the two screens, with moving meters"},
         {"combo": ["DISPLAY"], "context": "MIXER", "does": "Select that strip's track. Hold MUTE or SOLO and press a display button: mute / solo that track.", "best": 61},
         {"combo": ["TURN"], "does": "Tilt the 4-D left / right to pick a strip. Turn it for that strip's volume (SHIFT: 0.1 dB). A strip that clips shows a red cap for about 3 s.", "best": 60},
         {"combo": ["TURN"], "context": "4-D down", "does": "On a Drum Rack track: its pads as strips, with hit meters. 4-D up: the tracks again.", "best": 13, "headline": "A Drum Rack's pads as mixer strips, with hit meters"}
@@ -511,9 +511,9 @@
       "devices": ["mk3"],
       "items": [
         {"combo": ["PLUG-IN"], "does": "Knobs 1-8: the selected device's parameters. ◀ ▶ page through its banks. (Without the screens the buttons above them choose the bank 1-8, and PLUG-IN + ◀ ▶ step through every bank.)", "best": 27, "headline": "Knobs 1-8: the selected device's parameters"},
-        {"combo": ["PLUG-IN"], "context": "with the screens", "does": "MASCHINE's Control page: the track's devices on the left, the selected device on the right (Live's own devices drawn as a picture, such as a filter's curve), and its 8 parameters on the knobs with their values and bars. Turn a knob: the value, its bar and the picture follow. PLUG-IN held + a display button: bank 1-8.", "best": 1, "headline": "Live's devices drawn on the screens, moving as you turn"},
+        {"combo": ["PLUG-IN"], "context": "with the screens", "does": "MASCHINE's Control page: the track's devices on the left, the selected device on the right (Live's own devices drawn as a picture, such as a filter's curve), and its 8 parameters on the knobs with their values and bars. Turn a knob: the value, its bar and the picture follow. PLUG-IN held + a display button: bank 1-8.", "best": {"mikro": 1, "mk3": 2}, "headline": "Live's devices drawn on the screens, moving as you turn"},
         {"combo": ["PLUG-IN"], "context": "Simpler", "does": "Simpler drawn as its sample: the waveform with its Start and End markers. Knobs 3 and 4 (Start, End): the marker moves on the waveform as you turn.", "best": 26},
-        {"combo": ["PLUG-IN"], "context": "Simpler: Slicing", "does": "Simpler in Slicing mode: the slices' markers on the waveform. Knob 2 moves the cursor across them, and its value shows the slice's number (632 ms #4). Display button 7 (+ MARKER / - MARKER) adds a slice at the cursor or removes the one there.", "best": 6, "headline": "Chop a sample: Simpler's slices on the waveform"},
+        {"combo": ["PLUG-IN"], "context": "Simpler: Slicing", "does": "Simpler in Slicing mode: the slices' markers on the waveform. Knob 2 moves the cursor across them, and its value shows the slice's number (632 ms #4). Display button 7 (+ MARKER / - MARKER) adds a slice at the cursor or removes the one there.", "best": {"mikro": 6, "mk3": 7}, "headline": "Chop a sample: Simpler's slices on the waveform"},
         {"combo": ["PLUG-IN"], "context": "EQ Eight", "does": "EQ Eight drawn as its curve, with a dot for each band. Turn a band's frequency or gain: the dot and the curve follow.", "best": 14},
         {"combo": ["KNOB"], "does": "Touch a knob: its name lights up. A parameter with a few choices shows them in a list while you turn.", "best": 28},
         {"combo": ["DISPLAY"], "context": "PLUG-IN", "does": "Buttons 1-3: MASTER, TRACK or PAD (the focused drum pad's chain, an empty pad too). Buttons 5 / 6: the previous / next track or pad. Button 8: Hot-Swap the device. Hold SHIFT: its functions light up at once. SHIFT + button 3: INSERT, an Audio Effect after the device (on an empty drum pad: the browser's top list, to load an instrument, a sample or a drum into it). SHIFT + button 7: BYPASS, the device off / on.", "best": 29, "headline": "Display buttons: MASTER, TRACK, PAD, Hot-Swap, INSERT, BYPASS"},
@@ -530,8 +530,8 @@
       "tour": {"intro": "Live's Drum Synths drawn on the screen, each with its own card and icon. Hit a pad and its drawing plays."},
       "devices": ["mk3"],
       "items": [
-        {"combo": ["PLUG-IN"], "does": "On a Drum Synth: its card. DS Kick, DS Snare, DS HH, DS Cymbal, DS Tom, DS Clap, DS Clang, DS FM and DS Sampler each have their own drawing and icon.", "best": 2, "headline": "Each Drum Synth on a card of its own, with a drawing and an icon"},
-        {"combo": ["PAD"], "does": "Hit the pad: its Drum Synth's drawing plays the hit, as loud as you played it. Another pad focuses its own synth.", "best": 3},
+        {"combo": ["PLUG-IN"], "does": "On a Drum Synth: its card. DS Kick, DS Snare, DS HH, DS Cymbal, DS Tom, DS Clap, DS Clang, DS FM and DS Sampler each have their own drawing and icon.", "best": {"mikro": 2, "mk3": 3}, "headline": "Each Drum Synth on a card of its own, with a drawing and an icon"},
+        {"combo": ["PAD"], "does": "Hit the pad: its Drum Synth's drawing plays the hit, as loud as you played it. Another pad focuses its own synth.", "best": {"mikro": 3, "mk3": 4}},
         {"combo": ["KNOB"], "does": "Turn a knob: the drawing and its decay line follow the sound.", "best": 15}
       ]
     },

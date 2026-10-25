@@ -49,7 +49,7 @@ test('the picker pads have the corner of the hardware pads (PAD_ROUND in js/manu
 });
 
 test('no corner is set outside the style sheets', () => {
-  const files = ['index.html', 'activate.html', 'check-screens.html',
+  const files = ['index.html', 'activate.html', 'check-screens.html', 'report.html',
     ...fs.readdirSync(path.join(ROOT, 'js')).map((f) => 'js/' + f)];
   const bad = files.filter((f) => /border-?radius/i.test(read(f)));
   assert.deepStrictEqual(bad, []);

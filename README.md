@@ -12,6 +12,12 @@ mode), and the manual in two views, switched in the header (the choice is rememb
   it does, hover a combination to see it on the controller, search, deep links (`#mikro/SHIFT`,
   `#mk3/PLUG-IN`, `#mikro?q=arp`).
 
+**Report an issue** (`report.html`): a support form (Live version, operating system, hardware,
+script version and a description are required; steps, what was expected, an email address and up to
+three .txt / .log files are optional), where to find the log files with a copy button for each path,
+and the known issues (`data/known-issues.json`). The form is checked on the page and sent to the
+report service at `REPORT_URL` in `js/report.js`.
+
 `#<section>` (`#browser`) opens that section in the view chosen last. Light / dark / system
 theme; setup deep links like `#setup/win11/mikro/live12/3`.
 
@@ -29,7 +35,7 @@ for the manual, `install.json` for the setup guide).
 node --test
 ```
 
-runs `tests/` (no dependencies): the radius family, and the day colour against the dev chat's
+runs `tests/` (no dependencies): the radius family, the Report an issue form's checks, and the day colour against the dev chat's
 palette and day rule, with the contrast of every colour in both themes.
 
 ## Updating the content

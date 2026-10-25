@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- This site's own scripts only. The report is sent to the report service (REPORT_URL in js/report.js)
+       and nowhere else. Styles: the day colour is a style element (js/day-colour.js). -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://*.workers.dev; form-action 'none'; base-uri 'none'">
+  <meta name="referrer" content="no-referrer">
+  <title>Report an issue: MASCHINE for Ableton Live</title>
+  <meta name="description" content="Report a problem with MASCHINE for Ableton Live, and see the known issues.">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#fff8f6" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#171211" media="(prefers-color-scheme: dark)">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='3' fill='%230f0f10'/%3E%3Crect x='3' y='3' width='11.5' height='11.5' rx='1' fill='%23d24dff'/%3E%3Crect x='17.5' y='3' width='11.5' height='11.5' rx='1' fill='%23a4333d'/%3E%3Crect x='3' y='17.5' width='11.5' height='11.5' rx='1' fill='%23ff692d'/%3E%3Crect x='17.5' y='17.5' width='11.5' height='11.5' rx='1' fill='%23a49025'/%3E%3Cpath d='M13.4 1.4H18.6L16.6 4.4V30H15.4V4.4Z' fill='%23f4ece9' stroke='%230f0f10' stroke-width='.5' paint-order='stroke' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,400..700&display=swap">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/report.css">
+  <!-- the day's colour, after the styles so it wins; then the remembered theme, before the first paint -->
+  <script src="js/day-colour.js"></script>
+  <script src="js/activate-theme.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="top-app-bar">
+    <div class="top-app-bar-inner">
+      <a class="brand" href="./#manual" aria-label="MASCHINE for Ableton Live: manual">
+        <svg class="logo" viewBox="0 0 32 32" aria-hidden="true"><defs><filter id="logo-glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="1.4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><rect width="32" height="32" rx="3" fill="#0f0f10"/><rect x="3" y="3" width="11.5" height="11.5" rx="1" fill="#d24dff" style="fill: var(--day-pad, #d24dff)" filter="url(#logo-glow)"/><rect x="17.5" y="3" width="11.5" height="11.5" rx="1" fill="#a4333d" style="fill: var(--day-pad-dim, #a4333d)"/><rect x="3" y="17.5" width="11.5" height="11.5" rx="1" fill="#ff692d" style="fill: var(--day-pad, #ff692d)" filter="url(#logo-glow)"/><rect x="17.5" y="17.5" width="11.5" height="11.5" rx="1" fill="#a49025" style="fill: var(--day-pad-dim, #a49025)"/><path d="M13.4 1.4H18.6L16.6 4.4V30H15.4V4.4Z" fill="#f4ece9" stroke="#0f0f10" stroke-width=".5" paint-order="stroke" stroke-linejoin="round"/></svg>
+        <span class="brand-text">
+          <span class="brand-title">MASCHINE <span class="brand-for">for Ableton Live</span></span>
+          <span class="brand-sub">Support</span>
+        </span>
+      </a>
+      <nav class="nav-tabs" aria-label="Sections">
+        <a href="./#setup" class="nav-tab"><svg class="icon" aria-hidden="true"><use href="#i-setup"/></svg><span>Set up</span></a>
+        <a href="./#highlights" class="nav-tab"><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg><span>Highlights</span></a>
+        <a href="./#tour" class="nav-tab"><svg class="icon" aria-hidden="true"><use href="#i-spark"/></svg><span>Tour</span></a>
+        <a href="./#full" class="nav-tab"><svg class="icon" aria-hidden="true"><use href="#i-book"/></svg><span>Full manual</span></a>
+      </nav>
+      <a href="./#help" class="icon-button" title="Help and troubleshooting">
+        <svg class="icon" aria-hidden="true"><use href="#i-help"/></svg>
+        <span class="visually-hidden">Help and troubleshooting</span>
+      </a>
+      <div class="theme-menu accent-menu">
+        <button type="button" id="accent-button" class="icon-button" aria-haspopup="dialog" aria-expanded="false" aria-controls="accent-list" title="Accent colour">
+          <!-- the pads' corners: 3 % of their width, as the hardware pads in the drawings (PAD_ROUND) -->
+          <svg class="icon accent-icon" viewBox="0 0 24 24" aria-hidden="true"><rect class="accent-icon-lit" x="4" y="4" width="7" height="7" rx=".21"/><rect x="13" y="4" width="7" height="7" rx=".21"/><rect x="4" y="13" width="7" height="7" rx=".21"/><rect x="13" y="13" width="7" height="7" rx=".21"/></svg>
+          <span class="visually-hidden">Accent colour</span>
+        </button>
+        <div id="accent-list" class="menu accent-popover" role="dialog" aria-label="Accent colour" hidden>
+          <div class="colour-choices" role="radiogroup" aria-label="Accent colour">
+            <button type="button" role="radio" class="colour-auto" data-colour="auto">
+              <span>Auto</span><span class="colour-auto-sub">A new colour every day</span>
+            </button>
+            <div class="colour-pads" id="colour-pads"></div>
+          </div>
+        </div>
+      </div>
+      <div class="theme-menu">
+        <button type="button" id="theme-button" class="icon-button" aria-haspopup="menu" aria-expanded="false" aria-controls="theme-list" title="Theme">
+          <svg class="icon" aria-hidden="true"><use id="theme-icon" href="#i-auto"/></svg>
+          <span class="visually-hidden">Theme</span>
+        </button>
+        <div id="theme-list" class="menu" role="menu" aria-label="Theme" hidden>
+          <button type="button" role="menuitemradio" data-theme-choice="system"><svg class="icon" aria-hidden="true"><use href="#i-auto"/></svg>System</button>
+          <button type="button" role="menuitemradio" data-theme-choice="light"><svg class="icon" aria-hidden="true"><use href="#i-sun"/></svg>Light</button>
+          <button type="button" role="menuitemradio" data-theme-choice="dark"><svg class="icon" aria-hidden="true"><use href="#i-moon"/></svg>Dark</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" tabindex="-1">
+    <div class="report">
+      <header class="setup-hero">
+        <p class="eyebrow">Support</p>
+        <h1 class="setup-title">Report an issue</h1>
+        <p class="setup-intro">Please check the known issues first. If your problem is not listed, fill in the form below. Your report is private: only the developer reads it.</p>
+      </header>
+
+      <!-- Known issues: from data/known-issues.json (js/report.js) -->
+      <section class="card rep-card" id="known" aria-labelledby="known-title">
+        <h2 id="known-title">Known issues</h2>
+        <div id="known-list" aria-live="polite"><p class="rep-muted">Loading…</p></div>
+      </section>
+
+      <section class="card rep-card" aria-labelledby="form-title">
+        <h2 id="form-title">Your report</h2>
+        <p class="rep-muted">Fields marked <span class="rep-req" aria-hidden="true">*</span><span class="visually-hidden">with an asterisk</span> are required.</p>
+
+        <form id="report-form" class="rep-form" novalidate>
+          <div class="rep-grid">
+            <div class="rep-field">
+              <label for="live_version">Live version <span class="rep-req" aria-hidden="true">*</span></label>
+              <input id="live_version" name="live_version" type="text" required maxlength="40" autocomplete="off" spellcheck="false" placeholder="For example 12.1.10" aria-describedby="live_version-help live_version-error">
+              <p class="rep-help" id="live_version-help">In Live: Help &gt; About Live (macOS: Live &gt; About Live).</p>
+              <p class="rep-error" id="live_version-error" hidden></p>
+            </div>
+            <div class="rep-field">
+              <label for="os">Operating system <span class="rep-req" aria-hidden="true">*</span></label>
+              <select id="os" name="os" required aria-describedby="os-error">
+                <option value="" selected disabled>Select</option>
+                <option>Windows 10</option>
+                <option>Windows 11</option>
+                <option>macOS</option>
+              </select>
+              <p class="rep-error" id="os-error" hidden></p>
+            </div>
+            <div class="rep-field">
+              <label for="hardware">Hardware <span class="rep-req" aria-hidden="true">*</span></label>
+              <select id="hardware" name="hardware" required aria-describedby="hardware-error">
+                <option value="" selected disabled>Select</option>
+                <option>MASCHINE MIKRO MK3</option>
+                <option>MASCHINE MK3</option>
+                <option>MASCHINE+</option>
+              </select>
+              <p class="rep-error" id="hardware-error" hidden></p>
+            </div>
+            <div class="rep-field">
+              <label for="script_version">Script version <span class="rep-req" aria-hidden="true">*</span></label>
+              <select id="script_version" name="script_version" required aria-describedby="script_version-error">
+                <option value="" selected disabled>Select</option>
+                <option>v2.0.0</option>
+                <option>v1.6.1</option>
+                <option>v1.6.0</option>
+                <option>v1.5.1</option>
+                <option>v1.5.0</option>
+                <option>v1.4.0</option>
+                <option>v1.3.0</option>
+                <option>v1.2.0</option>
+                <option>v1.1.0</option>
+                <option>v1.0.0</option>
+              </select>
+              <p class="rep-error" id="script_version-error" hidden></p>
+            </div>
+          </div>
+
+          <div class="rep-field">
+            <label for="description">Describe the issue <span class="rep-req" aria-hidden="true">*</span></label>
+            <textarea id="description" name="description" required rows="5" maxlength="8000" aria-describedby="description-help description-error"></textarea>
+            <p class="rep-help" id="description-help">What happened, and in which mode or on which page of the controller.</p>
+            <p class="rep-error" id="description-error" hidden></p>
+          </div>
+          <div class="rep-field">
+            <label for="steps">Steps to reproduce <span class="rep-opt">(optional)</span></label>
+            <textarea id="steps" name="steps" rows="4" maxlength="8000" placeholder="1. &#10;2. &#10;3. " aria-describedby="steps-error"></textarea>
+            <p class="rep-error" id="steps-error" hidden></p>
+          </div>
+          <div class="rep-field">
+            <label for="expected">What did you expect? <span class="rep-opt">(optional)</span></label>
+            <textarea id="expected" name="expected" rows="3" maxlength="4000" aria-describedby="expected-error"></textarea>
+            <p class="rep-error" id="expected-error" hidden></p>
+          </div>
+          <div class="rep-field">
+            <label for="email">Email address <span class="rep-opt">(optional)</span></label>
+            <input id="email" name="email" type="email" maxlength="254" autocomplete="email" spellcheck="false" aria-describedby="email-help email-error">
+            <p class="rep-help" id="email-help">Only to reply to you about this report.</p>
+            <p class="rep-error" id="email-error" hidden></p>
+          </div>
+
+          <div class="rep-field">
+            <label for="attachments">Attachments <span class="rep-opt">(optional)</span></label>
+            <input id="attachments" name="attachments" type="file" multiple accept=".txt,.log,text/plain" aria-describedby="attachments-help attachments-error">
+            <p class="rep-help" id="attachments-help">Up to 3 files, .txt or .log only. A file larger than 2 MB is shortened to its last 2 MB.</p>
+            <ul id="attachments-list" class="rep-files" hidden></ul>
+            <p class="rep-error" id="attachments-error" hidden></p>
+          </div>
+
+          <!-- Where the log files are (js/report.js fills in the Live version) -->
+          <details class="rep-logs" id="logs">
+            <summary><svg class="icon" aria-hidden="true"><use href="#i-sheet"/></svg>Where to find the log files<svg class="icon rep-chev" aria-hidden="true"><use href="#i-down"/></svg></summary>
+            <div class="rep-logs-body">
+              <div class="segmented" role="radiogroup" aria-label="Operating system">
+                <button type="button" role="radio" data-logs-os="windows"><svg class="icon check" aria-hidden="true"><use href="#i-check"/></svg>Windows</button>
+                <button type="button" role="radio" data-logs-os="mac"><svg class="icon check" aria-hidden="true"><use href="#i-check"/></svg>macOS</button>
+              </div>
+              <div class="copy-list" id="logs-list"></div>
+              <p class="rep-help" id="logs-tip"></p>
+            </div>
+          </details>
+
+          <!-- Leave empty. A field people never see: forms that fill it in are not sent. -->
+          <div class="rep-trap" aria-hidden="true">
+            <label for="website">Website</label>
+            <input id="website" name="website" type="text" tabindex="-1" autocomplete="off">
+          </div>
+
+          <p class="rep-privacy">Only the fields above and the files you attach are sent. Your IP address is used to limit the number of reports per hour and is not stored with your report.</p>
+
+          <div class="rep-actions">
+            <button type="submit" class="btn btn-filled has-icon-end" id="report-send">Send report<svg class="icon" aria-hidden="true"><use href="#i-right"/></svg></button>
+          </div>
+          <div id="report-message" role="status" aria-live="polite"></div>
+        </form>
+      </section>
+
+      <noscript>
+        <p class="note important">This page needs JavaScript to send a report.</p>
+      </noscript>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <p>Elton47 · <a href="https://payhip.com/b/h4tva">Get the script</a> · <a href="./#setup">Set up</a> · <a href="./#highlights">Highlights</a> · <a href="./#tour">Tour</a> · <a href="report.html" aria-current="page">Report an issue</a></p>
+    <p>Not affiliated with Native Instruments or Ableton.</p>
+  </footer>
+
+  <div id="snackbar" class="snackbar" role="status" aria-live="polite"></div>
+
+  <!-- Icons: simple strokes, drawn for this site. -->
+  <svg width="0" height="0" class="rep-sprite" aria-hidden="true" focusable="false">
+    <defs>
+      <symbol id="i-setup" viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></symbol>
+      <symbol id="i-book" viewBox="0 0 24 24"><path d="M4 5.5C4 4.7 4.7 4 5.5 4H11v16H5.5c-.8 0-1.5-.7-1.5-1.5zM20 5.5c0-.8-.7-1.5-1.5-1.5H13v16h5.5c.8 0 1.5-.7 1.5-1.5z"/></symbol>
+      <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4"/></symbol>
+      <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></symbol>
+      <symbol id="i-auto" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 3.5v17a8.5 8.5 0 0 0 0-17z" fill="currentColor" stroke="none"/></symbol>
+      <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+      <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8.5" y="8.5" width="11" height="11" rx="2"/><path d="M15.5 8.5V6a1.5 1.5 0 0 0-1.5-1.5H6A1.5 1.5 0 0 0 4.5 6v8A1.5 1.5 0 0 0 6 15.5h2.5"/></symbol>
+      <symbol id="i-close" viewBox="0 0 24 24"><path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/></symbol>
+      <symbol id="i-sheet" viewBox="0 0 24 24"><path d="M7 3.5h7l4.5 4.5v11a1.5 1.5 0 0 1-1.5 1.5H7A1.5 1.5 0 0 1 5.5 19V5A1.5 1.5 0 0 1 7 3.5zM14 3.5V7a1 1 0 0 0 1 1h3.5M8.75 11.5h6.5M8.75 14.5h6.5M8.75 17.5h4"/></symbol>
+      <symbol id="i-right" viewBox="0 0 24 24"><path d="M9.5 6l6 6-6 6"/></symbol>
+      <symbol id="i-down" viewBox="0 0 24 24"><path d="M6 9.5l6 6 6-6"/></symbol>
+      <symbol id="i-help" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M9.6 9.6a2.4 2.4 0 1 1 3.4 2.2c-.6.3-1 .8-1 1.5v.5M12 16.6v.4"/></symbol>
+      <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 11v5.5M12 7.5v.5"/></symbol>
+      <symbol id="i-alert" viewBox="0 0 24 24"><path d="M12 3.5l9 16H3z"/><path d="M12 10v4.5M12 17v.5"/></symbol>
+      <symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 3.5l1.9 5.6 5.6 1.9-5.6 1.9L12 18.5l-1.9-5.6L4.5 11l5.6-1.9z"/><path d="M18.5 15.5l.7 2 2 .7-2 .7-.7 2-.7-2-2-.7 2-.7z"/></symbol>
+      <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 3.8l2.5 5.2 5.7.8-4.1 4 1 5.6L12 16.7l-5.1 2.7 1-5.6-4.1-4 5.7-.8z"/></symbol>
+    </defs>
+  </svg>
+
+  <script src="js/site.js"></script>
+  <script src="js/report.js"></script>
+</body>
+</html>

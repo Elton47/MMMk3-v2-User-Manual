@@ -43,6 +43,7 @@ test('a complete report passes, missing required fields do not', () => {
   assert.ok(report.validate(Object.assign({}, GOOD, { description: '   ' })).description);
   assert.ok(report.validate(Object.assign({}, GOOD, { description: 'x'.repeat(8001) })).description);
   assert.ok(report.validate(Object.assign({}, GOOD, { email: 'not an email' })).email);
+  assert.ok(report.validate(Object.assign({}, GOOD, { email: 'a`b@example.com' })).email);
   assert.deepStrictEqual(report.validate(Object.assign({}, GOOD, { email: 'name@example.com' })), {});
 });
 

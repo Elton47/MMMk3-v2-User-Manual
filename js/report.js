@@ -27,7 +27,7 @@
   };
   var LIMITS = { live_version: 40, description: 8000, steps: 8000, expected: 4000, email: 254, files: 3, file_bytes: 2 * 1024 * 1024 };
   var FILE_NAME = /\.(txt|log|log\.[0-9])$/i;
-  var EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  var EMAIL = /^[A-Za-z0-9._%+'-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
   var LABELS = { os: 'your operating system', hardware: 'your hardware', script_version: 'the script version' };
 
   function text(value) { return typeof value === 'string' ? value.trim() : ''; }

@@ -116,15 +116,21 @@ function spamCheck(options) {
 }
 
 test('the spam check: nothing loads from Cloudflare until the report service and the site key are filled in', () => {
-  assert.ok(!report.isConfigured(report.REPORT_URL, report.TURNSTILE_SITE_KEY), 'the page ships with placeholders');
-  assert.match(report.TURNSTILE_SITE_KEY, /PASTE/);
-  assert.ok(!report.isConfigured('https://maschine-reports.me.workers.dev/report', report.TURNSTILE_SITE_KEY));
-  assert.ok(!report.isConfigured(report.REPORT_URL, '0x4AAAAAAA-key'));
+  const URL_PLACEHOLDER = 'https://maschine-reports.YOUR-SUBDOMAIN.workers.dev/report', KEY_PLACEHOLDER = 'PASTE-THE-TURNSTILE-SITE-KEY-HERE';
+  assert.ok(!report.isConfigured(URL_PLACEHOLDER, KEY_PLACEHOLDER), 'placeholders are not a configuration');
+  assert.ok(!report.isConfigured('https://maschine-reports.me.workers.dev/report', KEY_PLACEHOLDER));
+  assert.ok(!report.isConfigured(URL_PLACEHOLDER, '0x4AAAAAAA-key'));
   assert.ok(report.isConfigured('https://maschine-reports.me.workers.dev/report', '0x4AAAAAAA-key'));
-  const off = spamCheck({ siteKey: report.TURNSTILE_SITE_KEY });
+  const off = spamCheck({ siteKey: KEY_PLACEHOLDER });
   off.check.start(false);
   assert.strictEqual(off.check.state, 'off');
   assert.deepStrictEqual(off.seen.scripts, []);
+});
+
+test('the page ships pointing at the deployed report service and its Turnstile widget', () => {
+  assert.ok(report.isConfigured(report.REPORT_URL, report.TURNSTILE_SITE_KEY));
+  assert.match(report.REPORT_URL, /^https:\/\/maschine-reports\.[a-z0-9-]+\.workers\.dev\/report$/);
+  assert.match(report.TURNSTILE_SITE_KEY, /^0x4[A-Za-z0-9_-]{10,}$/);
 });
 
 test('the spam check: Turnstile from challenges.cloudflare.com, rendered for the report, in the page\'s theme', () => {

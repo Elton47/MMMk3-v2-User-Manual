@@ -24,8 +24,8 @@
   // The report service's address and the Turnstile widget's site key (public, from the Cloudflare
   // dashboard: the report service's README). Until both are set, the page says that reports can't be
   // sent yet, and loads nothing from Cloudflare.
-  var REPORT_URL = 'https://maschine-reports.YOUR-SUBDOMAIN.workers.dev/report';
-  var TURNSTILE_SITE_KEY = 'PASTE-THE-TURNSTILE-SITE-KEY-HERE';
+  var REPORT_URL = 'https://maschine-reports.elton47.workers.dev/report';
+  var TURNSTILE_SITE_KEY = '0x4AAAAAAFnGt2Zt9dqnXi1N';
   var TURNSTILE_SCRIPT = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
   var TURNSTILE_ACTION = 'report';  // the report service accepts only tokens made for this action
   var TURNSTILE_LOAD_MS = 20000;    // no script by then: blocked (an ad blocker that never answers)

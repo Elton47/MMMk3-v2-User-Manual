@@ -22,8 +22,7 @@
       "id": "os",
       "label": "Your computer",
       "options": [
-        {"id": "win11", "label": "Windows 11", "aliases": ["windows"]},
-        {"id": "win10", "label": "Windows 10"},
+        {"id": "win11", "label": "Windows 10 / 11", "aliases": ["windows", "win10"]},
         {"id": "macos", "label": "macOS", "aliases": ["mac"]}
       ]
     },
@@ -60,21 +59,20 @@
     "midi_mode": {"choice": "device", "generic": "[[SHIFT]] + [[MASCHINE]] (MIKRO MK3) or [[SHIFT]] + [[CHANNEL]] (MK3, MASCHINE+)",
       "values": {"mikro": "[[SHIFT]] + [[MASCHINE]]", "mk3": "[[SHIFT]] + [[CHANNEL]]", "plus": "[[SHIFT]] + [[CHANNEL]]"}},
     "library_path": {"choice": "os", "generic": "Documents\\Ableton\\User Library (Windows) or ~/Music/Ableton/User Library (macOS)",
-      "values": {"win11": "Documents\\Ableton\\User Library", "win10": "Documents\\Ableton\\User Library",
+      "values": {"win11": "Documents\\Ableton\\User Library",
                  "macos": "~/Music/Ableton/User Library"}},
     "system_folder": {"choice": "os", "generic": "Windows (Windows) or macOS (Mac)",
-      "values": {"win11": "Windows", "win10": "Windows", "macos": "macOS"}},
+      "values": {"win11": "Windows", "macos": "macOS"}},
     "update_copy": {"choice": "os", "generic": "Copy the folders from the **Remote Scripts** folder in the new download's **Windows** or **macOS** folder into Live's Remote Scripts folder.",
       "values": {"win11": "Drag the **Remote Scripts** folder from the new download's **Windows** folder onto Live's **User Library**, as when installing.",
-                 "win10": "Drag the **Remote Scripts** folder from the new download's **Windows** folder onto Live's **User Library**, as when installing.",
                  "macos": "Copy the folders from the **Remote Scripts** folder in the new download's **macOS** folder into it."}},
     "about": {"choice": "device", "generic": " On the MIKRO MK3, [[MASCHINE]] then **About** shows the new version.",
       "values": {"mikro": " [[MASCHINE]] then **About** shows the new version.", "mk3": "", "plus": ""}},
     "scripts_path": {"choice": "os", "generic": "Documents\\Ableton\\User Library\\Remote Scripts (Windows) or ~/Music/Ableton/User Library/Remote Scripts (macOS)",
-      "values": {"win11": "Documents\\Ableton\\User Library\\Remote Scripts", "win10": "Documents\\Ableton\\User Library\\Remote Scripts",
+      "values": {"win11": "Documents\\Ableton\\User Library\\Remote Scripts",
                  "macos": "~/Music/Ableton/User Library/Remote Scripts"}},
     "log_path": {"choice": "os", "generic": "%LOCALAPPDATA%\\Maschine Bridge\\bridge.log (Windows) or ~/Library/Logs/Maschine Bridge/bridge.log (macOS)",
-      "values": {"win11": "%LOCALAPPDATA%\\Maschine Bridge\\bridge.log", "win10": "%LOCALAPPDATA%\\Maschine Bridge\\bridge.log",
+      "values": {"win11": "%LOCALAPPDATA%\\Maschine Bridge\\bridge.log",
                  "macos": "~/Library/Logs/Maschine Bridge/bridge.log"}}
   },
   "steps": [
@@ -102,7 +100,7 @@
         ]},
         {"p": "Nothing else. No other drivers, no extra MIDI tools, no Controller Editor templates."},
         {"note": "Use MASCHINE+ in controller mode, connected to the computer by USB.", "when": {"device": ["plus"]}},
-        {"note": "On Windows, the MASCHINE+ works like the MK3: Live's pages on its screens and its pads playing into Live's tracks, with nothing to install. This is untested on hardware so far.", "when": {"device": ["plus"], "os": ["win11", "win10"]}},
+        {"note": "On Windows, the MASCHINE+ works like the MK3: Live's pages on its screens and its pads playing into Live's tracks, with nothing to install. This is untested on hardware so far.", "when": {"device": ["plus"], "os": ["win11"]}},
         {"note": "Support for the {{device_name}} is built from the hardware protocol and has not been tested on a real unit yet. If something doesn't behave as described, please get in touch through the [product page](https://payhip.com/b/h4tva).", "when": {"device": ["mk3", "plus"]}},
         {"note": "**Close Live** before you install.", "kind": "important"}
       ]
@@ -118,9 +116,9 @@
           "Open the **{{system_folder}}** folder inside it. It holds a folder called **Remote Scripts**.",
           "Drag the whole **Remote Scripts** folder onto Live's **User Library** folder, below.",
           "Windows says a folder with that name already exists: choose to merge them, and to replace the files if it asks."
-        ], "when": {"os": ["win11", "win10"]}},
-        {"copy": [{"label": "Live's User Library", "value": "{{library_path}}"}], "when": {"os": ["win11", "win10"]}},
-        {"note": "No **Remote Scripts** folder in your User Library yet? The drag simply creates it. Either way, the download's folders end up in **User Library\\Remote Scripts**. It holds two folders, `_MaschineCore` and `MIKRO_MK3_for_Live` (the MIKRO MK3 edition), or three, with `MK3_for_Live` too (the full edition).", "when": {"os": ["win11", "win10"]}},
+        ], "when": {"os": ["win11"]}},
+        {"copy": [{"label": "Live's User Library", "value": "{{library_path}}"}], "when": {"os": ["win11"]}},
+        {"note": "No **Remote Scripts** folder in your User Library yet? The drag simply creates it. Either way, the download's folders end up in **User Library\\Remote Scripts**. It holds two folders, `_MaschineCore` and `MIKRO_MK3_for_Live` (the MIKRO MK3 edition), or three, with `MK3_for_Live` too (the full edition).", "when": {"os": ["win11"]}},
         {"ol": [
           "Unzip the download: double-click it.",
           "Open the **{{system_folder}}** folder inside it. It holds a folder called **Remote Scripts**.",
@@ -143,8 +141,8 @@
           "Start Live.",
           "That's it. Live finds the script by itself, and the controller's screen and pads light up."
         ]},
-        {"p": "You don't set anything in Live's MIDI settings. Live picks up the script on the controller's own NI port and remembers it.", "when": {"os": ["win11", "win10"]}},
-        {"note": "In Live's **Settings → Link, Tempo & MIDI** you can see it: the Control Surface **{{surface}}**, with Input and Output **{{ni_port}}**. Leave that row as it is.", "when": {"os": ["win11", "win10"]}},
+        {"p": "You don't set anything in Live's MIDI settings. Live picks up the script on the controller's own NI port and remembers it.", "when": {"os": ["win11"]}},
+        {"note": "In Live's **Settings → Link, Tempo & MIDI** you can see it: the Control Surface **{{surface}}**, with Input and Output **{{ni_port}}**. Leave that row as it is.", "when": {"os": ["win11"]}},
         {"p": "You don't set anything in Live's MIDI settings. Live selects the control surface by itself.", "when": {"os": ["macos"]}},
         {"note": "If macOS asks for permission for **MaschineBridge** (Input Monitoring), allow it.", "when": {"os": ["macos"]}},
         {"note": "The bridge isn't notarised by Apple. A downloaded zip carries macOS's download flag (quarantine), which would block the bridge the first time. So before Live starts the bridge, the script removes that flag from the bridge's own files in `_MaschineCore/bridge`. It changes nothing else on your Mac and needs no password. Live's log notes how many files it cleared. If macOS still says it can't verify **MaschineBridge**, open **System Settings → Privacy & Security** and click **Open Anyway**.", "when": {"os": ["macos"]}}
@@ -179,8 +177,8 @@
       "nav": "MK3 screens",
       "when": {"device": ["mk3", "plus"], "live": ["live12"]},
       "body": [
-        {"p": "The screens show Live's pages by themselves. NI's own software draws them for the script, so there is nothing to switch or install.", "when": {"device": ["mk3", "plus"], "os": ["win11", "win10"]}},
-        {"note": "On the MASCHINE+ this is untested on hardware so far.", "when": {"device": ["plus"], "os": ["win11", "win10"]}},
+        {"p": "The screens show Live's pages by themselves. NI's own software draws them for the script, so there is nothing to switch or install.", "when": {"device": ["mk3", "plus"], "os": ["win11"]}},
+        {"note": "On the MASCHINE+ this is untested on hardware so far.", "when": {"device": ["plus"], "os": ["win11"]}},
         {"p": "The first time Live starts with the controller, the screens switch to Live by themselves. Live's status bar says so. When Live quits, MASCHINE and Komplete Kontrol get the screens back by themselves, even after a force quit.", "when": {"os": ["macos"]}},
         {"note": "Is a Komplete Kontrol keyboard connected too? Then the screens stay with MASCHINE, so the keyboard keeps its own screens.", "when": {"os": ["macos"]}}
       ]
@@ -203,7 +201,7 @@
       "when": {"live": ["live12"]},
       "body": [
         {"faq": [
-          {"q": "The screen stays on “Waiting for Live”", "when": {"os": ["win11", "win10"]}, "a": [
+          {"q": "The screen stays on “Waiting for Live”", "when": {"os": ["win11"]}, "a": [
             "Restart Live.",
             "Is NI's MASCHINE software installed? It brings NI's port that Live uses for the script.",
             "In Live's **Settings → Link, Tempo & MIDI**, look for the Control Surface **{{surface}}**. Missing, or set to **None**? Choose it in an empty row, and set its Input and Output to **{{ni_port}}**."
@@ -216,19 +214,19 @@
             "Check that the controller is connected by USB, then restart Live.",
             "If it stays, check that the script's folders are directly inside **Remote Scripts**."
           ]},
-          {"q": "The pads play no notes, and the controller says **Tick Track**", "when": {"os": ["win11", "win10"], "device": ["mikro", "mk3", "plus"]}, "a": [
+          {"q": "The pads play no notes, and the controller says **Tick Track**", "when": {"os": ["win11"], "device": ["mikro", "mk3", "plus"]}, "a": [
             "Live doesn't listen to the controller's port for notes. Someone turned its **Track** switch off.",
             "In Live's **Settings → Link, Tempo & MIDI**, under **MIDI Ports**, turn **Track** on for the input **{{track_input}}**. Live's status bar names it too. Live remembers it."
           ]},
-          {"q": "The controller says **Notes stopped** and **Restart Live**", "when": {"os": ["win11", "win10"]}, "a": [
+          {"q": "The controller says **Notes stopped** and **Restart Live**", "when": {"os": ["win11"]}, "a": [
             "The pads' notes stopped after a controller was unplugged or plugged in while Live was running.",
             "Restart Live to bring them back."
           ]},
-          {"q": "The controller says **Notes blocked** and **NI update?**", "when": {"os": ["win11", "win10"]}, "a": [
+          {"q": "The controller says **Notes blocked** and **NI update?**", "when": {"os": ["win11"]}, "a": [
             "NI's software no longer passes the pads' notes to Live. This can happen after an update of NI's software.",
             "Look for an update of this script. Until then, v1.6.1 works (a separate download: reply to your purchase email)."
           ]},
-          {"q": "Live's status bar says “NI's helper is off”", "when": {"os": ["win11", "win10"]}, "a": [
+          {"q": "Live's status bar says “NI's helper is off”", "when": {"os": ["win11"]}, "a": [
             "Restart the computer.",
             "If it stays off, reinstall your NI software with Native Access."
           ]},
@@ -322,7 +320,7 @@
     }
   ],
   "guide": [
-    {"title": "Windows 11 and Windows 10", "when": {"os": ["win11", "win10"], "live": ["live12"]}},
+    {"title": "Windows 10 and 11", "when": {"os": ["win11"], "live": ["live12"]}},
     {"title": "macOS", "when": {"os": ["macos"], "live": ["live12"]}},
     {"title": "Live 11", "when": {"live": ["live11"]}}
   ]

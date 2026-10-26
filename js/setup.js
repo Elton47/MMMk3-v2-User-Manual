@@ -411,7 +411,7 @@ MM.setup = (function () {
     root.appendChild(h('div', { className: 'wizard' + (single ? ' single' : '') }, single ? [summary, card] : [summary, progress, nav, card]));
     // reaching "You're set" (or the last step) finishes the setup; steps after it (updating) are extra
     if (index === total - 1 || steps.slice(0, index + 1).some(function (s) { return s.id === 'done'; })) markDone();
-    document.title = fill(step.title) + ' Â· Setup Â· MASCHINE for Ableton Live';
+    document.title = fill(step.title) + ' · Setup · MASCHINE for Ableton Live';
 
     if (state.focusStep) {
       state.focusStep = false;
@@ -437,7 +437,7 @@ MM.setup = (function () {
   // ['video', os, device], or [os, device, live, step]
   function show(parts) {
     parts = (parts || []).filter(function (p) { return p !== ''; });
-    document.title = 'Install and set up Â· MASCHINE for Ableton Live';
+    document.title = 'Install and set up · MASCHINE for Ableton Live';
     if (parts[0] === 'video') {
       showVideo(parts.slice(1));
       return;
@@ -479,8 +479,7 @@ MM.setup = (function () {
     if (/Win/i.test(platform) && navigator.userAgentData && navigator.userAgentData.getHighEntropyValues) {
       navigator.userAgentData.getHighEntropyValues(['platformVersion']).then(function (values) {
         var major = parseInt(String(values.platformVersion || '').split('.')[0], 10);
-        if (major >= 13) state.detected.os = 'win11';
-        else if (major > 0) state.detected.os = 'win10';
+        if (major > 0) state.detected.os = 'win11';  // one choice for Windows 10 and 11: the same setup (Elton, 2026-10-27)
         // the questions may already be on screen: show the hint there
         if (state.detected.os && !el('view-setup').hidden && el('setup-root').querySelector('.choice-form, .guide-cards')) {
           var parts = location.hash.replace(/^#setup\/?/, '').split('/');
@@ -779,7 +778,7 @@ MM.setup = (function () {
     });
     return {
       title: state.data.title,
-      subtitle: given.join(' Â· '),
+      subtitle: given.join(' · '),
       site: state.data.site,
       contents: contents,
       node: node
@@ -947,7 +946,7 @@ MM.setup = (function () {
       ])
     ]);
     root.appendChild(h('div', { className: 'wizard single video-wizard' }, [summary, card]));
-    document.title = 'Video guide Â· Setup Â· MASCHINE for Ableton Live';
+    document.title = 'Video guide · Setup · MASCHINE for Ableton Live';
   }
 
   return { init: init, show: show, help: help, guide: guide, videoFor: videoFor };

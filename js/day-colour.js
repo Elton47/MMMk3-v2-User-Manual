@@ -158,7 +158,9 @@
     var pads = '--day-pad: ' + hex(s.pad) + '; --day-pad-dim: ' + hex(s.padDim) + ';';
     return ':root { ' + pads + ' ' + declarations(s.light) + ' }\n' +
       '@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { ' + declarations(s.dark) + ' } }\n' +
-      ':root[data-theme="dark"] { ' + declarations(s.dark) + ' }\n';
+      ':root[data-theme="dark"] { ' + declarations(s.dark) + ' }\n' +
+      // the printable sheets (#setup/print, #whatsnew) stay light in both themes, in the day's colour
+      '.print-doc { ' + declarations(s.light) + ' }\n';
   }
 
   // The tab icon: the site's logo (four pads and the stick) with the day's colour on the pads.

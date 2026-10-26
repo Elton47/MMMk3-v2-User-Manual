@@ -85,6 +85,27 @@ test('the style sheet sets both themes with the site\'s selectors', () => {
   assert.match(day.favicon(palette[0]), /^data:image\/svg\+xml,/);
 });
 
+test('the printable sheets take the day colour, in the light tones whatever the theme (Elton)', () => {
+  palette.forEach((c, i) => {
+    const light = day.scheme(c).light;
+    const sheet = day.css(c).match(/\.print-doc \{ ([^}]*) \}/);
+    assert.ok(sheet, 'pad ' + (i + 1) + ': no .print-doc rule');
+    ['primary', 'surface', 'surface-container-low', 'secondary-container'].forEach((role) => {
+      assert.ok(sheet[1].includes('--md-sys-color-' + role + ': ' + day.hex(light[role]) + ';'), 'pad ' + (i + 1) + ' ' + role);
+    });
+  });
+});
+
+test('no broken characters (UTF-8 read as Latin-1) in the site\'s files', () => {
+  const files = ['index.html'].concat(
+    ['js', 'css', 'data'].flatMap((d) => fs.readdirSync(path.join(ROOT, d)).map((f) => d + '/' + f)))
+    .filter((f) => /\.(html|js|css|json)$/.test(f));
+  files.forEach((f) => {
+    const text = fs.readFileSync(path.join(ROOT, f), 'utf8');
+    assert.ok(!/Â[· -¿]|â€/.test(text), f + ' has mojibake');
+  });
+});
+
 test('text on a pad colour is black or white by the WCAG luminance rule (the onText), all 16', () => {
   const BLACK = [0, 0, 0], WHITE = [255, 255, 255];
   palette.forEach((c, i) => {

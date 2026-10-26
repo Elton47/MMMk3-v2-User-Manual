@@ -185,6 +185,7 @@ MM.tour = (function () {
       b.setAttribute('tabindex', on ? '0' : '-1');
     });
     el('tour-unverified').hidden = state.data.devices[device].verified;
+    if (MM.tourDevices) MM.tourDevices.show(device);  // the last card: devices on the screens
     if (state.active) state.active.player.halt();
     state.active = null;
     arrange(device);

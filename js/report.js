@@ -10,13 +10,25 @@
 // data/known-issues.json: {"issues": [{"title", "affects", "status", "workaround"}]}; every field but
 // the title is optional. An empty list says so.
 //
-// The pure parts (validate, keepTail, logPaths) also run in Node: tests/report.test.js.
+// The spam check: Cloudflare Turnstile. Its script loads from challenges.cloudflare.com on this page
+// only, and only once the report service and the site key are filled in. Its widget gives the visitor
+// a one-time token (most people see nothing, some one click). Send stays off until a token exists, the
+// token goes with the report (turnstile_token), and after every answer the widget makes a new one.
+// The report service checks the token with Cloudflare before anything else counts.
+//
+// The pure parts (validate, keepTail, logPaths, answerMessage, createSpamCheck) also run in Node:
+// tests/report.test.js.
 (function (root) {
   'use strict';
 
-  // The report service's address. Until it is set, the page says that reports can't be sent yet.
+  // The report service's address and the Turnstile widget's site key (public, from the Cloudflare
+  // dashboard: the report service's README). Until both are set, the page says that reports can't be
+  // sent yet, and loads nothing from Cloudflare.
   var REPORT_URL = 'https://maschine-reports.YOUR-SUBDOMAIN.workers.dev/report';
-  var NOT_SET = 'YOUR-SUBDOMAIN';
+  var TURNSTILE_SITE_KEY = 'PASTE-THE-TURNSTILE-SITE-KEY-HERE';
+  var TURNSTILE_SCRIPT = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
+  var TURNSTILE_ACTION = 'report';  // the report service accepts only tokens made for this action
+  var TURNSTILE_LOAD_MS = 20000;    // no script by then: blocked (an ad blocker that never answers)
   var TIMEOUT_MS = 45000;
 
   var OPTIONS = {
@@ -98,7 +110,109 @@
       'The Library folder is hidden in Finder, this opens it directly. Live x.y.z is your Live version, for example Live 12.1.10.'
   };
 
-  var api = { REPORT_URL: REPORT_URL, OPTIONS: OPTIONS, LIMITS: LIMITS, FILE_NAME: FILE_NAME, validate: validate, keepTail: keepTail, logPaths: logPaths };
+  // --- the spam check ---------------------------------------------------------------------
+
+  var TEXTS = {
+    waiting: 'Send turns on after a quick spam check.',
+    blocked: 'The spam check could not load. Allow challenges.cloudflare.com in your browser or ad blocker and reload the page, or reply to your purchase email and we will help.',
+    failed: 'The spam check failed. Reload the page and try again.',
+    unavailable: 'The spam check is not reachable at the moment. Please try again in a minute.'
+  };
+
+  function isConfigured(url, siteKey) {
+    return /^https:\/\//.test(url || '') && url.indexOf('YOUR-SUBDOMAIN') < 0 && !!siteKey && siteKey.indexOf('PASTE') < 0;
+  }
+
+  // The page's theme (html data-theme: light, dark, or none for the system's) as Turnstile's.
+  function turnstileTheme(dataTheme) { return dataTheme === 'light' || dataTheme === 'dark' ? dataTheme : 'auto'; }
+
+  function withToken(report, token) {
+    var sent = {};
+    Object.keys(report).forEach(function (key) { sent[key] = report[key]; });
+    sent.turnstile_token = token;
+    return sent;
+  }
+
+  // The widget's life: state 'off' (not configured), 'loading', 'waiting' (no token), 'ready',
+  // 'blocked' (the script did not load) or 'failed' (the widget reported an error). The page passes
+  // in how to load a script, Turnstile itself, the theme, a timer and onChange (tests pass fakes).
+  function createSpamCheck(opts) {
+    var check = { state: 'off' };
+    var widget = null, value = null;
+    function set(state) {
+      check.state = state;
+      if (opts.onChange) opts.onChange(state);
+    }
+    function draw() {
+      var turnstile = opts.turnstile();
+      if (!turnstile) { set('blocked'); return; }
+      value = null;
+      set('waiting');
+      try {
+        widget = turnstile.render(opts.container, {
+          sitekey: opts.siteKey,
+          action: TURNSTILE_ACTION,
+          theme: opts.theme(),
+          appearance: 'interaction-only',
+          'response-field': false,
+          'refresh-expired': 'auto',
+          callback: function (token) { value = token; set('ready'); },
+          'expired-callback': function () { value = null; set('waiting'); },
+          'error-callback': function () { value = null; set('failed'); return true; }
+        });
+      } catch (e) {
+        widget = null;
+        set('failed');
+      }
+    }
+    check.start = function (configured) {
+      if (!configured) { set('off'); return; }
+      set('loading');
+      opts.loadScript(TURNSTILE_SCRIPT,
+        function () { if (check.state === 'loading') draw(); },
+        function () { if (check.state === 'loading') set('blocked'); });
+      opts.timer(function () { if (check.state === 'loading') set('blocked'); }, TURNSTILE_LOAD_MS);
+    };
+    check.token = function () { return value; };
+    // after every answer: the token is spent, the widget makes a new one
+    check.reset = function () {
+      value = null;
+      var turnstile = opts.turnstile();
+      if (!turnstile || widget === null) return;
+      try { turnstile.reset(widget); } catch (e) { /* the next draw makes a new one */ }
+      set('waiting');
+    };
+    // the page's theme changed: the widget again, in the new theme
+    check.redraw = function () {
+      var turnstile = opts.turnstile();
+      if (!turnstile || widget === null) return;
+      try { turnstile.remove(widget); } catch (e) { /* already gone */ }
+      widget = null;
+      draw();
+    };
+    return check;
+  }
+
+  // Send is on without the spam check only when the page is not configured (it then says so).
+  function canSend(check) { return check.state === 'off' || (check.state === 'ready' && !!check.token()); }
+
+  // The report service's answer as the page's message: {kind: 'ok' | 'bad', text}.
+  function answerMessage(status, body) {
+    body = body || {};
+    function bad(textValue) { return { kind: 'bad', text: textValue }; }
+    if (status === 200 && body.ok) return { kind: 'ok', text: 'Your report was sent. Reference number: ' + body.reference + '. Thank you.' };
+    if (status === 429) return bad('Too many reports were sent from this connection. Please try again in an hour.');
+    if (status === 400 && body.fields) return bad('Please check the highlighted fields.');
+    if (body.error === 'spam_check_failed') return bad(TEXTS.failed);
+    if (body.error === 'spam_check_unavailable') return bad(TEXTS.unavailable);
+    return bad('The report could not be sent. Please try again later.');
+  }
+
+  var api = {
+    REPORT_URL: REPORT_URL, TURNSTILE_SITE_KEY: TURNSTILE_SITE_KEY, OPTIONS: OPTIONS, LIMITS: LIMITS, FILE_NAME: FILE_NAME, TEXTS: TEXTS,
+    validate: validate, keepTail: keepTail, logPaths: logPaths, isConfigured: isConfigured, turnstileTheme: turnstileTheme,
+    withToken: withToken, createSpamCheck: createSpamCheck, canSend: canSend, answerMessage: answerMessage
+  };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   var doc = root.document;
   if (!doc || !root.MM) return;
@@ -109,6 +223,48 @@
   var FIELDS = ['live_version', 'os', 'hardware', 'script_version', 'description', 'steps', 'expected', 'email'];
   var attached = [];  // [{name, text, cut, size}]
   var logsOs = null;
+  var spam = null;       // the spam check (createSpamCheck)
+  var sending = false;
+
+  // Send: off while a report is on its way, and until the spam check gave a token
+  function updateSend() { el('report-send').disabled = sending || !canSend(spam); }
+
+  function showSpam(state) {
+    var line = el('spam-check-status');
+    var textValue = state === 'loading' || state === 'waiting' ? TEXTS.waiting : (TEXTS[state] || '');
+    line.textContent = textValue;
+    line.hidden = !textValue;
+    line.classList.toggle('rep-spam-bad', state === 'blocked' || state === 'failed');
+    updateSend();
+  }
+
+  function startSpamCheck() {
+    var html = doc.documentElement;
+    var drawnTheme = turnstileTheme(html.getAttribute('data-theme'));
+    spam = createSpamCheck({
+      siteKey: TURNSTILE_SITE_KEY,
+      container: el('spam-check'),
+      theme: function () { drawnTheme = turnstileTheme(html.getAttribute('data-theme')); return drawnTheme; },
+      loadScript: function (src, onload, onerror) {
+        var script = doc.createElement('script');
+        script.src = src;
+        script.onload = onload;
+        script.onerror = onerror;
+        doc.head.appendChild(script);
+      },
+      turnstile: function () { return root.turnstile; },
+      timer: function (fn, ms) { setTimeout(fn, ms); },
+      onChange: showSpam
+    });
+    spam.start(isConfigured(REPORT_URL, TURNSTILE_SITE_KEY));
+    updateSend();
+    // the theme menu (Light / Dark / System): the widget follows
+    if (root.MutationObserver) {
+      new MutationObserver(function () {
+        if (turnstileTheme(html.getAttribute('data-theme')) !== drawnTheme) spam.redraw();
+      }).observe(html, { attributes: true, attributeFilter: ['data-theme'] });
+    }
+  }
 
   function knownIssues() {
     var list = el('known-list');
@@ -258,42 +414,46 @@
       message('bad', 'Please check the highlighted fields.');
       return;
     }
-    if (REPORT_URL.indexOf(NOT_SET) >= 0) {
+    if (spam.state === 'off') {
       message('bad', 'Reports cannot be sent from this page yet. Please try again later.');
       return;
     }
+    if (!canSend(spam)) {
+      message('bad', spam.state === 'blocked' || spam.state === 'failed' ? TEXTS[spam.state] : TEXTS.waiting);
+      return;
+    }
     var send = el('report-send');
-    send.disabled = true;
+    sending = true;
+    updateSend();
     send.firstChild.textContent = 'Sending…';
     var controller = root.AbortController ? new AbortController() : null;
     var timer = setTimeout(function () { if (controller) controller.abort(); }, TIMEOUT_MS);
     fetch(REPORT_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(report),
+      body: JSON.stringify(withToken(report, spam.token())),
       signal: controller ? controller.signal : undefined
     }).then(function (r) {
       return r.json().catch(function () { return {}; }).then(function (body) { return { status: r.status, body: body }; });
     }).then(function (answer) {
-      if (answer.status === 200 && answer.body.ok) {
+      var said = answerMessage(answer.status, answer.body);
+      if (said.kind === 'ok') {
         el('report-form').reset();
         attached = [];
         showFiles();
         showLogs(guessOs());
-        message('ok', 'Your report was sent. Reference number: ' + answer.body.reference + '. Thank you.');
-      } else if (answer.status === 429) {
-        message('bad', 'Too many reports were sent from this connection. Please try again in an hour.');
       } else if (answer.status === 400 && answer.body.fields) {
         Object.keys(answer.body.fields).forEach(function (field) { if (el(field + '-error')) showError(field, answer.body.fields[field]); });
-        message('bad', 'Please check the highlighted fields.');
-      } else {
-        message('bad', 'The report could not be sent. Please try again later.');
       }
+      message(said.kind, said.text);
     }, function () {
       message('bad', 'The report could not be sent. Please check your connection and try again.');
     }).then(function () {
       clearTimeout(timer);
-      send.disabled = false;
+      // whatever the answer, the token is spent: a retry gets a fresh one
+      spam.reset();
+      sending = false;
+      updateSend();
       send.firstChild.textContent = 'Send report';
     });
   }
@@ -314,6 +474,7 @@
       el(field).addEventListener('input', function () { if (!el(field + '-error').hidden) showError(field, ''); });
     });
     el('report-form').addEventListener('submit', submit);
+    startSpamCheck();
   }
 
   init();

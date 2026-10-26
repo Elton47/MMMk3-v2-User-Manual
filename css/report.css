@@ -61,6 +61,10 @@
 .rep-trap { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
 
 .rep-privacy { margin: 0; color: var(--md-sys-color-on-surface-variant); font-size: 13px; line-height: 18px; }
+/* the spam check (Cloudflare Turnstile): its frame shows only when a click is needed */
+.rep-spam:empty { display: none; }
+#spam-check-status[hidden] { display: none; }
+#spam-check-status.rep-spam-bad { color: var(--md-sys-color-error); font-weight: 500; }
 .rep-actions { display: flex; justify-content: flex-end; }
 #report-message:empty { display: none; }
 #report-message .note { margin: 0; }

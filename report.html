@@ -3,10 +3,12 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <!-- This site's own scripts only. The report is sent to the report service (REPORT_URL in js/report.js)
-       and nowhere else. Styles: the day colour is a style element (js/day-colour.js). -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://*.workers.dev; form-action 'none'; base-uri 'none'">
-  <meta name="referrer" content="no-referrer">
+  <!-- This site's own scripts, and Cloudflare Turnstile (the spam check, its script and its frame from
+       challenges.cloudflare.com, js/report.js). The report is sent to the report service (REPORT_URL in
+       js/report.js) and nowhere else. Styles: the day colour is a style element (js/day-colour.js).
+       Referrer: the origin only, never the page's address (Turnstile's frame checks which site it runs on). -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' https://challenges.cloudflare.com; frame-src https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://*.workers.dev; form-action 'none'; base-uri 'none'">
+  <meta name="referrer" content="strict-origin">
   <title>Report an issue: MASCHINE for Ableton Live</title>
   <meta name="description" content="Report a problem with MASCHINE for Ableton Live, and see the known issues.">
   <meta name="color-scheme" content="light dark">
@@ -188,10 +190,14 @@
             <input id="website" name="website" type="text" tabindex="-1" autocomplete="off">
           </div>
 
-          <p class="rep-privacy">Only the fields above and the files you attach are sent. Your IP address is used to limit the number of reports per hour and is not stored with your report.</p>
+          <p class="rep-privacy">Only the fields above and the files you attach are sent. Your IP address is used to limit the number of reports per hour and is not stored with your report. To stop spam, Cloudflare Turnstile checks that a person sends the report.</p>
+
+          <!-- The spam check (Cloudflare Turnstile, js/report.js): most people see nothing here, some one click. -->
+          <div id="spam-check" class="rep-spam"></div>
+          <p class="rep-help" id="spam-check-status" role="status" aria-live="polite" hidden></p>
 
           <div class="rep-actions">
-            <button type="submit" class="btn btn-filled has-icon-end" id="report-send">Send report<svg class="icon" aria-hidden="true"><use href="#i-right"/></svg></button>
+            <button type="submit" class="btn btn-filled has-icon-end" id="report-send" disabled>Send report<svg class="icon" aria-hidden="true"><use href="#i-right"/></svg></button>
           </div>
           <div id="report-message" role="status" aria-live="polite"></div>
         </form>

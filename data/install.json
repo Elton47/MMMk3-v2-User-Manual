@@ -4,17 +4,17 @@
     "choices: the questions asked first. Each option id can appear in a step's or block's 'when'.",
     "when: {choice id: [option ids]}. Every listed choice must match (AND); any option in a list matches (OR). No 'when' = always.",
     "vars: {{name}} in any text. Each var depends on one choice: 'values' per option, 'generic' when the choice is open (the Markdown guide).",
-    "steps: {id, title, nav (short title for the step list, optional), when, body: [blocks]}. Step order is the order here.",
+    "steps: {id, title, nav (short title for the step list, optional), when, place, body: [blocks]}. Step order is the order here.",
+    "place: where a step shows. wizard (the default): one of the setup's steps. section: a short section of its own, always shown, outside the steps (the setup page, the printable guide, its own part of INSTALLATION.md). none: shown nowhere, kept only because the setup videos' captions quote it (tools/make_setup_videos.py).",
     "blocks (one type key each, plus an optional 'when'): p, h (sub-heading), ol / ul (list of strings), note + optional kind (info | important | coming), copy (list of {label, value}: exact strings with a copy button), table (list of [label, value]), faq (list of {q, a: [strings], when}), actions (list of {label, href, primary}).",
     "Inline markup in any string: **bold**, `code`, [text](href), [[BUTTON]] (a hardware button), {{var}}. An href starting with # points into the manual site.",
     "guide: the sections of the Markdown guide, one per route, each with the 'when' that picks its steps.",
-    "licensing: the release-day switch (docs/LICENSING-SETUP.md). While it is false, steps marked \"licensing\": true are left out of the wizard and the Markdown guide, and the manual site's header shows no Licence link.",
+    "Activation (Elton, 2026-10-26): no step. The controller asks for the key by itself, and the setup's last step says so in a note. The manual's header has no Licence link: activate.html is reached only by its own link (the controller's encoder press, SETTINGS > Licence).",
     "Windows: zero install (src/_MaschineCore/zero_install.py). Live loads the script by itself on NI's own port for the controller. The customer sets nothing in Live's MIDI settings. tests/test_install_guide_zero_install.py checks the names and messages against the code."
   ],
   "version": 1,
   "product": "MASCHINE for Ableton Live",
   "site": "https://elton47.github.io/MMMk3-v2-User-Manual/",
-  "licensing": false,
   "title": "Install and set up",
   "intro": "Three quick questions, then a few short steps. It takes a few minutes, and there is nothing to set up in Live.",
   "choices": [
@@ -150,7 +150,7 @@
       "id": "activate",
       "title": "Activate your licence",
       "nav": "Activate",
-      "licensing": true,
+      "place": "none",
       "when": {"live": ["live12"]},
       "body": [
         {"p": "Until this computer is activated, the controller shows **Activate your key**. You do this only once per computer."},
@@ -274,6 +274,7 @@
           "[[PLAY]] starts and stops Live. Hold [[NOTE REPEAT]] and a pad for note repeat."
         ]},
         {"note": "Close the MASCHINE app while you use the controller with Live: both would try to drive it. The MASCHINE plug-in inside Live is fine."},
+        {"note": "The first time, the controller asks for your licence key. Press the encoder and enter it in the page that opens."},
         {"actions": [
           {"label": "Open the manual", "href": "#{{manual}}", "primary": true},
           {"label": "What SHIFT does", "href": "#{{manual}}/SHIFT"}
@@ -300,8 +301,7 @@
       "id": "full_edition",
       "title": "Upgrading to the full edition",
       "nav": "Full edition",
-      "licensing": true,
-      "when": {"live": ["live12"]},
+      "place": "section",
       "body": [
         {"p": "From the MIKRO MK3 edition to the full edition (MK3, MASCHINE+ & MIKRO MK3):"},
         {"ol": [
@@ -309,7 +309,8 @@
           "In Live's **Remote Scripts** folder, below, delete the two folders `_MaschineCore` and `MIKRO_MK3_for_Live`.",
           "Copy the full edition's three folders into it: `_MaschineCore`, `MIKRO_MK3_for_Live` and `MK3_for_Live`.",
           "Start Live.",
-          "The full edition comes with a new licence key. While Live is running, open the activation page, click **Connect**, then **Deactivate this computer**. Then activate it with the new key."
+          "The full edition comes with a new licence key. In the controller's settings, choose **Licence** (just before **About**) and confirm. The licence page opens in your browser: choose **Deactivate this computer** there.",
+          "The controller asks for a key again. Press the encoder and enter the new key in the page that opens."
         ]},
         {"copy": [{"label": "Live's Remote Scripts folder", "value": "{{scripts_path}}"}]},
         {"note": "Your settings and favourites and Live's control surface settings stay."}

@@ -180,8 +180,6 @@
         el('sections').innerHTML = '<p class="empty">Could not load the manual data (open the page through a web server).</p>';
       }
       if (install) {
-        // the header's Licence link (activate.html) waits for the release-day switch too
-        if (install.licensing === true) el('licence-tab').hidden = false;
         MM.setup.init(install);
         ready.setup = true;
       }

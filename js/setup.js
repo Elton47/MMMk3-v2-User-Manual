@@ -1,18 +1,26 @@
 // The setup wizard: choices first, then a stepper. Content from data/install.json (a copy of
 // docs/install.json in the script repository; the schema is described at the top of that file).
-// Deep links: #setup (the questions), #setup/<os>/<device>/<live>/<step number>.
+// Deep links: #setup (two cards: the text guide and the video guide), #setup/text (the questions),
+// #setup/<os>/<device>/<live>/<step number> (a step), #setup/video[/<os>/<device>] (the video for this
+// controller and computer; without them, the two questions first).
 // #setup/print[/<choices>...] is the printable guide: every step on one page (see guide()).
+// A step's "place" (install.json): the wizard's steps (default), a "section" of its own (on the cards'
+// page and in the printable guide) or "none" (shown nowhere).
 MM.setup = (function () {
   'use strict';
 
   var el = MM.el, h = MM.h;
   var CHOICE_ICONS = { os: 'computer', device: 'pads', live: 'live' };
   var NOTE_ICONS = { info: 'info', important: 'alert', coming: 'soon' };
+  // The setup videos: one per controller and computer (video/<controller>-setup-<os>.mp4, its still
+  // .jpg beside it). The MASCHINE+ sets up like the MK3, and Windows 10 like Windows 11.
+  var VIDEO_DEVICE = { mikro: 'mikro', mk3: 'mk3', plus: 'mk3' };
+  var VIDEO_OS = { win11: 'windows', win10: 'windows', macos: 'mac' };
   var INLINE = /\*\*(.+?)\*\*|`([^`]+)`|\[\[([^\]]+)\]\]|\[([^\]]+)\]\(([^)\s]+)\)/g;
 
   // ctx: set while the printable guide renders ({choice id: [options still allowed]}); vars and
   // links follow it instead of the wizard's choices.
-  var state = { data: null, choices: {}, steps: [], index: 0, detected: {}, focusStep: false, ctx: null };
+  var state = { data: null, sections: [], choices: {}, steps: [], index: 0, detected: {}, focusStep: false, ctx: null };
 
   // --- data -------------------------------------------------------------------------------
 
@@ -219,8 +227,8 @@ MM.setup = (function () {
   function renderChoices() {
     var root = el('setup-root');
     root.innerHTML = '';
-    el('setup-intro').hidden = false;
-    var start = h('a', { className: 'btn btn-filled has-icon-end', href: '#setup' }, [h('span', { text: 'Start' }), MM.icon('right')]);
+    intro(state.data.intro);
+    var start = h('a', { className: 'btn btn-filled has-icon-end', href: '#setup/text' }, [h('span', { text: 'Start' }), MM.icon('right')]);
     var groups = choiceDefs().map(function (choice, number) { return choiceGroup(choice, number, update); });
 
     function update() {
@@ -231,7 +239,7 @@ MM.setup = (function () {
         start.removeAttribute('tabindex');
       } else {
         start.setAttribute('aria-disabled', 'true');
-        start.setAttribute('href', '#setup');
+        start.setAttribute('href', '#setup/text');
         start.setAttribute('tabindex', '-1');
       }
     }
@@ -328,13 +336,13 @@ MM.setup = (function () {
     var step = steps[index];
     var total = steps.length;
     root.innerHTML = '';
-    el('setup-intro').hidden = true;
+    intro('');
     MM.store('setupProgress', routeHash(index));
 
     var summary = h('div', { className: 'wizard-summary', 'aria-label': 'Your answers' }, choiceDefs().map(function (c) {
       return h('span', { className: 'chip' }, [MM.icon(CHOICE_ICONS[c.id] || 'check'), optionLabel(c.id, state.choices[c.id])]);
     }).concat([
-      h('a', { className: 'btn btn-text has-icon-start', href: '#setup' }, [MM.icon('edit'), h('span', { text: 'Change' })]),
+      h('a', { className: 'btn btn-text has-icon-start', href: '#setup/text' }, [MM.icon('edit'), h('span', { text: 'Change' })]),
       h('a', { className: 'btn btn-text has-icon-start', href: routeHash().replace('#setup/', '#setup/print/') }, [MM.icon('print'), h('span', { text: 'All steps on one page' })])
     ]));
 
@@ -374,7 +382,7 @@ MM.setup = (function () {
       if (node) body.appendChild(node);
     });
 
-    var prevHref = index > 0 ? routeHash(index - 1) : '#setup';
+    var prevHref = index > 0 ? routeHash(index - 1) : '#setup/text';
     var prev = h('a', { className: 'btn btn-outlined has-icon-start', href: prevHref }, [
       MM.icon('left'), h('span', { text: index > 0 ? 'Previous' : 'Change answers' })
     ]);
@@ -388,7 +396,7 @@ MM.setup = (function () {
       ]);
       next.addEventListener('click', function () { state.focusStep = true; });
     }
-    var hint = next ? h('span', { className: 'key-hint', 'aria-hidden': 'true' }, [h('kbd', { text: '←' }), ' ', h('kbd', { text: '→' }), ' to move']) : null;
+    var hint = next ? h('span', { className: 'key-hint', 'aria-hidden': 'true' }, [h('kbd', { text: 'â†' }), ' ', h('kbd', { text: 'â†’' }), ' to move']) : null;
 
     var card = h('article', { className: 'step-card', 'aria-labelledby': 'step-title' }, [
       h('p', { className: 'step-eyebrow', text: 'Step ' + (index + 1) + ' of ' + total }),
@@ -402,7 +410,7 @@ MM.setup = (function () {
     root.appendChild(h('div', { className: 'wizard' + (single ? ' single' : '') }, single ? [summary, card] : [summary, progress, nav, card]));
     // reaching "You're set" (or the last step) finishes the setup; steps after it (updating) are extra
     if (index === total - 1 || steps.slice(0, index + 1).some(function (s) { return s.id === 'done'; })) markDone();
-    document.title = fill(step.title) + ' · Setup · MASCHINE for Ableton Live';
+    document.title = fill(step.title) + ' Â· Setup Â· MASCHINE for Ableton Live';
 
     if (state.focusStep) {
       state.focusStep = false;
@@ -415,20 +423,37 @@ MM.setup = (function () {
 
   // --- routing ----------------------------------------------------------------------------
 
-  // parts: the hash after "setup/", split on "/": [os, device, live, step]
-  function show(parts) {
+  // The answers: the hash's ({choice id: option}), else the remembered ones, else what was detected.
+  function loadChoices(fromHash) {
     var stored = MM.storeJSON('setupChoices') || {};
+    state.choices = {};
+    choiceDefs().forEach(function (c) {
+      state.choices[c.id] = fromHash[c.id] || findOption(c, stored[c.id]) || state.detected[c.id] || null;
+    });
+  }
+
+  // parts: the hash after "setup/", split on "/": [] (the cards), ['text'] (the questions),
+  // ['video', os, device], or [os, device, live, step]
+  function show(parts) {
+    parts = (parts || []).filter(function (p) { return p !== ''; });
+    document.title = 'Install and set up Â· MASCHINE for Ableton Live';
+    if (parts[0] === 'video') {
+      showVideo(parts.slice(1));
+      return;
+    }
+    if (!parts.length) {
+      loadChoices({});
+      renderLanding();
+      return;
+    }
+    if (parts[0] === 'text') parts = parts.slice(1);
     var fromHash = {};
     choiceDefs().forEach(function (c, i) {
       var id = findOption(c, parts[i]);
       if (id) fromHash[c.id] = id;
     });
     var hashComplete = choiceDefs().every(function (c) { return !!fromHash[c.id]; });
-    state.choices = {};
-    choiceDefs().forEach(function (c) {
-      state.choices[c.id] = fromHash[c.id] || findOption(c, stored[c.id]) || state.detected[c.id] || null;
-    });
-    document.title = 'Install and set up · MASCHINE for Ableton Live';
+    loadChoices(fromHash);
     if (!hashComplete) {
       renderChoices();
       return;
@@ -456,7 +481,7 @@ MM.setup = (function () {
         if (major >= 13) state.detected.os = 'win11';
         else if (major > 0) state.detected.os = 'win10';
         // the questions may already be on screen: show the hint there
-        if (state.detected.os && !el('view-setup').hidden && el('setup-root').querySelector('.choice-form')) {
+        if (state.detected.os && !el('view-setup').hidden && el('setup-root').querySelector('.choice-form, .guide-cards')) {
           var parts = location.hash.replace(/^#setup\/?/, '').split('/');
           show(parts);
         }
@@ -465,10 +490,11 @@ MM.setup = (function () {
   }
 
   function init(data) {
-    // A step marked "licensing" waits for the release-day switch ("licensing": true at the top).
-    data.steps = (data.steps || []).filter(function (step) { return !step.licensing || data.licensing === true; });
+    var all = data.steps || [];
+    data.steps = all.filter(function (step) { return (step.place || 'wizard') === 'wizard'; });
+    state.sections = all.filter(function (step) { return step.place === 'section'; });
     state.data = data;
-    el('setup-intro').textContent = data.intro || '';
+    intro(data.intro);
     detect();
     document.addEventListener('keydown', function (e) {
       if (el('view-setup').hidden || !el('setup-root').querySelector('.step-card')) return;
@@ -731,12 +757,28 @@ MM.setup = (function () {
       });
       node.appendChild(wrap);
     });
+    // the sections of their own (upgrading to the full edition): once, after every route
+    state.sections.forEach(function (step) {
+      var stepCtx = narrow(step.when, ctx);
+      if (!stepCtx) return;
+      var title = withCtx(stepCtx, function () { return fill(step.title); });
+      contents.appendChild(h('li', { className: sections.length > 1 ? 'pd-contents-group' : null }, [h('span', { text: title })]));
+      var body = h('div', { className: 'step-body pd-body pd-flow' });
+      (step.body || []).forEach(function (b) {
+        var n = printBlock(b, stepCtx);
+        if (n) body.appendChild(n);
+      });
+      node.appendChild(h('section', { className: 'pd-section' }, [
+        h('h2', { className: 'pd-section-title', text: title }),
+        h('article', { className: 'pd-step' }, [body])
+      ]));
+    });
     var given = choiceDefs().filter(function (c) { return ctx[c.id]; }).map(function (c) {
       return ctx[c.id].map(function (o) { return optionLabel(c.id, o); }).join(' and ');
     });
     return {
       title: state.data.title,
-      subtitle: given.join(' · '),
+      subtitle: given.join(' Â· '),
       site: state.data.site,
       contents: contents,
       node: node
@@ -755,5 +797,157 @@ MM.setup = (function () {
     show(parts);
   }
 
-  return { init: init, show: show, help: help, guide: guide };
+  // --- the cards: text guide | video guide (#setup) ---------------------------------------
+
+  function intro(text) {
+    var node = el('setup-intro');
+    node.textContent = text || '';
+    node.hidden = !text;
+  }
+
+  function videoChosen() { return !!(state.choices.os && state.choices.device); }
+
+  function videoHash() {
+    return '#setup/video' + (videoChosen() ? '/' + state.choices.os + '/' + state.choices.device : '');
+  }
+
+  function guideCard(iconName, title, text, action, href) {
+    return h('a', { className: 'guide-card', href: href }, [
+      h('span', { className: 'guide-card-icon', 'aria-hidden': 'true' }, [MM.icon(iconName)]),
+      h('span', { className: 'guide-card-text' }, [
+        h('span', { className: 'guide-card-title', text: title }),
+        h('span', { className: 'guide-card-sub', text: text })
+      ]),
+      h('span', { className: 'btn btn-filled has-icon-end guide-card-action', 'aria-hidden': 'true' }, [h('span', { text: action }), MM.icon('right')])
+    ]);
+  }
+
+  function renderLanding() {
+    var root = el('setup-root');
+    root.innerHTML = '';
+    intro('Read it step by step, or watch it. It takes a few minutes, and there is nothing to set up in Live.');
+    root.appendChild(h('div', { className: 'guide-cards' }, [
+      guideCard('sheet', 'Text guide', 'Three quick questions, then a few short steps.', 'Start', '#setup/text'),
+      guideCard('play', 'Video guide', 'The whole setup for your controller and computer, in one video.', 'Watch', videoHash())
+    ]));
+    state.sections.forEach(function (step) { root.appendChild(sectionCard(step)); });
+    root.appendChild(h('p', { className: 'guide-more' }, [
+      h('a', { className: 'btn btn-text', href: '#manual' }, [h('span', { text: 'Already set up? Open the manual' })])
+    ]));
+  }
+
+  // A section of its own (upgrading to the full edition), always shown. Its texts follow the visitor's
+  // computer when it is known, otherwise a folder shows once per computer.
+  function sectionCard(step) {
+    var body = h('div', { className: 'step-body' });
+    var ctx = state.choices.os ? null : {};
+    (step.body || []).forEach(function (b) {
+      var node = ctx ? printBlock(b, ctx) : (matches(b.when) ? block(b) : null);
+      if (node) body.appendChild(node);
+    });
+    return h('section', { className: 'step-card setup-section', id: 'setup-' + step.id.replace(/_/g, '-'), 'aria-labelledby': 'setup-section-' + step.id }, [
+      h('h2', { className: 'step-title', id: 'setup-section-' + step.id, text: fill(step.title) }),
+      body
+    ]);
+  }
+
+  // --- the video guide (#setup/video[/<os>/<device>]) -------------------------------------
+
+  // { src, poster } of the setup video for these answers, or null
+  function videoFor(os, device) {
+    var d = VIDEO_DEVICE[device], o = VIDEO_OS[os];
+    if (!d || !o) return null;
+    var name = 'video/' + d + '-setup-' + o;
+    return { src: name + '.mp4', poster: name + '.jpg' };
+  }
+
+  function showVideo(parts) {
+    var defs = choiceDefs().filter(function (c) { return c.id === 'os' || c.id === 'device'; });
+    var fromHash = {};
+    defs.forEach(function (c, i) {
+      var id = findOption(c, parts[i]);
+      if (id) fromHash[c.id] = id;
+    });
+    loadChoices(fromHash);
+    if (fromHash.os && fromHash.device) {
+      remember();
+      var canonical = '#setup/video/' + fromHash.os + '/' + fromHash.device;
+      if (location.hash !== canonical) history.replaceState(null, '', canonical);
+      renderVideo();
+    } else {
+      renderVideoChoices(defs);
+    }
+  }
+
+  // The two questions the video needs (the text guide's own), then Watch.
+  function renderVideoChoices(defs) {
+    var root = el('setup-root');
+    root.innerHTML = '';
+    intro('Two quick questions, then the video for your setup.');
+    var watch = h('a', { className: 'btn btn-filled has-icon-end', href: '#setup/video' }, [h('span', { text: 'Watch' }), MM.icon('right')]);
+    var groups = defs.map(function (choice, number) { return choiceGroup(choice, number, update); });
+    function update() {
+      groups.forEach(function (g, i) { g.classList.toggle('answered', !!state.choices[defs[i].id]); });
+      if (videoChosen()) {
+        watch.removeAttribute('aria-disabled');
+        watch.removeAttribute('tabindex');
+        watch.setAttribute('href', videoHash());
+      } else {
+        watch.setAttribute('aria-disabled', 'true');
+        watch.setAttribute('tabindex', '-1');
+        watch.setAttribute('href', '#setup/video');
+      }
+    }
+    var form = h('div', { className: 'choice-form' }, groups.concat([
+      h('div', { className: 'choice-actions' }, [
+        watch,
+        h('a', { className: 'btn btn-text', href: '#setup' }, [h('span', { text: 'Back' })])
+      ])
+    ]));
+    root.appendChild(h('div', { className: 'choices-layout' }, [form, padArt()]));
+    update();
+  }
+
+  function renderVideo() {
+    var root = el('setup-root');
+    root.innerHTML = '';
+    intro('');
+    var os = state.choices.os, device = state.choices.device;
+    var video = videoFor(os, device);
+    var deviceLabel = optionLabel('device', device), osLabel = optionLabel('os', os);
+    var summary = h('div', { className: 'wizard-summary', 'aria-label': 'Your answers' }, [
+      h('span', { className: 'chip' }, [MM.icon('computer'), osLabel]),
+      h('span', { className: 'chip' }, [MM.icon('pads'), deviceLabel]),
+      h('a', { className: 'btn btn-text has-icon-start', href: '#setup/video' }, [MM.icon('edit'), h('span', { text: 'Change' })])
+    ]);
+    var missing = h('div', { className: 'note important video-missing', hidden: true }, [
+      MM.icon('alert'), h('div', { text: 'The video does not load right now. The text guide has the same steps.' })
+    ]);
+    var source = h('source', { src: video.src, type: 'video/mp4' });
+    source.addEventListener('error', function () { missing.hidden = false; });
+    // the visitor starts it (phones too: playsinline keeps it in the page)
+    var player = h('video', { className: 'setup-video', controls: true, preload: 'metadata', playsinline: true,
+      poster: video.poster, 'aria-label': 'Setup video: ' + deviceLabel + ' on ' + osLabel }, [
+      source,
+      h('p', {}, ['Your browser cannot play this video here. ', h('a', { href: video.src, text: 'Download it' }), '.'])
+    ]);
+    var plus = device === 'plus' ? h('div', { className: 'note' }, [MM.icon('info'),
+      h('div', { text: 'The MASCHINE+ sets up like the MK3, so this video shows the MK3.' })]) : null;
+    var card = h('article', { className: 'step-card video-card', 'aria-labelledby': 'video-title' }, [
+      h('p', { className: 'step-eyebrow', text: 'Video guide' }),
+      h('h2', { className: 'step-title', id: 'video-title', tabindex: '-1', text: deviceLabel + ' on ' + osLabel }),
+      h('div', { className: 'video-frame' }, [player]),
+      missing,
+      plus,
+      h('div', { className: 'step-nav' }, [
+        h('a', { className: 'btn btn-outlined has-icon-start', href: '#setup' }, [MM.icon('left'), h('span', { text: 'Back' })]),
+        h('span', { className: 'spacer' }),
+        h('a', { className: 'btn btn-tonal has-icon-start', href: '#setup/' + os + '/' + device + '/live12/1' }, [MM.icon('sheet'), h('span', { text: 'Text guide' })])
+      ])
+    ]);
+    root.appendChild(h('div', { className: 'wizard single video-wizard' }, [summary, card]));
+    document.title = 'Video guide Â· Setup Â· MASCHINE for Ableton Live';
+  }
+
+  return { init: init, show: show, help: help, guide: guide, videoFor: videoFor };
 })();

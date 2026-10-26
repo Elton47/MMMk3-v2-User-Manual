@@ -861,6 +861,46 @@ td:first-child { font-weight: 500; }
 .choice-actions { display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: center; padding-top: 4px; }
 .choice-actions .hint-text { color: var(--md-sys-color-on-surface-variant); font-size: 12px; }
 
+/* the two guides (#setup): text | video */
+.guide-cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.guide-card {
+  position: relative; isolation: isolate;
+  display: flex; flex-direction: column; align-items: flex-start; gap: 16px; min-height: 220px; padding: 24px;
+  border: 1px solid var(--md-sys-color-outline-variant); border-radius: var(--r);
+  background: var(--md-sys-color-surface-container-low); color: var(--md-sys-color-on-surface); text-decoration: none;
+  transition: border-color var(--md-sys-motion-short) linear;
+}
+.guide-card::after { content: ""; position: absolute; inset: 0; z-index: -1; border-radius: inherit; background: currentColor; opacity: 0; }
+.guide-card:hover { border-color: var(--md-sys-color-primary); }
+.guide-card:hover::after { opacity: .04; }
+.guide-card:focus-visible { outline-offset: 2px; }
+.guide-card-icon {
+  display: grid; place-items: center; width: 48px; height: 48px; border-radius: var(--r-full);
+  background: var(--md-sys-color-secondary-container); color: var(--md-sys-color-primary);
+}
+.guide-card-icon .icon { width: 26px; height: 26px; }
+.guide-card-text { display: flex; flex-direction: column; gap: 4px; }
+.guide-card-title { font-size: 22px; line-height: 28px; font-weight: 500; }
+.guide-card-sub { color: var(--md-sys-color-on-surface-variant); font-size: 14px; line-height: 20px; }
+.guide-card-action { margin-top: auto; pointer-events: none; }
+.setup-section { margin-top: 24px; max-width: 820px; }
+.setup-section .step-title { font-size: 22px; line-height: 28px; }
+.guide-more { margin: 16px 0 0; }
+@media (max-width: 600px) {
+  .guide-cards { grid-template-columns: minmax(0, 1fr); }
+  .guide-card { min-height: 0; padding: 20px; }
+}
+
+/* the video guide (#setup/video/<os>/<device>) */
+.video-frame {
+  margin-top: 16px; overflow: hidden; border-radius: var(--r);
+  background: #000; aspect-ratio: 16 / 9;
+}
+.setup-video { display: block; width: 100%; height: 100%; background: #000; }
+.video-card .note { margin-top: 16px; }
+.video-missing[hidden] { display: none; }
+.video-card .step-nav { margin-top: 20px; }
+
 /* stepper */
 .wizard { display: grid; grid-template-columns: 280px minmax(0, 1fr); gap: 24px; align-items: start; }
 .wizard.single { grid-template-columns: minmax(0, 1fr); max-width: 820px; }

@@ -31,10 +31,10 @@
       "id": "start",
       "nav": "Getting started",
       "title": "Getting started",
-      "summary": "New here? The Set up guide walks you through it (macOS is automatic; Windows needs a one-time loopMIDI setup). After that: connect the controller and start Live. The script starts the Maschine Bridge, which takes over the hardware: no Controller Editor, no MIDI mode, a real SHIFT key. While Live loads, the screen shows Waiting for Live; when the set is ready, a rainbow wave sweeps across the pads. Your note repeat rate, arp settings, chord type and voicing, drum colours and velocity curve are remembered between Live sessions.",
+      "summary": "New here? The Set up guide walks you through it: copy the script's folder, plug in the controller and start Live. Live picks the script up by itself, on Windows and macOS. There is nothing to set up in Live. After that: connect the controller and start Live. The script starts the Maschine Bridge, which takes over the hardware: no Controller Editor, no MIDI mode, a real SHIFT key. While Live loads, the screen shows Waiting for Live; when the set is ready, a rainbow wave sweeps across the pads. Your note repeat rate, arp settings, chord type and voicing, drum colours and velocity curve are remembered between Live sessions.",
       "tour": {"intro": "Connect the controller and start Live: the Maschine Bridge takes over the hardware, with a real SHIFT key. No Controller Editor, no MIDI mode."},
       "notes": [
-        {"title": "Using the MASCHINE plug-in (Expansions)", "text": "NI's MASCHINE plug-in (VST / AU) takes the controller as soon as it is anywhere in the set, and keeps it until it is deleted: selecting another track or switching the plug-in off doesn't release it. Meanwhile the script steps aside: the lights, screen and pads are MASCHINE's, and Live's status bar says so. Delete the last MASCHINE plug-in and the controller is back with Live within about a second, on the drum pads or the keyboard. To switch between the two on the fly, use v1.6.1 (in the same download) in NI's MIDI mode, where SHIFT + MASCHINE (MK3, MASCHINE+: SHIFT + CHANNEL) switches between MASCHINE and Live. Or play the Expansions' kits without the plug-in: BROWSER > MASCHINE Kits (see BROWSER: browse and load). On Windows you can also keep the plug-in in the set and the controller with Live (see MASCHINE VSTi in Live Set Support)."},
+        {"title": "Using the MASCHINE plug-in (Expansions)", "text": "NI's MASCHINE plug-in (VST / AU) can stay in your set. While Live runs, the controller stays with Live: the plug-in doesn't take it. The pads still play the plug-in on its track, and its browser and pages work with the mouse (see MASCHINE plug-in in your Live sets). Or play the Expansions' kits without the plug-in: BROWSER > MASCHINE Kits (see BROWSER: browse and load). To control the plug-in from the hardware instead, use v1.6.1 (in the same download) in NI's MIDI mode, where SHIFT + MASCHINE (MK3, MASCHINE+: SHIFT + CHANNEL) switches between MASCHINE and Live."},
         {"title": "Activate once on each computer", "text": "Until this computer is activated, the controller shows the activation pages and Live doesn't connect. Press the encoder: the activation page opens in your browser. Your browser may ask whether this page may talk to apps on this computer: choose Allow. That lets the page reach MASCHINE for Ableton Live on this computer, and nothing else. Enter the licence key from your purchase email and the email you bought with, then Activate. Within a few seconds the controller works and Live connects. There are two editions. MIKRO MK3 covers the MIKRO MK3. MK3, MASCHINE+ & MIKRO MK3 covers all three controllers. A key works on 3 computers. Moving to another one? Open the same page and choose Deactivate this computer first. Once activated, it works offline too. It checks itself online now and then, and a computer that stays offline for 90 days is asked to go online once."}
       ],
       "items": [
@@ -66,17 +66,17 @@
       "title": "PATTERN: clips",
       "summary": "A 4x4 view of Live's Session clips (4 tracks x 4 scenes). Pad colours follow the clip colours; playing clips are bright, and a clip waiting to start (Live's launch quantization) blinks in its colour, red when it will record. Recording a new clip (an empty slot, or VARIATION + pad) selects its track, so Live's auto-arm arms it (the dimmed arm, which follows the track you select; tracks armed for real are disarmed), and the pads switch to the drum pads or the keyboard so you can play into it right away. With a Record length set (REC + TURN), the new clip records exactly that many bars and then loops.",
       "items": [
-        {"combo": ["PATTERN"], "does": "Tap: switch to clip mode. Hold + PAD: launch a clip, then return to the previous mode.", "best": {"mikro": 143, "mk3": 157}, "headline": "PATTERN: your clips on the pads"},
-        {"combo": ["PAD"], "does": "Launch the clip. On an empty slot of a MIDI track: select (arm) that track and record a new clip; the pads switch to the drum pads or keyboard to play.", "best": {"mikro": 142, "mk3": 156}, "headline": "Launch a clip, or record a new one on an empty slot"},
-        {"combo": ["DUPLICATE", "PAD"], "does": "Duplicate that clip into the next slot.", "best": {"mikro": 146, "mk3": 162}},
-        {"combo": ["ERASE", "PAD"], "does": "Delete that clip.", "best": {"mikro": 147, "mk3": 163}},
-        {"combo": ["TURN"], "does": "Move the clip view left / right by one track.", "best": {"mikro": 148, "mk3": 164}},
-        {"combo": ["SHIFT", "TURN"], "does": "Move the clip view up / down by one scene.", "best": {"mikro": 149, "mk3": 165}},
-        {"combo": ["◀", "▶"], "does": "Move the clip view by four tracks.", "best": {"mikro": 150, "mk3": 166}},
-        {"combo": ["SHIFT", "PATTERN"], "does": "New: stop recording and select the next empty slot (ready to record).", "best": {"mikro": 145, "mk3": 161}},
-        {"combo": ["STRIP"], "does": "The strip lights show the selected track's playing clip through its loop, in its colour, flashing red on every metronome click while it records; stopped, where each track's clip stopped. Touch to jump within the loop (on Live's launch quantization).", "best": {"mikro": 144, "mk3": 158}, "headline": "The strip shows the playing clip's loop, touch to jump"},
-        {"combo": ["PATTERN"], "context": "with the screens", "does": "Tap: the page stays. Hold: a quick look. The screens show the tracks' clips (Ideas view) with their progress.", "devices": ["mk3"], "best": 159, "headline": "Your clips on the screens, with their progress"},
-        {"combo": ["PUSH"], "context": "PATTERN page", "does": "Launch the focused clip. TURN moves to the next tracks. SHIFT + TURN: the scenes.", "devices": ["mk3"], "best": 160}
+        {"combo": ["PATTERN"], "does": "Tap: switch to clip mode. Hold + PAD: launch a clip, then return to the previous mode.", "best": {"mikro": 143, "mk3": 155}, "headline": "PATTERN: your clips on the pads"},
+        {"combo": ["PAD"], "does": "Launch the clip. On an empty slot of a MIDI track: select (arm) that track and record a new clip; the pads switch to the drum pads or keyboard to play.", "best": {"mikro": 142, "mk3": 154}, "headline": "Launch a clip, or record a new one on an empty slot"},
+        {"combo": ["DUPLICATE", "PAD"], "does": "Duplicate that clip into the next slot.", "best": {"mikro": 146, "mk3": 160}},
+        {"combo": ["ERASE", "PAD"], "does": "Delete that clip.", "best": {"mikro": 147, "mk3": 161}},
+        {"combo": ["TURN"], "does": "Move the clip view left / right by one track.", "best": {"mikro": 148, "mk3": 162}},
+        {"combo": ["SHIFT", "TURN"], "does": "Move the clip view up / down by one scene.", "best": {"mikro": 149, "mk3": 163}},
+        {"combo": ["◀", "▶"], "does": "Move the clip view by four tracks.", "best": {"mikro": 150, "mk3": 164}},
+        {"combo": ["SHIFT", "PATTERN"], "does": "New: stop recording and select the next empty slot (ready to record).", "best": {"mikro": 145, "mk3": 159}},
+        {"combo": ["STRIP"], "does": "The strip lights show the selected track's playing clip through its loop, in its colour, flashing red on every metronome click while it records; stopped, where each track's clip stopped. Touch to jump within the loop (on Live's launch quantization).", "best": {"mikro": 144, "mk3": 156}, "headline": "The strip shows the playing clip's loop, touch to jump"},
+        {"combo": ["PATTERN"], "context": "with the screens", "does": "Tap: the page stays. Hold: a quick look. The screens show the tracks' clips (Ideas view) with their progress.", "devices": ["mk3"], "best": 157, "headline": "Your clips on the screens, with their progress"},
+        {"combo": ["PUSH"], "context": "PATTERN page", "does": "Launch the focused clip. TURN moves to the next tracks. SHIFT + TURN: the scenes.", "devices": ["mk3"], "best": 158}
       ]
     },
     {
@@ -85,15 +85,15 @@
       "title": "SCENE: scenes",
       "summary": "16 scenes on the pads, in their colours, in the order of Live's scene list: scene 1 top left (pad 13), then to the right and down. A triggered scene blinks in its colour until it starts; the playing scene is the brightest.",
       "items": [
-        {"combo": ["SCENE"], "does": "Tap: switch to scene mode. Hold + PAD: launch a scene and return.", "best": {"mikro": 152, "mk3": 168}, "headline": "SCENE: your scenes on the pads"},
-        {"combo": ["PAD"], "does": "Launch the scene. An unlit pad creates a new scene.", "best": {"mikro": 151, "mk3": 167}},
-        {"combo": ["DUPLICATE", "PAD"], "does": "Duplicate the scene.", "best": {"mikro": 155, "mk3": 171}},
-        {"combo": ["ERASE", "PAD"], "does": "Delete the scene (the last scene can't be deleted).", "best": {"mikro": 156, "mk3": 172}},
-        {"combo": ["TURN"], "does": "Scroll the scenes by one (SHIFT: by 16).", "best": {"mikro": 157, "mk3": 173}},
+        {"combo": ["SCENE"], "does": "Tap: switch to scene mode. Hold + PAD: launch a scene and return.", "best": {"mikro": 152, "mk3": 166}, "headline": "SCENE: your scenes on the pads"},
+        {"combo": ["PAD"], "does": "Launch the scene. An unlit pad creates a new scene.", "best": {"mikro": 151, "mk3": 165}},
+        {"combo": ["DUPLICATE", "PAD"], "does": "Duplicate the scene.", "best": {"mikro": 155, "mk3": 169}},
+        {"combo": ["ERASE", "PAD"], "does": "Delete the scene (the last scene can't be deleted).", "best": {"mikro": 156, "mk3": 170}},
+        {"combo": ["TURN"], "does": "Scroll the scenes by one (SHIFT: by 16).", "best": {"mikro": 157, "mk3": 171}},
         {"combo": ["SHIFT", "SCENE"], "does": "Capture and insert scene (copies what is playing into a new scene).", "devices": ["mikro"], "best": 154},
-        {"combo": ["STRIP"], "does": "The strip lights show the playing clip's progress in the scene's colour. Touch the strip to jump all playing clips within their loops.", "best": {"mikro": 153, "mk3": 169}},
-        {"combo": ["DISPLAY"], "context": "SCENE", "does": "Button 2 CAPTURE: capture and insert a scene. The buttons light for SCENE: SCENE bright, CAPTURE dim. (SHIFT + SCENE opens the Section page.)", "devices": ["mk3"], "best": 170},
-        {"combo": ["SCENE"], "context": "pressed twice, with the screens", "does": "Over PLUG-IN or MIXER, SCENE again goes back to that page, as PATTERN does.", "devices": ["mk3"], "best": 174}
+        {"combo": ["STRIP"], "does": "The strip lights show the playing clip's progress in the scene's colour. Touch the strip to jump all playing clips within their loops.", "best": {"mikro": 153, "mk3": 167}},
+        {"combo": ["DISPLAY"], "context": "SCENE", "does": "Button 2 CAPTURE: capture and insert a scene. The buttons light for SCENE: SCENE bright, CAPTURE dim. (SHIFT + SCENE opens the Section page.)", "devices": ["mk3"], "best": 168},
+        {"combo": ["SCENE"], "context": "pressed twice, with the screens", "does": "Over PLUG-IN or MIXER, SCENE again goes back to that page, as PATTERN does.", "devices": ["mk3"], "best": 172}
       ]
     },
     {
@@ -103,18 +103,18 @@
       "summary": "Your tracks read like text: track 1 on pad 13 (marked A), track 2 on pad 14 (B), then to the right and down. The return tracks and the Master always sit on the last pads (two returns: pads 2 and 3, Master on pad 4); TURN scrolls the other tracks. Colours follow the tracks: the selected track brightest, a soloed one bright in its colour, an armed one red, a muted one (or one silenced by another's solo) dim white, a step brighter when selected, as on the drum pads.",
       "items": [
         {"combo": ["GROUP"], "does": "Tap: show tracks on the pads (latched). Hold + PAD: act on a track and return.", "devices": ["mikro"], "best": 160, "headline": "GROUP: your tracks on the pads"},
-        {"combo": ["SELECT"], "does": "Tap: show tracks on the pads (latched). Hold + PAD: act on a track and return.", "devices": ["mk3"], "best": 177, "headline": "SELECT: your tracks on the pads"},
-        {"combo": ["PAD"], "does": "Select the track. A group track folds / unfolds.", "best": {"mikro": 161, "mk3": 178}},
-        {"combo": ["PAD"], "context": "unlit pad", "does": "Create a new MIDI track.", "best": {"mikro": 163, "mk3": 179}},
-        {"combo": ["DUPLICATE", "PAD"], "context": "unlit pad", "does": "Create a new audio track.", "best": {"mikro": 164, "mk3": 180}},
+        {"combo": ["SELECT"], "does": "Tap: show tracks on the pads (latched). Hold + PAD: act on a track and return.", "devices": ["mk3"], "best": 175, "headline": "SELECT: your tracks on the pads"},
+        {"combo": ["PAD"], "does": "Select the track. A group track folds / unfolds.", "best": {"mikro": 161, "mk3": 176}},
+        {"combo": ["PAD"], "context": "unlit pad", "does": "Create a new MIDI track.", "best": {"mikro": 163, "mk3": 177}},
+        {"combo": ["DUPLICATE", "PAD"], "context": "unlit pad", "does": "Create a new audio track.", "best": {"mikro": 164, "mk3": 178}},
         {"combo": ["SELECT", "PAD"], "does": "Arm that track and disarm the others, like Live's mixer (again: disarm). SHIFT + SELECT + PAD adds a track, to record several at once. With ERASE or DUPLICATE also held: nothing (delete with GROUP + ERASE + PAD).", "devices": ["mikro"], "best": 162, "headline": "Arm a track from the pads"},
-        {"combo": ["SOLO", "PAD"], "does": "Solo / unsolo that track (works from any mode: the pads show tracks while SOLO is held).", "best": {"mikro": 158, "mk3": 175}, "headline": "SOLO + pad: solo a track, from any mode"},
-        {"combo": ["MUTE", "PAD"], "does": "Mute / unmute that track (from any mode).", "best": {"mikro": 159, "mk3": 176}},
-        {"combo": ["STOP", "PAD"], "does": "Stop that track's clips (from any mode).", "best": {"mikro": 165, "mk3": 181}},
-        {"combo": ["DUPLICATE", "PAD"], "does": "Duplicate the track.", "best": {"mikro": 167, "mk3": 183}},
-        {"combo": ["ERASE", "PAD"], "does": "Delete the track (not the Master, not the last track).", "best": {"mikro": 168, "mk3": 184}},
-        {"combo": ["TURN"], "does": "Scroll the tracks by one (SHIFT: by four).", "best": {"mikro": 169, "mk3": 185}},
-        {"combo": ["STOP", "PAD"], "context": "Master pad", "does": "Stop every clip, on Live's launch quantization, like the Master's stop button. The return pads stay dark while STOP is held.", "best": {"mikro": 166, "mk3": 182}, "headline": "The Master pad stops every clip"}
+        {"combo": ["SOLO", "PAD"], "does": "Solo / unsolo that track (works from any mode: the pads show tracks while SOLO is held).", "best": {"mikro": 158, "mk3": 173}, "headline": "SOLO + pad: solo a track, from any mode"},
+        {"combo": ["MUTE", "PAD"], "does": "Mute / unmute that track (from any mode).", "best": {"mikro": 159, "mk3": 174}},
+        {"combo": ["STOP", "PAD"], "does": "Stop that track's clips (from any mode).", "best": {"mikro": 165, "mk3": 179}},
+        {"combo": ["DUPLICATE", "PAD"], "does": "Duplicate the track.", "best": {"mikro": 167, "mk3": 181}},
+        {"combo": ["ERASE", "PAD"], "does": "Delete the track (not the Master, not the last track).", "best": {"mikro": 168, "mk3": 182}},
+        {"combo": ["TURN"], "does": "Scroll the tracks by one (SHIFT: by four).", "best": {"mikro": 169, "mk3": 183}},
+        {"combo": ["STOP", "PAD"], "context": "Master pad", "does": "Stop every clip, on Live's launch quantization, like the Master's stop button. The return pads stay dark while STOP is held.", "best": {"mikro": 166, "mk3": 180}, "headline": "The Master pad stops every clip"}
       ]
     },
     {
@@ -360,31 +360,29 @@
       "title": "Views and navigation",
       "items": [
         {"combo": ["PERFORM"], "does": "Session / Arrangement view.", "devices": ["mikro"], "best": 172},
-        {"combo": ["ARRANGER"], "does": "Session / Arrangement view.", "devices": ["mk3"], "best": 189},
-        {"combo": ["BROWSER"], "does": "Without the screens: show / hide Live's browser. With them it is MASCHINE's browser (see BROWSER: MASCHINE's browser).", "devices": ["mk3"], "best": 191},
+        {"combo": ["ARRANGER"], "does": "Session / Arrangement view.", "devices": ["mk3"], "best": 187},
+        {"combo": ["BROWSER"], "does": "Without the screens: show / hide Live's browser. With them it is MASCHINE's browser (see BROWSER: MASCHINE's browser).", "devices": ["mk3"], "best": 189},
         {"combo": ["SHIFT", "BROWSER"], "does": "Hot-Swap: the browser lands on the selected device (or where its last swap left it). PUSH swaps. SHIFT + BROWSER again cancels, back where you were.", "devices": ["mikro"], "best": 19, "headline": "Hot-Swap a device from the controller"},
-        {"combo": ["SHIFT", "BROWSER"], "does": "Hot-Swap the selected device (opens the browser on it).", "devices": ["mk3"], "best": 186},
-        {"combo": ["SHIFT", "PLUG-IN"], "does": "Toggle the Clip / Device detail view.", "best": {"mikro": 170, "mk3": 187}},
-        {"combo": ["SAMPLING"], "does": "Show the clip / sample editor.", "best": {"mikro": 171, "mk3": 188}},
+        {"combo": ["SHIFT", "BROWSER"], "does": "Hot-Swap the selected device (opens the browser on it).", "devices": ["mk3"], "best": 184},
+        {"combo": ["SHIFT", "PLUG-IN"], "does": "Toggle the Clip / Device detail view.", "best": {"mikro": 170, "mk3": 185}},
+        {"combo": ["SAMPLING"], "does": "Show the clip / sample editor.", "best": {"mikro": 171, "mk3": 186}},
         {"combo": ["SHIFT", "◀", "▶"], "does": "Select the previous / next track.", "devices": ["mikro"], "best": 173},
-        {"combo": ["SHIFT", "◀", "▶"], "does": "Select the previous / next track. Or press its group button A-H (the 8 tracks in view, lit in their colours).", "devices": ["mk3"], "best": 190},
+        {"combo": ["SHIFT", "◀", "▶"], "does": "Select the previous / next track. Or press its group button A-H (the 8 tracks in view, lit in their colours).", "devices": ["mk3"], "best": 188},
         {"combo": ["MASCHINE"], "does": "Open the settings page (see Settings).", "devices": ["mikro"], "best": 174}
       ]
     },
     {
       "id": "maschine-vsti",
       "nav": "MASCHINE plug-in",
-      "title": "MASCHINE VSTi in Live Set Support (Windows)",
-      "summary": "Keep NI's MASCHINE plug-in in your Live sets, and your controller stays with Live. You switch it on from the controller: NI VSTi support, on the settings page. It is off by default. Off is how NI's software works today: the MASCHINE plug-in takes the controller as soon as it is in the set (see Getting started). On: while Live runs, NI's background helper is paused. So the MASCHINE plug-in can't take the controller. It stays with MASCHINE for Ableton Live. When Live closes, the helper starts again by itself. That also happens after a crash. Windows only for now. macOS is coming.",
-      "tour": {"intro": "Keep the MASCHINE plug-in in your Live sets, and your controller stays with Live. Windows, switched on from the controller."},
+      "title": "MASCHINE plug-in in your Live sets",
+      "summary": "Keep NI's MASCHINE plug-in in your Live sets, and your controller stays with Live. While Live runs, the plug-in can't take the controller, in every set. Nothing to switch on. When Live closes, MASCHINE gets the controller back.",
+      "tour": {"intro": "Keep the MASCHINE plug-in in your Live sets, and your controller stays with Live. Nothing to switch on."},
       "notes": [
-        {"title": "Switch it on or off", "text": "Live can stay open. On the MK3 press SETTINGS and open the Setup tab. On the MIKRO press MASCHINE and turn to NI VSTi support, just before About. Turn its knob (MIKRO: press ◀ or ▶). A dialog explains what it does, with CANCEL highlighted. Choose CONFIRM, and Windows asks for your permission once. The value shows the new state at once. That lets your Windows user pause and restart one NI helper, NI Host Integration Agent. Nothing else changes: no other service, no driver and no NI setting. To switch it off, do the same again. MASCHINE Setup (in the download, choice 2, with Live closed) still does the same, if you ever need it."},
-        {"title": "MK3 screens and NI VSTi support", "text": "Switch the MK3 screens back to MASCHINE while NI VSTi support is on, and the screens go black: NI's helper is paused while Live runs. When Live closes, MASCHINE and Komplete Kontrol show the screens again."},
         {"title": "What you give up while Live runs", "text": "You can't control the MASCHINE plug-in from the controller. Its browser and its pages are mouse only. This comes back when Live closes."}
       ],
       "items": [
         {"combo": ["PAD"], "does": "Select the track with the MASCHINE plug-in and play: the pads play it, in MASCHINE's own pad order. Pick the group or kit inside the plug-in, with the mouse.", "best": {"mikro": 23, "mk3": 29}, "headline": "Keep the MASCHINE plug-in in your Live sets"},
-        {"combo": ["BROWSER"], "does": "Still Live's browser, not the plug-in's. The rest of the controller works as it does without the plug-in.", "best": {"mikro": 190, "mk3": 192}}
+        {"combo": ["BROWSER"], "does": "Still Live's browser, not the plug-in's. The rest of the controller works as it does without the plug-in.", "best": {"mikro": 190, "mk3": 190}}
       ]
     },
     {
@@ -454,7 +452,7 @@
       "id": "settings",
       "nav": "Settings",
       "title": "MASCHINE: settings (MIKRO)",
-      "summary": "Your preferences, on the controller. They are saved with Live's preferences on your computer, remembered after a restart, and take effect at once (Start mode: at the next start). The screen saver only darkens the screen: the pad and button lights stay as they are, and the press, pad hit, turn or strip touch that wakes it still does its job (a pad plays). It never darkens the waiting and setup screens. Record length is the same setting as hold REC + TURN (see Transport). Start mode Pads opens on the drum pads on a track with a Drum Rack, else on the keyboard; the start mode also applies when the controller comes back from the MASCHINE plug-in. On Windows the list ends with NI VSTi support (see MASCHINE VSTi in Live Set Support), then About. A switch like that asks first, in the popup: CANCEL or CONFIRM, the highlighted one in brackets, CANCEL first. Turn to move, PUSH to choose.",
+      "summary": "Your preferences, on the controller. They are saved with Live's preferences on your computer, remembered after a restart, and take effect at once (Start mode: at the next start). The screen saver only darkens the screen: the pad and button lights stay as they are, and the press, pad hit, turn or strip touch that wakes it still does its job (a pad plays). It never darkens the waiting and setup screens. Record length is the same setting as hold REC + TURN (see Transport). Start mode Pads opens on the drum pads on a track with a Drum Rack, else on the keyboard. The list ends with About.",
       "devices": ["mikro"],
       "items": [
         {"combo": ["MASCHINE"], "does": "Settings on / off. The screen lists them with their values; the bar on the right shows where you are in the list. PAD MODE, KEYBOARD or CHORDS close them and show the pads.", "best": 175, "headline": "The settings page on the controller"},
@@ -481,16 +479,14 @@
       "summary": "Built from the hardware protocol; not yet tested on a real MK3.",
       "devices": ["mk3"],
       "items": [
-        {"combo": ["SETTINGS"], "does": "The settings (the same as the MIKRO's, see Settings) in four tabs on the knobs: Hardware, Pads, General and Setup. A knob changes its setting. Display buttons 5 / 6 (or the 4-D left / right): the previous / next tab.", "best": 153, "headline": "The settings in four tabs on the knobs"},
-        {"combo": ["SETTINGS"], "context": "Setup tab", "does": "The one-time switches: the screens item (MK3 screens on Windows, Mac screens on macOS) gives the screens back to MASCHINE, and NI VSTi support (Windows, see MASCHINE VSTi in Live Set Support). Turning one opens a dialog: CANCEL or CONFIRM, CANCEL highlighted first. Turn or tilt the 4-D to move the highlight, PUSH to choose, or press button 7 (CANCEL) or 8 (CONFIRM). The value shows the new state at once.", "devices": ["mk3"], "best": 154, "headline": "Setup tab: the one-time switches"},
-        {"combo": ["SETTINGS"], "context": "the screens still MASCHINE's", "does": "Our pages on the two screens, switched on from the controller. On the first Live start, Live's status bar says how. Press SETTINGS once: the status bar explains. Press it twice quickly: the screens are Live's, no restart. macOS: at once, and MASCHINE and Komplete Kontrol get them back when Live quits (also after a force quit). Windows: Windows asks for your permission once (the status bar may ask you to switch the controller off and on once), and the screens stay Live's until you give them back in the Setup tab. The choice is remembered.", "devices": ["mk3"], "best": 152},
+        {"combo": ["SETTINGS"], "does": "The settings (the same as the MIKRO's, see Settings) in four tabs on the knobs: Hardware, Pads, General and Setup. A knob changes its setting. Display buttons 5 / 6 (or the 4-D left / right): the previous / next tab.", "best": 152, "headline": "The settings in four tabs on the knobs"},
         {"combo": ["GROUP A-H"], "does": "Select the 8 tracks in view (lit in track colours). An unlit one makes a new MIDI track (with DUPLICATE held: an audio track).", "best": 148},
         {"combo": ["SHIFT", "GROUP A-H"], "does": "Group banks: the next 8 tracks on A-H.", "best": 150},
         {"combo": ["MUTE", "GROUP A-H"], "does": "Mute / unmute that track. With SOLO: solo it. Several buttons solo them all.", "best": 149},
         {"combo": ["SOLO"], "context": "held, with the screens", "does": "SELECT, SOLO, MUTE or STOP held: the tracks of A-H and the pads' tracks as tiles, muted ones grey. In PAD MODE the tiles are the drum pads. The held button lights. Let go and the page comes back.", "best": 147, "headline": "Hold SELECT, SOLO, MUTE or STOP: the tracks as tiles"},
         {"combo": ["MACRO"], "does": "The rack's macros on the knobs, with names and values. Tap: the page stays. Hold: only while held. ◀ ▶: macros 9-16.", "best": 146},
         {"combo": ["SHIFT", "KNOB"], "does": "Fine adjustment.", "best": 151, "headline": "SHIFT + knob: fine adjustment"},
-        {"combo": ["SETTINGS"], "context": "Brightness", "does": "The Brightness setting dims the two screens too, with the pads and the buttons.", "best": 155}
+        {"combo": ["SETTINGS"], "context": "Brightness", "does": "The Brightness setting dims the two screens too, with the pads and the buttons.", "best": 153}
       ]
     },
     {
@@ -591,7 +587,7 @@
     }
   ],
   "changes": [
-    {"what": "Setup", "v1": "Controller Editor template, MIDI mode (SHIFT + MASCHINE), choose ports in Live", "v2": "Copy the script into the User Library; the bridge starts with Live. macOS: Live picks the controller by itself. Windows: the loopMIDI port pair and a one-time choice of the ports in Live"},
+    {"what": "Setup", "v1": "Controller Editor template, MIDI mode (SHIFT + MASCHINE), choose ports in Live", "v2": "Copy the script into the User Library, plug in the controller and start Live. Live picks the script up by itself on Windows and macOS, and the bridge starts with Live. Nothing to set up in Live"},
     {"what": "SHIFT", "v1": "RESTART acted as SHIFT", "v2": "The real SHIFT button; RESTART restarts playback"},
     {"what": "Tracks, scenes and steps on the pads", "v1": "Pad 1 (bottom left) first", "v2": "Read like text from pad 13 (A), as printed and as in MASCHINE; return tracks and Master stay on the last pads"},
     {"what": "PLAY", "v1": "Start (SHIFT: restart)", "v2": "Start / stop like MASCHINE; SHIFT + PLAY continues where it stopped; RESTART plays from the start"},
@@ -608,8 +604,8 @@
     {"what": "New", "v1": "", "v2": "Chords, arpeggiator, 16 Velocities, step sequencer, hardware browser (Live Sets open from it too), MASCHINE Expansion kits as Drum Racks (MIKRO), parameter control, Simpler's mode, sample markers and slices, pitch / mod strip, record variations (VARIATION + pad), take undo, clip progress and parameter value on the strip (touch to jump / set), a silent metronome on the strip while recording, fixed-length recording (REC + TURN), quick edits on a held step or drum pad, humanize, screen feedback, a screen saver, light brightness and a start mode (MIKRO settings), pads light instantly when played"},
     {"what": "Mode at start", "v1": "Always PATTERN (the clips)", "v2": "The drum pads (the keyboard without a Drum Rack); MIKRO: choose Pads, Pattern, Scene, Step or Track in the settings"},
     {"what": "Recording a new clip", "v1": "Records until stopped", "v2": "Free as before, or exactly 1, 2, 4 or 8 bars, then it loops (REC + TURN)"},
-    {"what": "MASCHINE plug-in in Live", "v1": "NI's MIDI mode: SHIFT + MASCHINE (MK3, MASCHINE+: SHIFT + CHANNEL) switches between MASCHINE and the script", "v2": "The script steps aside while a MASCHINE plug-in is in the set and comes back when it is deleted (or use v1.6.1 to switch on the fly). Windows: with NI VSTi support on (on the controller), the plug-in stays in the set and the controller stays with Live"},
-    {"what": "MK3 screens", "v1": "NI's MIDI mode pages", "v2": "MASCHINE's pages for Live on both screens (mixer, devices as pictures, browser, Section page ...). Switched on from the controller: SETTINGS twice, no restart, on macOS and Windows"},
+    {"what": "MASCHINE plug-in in Live", "v1": "NI's MIDI mode: SHIFT + MASCHINE (MK3, MASCHINE+: SHIFT + CHANNEL) switches between MASCHINE and the script", "v2": "The plug-in stays in the set and the controller stays with Live: the pads play the plug-in, its browser and pages work with the mouse (or use v1.6.1 to switch on the fly)"},
+    {"what": "MK3 screens", "v1": "NI's MIDI mode pages", "v2": "MASCHINE's pages for Live on both screens (mixer, devices as pictures, browser, Section page ...). Nothing to switch: on Windows NI's software draws them, on macOS they switch to Live by themselves the first time"},
     {"what": "Settings", "v1": "None (MK3: SETTINGS did nothing)", "v2": "On the controller: MIKRO MASCHINE (a list), MK3 SETTINGS (four tabs on the knobs). A switch that changes something outside Live asks first: CANCEL or CONFIRM"}
   ]
 }

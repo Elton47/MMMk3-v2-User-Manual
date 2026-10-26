@@ -216,13 +216,13 @@ MM.tour = (function () {
     });
   }
 
-  // Switching the controller keeps the card in view.
+  // Switching the controller never scrolls: the page stays where it is (the cards reorder under it).
   function switchDevice(device) {
     if (device === state.device) return;
-    var current = state.active;
+    var y = window.scrollY;
     setDevice(device);
-    if (current && !current.node.hidden) jump(current, null);
-    else later();
+    window.scrollTo(0, y);
+    later();
   }
 
   function awayChanged() {

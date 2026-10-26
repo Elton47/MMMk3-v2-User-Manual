@@ -23,7 +23,7 @@
     "STRIP": "touch / slide on the touch strip"
   },
   "tour_order": {
-    "mk3": ["mixer-mk3", "plugin-mk3", "slicing", "kits-mk3", "browser-mk3", "section-mk3", "drum-synths", "highlights", "start", "drum", "keyboard", "chords", "step", "playing", "clip", "scene", "track", "shift-pads", "events", "transport", "master", "edit", "views", "maschine-vsti", "mk3"]
+    "mk3": ["start", "highlights", "mixer-mk3", "plugin-mk3", "slicing", "kits-mk3", "browser-mk3", "section-mk3", "drum-synths", "drum", "keyboard", "chords", "step", "playing", "clip", "scene", "track", "shift-pads", "events", "transport", "master", "edit", "views", "maschine-vsti", "mk3"]
   },
   "best_of": {"mikro": 25, "mk3": 30},
   "sections": [

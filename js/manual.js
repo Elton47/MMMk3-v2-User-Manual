@@ -288,14 +288,27 @@ MM.manual = (function () {
     var key = part ? LCD_ANIM_DIR + a.image + '#' + side.side : 'img/screens/mk3/' + side.img + '.png';
     if (g.getAttribute('data-img') !== key) {
       g.setAttribute('data-img', key);
-      g.innerHTML = '';
       g.lcdAnim = null;
       if (part) {
+        g.innerHTML = '';
         lcdPiece(g, a, a.patches[part.base], 0, 0);
         if (side.alt) node('title', {}, g).textContent = side.alt;
         g.lcdAnim = part.frames ? { a: a, frames: part.frames, pool: [], frame: -1 } : null;
       } else {
-        lcdImage(g, key, 480, 272, side.alt);
+        // The new picture goes over the old one, which stays until it has loaded (or failed to):
+        // a picture seen for the first time is still downloading, and the screen would go black.
+        var stale = Array.prototype.slice.call(g.childNodes || []);
+        var image = lcdImage(g, key, 480, 272, side.alt);
+        var drop = function () {
+          stale.forEach(function (n) { if (n.parentNode === g) g.removeChild(n); });
+          stale = [];
+        };
+        if (stale.length && image.addEventListener) {
+          image.addEventListener('load', drop);
+          image.addEventListener('error', drop);
+        } else {
+          drop();
+        }
       }
     }
     var s = g.lcdAnim;

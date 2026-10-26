@@ -75,15 +75,13 @@ function screenKey(screen) {
 }
 const selfPlaying = (screen) => !!(screen && screen.anim && typeof screen.frame !== 'number');
 
-// Pages whose turn has no screens of its own yet (the value after each detent, from the script itself, still to
-// be exported): they show one screen while the encoder turns. Listed so the list only shrinks: a page that
-// follows its turns must leave it, a new page that doesn't fails.
+// Pages that show one screen while the encoder turns, as the controller does (the screens a turn shows,
+// detent by detent, come from the script itself: js/detent-screens.js). Listed so the list only shrinks: a
+// page that follows its turns must leave it, a new page that doesn't fails.
+//   mk3 track TURN: the MK3's screens show nothing of the tracks' scroll (only the pads move).
 const STILL_ON_TURN = {
-  mikro: ['drum TURN', 'slicing TURN', 'mixer TURN', 'mixer PUSH + TURN', 'step PUSH + TURN', 'step SHIFT + TURN',
-    'step TURN', 'chords TURN', 'keyboard SHIFT + TURN', 'keyboard PUSH + TURN', 'keyboard TURN', 'events EVENTS + TURN',
-    'clip TURN', 'clip SHIFT + TURN', 'scene TURN', 'track TURN'],
-  mk3: ['drum PAD + TURN', 'transport REC + TURN', 'playing FIXED VEL + TURN', 'drum TURN', 'chords TURN',
-    'keyboard TURN', 'keyboard SHIFT + TURN', 'track TURN']
+  mikro: [],
+  mk3: ['track TURN']
 };
 
 for (const device of ['mikro', 'mk3']) {

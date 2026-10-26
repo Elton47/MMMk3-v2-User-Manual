@@ -32,7 +32,7 @@ function load() {
   };
   context.window = context;
   vm.createContext(context);
-  for (const file of ['site.js', 'screen-render.js', 'layouts.js', 'manual.js', 'highlight-shows.js', 'highlights.js', 'best.js']) {
+  for (const file of ['site.js', 'screen-render.js', 'detent-screens.js', 'layouts.js', 'manual.js', 'highlight-shows.js', 'highlights.js', 'best.js']) {
     vm.runInContext(fs.readFileSync(path.join(ROOT, 'js', file), 'utf8'), context, { filename: file });
   }
   return context;

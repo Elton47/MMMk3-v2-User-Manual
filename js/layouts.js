@@ -604,7 +604,8 @@ var LAYOUTS = {
       },
       // Screens for a combo hovered in a given section (section id -> combo tokens joined with
       // '+', '*' for any other combo there); a list of states plays in turn (manual.js).
-      sectionScreens: {
+      // + the screens detent by detent, from the script (js/detent-screens.js: TURN in KEYBOARD, STEP ...)
+      sectionScreens: withDetents('mikro', {
         plugin: { '*': plugin, 'PUSH+TURN': macros,
           'TURN': [plugin, frequencyScreen(2.9), frequencyScreen(3.6)] },
         // The mixer: TURN in 1 dB steps; PUSH + TURN chooses Volume, Pan (its bar from the
@@ -652,7 +653,7 @@ var LAYOUTS = {
         drum: { 'PAD+TURN': [0, -1, -2].map(function (db) {
           return withFill(trackScreen(0, 'Volume', SAMPLE_DRUMS[0], dbText(db), 'Volume'), volumeFill(db));
         }) }
-      },
+      }, function (states) { return states; }),
       stripDots: dots,
       padDemos: padDemos('GROUP'),
       trackMode: 'GROUP',  // the track mode button; the other TRACK_VIEW_MODIFIERS are held
@@ -737,7 +738,11 @@ var LAYOUTS = {
       'variation': 'VARIATION, humanize and random',
       'simpler': 'PLUG-IN, Simpler and its markers', 'slicing': 'PLUG-IN, Simpler slicing, the slices on the pads',
       'eq-eight': 'PLUG-IN, EQ Eight and its curve', 'drum-synths': 'PLUG-IN, the Drum Synths',
-      'browser-tags': 'BROWSER, the tag cloud', 'kits': 'BROWSER, MASCHINE Kits', 'section': 'the Section page'
+      'browser-tags': 'BROWSER, the tag cloud', 'kits': 'BROWSER, MASCHINE Kits', 'section': 'the Section page',
+      'detent-drum': 'PAD MODE, TURN scrolls the pads', 'detent-drum-pad': 'PAD MODE, the volume of a held pad',
+      'detent-rec': 'REC held, the record length', 'detent-fixed-vel': 'FIXED VEL held, the velocity',
+      'detent-chords': 'CHORDS, TURN changes the octave', 'detent-keyboard': 'KEYBOARD, TURN changes the octave',
+      'detent-keyboard-shift': 'KEYBOARD, SHIFT + TURN changes the scale'
     };
     function shot(name) {
       var alt = 'MK3 screens: ' + (SHOT_ALT[name] || name);
@@ -811,10 +816,16 @@ var LAYOUTS = {
       screens: screens,
       // the MK3's own sections (data/features.json): the browser card shows the browser throughout,
       // a display button in MIXER the mixer
-      sectionScreens: { 'browser-mk3': { '*': screens.BROWSER }, 'mk3': { 'DISPLAY': screens.MIXER },
+      // (+ the turns detent by detent: js/detent-screens.js)
+      sectionScreens: withDetents('mk3', { 'browser-mk3': { '*': screens.BROWSER }, 'mk3': { 'DISPLAY': screens.MIXER },
         'mixer-mk3': { '*': screens.MIXER }, 'plugin-mk3': { '*': screens['PLUG-IN'] },
         'drum-synths': { '*': screens['DRUM SYNTHS'] }, 'kits-mk3': { '*': screens.KITS },
-        'section-mk3': { '*': screens.SECTION } },
+        'section-mk3': { '*': screens.SECTION } }, function (entry) {
+        // the export's animation of the turns (anim/detent-*), a frame a detent
+        var pair = anim(entry.anim, entry.still), frames = [];
+        for (var f = 0; f < entry.frames; f++) frames.push(lcdFrame(pair, f));
+        return frames;
+      }),
       controls: [
         c('CHANNEL', 'CHANNEL', 26.5, 28.5, 45, 16, 'button', { sub: 'MIDI' }),
         c('PLUG-IN', 'PLUG-IN', 77.5, 28.5, 45, 16, 'button', { sub: 'Instance' }),
@@ -870,6 +881,19 @@ var TOKEN_ALIASES = {
   'KNOB': function (id) { return /^KNOB \d$/.test(id); },
   'DISPLAY': function (id) { return /^DISPLAY \d$/.test(id); }
 };
+
+// A device's sectionScreens with the turns detent by detent added (js/detent-screens.js, exported from the
+// script: DETENT_SCREENS[device]['<section id> <combo joined with " + ">'] = what each detent shows, the
+// screen before the turn first). make(entry) turns an entry into the list of screens. Without the file the
+// table stays as it is.
+function withDetents(device, table, make) {
+  var all = typeof DETENT_SCREENS !== 'undefined' ? DETENT_SCREENS[device] || {} : {};
+  Object.keys(all).forEach(function (key) {
+    var at = key.indexOf(' '), section = key.slice(0, at), combo = key.slice(at + 1).split(' + ').join('+');
+    (table[section] = table[section] || {})[combo] = make(all[key]);
+  });
+  return table;
+}
 
 // An animated pair of MK3 screens (layouts.js anim()) at step k: a show's own clock (the pads'
 // step, anim/index.json `step` ms: a 1/16 for STEP) picks it, and the screens move on smoothly

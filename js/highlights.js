@@ -53,8 +53,9 @@ MM.tourShow = (function () {
     else combo.some(function (t) { return (demo = demos[t] || null) && (source = t); });
     // SHIFT takes the pads the moment it is held, as on the controller (not only once the combo is done)
     var shiftPads = source === 'SHIFT' && combo[0] === 'SHIFT';
-    // A turn steps through the screens: each detent shows the next one, turning back the previous
-    // (one detent for a single screen), so the screen follows the encoder detent by detent.
+    // A turn steps through the screens: the first is the screen before the turn, each detent shows
+    // the next one, turning back the previous (one detent for a single screen), so the screen
+    // follows the encoder detent by detent.
     var period = Math.max(1, 2 * (frames.length - 1));
     function position(since) {
       var q = Math.floor(since / 3) % period;
@@ -75,7 +76,9 @@ MM.tourShow = (function () {
           ids = ids.concat(pressedIds(token, device));
         });
         api.light(ids);
-        if (combo.indexOf('TURN') >= 0 && done) api.turn(position(since) + 1);
+        // the encoder's detents so far: the list's first screen is the one before the turn (one screen:
+        // the turn shows it)
+        if (combo.indexOf('TURN') >= 0 && done) api.turn(frames.length > 1 ? position(since) : 1);
         if (combo.indexOf('STRIP') >= 0) {
           api.strip(done ? 0.5 + 0.4 * Math.sin(since * 0.7) : null, SAMPLE_TRACKS[0].color);
         }

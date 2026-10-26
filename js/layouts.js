@@ -605,7 +605,8 @@ var LAYOUTS = {
       // Screens for a combo hovered in a given section (section id -> combo tokens joined with
       // '+', '*' for any other combo there); a list of states plays in turn (manual.js).
       // + the screens detent by detent, from the script (js/detent-screens.js: TURN in KEYBOARD, STEP ...)
-      sectionScreens: withDetents('mikro', {
+      // + the screens after a press, from the script (js/step-screens.js: a popup, a held page)
+      sectionScreens: withSteps('mikro', withDetents('mikro', {
         plugin: { '*': plugin, 'PUSH+TURN': macros,
           'TURN': [plugin, frequencyScreen(2.9), frequencyScreen(3.6)] },
         // The mixer: TURN in 1 dB steps; PUSH + TURN chooses Volume, Pan (its bar from the
@@ -645,6 +646,13 @@ var LAYOUTS = {
           'SHIFT+STAR': starring },
         highlights: { 'PUSH': kitsScreen(0, [0]) },
         settings: settingsSectionScreens(),
+        // A sliced Simpler on 1-Drums, PAD MODE: the slice on line 3 (the script's page, before a turn; the
+        // drum pads' screen without the export)
+        // ('^': the section's screen before a press, js/highlights.js genericShow)
+        slicing: (function () {
+          var page = typeof DETENT_SCREENS !== 'undefined' && (DETENT_SCREENS.mikro['slicing TURN'] || [])[0] || drums;
+          return { '*': page, '^': page };
+        })(),
         // Hold REC + TURN: the record length (Free, 1, 2, 4, 8 bars).
         transport: { 'REC+TURN': ['Free', '1 bar', '2 bars', '4 bars'].map(function (v) { return heldScreen('Record length', v); }) },
         // Hold a step + TURN: 'Step 1' and its velocity (SHIFT: 'Length 2 steps', PUSH: 'Nudge +1/16').
@@ -653,7 +661,7 @@ var LAYOUTS = {
         drum: { 'PAD+TURN': [0, -1, -2].map(function (db) {
           return withFill(trackScreen(0, 'Volume', SAMPLE_DRUMS[0], dbText(db), 'Volume'), volumeFill(db));
         }) }
-      }, function (states) { return states; }),
+      }, function (states) { return states; }), function (states) { return states; }),
       stripDots: dots,
       padDemos: padDemos('GROUP'),
       trackMode: 'GROUP',  // the track mode button; the other TRACK_VIEW_MODIFIERS are held
@@ -818,17 +826,18 @@ var LAYOUTS = {
       // the MK3's own sections (data/features.json): the browser card shows the browser throughout,
       // a display button in MIXER the mixer
       // (+ the turns detent by detent: js/detent-screens.js)
-      sectionScreens: withDetents('mk3', { 'browser-mk3': { '*': screens.BROWSER }, 'mk3': { 'DISPLAY': screens.MIXER },
+      // (+ the screens after a press: js/step-screens.js)
+      sectionScreens: withSteps('mk3', withDetents('mk3', { 'browser-mk3': { '*': screens.BROWSER }, 'mk3': { 'DISPLAY': screens.MIXER },
         'mixer-mk3': { '*': screens.MIXER }, 'plugin-mk3': { '*': screens['PLUG-IN'] },
         'drum-synths': { '*': screens['DRUM SYNTHS'] }, 'kits-mk3': { '*': screens.KITS },
         'section-mk3': { '*': screens.SECTION },
         // a sliced Simpler: PAD MODE's page with the slices on its pads (the script's, before a turn)
-        slicing: { '*': lcdFrame(anim('detent-slicing', 'pad-mode'), 0) } }, function (entry) {
+        slicing: { '*': lcdFrame(anim('detent-slicing', 'pad-mode'), 0), '^': lcdFrame(anim('detent-slicing', 'pad-mode'), 0) } }, function (entry) {
         // the export's animation of the turns (anim/detent-*), a frame a detent
         var pair = anim(entry.anim, entry.still), frames = [];
         for (var f = 0; f < entry.frames; f++) frames.push(lcdFrame(pair, f));
         return frames;
-      }),
+      }), function (names) { return names.map(shot); }),
       controls: [
         c('CHANNEL', 'CHANNEL', 26.5, 28.5, 45, 16, 'button', { sub: 'MIDI' }),
         c('PLUG-IN', 'PLUG-IN', 77.5, 28.5, 45, 16, 'button', { sub: 'Instance' }),
@@ -894,6 +903,23 @@ function withDetents(device, table, make) {
   Object.keys(all).forEach(function (key) {
     var at = key.indexOf(' '), section = key.slice(0, at), combo = key.slice(at + 1).split(' + ').join('+');
     (table[section] = table[section] || {})[combo] = make(all[key]);
+  });
+  return table;
+}
+
+// A device's sectionScreens with the screens after a press added (js/step-screens.js, exported from the script:
+// STEP_SCREENS[device]['<section id> <combo joined with " + ">'] = what the screen shows once the combo is
+// pressed: the popup, then the page under it), where the table has none for that combo yet. make(entry) turns an
+// entry into the list of screens. The list is marked `exact`: it is that combo's alone, never an item's with a
+// context (manual.js sectionScreen). Without the file the table stays as it is.
+function withSteps(device, table, make) {
+  var all = typeof STEP_SCREENS !== 'undefined' ? STEP_SCREENS[device] || {} : {};
+  Object.keys(all).forEach(function (key) {
+    var at = key.indexOf(' '), section = key.slice(0, at), combo = key.slice(at + 1).split(' + ').join('+');
+    var own = table[section] = table[section] || {};
+    if (own[combo]) return;
+    own[combo] = make(all[key]);
+    own[combo].exact = true;
   });
   return table;
 }

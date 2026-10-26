@@ -80,6 +80,16 @@ var HIGHLIGHT_SHOWS = (function () {
   }
 
   // The MIKRO's screens below are what the script shows (the screen helpers in layouts.js).
+  // TEMPO or SWING held: the script's held page (not the popup a tap shows), as exported for the master card's
+  // page (js/step-screens.js: 'master TEMPO + TURN'), with this value.
+  function heldScreenOf(button, value) {
+    var page = typeof STEP_SCREENS !== 'undefined' && (STEP_SCREENS.mikro || {})['master ' + button + ' + TURN'];
+    if (!page || !page[0]) return popupScreen(button.charAt(0) + button.slice(1).toLowerCase(), value);
+    var out = {};
+    Object.keys(page[0]).forEach(function (key) { out[key] = page[0][key]; });
+    out.MIKRO_LINE3 = value;
+    return out;
+  }
   var CHORDS_SCREEN = trackScreen(2, 'Triad Close  C Major', 'Chord', 'Triad', 'C Major');
 
   return {
@@ -118,9 +128,9 @@ var HIGHLIGHT_SHOWS = (function () {
         // 2.40-3.60 kHz)
         var k = TURNS.slice(0, n % TURNS.length + 1).filter(function (t) { return t[0] === turn[0]; }).length - 1;
         if (turn[0] === 'TEMPO') {
-          api.screen(popupScreen('Tempo', value.toFixed(2) + ' BPM'), mk3(api, 'TEMPO', k));
+          api.screen(heldScreenOf('TEMPO', value.toFixed(2) + ' BPM'), mk3(api, 'TEMPO', k));
         } else if (turn[0] === 'SWING') {
-          api.screen(popupScreen('Swing', value + ' %'), mk3(api, 'SWING', k));
+          api.screen(heldScreenOf('SWING', value + ' %'), mk3(api, 'SWING', k));
         } else {
           api.screen(frequencyScreen(value), mk3(api, 'PLUG-IN', k));
         }
@@ -503,7 +513,8 @@ var TOUR_SHOWS = (function () {
   }
 
   // The MIKRO has no picture of the slices: the pads play them in order (slice 1 on pad 1, the
-  // track's colour, the playing slice bright), the screen stays.
+  // track's colour, the playing slice bright), the screen shows the sliced track's page (layouts.js
+  // sectionScreens.slicing, from the script).
   var slicesPads = {
     every: 250,
     duration: 6000,
@@ -512,6 +523,7 @@ var TOUR_SHOWS = (function () {
       for (var i = 0; i < 16; i++) pads.push(api.lit(keys.color, i === hit ? 'bright' : 'dim'));
       api.light(['PAD MODE']);
       api.pads(pads);
+      api.show(((api.layout.sectionScreens || {}).slicing || {})['*']);
     }
   };
   var keys = SAMPLE_TRACKS[2];

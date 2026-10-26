@@ -39,7 +39,9 @@ MM.tourShow = (function () {
     var spec = LAYOUTS[device];
     var combo = step.combo, screens = spec.screens || {}, demos = spec.padDemos || {};
     var mode = section ? MM.manual.sectionMode(section, device) : null;
-    var base = (mode && screens[mode]) || spec.screen;
+    // (a section about a track of its own, the sliced Simpler's: its screen before a press, sectionScreens '^')
+    var start = section && (spec.sectionScreens || {})[section.id];
+    var base = (start && start['^']) || (mode && screens[mode]) || spec.screen;
     // a section about no mode of its own (transport, edit ...): the controller as it starts, the
     // drum pads, as its screen shows them
     var baseDemo = mode ? demos[mode] || null : section ? demos['PAD MODE'] || null : null;

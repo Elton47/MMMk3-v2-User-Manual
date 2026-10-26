@@ -754,7 +754,10 @@ MM.manual = (function () {
   function sectionScreen(device, combo, section, context) {
     var spec = LAYOUTS[device], own = combo && section && spec.sectionScreens && spec.sectionScreens[section.id];
     if (!own) return null;
-    return (context && own[combo.join('+') + ' (' + context + ')']) || own[combo.join('+')] || own['*'] || null;
+    var key = combo.join('+'), plain = own[key];
+    // a press's own screens (js/step-screens.js) are that combo's alone, not an item's with a context
+    if (context && plain && plain.exact) plain = null;
+    return (context && own[key + ' (' + context + ')']) || plain || own['*'] || null;
   }
 
   function updateScreen(combo, section, context) {

@@ -538,6 +538,20 @@ var TOUR_SHOWS = (function () {
       return key === 'BROWSER' || key === 'KNOB' ? cueFor('BROWSER TAGS', ['KNOB 2'])(step, device) : null;
     },
     playing: { 'NOTE REPEAT': S['NOTE REPEAT'] },
+    // The MK3's own way to pick a track: its group button. From PAD MODE on 1-Drums, GROUP C selects
+    // 3-Keys: the pads follow it (no Drum Rack there: the keyboard) and the screens show its KEYBOARD
+    // page, as the script does (the mode stays, the track changes).
+    mk3: {
+      'GROUP A-H': {
+        glow: ['GROUP C'],
+        tick: function (n, api) {
+          var picked = n >= 2;
+          api.light(n === 2 || n === 3 ? ['GROUP C'] : []);
+          api.screen(null, mk3(api, picked ? 'KEYBOARD' : 'PAD MODE'));
+          api.pads(api.demo(picked ? 'KEYBOARD' : 'PAD MODE'));
+        }
+      }
+    },
     chords: { 'PAD': S.CHORDS },
     step: { 'STEP': S.STEP },
     settings: settings

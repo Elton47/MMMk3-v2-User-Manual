@@ -44,23 +44,29 @@ const DATA = JSON.parse(fs.readFileSync(path.join(ROOT, 'data', 'features.json')
 function play(ctx, step, device) {
   const spec = ctx.LAYOUTS[device];
   const show = ctx.MM.tourShow(step, device);
-  const rec = { glow: show.glow || step.combo, outlined: [], lit: new Set(), screens: [], pads: [] };
+  const rec = { glow: show.glow || step.combo, outlined: [], lit: new Set(), screens: [], pads: [], ticks: [] };
+  // the state after each tick: { lit (exactly these buttons), turn, screen, pads } (a tick draws its whole state)
+  let now = { lit: [], turn: 0, screen: null, pads: null };
   const blank = () => Array.from({ length: 16 }, () => null);
   const lcdFrom = (oled) => (oled && (oled.left || oled.right) ? oled : null);
   const api = {
     device, layout: spec, calm: false, blank,
     lit: (color, level, drum) => ({ color, level, drum: drum || null }),
     demo: (token) => { const d = (spec.padDemos || {})[token]; return d ? d.slice() : blank(); },
-    pads: (list) => rec.pads.push(list || null),
-    screen: (oled, lcd) => rec.screens.push(device === 'mk3' ? lcd || lcdFrom(oled) : oled),
-    screenOf: (token) => rec.screens.push((spec.screens || {})[token] || spec.screen),
-    show: (lines) => rec.screens.push(lines || spec.screen),
-    light: (ids) => (ids || []).forEach((id) => rec.lit.add(id)),
-    turn() {}, strip() {},
+    pads: (list) => { rec.pads.push(list || null); now.pads = list || null; },
+    screen: (oled, lcd) => shown(device === 'mk3' ? (lcd === undefined ? now.screen : lcd || lcdFrom(oled)) : oled),
+    screenOf: (token) => shown((spec.screens || {})[token] || spec.screen),
+    show: (lines) => shown(lines || spec.screen),
+    light: (ids) => { (ids || []).forEach((id) => rec.lit.add(id)); now.lit = (ids || []).slice(); },
+    turn: (steps) => { now.turn = steps; }, strip() {},
     outline: (tokens) => rec.outlined.push(tokens)
   };
   const ticks = Math.ceil((show.duration || 6500) / (show.every || 500));
-  for (let n = 0; n <= ticks; n++) show.tick(n, api);
+  function shown(screen) { rec.screens.push(screen); now.screen = screen; }
+  for (let n = 0; n <= ticks; n++) {
+    show.tick(n, api);
+    rec.ticks.push({ lit: now.lit.slice(), turn: now.turn, screen: now.screen, pads: now.pads });
+  }
   return rec;
 }
 

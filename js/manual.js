@@ -810,7 +810,11 @@ MM.manual = (function () {
       var token = key in chosen ? chosen[key] : chosen['*'];
       demo = token ? demos[token] || null : null;
     } else {
+      // SHIFT takes the pads (its note-edit functions), except with a track button held (SHIFT + SELECT + PAD
+      // adds an arm: the tracks stay on the pads)
+      var tracks = (combo || []).some(function (t) { return TRACK_VIEW_MODIFIERS.indexOf(t) >= 0 || t === LAYOUTS[device].trackMode; });
       (combo || []).some(function (token) {
+        if (token === 'SHIFT' && tracks) return false;
         if (keep && TRACK_VIEW_MODIFIERS.indexOf(token) >= 0) { kept = true; return false; }
         return (demo = demos[token] || null) && (source = token);
       });

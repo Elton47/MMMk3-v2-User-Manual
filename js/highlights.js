@@ -48,9 +48,18 @@ MM.tourShow = (function () {
     if (!result && step.context && screens[step.context]) result = screens[step.context];
     if (!result && (!section || combo[0] !== 'SHIFT')) combo.some(function (t) { return (result = screens[t] || null); });
     var frames = Array.isArray(result) ? result : [result || base];
-    var demo = null;
-    if (section) demo = MM.manual.comboDemo(device, combo, section).demo;
-    else combo.some(function (t) { return (demo = demos[t] || null); });
+    var demo = null, source = null;
+    if (section) { var found = MM.manual.comboDemo(device, combo, section); demo = found.demo; source = found.source; }
+    else combo.some(function (t) { return (demo = demos[t] || null) && (source = t); });
+    // SHIFT takes the pads the moment it is held, as on the controller (not only once the combo is done)
+    var shiftPads = source === 'SHIFT' && combo[0] === 'SHIFT';
+    // A turn steps through the screens: each detent shows the next one, turning back the previous
+    // (one detent for a single screen), so the screen follows the encoder detent by detent.
+    var period = Math.max(1, 2 * (frames.length - 1));
+    function position(since) {
+      var q = Math.floor(since / 3) % period;
+      return frames.length > 1 && q >= frames.length ? period - q : q;
+    }
     if (!demo) demo = baseDemo;
     var presses = combo.length, tap = presses === 1;
     var pad = -1, padAt = -1;
@@ -66,12 +75,12 @@ MM.tourShow = (function () {
           ids = ids.concat(pressedIds(token, device));
         });
         api.light(ids);
-        if (combo.indexOf('TURN') >= 0 && done) api.turn(since + 1);
+        if (combo.indexOf('TURN') >= 0 && done) api.turn(position(since) + 1);
         if (combo.indexOf('STRIP') >= 0) {
           api.strip(done ? 0.5 + 0.4 * Math.sin(since * 0.7) : null, SAMPLE_TRACKS[0].color);
         }
-        api.show(done ? frames[Math.floor(since / 3) % frames.length] : base);
-        var pads = done ? demo : baseDemo;
+        api.show(done ? frames[position(since)] : base);
+        var pads = done || (shiftPads && down >= 1) ? demo : baseDemo;
         if (pad >= 0 && down > padAt) {
           pads = (pads || api.blank()).slice();
           pads[pad] = api.lit(SAMPLE_MASTER.color, 'bright');

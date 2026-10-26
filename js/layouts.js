@@ -399,11 +399,11 @@ var MIXER_VISITED = 1, MIXER_MUTED = 2;
 
 // Pad demos chosen by section (section id -> combo tokens joined with '+', or '*' for any other
 // combo there -> the token of the pad demo to show, null: none): in the mixer every combo
-// (MUTE + PAD, STOP + PAD ...) acts on the mixer's pads; holding VOLUME or SHIFT + VOLUME to turn
-// leaves the pads as they are.
+// (MUTE + PAD, STOP + PAD ...) acts on the mixer's pads; holding VOLUME to turn leaves the pads as
+// they are (SHIFT + VOLUME: SHIFT's pads while it is held, as everywhere).
 var SECTION_PADS = {
   mixer: { '*': 'VOLUME' },
-  master: { 'VOLUME+TURN': null, 'SHIFT+VOLUME': null }
+  master: { 'VOLUME+TURN': null }
 };
 
 // What the pads show in each mode, as the script lights them, for the sample set above. Per mode
@@ -462,6 +462,16 @@ function padDemos(trackMode) {
   // modifier; track 2 is armed) show the plain view.
   var held = { SOLO: trackView([], [SAMPLE_SELECTED]), MUTE: trackView([2], []), STOP: demos[trackMode], SELECT: demos[trackMode] };
   TRACK_VIEW_MODIFIERS.forEach(function (id) { if (id !== trackMode) demos[id] = held[id]; });
+
+  // SHIFT held: the pads are the note-edit functions in every mode (the script's note_edit.py, pad 1
+  // first): Undo bright white (Live can undo), Redo dim (nothing to redo), the note functions in the
+  // clip's colour (the drum loop, its notes), Clear envelopes and Paste dim (no envelopes, nothing copied).
+  var UNDO = 0, REDO = 1, CLEAR_ENVELOPES = 9, PASTE = 11;
+  demos.SHIFT = pads().map(function (_, i) {
+    if (i === UNDO) return lit(SAMPLE_MASTER.color, 'bright');
+    if (i === REDO || i === CLEAR_ENVELOPES || i === PASTE) return lit(SAMPLE_MASTER.color, 'dim');
+    return lit(drums, 'bright');
+  });
 
   // PAD MODE: the Drum Rack, the focused drum (pad 1) bright.
   demos['PAD MODE'] = SAMPLE_DRUMS.map(function (name, i) { return lit(drums, i === 0 ? 'bright' : 'dim', name); });

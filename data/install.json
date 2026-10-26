@@ -62,10 +62,12 @@
     "library_path": {"choice": "os", "generic": "Documents\\Ableton\\User Library (Windows) or ~/Music/Ableton/User Library (macOS)",
       "values": {"win11": "Documents\\Ableton\\User Library", "win10": "Documents\\Ableton\\User Library",
                  "macos": "~/Music/Ableton/User Library"}},
-    "update_copy": {"choice": "os", "generic": "Copy the new download's **Remote Scripts** folder into Live's User Library, as when installing.",
-      "values": {"win11": "Drag the new download's **Remote Scripts** folder onto Live's **User Library**, as when installing.",
-                 "win10": "Drag the new download's **Remote Scripts** folder onto Live's **User Library**, as when installing.",
-                 "macos": "Copy the folders from the new download's **Remote Scripts** folder into it, as when installing."}},
+    "system_folder": {"choice": "os", "generic": "Windows (Windows) or macOS (Mac)",
+      "values": {"win11": "Windows", "win10": "Windows", "macos": "macOS"}},
+    "update_copy": {"choice": "os", "generic": "Copy the folders from the **Remote Scripts** folder in the new download's **Windows** or **macOS** folder into Live's Remote Scripts folder.",
+      "values": {"win11": "Drag the **Remote Scripts** folder from the new download's **Windows** folder onto Live's **User Library**, as when installing.",
+                 "win10": "Drag the **Remote Scripts** folder from the new download's **Windows** folder onto Live's **User Library**, as when installing.",
+                 "macos": "Copy the folders from the **Remote Scripts** folder in the new download's **macOS** folder into it."}},
     "about": {"choice": "device", "generic": " On the MIKRO MK3, [[MASCHINE]] then **About** shows the new version.",
       "values": {"mikro": " [[MASCHINE]] then **About** shows the new version.", "mk3": "", "plus": ""}},
     "scripts_path": {"choice": "os", "generic": "Documents\\Ableton\\User Library\\Remote Scripts (Windows) or ~/Music/Ableton/User Library/Remote Scripts (macOS)",
@@ -112,19 +114,21 @@
       "when": {"live": ["live12"]},
       "body": [
         {"ol": [
-          "Unzip the download. It holds a folder called **Remote Scripts**.",
+          "Unzip the download: right-click it, then **Extract All**.",
+          "Open the **{{system_folder}}** folder inside it. It holds a folder called **Remote Scripts**.",
           "Drag the whole **Remote Scripts** folder onto Live's **User Library** folder, below.",
           "Windows says a folder with that name already exists: choose to merge them, and to replace the files if it asks."
         ], "when": {"os": ["win11", "win10"]}},
         {"copy": [{"label": "Live's User Library", "value": "{{library_path}}"}], "when": {"os": ["win11", "win10"]}},
         {"note": "No **Remote Scripts** folder in your User Library yet? The drag simply creates it. Either way, the download's folders end up in **User Library\\Remote Scripts**. It holds two folders, `_MaschineCore` and `MIKRO_MK3_for_Live` (the MIKRO MK3 edition), or three, with `MK3_for_Live` too (the full edition).", "when": {"os": ["win11", "win10"]}},
         {"ol": [
-          "Unzip the download.",
-          "Open the **Remote Scripts** folder inside it. It holds two folders, `_MaschineCore` and `MIKRO_MK3_for_Live` (the MIKRO MK3 edition), or three, with `MK3_for_Live` too (the full edition).",
-          "Copy **all of them** into the **Remote Scripts** folder of Live's User Library, below. If that folder doesn't exist yet, create it."
+          "Unzip the download: double-click it.",
+          "Open the **{{system_folder}}** folder inside it. It holds a folder called **Remote Scripts**.",
+          "Drag the whole **Remote Scripts** folder onto Live's **User Library** folder, below."
         ], "when": {"os": ["macos"]}},
-        {"copy": [{"label": "Live's Remote Scripts folder", "value": "{{scripts_path}}"}], "when": {"os": ["macos"]}},
-        {"note": "Copy all of them: `_MaschineCore` is shared. They go directly inside **Remote Scripts**, not into a sub-folder.", "when": {"os": ["macos"]}},
+        {"copy": [{"label": "Live's User Library", "value": "{{library_path}}"}], "when": {"os": ["macos"]}},
+        {"note": "No **Remote Scripts** folder in your User Library yet? The drag simply creates it. It holds two folders, `_MaschineCore` and `MIKRO_MK3_for_Live` (the MIKRO MK3 edition), or three, with `MK3_for_Live` too (the full edition).", "when": {"os": ["macos"]}},
+        {"note": "Already have a **Remote Scripts** folder there? Then don't drag: the Finder would replace it, and the other scripts in it. Copy the folders inside the download's **Remote Scripts** into yours instead. They go directly inside it, not into a sub-folder.", "kind": "important", "when": {"os": ["macos"]}},
         {"note": "Moved your User Library? Live shows where it is in **Settings → Library**."},
         {"note": "Upgrading from v1.6? v1 and v2 shouldn't run at the same time. In Live's **Settings → Link, Tempo & MIDI**, set v1's control surface `Mikro_Mk3_Unofficial` to **None**. If you forget, the controller reminds you."}
       ]
@@ -166,7 +170,7 @@
         {"ul": ["**MIKRO MK3**: for the MASCHINE MIKRO MK3.", "**MK3, MASCHINE+ & MIKRO MK3**: for all three controllers."]},
         {"p": "Once activated, it works offline too. It checks itself online now and then. A computer that stays offline for 90 days is asked to go online once."},
         {"h": "Moving to another computer"},
-        {"p": "While Live is running, open the activation page, click **Connect**, then **Deactivate this computer**. That frees its place for the new computer. A key works on 3 computers."}
+        {"p": "While Live is running, open the controller's settings, choose **Licence** (just before **About**) and press **CONFIRM**. The licence page opens in your browser: click **Deactivate this computer** there. That frees its place for the new computer. A key works on 3 computers."}
       ]
     },
     {

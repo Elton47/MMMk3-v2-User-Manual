@@ -1,9 +1,9 @@
-// Drawings for the setup steps, in the manual's own look (no screenshots): the folder to drag, the
-// two loopMIDI ports, Live's MIDI settings as a diagram, and the controller with its screen (the
-// manual's drawing and the MIKRO's screen renderer, pixel for pixel). The printable guide
+// Drawings for the setup steps, in the manual's own look (no screenshots): the folder to drag, and
+// the controller with its screen (the manual's drawing and the MIKRO's screen renderer, pixel for
+// pixel). The printable guide
 // (#setup/print...) shows them beside the step's text. Every name in them comes from
 // data/install.json (its vars and the step's own text); the screens show what the controller
-// really shows: the bridge's setup pages (setup_pages() in bridge/maschine_bridge/app.py of the
+// really shows: the bridge's waiting page (setup_pages() in bridge/maschine_bridge/app.py of the
 // script repository), the layout's default screen once Live is connected, and the settings page.
 // A drawing for several controllers shows the MASCHINE MIKRO MK3 and says so.
 MM.setupFigures = (function () {
@@ -12,12 +12,8 @@ MM.setupFigures = (function () {
   var h = MM.h;
   var SHOWN = 'mikro';  // the controller the drawings show when the guide is for several
 
-  // The bridge's waiting pages, by route (setup_pages() in the bridge): without the loopMIDI
-  // ports, and with them while Live isn't connected yet. {in} / {out}: the port names.
-  var PAGES_NO_PORTS = [['Needs loopMIDI', 'See the setup guide'], ['Create port', '{in}'], ['Create port', '{out}'],
-    ['Or use v1.6.1', 'In the same download']];
-  var PAGES_WAITING = [['MASCHINE for Live', 'Waiting for Live...'], ['Live: Settings', 'Link, Tempo & MIDI'],
-    ['Input', '{in}'], ['Output', '{out}'], ['Output may show', '{in} (Port 2)']];
+  // The bridge's waiting page (setup_pages() in the bridge): the only one, on every route.
+  var PAGE_WAITING = ['MASCHINE for Live', 'Waiting for Live...'];
 
   function svgNode(tag, attrs, parent) {
     var n = document.createElementNS('http://www.w3.org/2000/svg', tag);
@@ -62,9 +58,8 @@ MM.setupFigures = (function () {
     return h('div', { className: 'sf-screen' }, [svg, label ? h('span', { className: 'sf-screen-label', text: label }) : null]);
   }
 
-  function page(pair, names) {
-    var sub = pair[1].replace('{in}', names.in).replace('{out}', names.out);
-    return oled({ TITLE: pair[0], SUBTITLE: sub });
+  function page(pair, label) {
+    return oled({ TITLE: pair[0], SUBTITLE: pair[1] }, label);
   }
 
   // the controller drawing (the manual's), these controls lit as the manual lights related ones
@@ -137,72 +132,21 @@ MM.setupFigures = (function () {
       return { node: h('figure', { className: 'sf sf-copy' }, [h('div', { className: 'sf-flow' }, [before, arrow, after])]) };
     } },
 
-    // The two ports in a loopMIDI-like panel (a diagram, not loopMIDI's window).
-    ports: { make: function (env) {
-      var names = { in: env.value('in_port', env.device), out: env.value('out_port', env.device) };
-      var panel = h('div', { className: 'sf-panel' }, [
-        h('p', { className: 'sf-panel-bar', text: 'loopMIDI' }),
-        h('div', { className: 'sf-field-row' }, [
-          h('span', { className: 'sf-field-label', text: 'New port-name' }),
-          h('span', { className: 'sf-field', text: names.out }),
-          h('span', { className: 'sf-plus', text: '+' })
-        ]),
-        h('ul', { className: 'sf-port-list' }, [
-          h('li', {}, [h('span', { className: 'sf-num', text: '1' }), h('span', { className: 'sf-mono', text: names.in })]),
-          h('li', {}, [h('span', { className: 'sf-num', text: '2' }), h('span', { className: 'sf-mono', text: names.out })])
-        ])
-      ]);
-      return { node: h('figure', { className: 'sf sf-ports' }, [panel,
-        env.several ? caption(['For the ' + env.deviceName + '; the other controllers’ names are in the table.']) : null]) };
-    } },
-
-    // Live's settings as a diagram: v1.6.1's row set to None, the new row, the MIDI ports.
-    'live-settings': { make: function (env) {
-      var surface = env.value('surface', env.device), input = env.value('in_port', env.device), output = env.value('out_port', env.device);
-      function select(text, off) { return h('span', { className: 'sf-select' + (off ? ' off' : ''), text: text }); }
-      function toggle(on) { return h('span', { className: 'sf-toggle' + (on ? ' on' : ''), text: on ? 'On' : 'Off' }); }
-      var surfaces = h('table', { className: 'sf-grid' }, [
-        h('thead', {}, [h('tr', {}, [h('th', { text: 'Control Surface' }), h('th', { text: 'Input' }), h('th', { text: 'Output' })])]),
-        h('tbody', {}, [
-          h('tr', { className: 'sf-dim' }, [h('td', {}, [select('None', true), h('span', { className: 'sf-aside', text: 'v1.6’s row, if any' })]),
-            h('td', {}, [select('None', true)]), h('td', {}, [select('None', true)])]),
-          h('tr', { className: 'sf-on' }, [h('td', {}, [select(surface)]), h('td', {}, [select(input)]), h('td', {}, [select(output)])])
-        ])
-      ]);
-      var ports = h('table', { className: 'sf-grid sf-ports-grid' }, [
-        h('thead', {}, [h('tr', {}, [h('th', { text: 'MIDI Ports' }), h('th', { text: 'Track' })])]),
-        h('tbody', {}, [
-          h('tr', {}, [h('td', { className: 'sf-mono', text: 'In: ' + input }), h('td', {}, [toggle(true)])]),
-          h('tr', {}, [h('td', { className: 'sf-mono', text: 'In: ' + output }), h('td', {}, [toggle(false)])])
-        ])
-      ]);
-      var panel = h('div', { className: 'sf-panel' }, [h('p', { className: 'sf-panel-bar', text: 'Settings → Link, Tempo & MIDI' }), surfaces, ports]);
-      return { node: h('figure', { className: 'sf sf-live' }, [panel,
-        env.several ? caption(['For the ' + env.deviceName + '; the others are in the table.']) : null]) };
-    } },
-
-    // The controller: its screen while it waits (both routes), once connected, and About.
+    // The controller: its screen while it waits, once connected, and About.
     check: { make: function (env) {
-      if (env.drawingDevice !== 'mikro') return null;  // the setup pages are drawn for the MIKRO's screen
-      var names = { in: env.value('in_port', env.device), out: env.value('out_port', env.device) };
+      if (env.drawingDevice !== 'mikro') return null;  // the waiting page is drawn for the MIKRO's screen
       var layout = LAYOUTS[env.drawingDevice];
       var drawing = h('div', {}, [
         controller(env.drawingDevice, layout.screen, ['SHIFT', 'MASCHINE']),
         caption([keys(['SHIFT', 'MASCHINE']), ' leaves NI’s MIDI mode' + (env.several ? ' (MASCHINE MIKRO MK3 shown).' : '.')])
       ]);
-      // under the step's text: the screen once connected, and the settings page's About row
+      // under the step's text: the screen while Live starts, once connected, and the settings page's About row
       var connected = h('div', { className: 'sf-pair' }, [
+        page(PAGE_WAITING, 'While Live starts'),
         oled(layout.screen, 'Connected: Live’s screen'),
         oled(settingsScreen('About'), 'MASCHINE, turn to About: the version')
       ]);
-      function group(title, screens) {
-        return h('div', { className: 'sf-screens-group' }, [h('p', { className: 'sf-screens-title', text: title }), h('div', { className: 'sf-screens' }, screens)]);
-      }
-      var screens = h('figure', { className: 'sf sf-screens-all' }, [
-        group('Without the loopMIDI ports, the screen’s pages take turns:', PAGES_NO_PORTS.map(function (p) { return page(p, names); })),
-        group('With the ports, until Live connects:', PAGES_WAITING.map(function (p) { return page(p, names); }))
-      ]);
-      return { node: h('figure', { className: 'sf sf-check' }, [drawing]), lead: connected, below: screens, besideAll: true };
+      return { node: h('figure', { className: 'sf sf-check' }, [drawing]), lead: connected, besideAll: true };
     } }
   };
 

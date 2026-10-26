@@ -102,6 +102,17 @@ for (const device of ['mikro', 'mk3']) {
   });
 }
 
+test('mikro: SOLO / MUTE end with the track box\'s S / hollow box (the script redraws it, no popup)', () => {
+  const flagged = (combo, bit) => {
+    const step = steps('mikro').find((s) => s.section.id === 'edit' && s.combo.join('+') === combo && !s.context);
+    assert.ok(step, 'no edit ' + combo + ' step');
+    const screens = h.play(ctx, step, 'mikro').screens;
+    return screens.some((s) => s && ((s.MIKRO_TRACK_FLAGS || 0) & bit));
+  };
+  assert.ok(flagged('SOLO', 2), 'SOLO never shows the S box');
+  assert.ok(flagged('MUTE', 1), 'MUTE never shows the hollow box');
+});
+
 test('the export\'s MK3 pictures are all there', () => {
   const fs = require('node:fs'), path = require('node:path');
   const missing = [];

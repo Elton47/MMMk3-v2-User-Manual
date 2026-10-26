@@ -1,4 +1,4 @@
-// The setup page: two guides (text | video), the video per controller and computer, no loopMIDI anywhere,
+// The setup page: two guides (text | video), the video per controller and computer, no virtual MIDI port tool named anywhere,
 // no Licence tab (activate.html is reached only by its own link), activation only as a note on the setup's
 // last step, and upgrading to the full edition as a section of its own.
 const test = require('node:test');
@@ -31,7 +31,7 @@ function setupModule() {
   return context.MM.setup;
 }
 
-test('no trace of loopMIDI in the site', () => {
+test('no trace of the old virtual MIDI port tool in the site', () => {
   const word = new RegExp('loop' + 'midi', 'i');  // (spelled apart: a grep over the repo finds nothing, this test too)
   const hits = siteFiles('.').filter((f) => word.test(fs.readFileSync(path.join(root, f), 'utf8')));
   assert.deepStrictEqual(hits, []);

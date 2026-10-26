@@ -16,7 +16,8 @@ function siteFiles(dir) {
   const out = [];
   for (const entry of fs.readdirSync(path.join(root, dir), { withFileTypes: true })) {
     const rel = path.join(dir, entry.name);
-    if (entry.name === '.git' || entry.name === 'node_modules' || rel === 'tests') continue;
+    // local files that never ship (git-excluded notes for the maintainer, a tools folder) are not the site
+    if (entry.name === '.git' || entry.name === 'node_modules' || entry.name === '.claude' || entry.name === 'CLAUDE.md' || rel === 'tests') continue;
     if (entry.isDirectory()) out.push(...siteFiles(rel));
     else if (TEXT.test(entry.name)) out.push(rel);
   }

@@ -36,6 +36,11 @@
       if (tab.getAttribute('data-view') === tabName) tab.setAttribute('aria-current', 'page');
       else tab.removeAttribute('aria-current');
     });
+    var help = el('help-button');  // the header's icon button is "current" on #help, like a tab
+    if (help) {
+      if (tabName === 'help') help.setAttribute('aria-current', 'page');
+      else help.removeAttribute('aria-current');
+    }
     if (current && current !== name) window.scrollTo(0, 0);
     current = name;
   }
@@ -85,7 +90,7 @@
     var parts = hash.split('/');
     if (parts[0] === 'help') {
       // The header's help button: the troubleshooting step for this visitor's setup.
-      showView('setup');
+      showView('setup', 'help');
       if (ready.setup) MM.setup.help();
       return;
     }

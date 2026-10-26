@@ -266,6 +266,9 @@ button { font: inherit; color: inherit; }
   color: var(--md-sys-color-on-surface-variant); cursor: pointer;
 }
 .icon-button .icon { width: 22px; height: 22px; }
+.icon-button[aria-current="page"] {  /* its page is open (help, report an issue): like an active tab */
+  background: var(--md-sys-color-secondary-container); color: var(--md-sys-color-on-secondary-container);
+}
 .icon-button::after {
   content: ""; position: absolute; inset: 0; z-index: -1; border-radius: inherit;
   background: currentColor; opacity: 0; transition: opacity var(--md-sys-motion-short) linear;

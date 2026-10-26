@@ -524,7 +524,9 @@ var TOUR_SHOWS = (function () {
     },
     'drum-synths': cueFor('DRUM SYNTHS'),
     'slicing': function (step, device) {
-      if (device === 'mk3') return cueFor('SLICING', ['PAD'])(step, device);
+      // the MK3: PLUG-IN shows Slicing's picture (the showcase); PAD MODE's page has the slices on its
+      // pads (layouts.js sectionScreens: the script's page, TURN detent by detent)
+      if (device === 'mk3') return step.context === 'Slicing' ? cueFor('SLICING', ['PLUG-IN'])(step, device) : null;
       return step.combo[0] === 'PAD MODE' || step.combo[0] === 'PAD' ? slicesPads : null;
     },
     'kits-mk3': cueFor('KITS', ['BROWSER']),

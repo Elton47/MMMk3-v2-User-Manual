@@ -742,7 +742,8 @@ var LAYOUTS = {
       'detent-drum': 'PAD MODE, TURN scrolls the pads', 'detent-drum-pad': 'PAD MODE, the volume of a held pad',
       'detent-rec': 'REC held, the record length', 'detent-fixed-vel': 'FIXED VEL held, the velocity',
       'detent-chords': 'CHORDS, TURN changes the octave', 'detent-keyboard': 'KEYBOARD, TURN changes the octave',
-      'detent-keyboard-shift': 'KEYBOARD, SHIFT + TURN changes the scale'
+      'detent-keyboard-shift': 'KEYBOARD, SHIFT + TURN changes the scale',
+      'detent-slicing': 'PAD MODE, the slices on the pads'
     };
     function shot(name) {
       var alt = 'MK3 screens: ' + (SHOT_ALT[name] || name);
@@ -820,7 +821,9 @@ var LAYOUTS = {
       sectionScreens: withDetents('mk3', { 'browser-mk3': { '*': screens.BROWSER }, 'mk3': { 'DISPLAY': screens.MIXER },
         'mixer-mk3': { '*': screens.MIXER }, 'plugin-mk3': { '*': screens['PLUG-IN'] },
         'drum-synths': { '*': screens['DRUM SYNTHS'] }, 'kits-mk3': { '*': screens.KITS },
-        'section-mk3': { '*': screens.SECTION } }, function (entry) {
+        'section-mk3': { '*': screens.SECTION },
+        // a sliced Simpler: PAD MODE's page with the slices on its pads (the script's, before a turn)
+        slicing: { '*': lcdFrame(anim('detent-slicing', 'pad-mode'), 0) } }, function (entry) {
         // the export's animation of the turns (anim/detent-*), a frame a detent
         var pair = anim(entry.anim, entry.still), frames = [];
         for (var f = 0; f < entry.frames; f++) frames.push(lcdFrame(pair, f));

@@ -95,6 +95,7 @@ var DETENT_SCREENS = {
   "keyboard SHIFT + TURN": {"anim": "detent-keyboard-shift", "frames": 4, "still": "keyboard"},
   "keyboard TURN": {"anim": "detent-keyboard", "frames": 4, "still": "keyboard"},
   "playing FIXED VEL + TURN": {"anim": "detent-fixed-vel", "frames": 4, "still": "pad-mode"},
+  "slicing TURN": {"anim": "detent-slicing", "frames": 4, "still": "pad-mode"},
   "transport REC + TURN": {"anim": "detent-rec", "frames": 4, "still": "pad-mode"}
  }
 };

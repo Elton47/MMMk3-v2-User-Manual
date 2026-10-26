@@ -230,7 +230,7 @@ var HIGHLIGHT_SHOWS = (function () {
       every: 750,
       loupe: true,
       duration: 8000,
-      glow: ['BROWSER', 'PUSH'],
+      glow: ['PUSH', 'BROWSER'],  // the callout on PUSH, the page's own control
       tick: function (n, api) {
         var kits = SAMPLE_BROWSER.indexOf('MASCHINE Kits');
         var folders = function () { return true; };
@@ -473,7 +473,12 @@ var TOUR_SHOWS = (function () {
         api.screen(null, lcdFrame(pair, k));
         if (!cue) return;
         if (cue.lit) api.light(cue.lit);
-        if (cue.glow && cue.glow.length) api.outline(cue.glow);
+        // the page's own controls stay outlined: a cue outlines only what the page is about (its pad,
+        // its knob), never another control of the animation (PLUG-IN on a page about the pads)
+        var own = (cue.glow || []).filter(function (id) {
+          return glow.some(function (token) { return token === id || tokenMatches(token, id); });
+        });
+        if (own.length) api.outline(own);
         if (typeof cue.turn === 'number') api.turn(cue.turn);
         if (cue.pads) api.pads(cue.pads.map(function (p) { return p ? api.lit(padColor(p[0]), p[1]) : null; }));
       }
@@ -486,11 +491,14 @@ var TOUR_SHOWS = (function () {
     } });
     return show;
   }
+  // A section's showcase on the MK3: every page plays it, outlining the page's own controls (its
+  // combo; glow only for a page whose combo the drawing can't outline).
   function cueFor(token, glow) {
     var shows = {};
     return function (step, device) {
       if (device !== 'mk3') return null;
-      return shows[token] || (shows[token] = cueShow(token, glow || step.combo));
+      var key = step.combo.join('+');
+      return shows[key] || (shows[key] = cueShow(token, glow && !step.combo.length ? glow : step.combo));
     };
   }
 

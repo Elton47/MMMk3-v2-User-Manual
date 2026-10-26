@@ -35,7 +35,7 @@ for the manual, `install.json` for the setup guide).
 node --test
 ```
 
-runs `tests/` (no dependencies): the radius family, the Report an issue form's checks, and the day colour against the dev chat's
+runs `tests/` (no dependencies): every Highlights page played to its end (`tests/harness.js`: the callout on a control the page names, each page in its own mode, each controller's own screens), the radius family, the Report an issue form's checks, and the day colour against the dev chat's
 palette and day rule, with the contrast of every colour in both themes.
 
 ## Updating the content

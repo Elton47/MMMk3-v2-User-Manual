@@ -40,8 +40,12 @@ MM.tourShow = (function () {
     var combo = step.combo, screens = spec.screens || {}, demos = spec.padDemos || {};
     var mode = section ? MM.manual.sectionMode(section, device) : null;
     var base = (mode && screens[mode]) || spec.screen;
-    var baseDemo = mode ? demos[mode] || null : null;
+    // a section about no mode of its own (transport, edit ...): the controller as it starts, the
+    // drum pads, as its screen shows them
+    var baseDemo = mode ? demos[mode] || null : section ? demos['PAD MODE'] || null : null;
     var result = section ? MM.manual.sectionScreen(device, combo, section, step.context) : null;
+    // a context that names a mode (KNOB in KEYBOARD): that mode's screen, not the token's own
+    if (!result && step.context && screens[step.context]) result = screens[step.context];
     if (!result && (!section || combo[0] !== 'SHIFT')) combo.some(function (t) { return (result = screens[t] || null); });
     var frames = Array.isArray(result) ? result : [result || base];
     var demo = null;

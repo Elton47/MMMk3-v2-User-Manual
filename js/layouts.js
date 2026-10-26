@@ -721,7 +721,7 @@ var LAYOUTS = {
     var SHOT_ALT = {
       'pad-mode': 'PAD MODE, the Drum Rack on the pads', 'keyboard': 'KEYBOARD, the scale on the pads',
       'chords': 'CHORDS, a chord on every pad', 'step': 'STEP, the step sequencer', 'events': 'EVENTS, the notes',
-      'pattern': 'PATTERN, the clips', 'mixer': 'MIXER, the tracks', 'plugin': 'PLUG-IN, the device and its parameters',
+      'pattern': 'PATTERN, the clips', 'scene': 'SCENE, the scenes', 'mixer': 'MIXER, the tracks', 'plugin': 'PLUG-IN, the device and its parameters',
       'browser': 'BROWSER, Live\'s browser', 'settings': 'SETTINGS', 'select': 'SELECT, the tracks',
       'note-repeat': 'NOTE REPEAT, rate and settings', 'tempo': 'Tempo', 'swing': 'Swing',
       'variation': 'VARIATION, humanize and random',
@@ -754,7 +754,7 @@ var LAYOUTS = {
       'MIXER': anim('mixer'),
       'VOLUME': anim('mixer'),
       'PATTERN': anim('pattern'),
-      'SCENE': anim('pattern'),
+      'SCENE': anim('scene'),
       'TEMPO': anim('tempo'),
       'SWING': anim('swing'),
       'PAD MODE': shot('pad-mode'),

@@ -776,12 +776,15 @@ MM.manual = (function () {
   }
 
   // The mode a section is about: its first single-button item (for this device) that has a pad
-  // demo, e.g. PAD MODE for the drum section; null if none.
+  // demo, e.g. PAD MODE for the drum section; null if none. A held modifier (STOP, SOLO, MUTE: the
+  // tracks while it is held) is no section's mode: only the track mode's own button is.
   function sectionMode(section, device) {
     device = device || state.device;
-    var demos = LAYOUTS[device].padDemos || {}, mode = null;
+    var spec = LAYOUTS[device], demos = spec.padDemos || {}, mode = null;
     (section ? section.items.filter(function (item) { return !item.devices || item.devices.indexOf(device) >= 0; }) : []).some(function (item) {
-      return item.combo.length === 1 && demos[item.combo[0]] && (mode = item.combo[0]);
+      var token = item.combo[0];
+      if (TRACK_VIEW_MODIFIERS.indexOf(token) >= 0 && token !== spec.trackMode) return false;
+      return item.combo.length === 1 && demos[token] && (mode = token);
     });
     return mode;
   }

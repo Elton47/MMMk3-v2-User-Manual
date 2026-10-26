@@ -167,7 +167,8 @@
       "items": [
         {"combo": ["PAD MODE"], "does": "The slices on the pads (KEYBOARD and CHORDS on such a track land on them too, as on a Drum Rack).", "best": {"mikro": 8, "mk3": 8}, "headline": "Simpler's slices on the pads, ready to play"},
         {"combo": ["PAD"], "does": "Play the slice and select it in Simpler.", "best": {"mikro": 44, "mk3": 48}},
-        {"combo": ["◀", "▶"], "does": "The previous / next 16 slices.", "best": {"mikro": 45, "mk3": 50}},
+        {"combo": ["◀", "▶"], "does": "The previous / next 16 slices.", "devices": ["mikro"], "best": 45},
+        {"combo": ["◀", "▶"], "does": "PAD MODE's knob pages (1/2, 2/2), as on a Drum Rack track. TURN moves the slices.", "devices": ["mk3"], "best": 50},
         {"combo": ["TURN"], "does": "Scroll by one row of slices.", "best": {"mikro": 46, "mk3": 51}},
         {"combo": ["PLUG-IN"], "context": "Slicing", "does": "The Slicing picture follows the slice you play.", "devices": ["mk3"], "best": 49}
       ]

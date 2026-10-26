@@ -118,7 +118,7 @@ MM.setupFigures = (function () {
         caption(['One drag: the two ', h('strong', { text: 'Remote Scripts' }), ' folders merge.'])]) };
     } },
 
-    // Updating: the three folders deleted first, then the new ones copied in as when installing.
+    // Updating: the script's folders (two or three, by edition) deleted first, then the new ones copied in as when installing.
     update: { make: function (env) {
       var names = codeNames(env.text);
       var windows = !env.ctx.os || env.ctx.os.every(function (o) { return o !== 'macos'; });
@@ -126,7 +126,7 @@ MM.setupFigures = (function () {
         return h('div', { className: 'sf-box' }, [h('p', { className: 'sf-box-title' }, [folderIcon(), h('span', { text: title })]),
           h('ul', { className: 'sf-tree' }, [folder('Remote Scripts', null, rows, 'sf-hot')])]);
       }
-      var before = box('1. Delete the three', names.map(function (n) { return folder(n, null, null, 'sf-del'); }));
+      var before = box('1. Delete them', names.map(function (n) { return folder(n, null, null, 'sf-del'); }));
       var after = box('2. Then the new ones', names.map(function (n) { return folder(n, null, null, 'sf-new'); }));
       var arrow = h('div', { className: 'sf-arrow', 'aria-hidden': 'true' }, [h('span', { text: windows ? 'drag' : 'copy' })]);
       return { node: h('figure', { className: 'sf sf-copy' }, [h('div', { className: 'sf-flow' }, [before, arrow, after])]) };

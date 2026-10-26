@@ -50,13 +50,13 @@
       "values": {"mikro": "MASCHINE MIKRO MK3", "mk3": "MASCHINE MK3", "plus": "MASCHINE+"}},
     "manual": {"choice": "device", "generic": "mikro",
       "values": {"mikro": "mikro", "mk3": "mk3", "plus": "mk3"}},
-    "surface": {"choice": "device", "generic": "Maschine Mikro MK3 (MIKRO MK3) or Maschine MK3 (MK3, MASCHINE+)",
-      "values": {"mikro": "Maschine Mikro MK3", "mk3": "Maschine MK3", "plus": "Maschine MK3"}},
+    "surface": {"choice": "device", "generic": "MIKRO MK3 for Live (MIKRO MK3) or MK3 for Live (MK3, MASCHINE+)",
+      "values": {"mikro": "MIKRO MK3 for Live", "mk3": "MK3 for Live", "plus": "MK3 for Live"}},
     "ni_port": {"choice": "device", "generic": "Maschine Mikro MK3 (MIKRO MK3), Maschine MK3 Ctrl MIDI (MK3) or Maschine Plus Ctrl MIDI (MASCHINE+)",
       "values": {"mikro": "Maschine Mikro MK3", "mk3": "Maschine MK3 Ctrl MIDI", "plus": "Maschine Plus Ctrl MIDI"}},
-    "track_input": {"choice": "device", "generic": "Maschine_Mikro_MK3 Input (Maschine Mikro MK3) (MIKRO MK3) or Maschine_MK3 Input (Maschine MK3 Ctrl MIDI) (MK3)",
-      "values": {"mikro": "Maschine_Mikro_MK3 Input (Maschine Mikro MK3)", "mk3": "Maschine_MK3 Input (Maschine MK3 Ctrl MIDI)",
-                 "plus": "Maschine_MK3 Input (Maschine Plus Ctrl MIDI)"}},
+    "track_input": {"choice": "device", "generic": "MIKRO_MK3_for_Live Input (Maschine Mikro MK3) (MIKRO MK3), MK3_for_Live Input (Maschine MK3 Ctrl MIDI) (MK3) or MK3_for_Live Input (Maschine Plus Ctrl MIDI) (MASCHINE+)",
+      "values": {"mikro": "MIKRO_MK3_for_Live Input (Maschine Mikro MK3)", "mk3": "MK3_for_Live Input (Maschine MK3 Ctrl MIDI)",
+                 "plus": "MK3_for_Live Input (Maschine Plus Ctrl MIDI)"}},
     "midi_mode": {"choice": "device", "generic": "[[SHIFT]] + [[MASCHINE]] (MIKRO MK3) or [[SHIFT]] + [[CHANNEL]] (MK3, MASCHINE+)",
       "values": {"mikro": "[[SHIFT]] + [[MASCHINE]]", "mk3": "[[SHIFT]] + [[CHANNEL]]", "plus": "[[SHIFT]] + [[CHANNEL]]"}},
     "library_path": {"choice": "os", "generic": "Documents\\Ableton\\User Library (Windows) or ~/Music/Ableton/User Library (macOS)",
@@ -65,7 +65,7 @@
     "update_copy": {"choice": "os", "generic": "Copy the new download's **Remote Scripts** folder into Live's User Library, as when installing.",
       "values": {"win11": "Drag the new download's **Remote Scripts** folder onto Live's **User Library**, as when installing.",
                  "win10": "Drag the new download's **Remote Scripts** folder onto Live's **User Library**, as when installing.",
-                 "macos": "Copy the three folders from the new download's **Remote Scripts** folder into it, as when installing."}},
+                 "macos": "Copy the folders from the new download's **Remote Scripts** folder into it, as when installing."}},
     "about": {"choice": "device", "generic": " On the MIKRO MK3, [[MASCHINE]] then **About** shows the new version.",
       "values": {"mikro": " [[MASCHINE]] then **About** shows the new version.", "mk3": "", "plus": ""}},
     "scripts_path": {"choice": "os", "generic": "Documents\\Ableton\\User Library\\Remote Scripts (Windows) or ~/Music/Ableton/User Library/Remote Scripts (macOS)",
@@ -100,7 +100,7 @@
         ]},
         {"p": "Nothing else. No other drivers, no extra MIDI tools, no Controller Editor templates."},
         {"note": "Use MASCHINE+ in controller mode, connected to the computer by USB.", "when": {"device": ["plus"]}},
-        {"note": "On Windows, the MASCHINE+ doesn't show Live's pages on its screens yet, and its pads don't play notes into Live's tracks yet. The buttons, knobs and lights work.", "kind": "important", "when": {"device": ["plus"], "os": ["win11", "win10"]}},
+        {"note": "On Windows, the MASCHINE+ works like the MK3: Live's pages on its screens and its pads playing into Live's tracks, with nothing to install. This is untested on hardware so far.", "when": {"device": ["plus"], "os": ["win11", "win10"]}},
         {"note": "Support for the {{device_name}} is built from the hardware protocol and has not been tested on a real unit yet. If something doesn't behave as described, please get in touch through the [product page](https://payhip.com/b/h4tva).", "when": {"device": ["mk3", "plus"]}},
         {"note": "**Close Live** before you install.", "kind": "important"}
       ]
@@ -117,14 +117,14 @@
           "Windows says a folder with that name already exists: choose to merge them, and to replace the files if it asks."
         ], "when": {"os": ["win11", "win10"]}},
         {"copy": [{"label": "Live's User Library", "value": "{{library_path}}"}], "when": {"os": ["win11", "win10"]}},
-        {"note": "No **Remote Scripts** folder in your User Library yet? The drag simply creates it. Either way, its three folders `_MaschineCore`, `Maschine_Mikro_MK3` and `Maschine_MK3` end up in **User Library\\Remote Scripts**, whichever controller you have.", "when": {"os": ["win11", "win10"]}},
+        {"note": "No **Remote Scripts** folder in your User Library yet? The drag simply creates it. Either way, the download's folders end up in **User Library\\Remote Scripts**. It holds two folders, `_MaschineCore` and `MIKRO_MK3_for_Live` (the MIKRO MK3 edition), or three, with `MK3_for_Live` too (the full edition).", "when": {"os": ["win11", "win10"]}},
         {"ol": [
           "Unzip the download.",
-          "Open the **Remote Scripts** folder inside it. It holds three folders: `_MaschineCore`, `Maschine_Mikro_MK3` and `Maschine_MK3`.",
-          "Copy **all three** into the **Remote Scripts** folder of Live's User Library, below. If that folder doesn't exist yet, create it."
+          "Open the **Remote Scripts** folder inside it. It holds two folders, `_MaschineCore` and `MIKRO_MK3_for_Live` (the MIKRO MK3 edition), or three, with `MK3_for_Live` too (the full edition).",
+          "Copy **all of them** into the **Remote Scripts** folder of Live's User Library, below. If that folder doesn't exist yet, create it."
         ], "when": {"os": ["macos"]}},
         {"copy": [{"label": "Live's Remote Scripts folder", "value": "{{scripts_path}}"}], "when": {"os": ["macos"]}},
-        {"note": "Copy all three folders, whichever controller you have: `_MaschineCore` is shared. They go directly inside **Remote Scripts**, not into a sub-folder.", "when": {"os": ["macos"]}},
+        {"note": "Copy all of them: `_MaschineCore` is shared. They go directly inside **Remote Scripts**, not into a sub-folder.", "when": {"os": ["macos"]}},
         {"note": "Moved your User Library? Live shows where it is in **Settings → Library**."},
         {"note": "Upgrading from v1.6? v1 and v2 shouldn't run at the same time. In Live's **Settings → Link, Tempo & MIDI**, set v1's control surface `Mikro_Mk3_Unofficial` to **None**. If you forget, the controller reminds you."}
       ]
@@ -175,8 +175,8 @@
       "nav": "MK3 screens",
       "when": {"device": ["mk3", "plus"], "live": ["live12"]},
       "body": [
-        {"p": "The screens show Live's pages by themselves. NI's own software draws them for the script, so there is nothing to switch or install.", "when": {"device": ["mk3"], "os": ["win11", "win10"]}},
-        {"p": "On Windows, the MASCHINE+'s screens keep MASCHINE's own pages for now.", "when": {"device": ["plus"], "os": ["win11", "win10"]}},
+        {"p": "The screens show Live's pages by themselves. NI's own software draws them for the script, so there is nothing to switch or install.", "when": {"device": ["mk3", "plus"], "os": ["win11", "win10"]}},
+        {"note": "On the MASCHINE+ this is untested on hardware so far.", "when": {"device": ["plus"], "os": ["win11", "win10"]}},
         {"p": "The first time Live starts with the controller, the screens switch to Live by themselves. Live's status bar says so. When Live quits, MASCHINE and Komplete Kontrol get the screens back by themselves, even after a force quit.", "when": {"os": ["macos"]}},
         {"note": "Is a Komplete Kontrol keyboard connected too? Then the screens stay with MASCHINE, so the keyboard keeps its own screens.", "when": {"os": ["macos"]}}
       ]
@@ -210,9 +210,9 @@
           ]},
           {"q": "Live's status bar says “no connection to the Maschine Bridge”", "a": [
             "Check that the controller is connected by USB, then restart Live.",
-            "If it stays, check that the three folders are directly inside **Remote Scripts**."
+            "If it stays, check that the script's folders are directly inside **Remote Scripts**."
           ]},
-          {"q": "The pads play no notes, and the controller says **Tick Track**", "when": {"os": ["win11", "win10"], "device": ["mikro", "mk3"]}, "a": [
+          {"q": "The pads play no notes, and the controller says **Tick Track**", "when": {"os": ["win11", "win10"], "device": ["mikro", "mk3", "plus"]}, "a": [
             "Live doesn't listen to the controller's port for notes. Someone turned its **Track** switch off.",
             "In Live's **Settings → Link, Tempo & MIDI**, under **MIDI Ports**, turn **Track** on for the input **{{track_input}}**. Live's status bar names it too. Live remembers it."
           ]},
@@ -250,7 +250,7 @@
           {"q": "Nothing happens at all", "a": [
             "Is NI's MASCHINE software installed? It installs the drivers.",
             "Is the controller connected by USB?",
-            "Are the three folders directly inside **Remote Scripts**?",
+            "Are the script's folders directly inside **Remote Scripts**?",
             "Restart Live."
           ]}
         ]},
@@ -288,12 +288,31 @@
       "body": [
         {"ol": [
           "**Close Live.** The bridge closes with it.",
-          "In Live's **Remote Scripts** folder, below, delete the three folders `_MaschineCore`, `Maschine_Mikro_MK3` and `Maschine_MK3`. Delete them first: copying over them can leave old files behind.",
+          "In Live's **Remote Scripts** folder, below, delete the script's folders: `_MaschineCore`, `MIKRO_MK3_for_Live` and, in the full edition, `MK3_for_Live`. Delete them first: copying over them can leave old files behind.",
           "{{update_copy}}",
           "Start Live.{{about}}"
         ]},
         {"copy": [{"label": "Live's Remote Scripts folder", "value": "{{scripts_path}}"}]},
         {"note": "Everything else stays: your settings and favourites and Live's control surface settings. Nothing to set up again."}
+      ]
+    },
+    {
+      "id": "full_edition",
+      "title": "Upgrading to the full edition",
+      "nav": "Full edition",
+      "licensing": true,
+      "when": {"live": ["live12"]},
+      "body": [
+        {"p": "From the MIKRO MK3 edition to the full edition (MK3, MASCHINE+ & MIKRO MK3):"},
+        {"ol": [
+          "**Close Live.**",
+          "In Live's **Remote Scripts** folder, below, delete the two folders `_MaschineCore` and `MIKRO_MK3_for_Live`.",
+          "Copy the full edition's three folders into it: `_MaschineCore`, `MIKRO_MK3_for_Live` and `MK3_for_Live`.",
+          "Start Live.",
+          "The full edition comes with a new licence key. While Live is running, open the activation page, click **Connect**, then **Deactivate this computer**. Then activate it with the new key."
+        ]},
+        {"copy": [{"label": "Live's Remote Scripts folder", "value": "{{scripts_path}}"}]},
+        {"note": "Your settings and favourites and Live's control surface settings stay."}
       ]
     }
   ],

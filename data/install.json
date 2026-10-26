@@ -16,7 +16,7 @@
   "product": "MASCHINE for Ableton Live",
   "site": "https://elton47.github.io/MMMk3-v2-User-Manual/",
   "title": "Install and set up",
-  "intro": "Three quick questions, then a few short steps. It takes a few minutes, and there is nothing to set up in Live.",
+  "intro": "Three quick questions, then a few short steps. It takes a few minutes. Nothing to install, no admin rights asked, and nothing to set up in Live.",
   "choices": [
     {
       "id": "os",

@@ -51,7 +51,7 @@
       "title": "Highlights",
       "summary": "The best of it in a minute. Each one is explained in its own section below.",
       "items": [
-        {"combo": ["SHIFT"], "does": "A real controller, not a template: a real SHIFT key and Live's colours on the pads. No Controller Editor, no MIDI mode.", "headline": "A real controller, not a template: drag and drop, open Live, play", "best": {"mikro": 1, "mk3": 1}},
+        {"combo": ["SHIFT"], "does": "A real controller, not a template: a real SHIFT key and Live's colours on the pads. No Controller Editor, no MIDI mode, nothing to install and no admin rights asked.", "headline": "A real controller, not a template: drag and drop, open Live, play", "best": {"mikro": 1, "mk3": 1}},
         {"combo": ["TURN"], "does": "The screen shows almost anything: the mode and track, tempo, swing and volume as you change them, and device parameters with their names and values.", "best": {"mikro": 12, "mk3": 12}, "headline": "A screen that shows what you play and turn"},
         {"combo": ["CHORDS"], "does": "A chord on every pad, always in Live's key: triads to 9ths, with voicings.", "best": {"mikro": 10, "mk3": 10}},
         {"combo": ["NOTE REPEAT"], "does": "Note repeat that follows pad pressure: slide the touch strip to set its rate, or touch it while holding pads to repeat them on the spot. Plus an arpeggiator, all recorded exactly on Live's grid.", "best": {"mikro": 6, "mk3": 6}, "headline": "Note repeat and an arpeggiator that follow pad pressure"},

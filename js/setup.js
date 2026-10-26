@@ -256,6 +256,7 @@ MM.setup = (function () {
       h('div', { className: 'choice-actions' }, [
         start,
         resume,
+        h('a', { className: 'btn btn-text', href: '#setup' }, [h('span', { text: 'Back' })]),  // to the two cards, as the video guide's
         h('a', { className: 'btn btn-text', href: '#manual' }, [h('span', { text: 'Already set up? Open the manual' })])
       ])
     ]));

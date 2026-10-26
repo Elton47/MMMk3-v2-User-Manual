@@ -117,3 +117,10 @@ test('the four videos and their stills are in the site, or none yet', (t) => {
   }
   assert.deepStrictEqual(there, files);
 });
+
+test('both guides\' questions lead back to the two cards', () => {
+  // Elton (2026-10-27): the text guide's questions had no way back to the cards; the video guide's had one.
+  const src = read('js/setup.js');
+  const backs = src.match(/href: '#setup' \}, \[h\('span', \{ text: 'Back' \}\)\]\)/g) || [];
+  assert.ok(backs.length >= 2, 'a Back to #setup on the text questions and on the video questions');
+});

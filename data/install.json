@@ -41,7 +41,7 @@
       "label": "Your Ableton Live",
       "options": [
         {"id": "live12", "label": "Live 12", "hint": "12.0 or newer"},
-        {"id": "live11", "label": "Live 11", "hint": "Uses v1.6.1, in the same download"}
+        {"id": "live11", "label": "Live 11", "hint": "Uses v1.6.1, a separate download"}
       ]
     }
   ],
@@ -83,7 +83,7 @@
       "title": "Live 11: use v1.6.1",
       "when": {"live": ["live11"]},
       "body": [
-        {"p": "This version (v2) is made for **Live 12**. For **Live 11**, use **v1.6.1**: it is included in the same download, and it has its own manual."},
+        {"p": "This version (v2) is made for **Live 12**. For **Live 11**, use **v1.6.1**: it is a separate download. Reply to your purchase email and you get it. It has its own manual."},
         {"actions": [{"label": "Open the v1.6.1 manual", "href": "https://elton47.github.io/MMMk3-User-Manual/", "primary": true}]},
         {"note": "Moving to Live 12 later? Come back here and choose Live 12: v2 is part of the same purchase."}
       ]
@@ -226,7 +226,7 @@
           ]},
           {"q": "The controller says **Notes blocked** and **NI update?**", "when": {"os": ["win11", "win10"]}, "a": [
             "NI's software no longer passes the pads' notes to Live. This can happen after an update of NI's software.",
-            "Look for an update of this script. Until then, v1.6.1 from the same download works."
+            "Look for an update of this script. Until then, v1.6.1 works (a separate download: reply to your purchase email)."
           ]},
           {"q": "Live's status bar says “NI's helper is off”", "when": {"os": ["win11", "win10"]}, "a": [
             "Restart the computer.",

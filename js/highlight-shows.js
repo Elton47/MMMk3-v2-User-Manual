@@ -434,8 +434,35 @@ var TOUR_SHOWS = (function () {
     };
   }
 
+  // Licence: onto the row, PUSH asks first (CANCEL highlighted), a turn to CONFIRM, PUSH: the licence page
+  // opens in the browser (the bridge's popup), then the page again.
+  var licenceShow = {
+    every: 700,
+    duration: 8000,
+    glow: ['SCREEN', 'PUSH'],
+    tick: function (n, api) {
+      var at = NAMES.indexOf('Licence');
+      var steps = [
+        // [screen, lit buttons, encoder detents]
+        [settingsScreen(NAMES[at - 1]), [], 0],
+        [settingsScreen('Licence'), [], 1],
+        [licenceConfirmScreen(false), ['ENCODER'], 1],
+        [licenceConfirmScreen(false), [], 1],
+        [licenceConfirmScreen(true), [], 2],
+        [licenceOpenedScreen(), ['ENCODER'], 2],
+        [licenceOpenedScreen(), [], 2],
+        [settingsScreen('Licence'), [], 2]
+      ];
+      var step = steps[Math.min(n, steps.length - 1)];
+      api.turn(step[2]);
+      api.light(step[1]);
+      api.screen(step[0], mk3(api, 'SETTINGS'));
+    }
+  };
+
   function settings(step) {
     var key = step.combo.join('+');
+    if (step.context === 'Licence') return licenceShow;
     if (step.context && step.values) return valuesShow(step.context, step.values);
     if (key === 'TURN') return turnShow;
     if (key === '◀+▶') {

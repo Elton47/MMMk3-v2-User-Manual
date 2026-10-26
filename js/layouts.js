@@ -347,11 +347,23 @@ function kitsPreparingScreen(percent) {
 // 'Name: value' as the script's settings page shows it (the setup guide shows 'About'). The rows
 // in the script's order and with its defaults (surface.py _settings_items). The Tour's Settings
 // card steps through the values in features.json (`values`, checked against the script there).
+// Licence (licence_item.py) is right before About on an activated computer.
 function settingsRows() {
   return ['Screen\t' + MM.screenLines + ' lines', 'Screen saver\t10 min', 'Brightness\tMax', 'Velocity curve\tLinear',
     'Fixed velocity\t100', 'Pad pressure\tPoly', 'Drum colours\tBy chain', 'Step follows\tOn',
-    'Record length\tFree', 'Start mode\tPads', 'About\t2.0.0'];
+    'Record length\tFree', 'Start mode\tPads', 'Covers\tMinimal', 'Licence\tActivated', 'About\t2.0.0'];
 }
+
+// SETTINGS > Licence's confirmation (the script's confirm_dialog.py mikro_lines(), licence_item.py): line 1
+// the title and the explanation with the edition and the masked email (a made-up one), line 2 the two
+// buttons, the highlighted one in brackets (CANCEL first). After CONFIRM the bridge's popup.
+var SAMPLE_LICENCE = { edition: 'MIKRO MK3', email: 'bu***@example.com' };
+function licenceConfirmScreen(confirm) {
+  var text = SAMPLE_LICENCE.edition + ' edition, ' + SAMPLE_LICENCE.email +
+    '. CONFIRM opens the licence page in your browser. Deactivate this computer there, or check your licence.';
+  return modeScreen('Licence page?: ' + text, confirm ? 'Cancel  [Confirm]' : '[Cancel]  Confirm');
+}
+function licenceOpenedScreen() { return popupScreen('Licence page', 'Opened in browser'); }
 // changed (optional): { setting name: value } shown instead of the default; Screen '3 lines'
 // draws the page in three lines, as the controller does at once.
 function settingsScreen(chosenName, changed) {

@@ -382,7 +382,7 @@
       ],
       "items": [
         {"combo": ["PAD"], "does": "Select the track with the MASCHINE plug-in and play: the pads play it, in MASCHINE's own pad order. Pick the group or kit inside the plug-in, with the mouse.", "best": {"mikro": 23, "mk3": 29}, "headline": "Keep the MASCHINE plug-in in your Live sets"},
-        {"combo": ["BROWSER"], "does": "Still Live's browser, not the plug-in's. The rest of the controller works as it does without the plug-in.", "best": {"mikro": 190, "mk3": 190}}
+        {"combo": ["BROWSER"], "does": "Still Live's browser, not the plug-in's. The rest of the controller works as it does without the plug-in.", "best": {"mikro": 191, "mk3": 190}}
       ]
     },
     {
@@ -469,8 +469,8 @@
         {"combo": ["MASCHINE"], "context": "Record length", "does": "Free, 1, 2, 4 or 8 bars for a new clip (as REC + TURN).", "values": ["Free", "1 bar", "2 bars", "4 bars", "8 bars"], "best": 184, "headline": "Record length for a new clip"},
         {"combo": ["MASCHINE"], "context": "Start mode", "does": "The mode the controller opens in: Pads (default), Pattern, Scene, Step or Track.", "values": ["Pads", "Pattern", "Scene", "Step", "Track"], "best": 179, "headline": "Start mode: the mode the controller opens in"},
         {"combo": ["MASCHINE"], "context": "Covers", "does": "The covers of MASCHINE Kits in the browser: Minimal (default: our own cover for each Expansion) or NI Artwork (the Expansions' own artwork).", "values": ["Minimal", "NI Artwork"], "best": 180},
-        {"combo": ["MASCHINE"], "context": "Licence", "does": "This computer's licence (Activated). Press it: the controller shows your edition and email, and CONFIRM opens the licence page in your browser, to deactivate this computer or check your licence.", "values": ["Activated"], "best": 191, "headline": "Licence: deactivate this computer"},
-        {"combo": ["MASCHINE"], "context": "About", "does": "The script version, its author and your Live version (◀ ▶ to show it).", "values": ["2.0.0"], "best": 189, "headline": "About: the script and Live versions"}
+        {"combo": ["MASCHINE"], "context": "Licence", "does": "This computer's licence (Activated). Press it: the controller shows your edition and email, and CONFIRM opens the licence page in your browser, to deactivate this computer or check your licence.", "values": ["Activated"], "best": 189, "headline": "Licence: deactivate this computer"},
+        {"combo": ["MASCHINE"], "context": "About", "does": "The script version, its author and your Live version (◀ ▶ to show it).", "values": ["2.0.0"], "best": 190, "headline": "About: the script and Live versions"}
       ]
     },
     {

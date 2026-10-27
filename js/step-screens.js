@@ -181,6 +181,10 @@ var STEP_SCREENS = {
     {"popup": "Sound\nSnare"},
     {"MIKRO_CORNER": "", "MIKRO_LINE3": "Page 1/2  1/16", "MIKRO_LINE3_VALUE": "C#1", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "1", "SUBTITLE": "Step Snare", "TITLE": "Snare"}
   ],
+  "transport AUTO": [
+    {"popup": "Automation Arm\nOn"},
+    {"MIKRO_CORNER": "Kit-Core 909", "MIKRO_LINE3": "Kick 909 1", "MIKRO_LINE3_VALUE": "C1", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "1", "SUBTITLE": "Kit-Core 909", "TITLE": "1-Drums"}
+  ],
   "transport FOLLOW": [
     {"popup": "Follow\nOn"},
     {"MIKRO_CORNER": "Kit-Core 909", "MIKRO_LINE3": "Kick 909 1", "MIKRO_LINE3_VALUE": "C1", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "1", "SUBTITLE": "Kit-Core 909", "TITLE": "1-Drums"}
@@ -365,6 +369,10 @@ var STEP_SCREENS = {
     "press-step-push-turn-1",
     "press-step-push-turn-2",
     "press-step-push-turn-3"
+  ],
+  "transport AUTO": [
+    "press-transport-auto-0",
+    "press-drum-erase-pad-1"
   ],
   "transport FOLLOW": [
     "press-transport-follow-0",

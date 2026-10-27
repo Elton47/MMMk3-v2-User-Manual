@@ -397,7 +397,7 @@ MM.setup = (function () {
       ]);
       next.addEventListener('click', function () { state.focusStep = true; });
     }
-    var hint = next ? h('span', { className: 'key-hint', 'aria-hidden': 'true' }, [h('kbd', { text: 'â†' }), ' ', h('kbd', { text: 'â†’' }), ' to move']) : null;
+    var hint = next ? h('span', { className: 'key-hint', 'aria-hidden': 'true' }, [h('kbd', { text: '←' }), ' ', h('kbd', { text: '→' }), ' to move']) : null;
 
     var card = h('article', { className: 'step-card', 'aria-labelledby': 'step-title' }, [
       h('p', { className: 'step-eyebrow', text: 'Step ' + (index + 1) + ' of ' + total }),

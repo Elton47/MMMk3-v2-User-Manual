@@ -97,12 +97,14 @@ test('the printable sheets take the day colour, in the light tones whatever the 
 });
 
 test('no broken characters (UTF-8 read as Latin-1) in the site\'s files', () => {
-  const files = ['index.html'].concat(
+  const files = fs.readdirSync(ROOT).concat(
     ['js', 'css', 'data'].flatMap((d) => fs.readdirSync(path.join(ROOT, d)).map((f) => d + '/' + f)))
-    .filter((f) => /\.(html|js|css|json)$/.test(f));
+    .filter((f) => /\.(html|js|css|json|md)$/.test(f));
   files.forEach((f) => {
     const text = fs.readFileSync(path.join(ROOT, f), 'utf8');
-    assert.ok(!/Â[· -¿]|â€/.test(text), f + ' has mojibake');
+    // A UTF-8 lead byte read as Windows-1252 (Â Ã â ð), then a continuation byte read the same way: catches
+    // 'Â·' and 'â€”', and also the arrows 'â†' + U+0090 / 'â†’' (← →) that an older, narrower check let through.
+    assert.ok(!/[\u00c2\u00c3\u00e2\u00f0][\u0080-\u00bf\u0152\u0153\u0160\u0161\u0178\u017d\u017e\u0192\u02c6\u02dc\u2013\u2014\u2018-\u201e\u2020-\u2022\u2026\u2030\u2039\u203a\u20ac\u2122]/.test(text), f + ' has mojibake');
   });
 });
 

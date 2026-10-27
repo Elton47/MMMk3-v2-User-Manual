@@ -4,6 +4,16 @@
 // (img/screens/mk3/anim/), one frame a detent. js/layouts.js puts them on their pages.
 var DETENT_SCREENS = {
  "mikro": {
+  "automation AUTO + ERASE + TURN (PLUG-IN or the mixer)": [
+    {"MIKRO_CORNER": "", "MIKRO_LINE3": "Touch to clear", "MIKRO_LINE3_VALUE": "", "MIKRO_TRACK_FLAGS": 0, "MIKRO_TRACK_LABEL": "", "SUBTITLE": "2-Bass", "TITLE": "AUTO"},
+    {"MIKRO_CORNER": "", "MIKRO_LINE3": "Cleared", "MIKRO_LINE3_VALUE": "Frequency", "MIKRO_TRACK_FLAGS": 0, "MIKRO_TRACK_LABEL": "", "SUBTITLE": "2-Bass", "TITLE": "AUTO"}
+  ],
+  "automation AUTO + TURN (PLUG-IN or the mixer)": [
+    {"MIKRO_CORNER": "", "MIKRO_LINE3": "Turn to record", "MIKRO_LINE3_VALUE": "", "MIKRO_TRACK_FLAGS": 0, "MIKRO_TRACK_LABEL": "", "SUBTITLE": "2-Bass", "TITLE": "AUTO"},
+    {"MIKRO_CORNER": "", "MIKRO_LINE3": "Frequency", "MIKRO_LINE3_VALUE": "0.96 kHz", "MIKRO_TRACK_FLAGS": 0, "MIKRO_TRACK_LABEL": "", "SUBTITLE": "2-Bass", "TITLE": "AUTO"},
+    {"MIKRO_CORNER": "", "MIKRO_LINE3": "Frequency", "MIKRO_LINE3_VALUE": "1.03 kHz", "MIKRO_TRACK_FLAGS": 0, "MIKRO_TRACK_LABEL": "", "SUBTITLE": "2-Bass", "TITLE": "AUTO"},
+    {"MIKRO_CORNER": "", "MIKRO_LINE3": "Frequency", "MIKRO_LINE3_VALUE": "1.10 kHz", "MIKRO_TRACK_FLAGS": 0, "MIKRO_TRACK_LABEL": "", "SUBTITLE": "2-Bass", "TITLE": "AUTO"}
+  ],
   "chords TURN": [
     {"MIKRO_CORNER": "C Major", "MIKRO_LINE3": "Octave", "MIKRO_LINE3_VALUE": "C3", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "3", "SUBTITLE": "Triad Close  C Major", "TITLE": "3-Keys"},
     {"MIKRO_CORNER": "C Major", "MIKRO_LINE3": "Octave", "MIKRO_LINE3_VALUE": "C4", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "3", "SUBTITLE": "Triad Close  C Major", "TITLE": "3-Keys"},

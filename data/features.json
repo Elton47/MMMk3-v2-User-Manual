@@ -1,7 +1,7 @@
 {
   "$comment": [
     "Single source of the user guide (docs/USER-GUIDE.md, python tools/gen_user_guide.py) and of the interactive manual (data/features.json on the manual site, copied by python tools/dev.py manual). Only what is confirmed on the hardware goes in.",
-    "devices: {id: {name, verified, unverified_note (optional: the guide's words for what is not hardware-tested yet)}}. verified false shows the manual's banner. notation: how combos read. changes: the v1 -> v2 table ({what, v1, v2}).",
+    "devices: {id: {name, verified}}. notation: how combos read. changes: the v1 -> v2 table ({what, v1, v2}).",
     "sections: {id, nav (short name for menus), title, summary, devices (optional: only on these), notes (optional: [{title, text}] callouts), grid (optional: the SHIFT + pads matrix, top row first), swatches + swatches_note (optional: the drum name colours), tour (optional), items}. The manual's Full manual view shows a section as a card; its Tour view plays it as a card on the controller drawing, one step per item, in this order.",
     "tour (optional, per section): {intro}: the short line under the section's title on its Tour card (default: the summary's first sentence).",
     "items: {combo: [tokens], does, context (optional: shown in brackets, e.g. a setting's name), devices (optional), values (optional, the MASCHINE settings: the values the Tour card steps through on the screen, as the settings page writes them: the default first, then in the order the next-value button walks)}.",
@@ -13,7 +13,7 @@
   "version": "2.0.0",
   "devices": {
     "mikro": {"name": "MASCHINE MIKRO MK3", "verified": true},
-    "mk3": {"name": "MASCHINE MK3 / MASCHINE+", "verified": false, "unverified_note": "the MASCHINE+ not yet hardware-tested"}
+    "mk3": {"name": "MASCHINE MK3 / MASCHINE+", "verified": true}
   },
   "notation": {
     "+": "hold the first control(s) and press the last one",

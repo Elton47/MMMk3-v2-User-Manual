@@ -31,7 +31,7 @@
       "label": "Your controller",
       "options": [
         {"id": "mikro", "label": "MASCHINE MIKRO MK3"},
-        {"id": "mk3", "label": "MASCHINE MK3", "hint": "Not yet tested on a real unit"},
+        {"id": "mk3", "label": "MASCHINE MK3"},
         {"id": "plus", "label": "MASCHINE+", "hint": "In controller mode. Not yet tested on a real unit"}
       ]
     },
@@ -101,7 +101,7 @@
         {"p": "Nothing else. No other drivers, no extra MIDI tools, no Controller Editor templates."},
         {"note": "Use MASCHINE+ in controller mode, connected to the computer by USB.", "when": {"device": ["plus"]}},
         {"note": "On Windows, the MASCHINE+ works like the MK3: Live's pages on its screens and its pads playing into Live's tracks, with nothing to install. This is untested on hardware so far.", "when": {"device": ["plus"], "os": ["win11"]}},
-        {"note": "Support for the {{device_name}} is built from the hardware protocol and has not been tested on a real unit yet. If something doesn't behave as described, please get in touch through the [product page](https://payhip.com/b/h4tva).", "when": {"device": ["mk3", "plus"]}},
+        {"note": "Support for the {{device_name}} is built from the hardware protocol and has not been tested on a real unit yet. If something doesn't behave as described, please get in touch through the [product page](https://payhip.com/b/h4tva).", "when": {"device": ["plus"]}},
         {"note": "**Close Live** before you install.", "kind": "important"}
       ]
     },

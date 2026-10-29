@@ -70,7 +70,7 @@ MM.cheatsheet = (function () {
           address ? ' · ' + address : null
         ]),
         device.verified ? null : h('p', { className: 'cs-note',
-          text: 'MASCHINE+ support is built from the MK3's protocol and not yet tested on a real unit.' })
+          text: 'MASCHINE+ support is built from the MK3’s protocol and not yet tested on a real unit.' })
       ]),
       legend
     ]));

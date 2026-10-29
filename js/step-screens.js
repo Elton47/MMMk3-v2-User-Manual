@@ -293,6 +293,10 @@ var STEP_SCREENS = {
   "mk3 MUTE + GROUP A-H": [
     "press-mk3-mute-group-a-h-0"
   ],
+  "mk3 SHIFT + FILE": [
+    "press-mk3-shift-file-0",
+    "press-mk3-shift-file-1"
+  ],
   "mk3 SHIFT + GROUP A-H": [
     "press-mk3-shift-group-a-h-0",
     "press-drum-erase-pad-1"

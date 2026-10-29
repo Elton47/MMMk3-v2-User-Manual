@@ -30,7 +30,7 @@ var DETENT_SCREENS = {
     {"MIKRO_CORNER": "T1-4 S1-4", "MIKRO_LINE3": "Drum Loop", "MIKRO_LINE3_VALUE": "", "MIKRO_TRACK_FLAGS": 0, "MIKRO_TRACK_LABEL": "", "SUBTITLE": "Tracks 1-4 Scenes 1-4", "TITLE": "Pattern"},
     {"MIKRO_CORNER": "T2-5 S1-4", "MIKRO_LINE3": "Drum Loop", "MIKRO_LINE3_VALUE": "", "MIKRO_TRACK_FLAGS": 0, "MIKRO_TRACK_LABEL": "", "SUBTITLE": "Tracks 2-5 Scenes 1-4", "TITLE": "Pattern"},
     {"MIKRO_CORNER": "T3-6 S1-4", "MIKRO_LINE3": "Drum Loop", "MIKRO_LINE3_VALUE": "", "MIKRO_TRACK_FLAGS": 0, "MIKRO_TRACK_LABEL": "", "SUBTITLE": "Tracks 3-6 Scenes 1-4", "TITLE": "Pattern"},
-    {"MIKRO_CORNER": "T4-6 S1-4", "MIKRO_LINE3": "Drum Loop", "MIKRO_LINE3_VALUE": "", "MIKRO_TRACK_FLAGS": 0, "MIKRO_TRACK_LABEL": "", "SUBTITLE": "Tracks 4-6 Scenes 1-4", "TITLE": "Pattern"}
+    {"MIKRO_CORNER": "T4-7 S1-4", "MIKRO_LINE3": "Drum Loop", "MIKRO_LINE3_VALUE": "", "MIKRO_TRACK_FLAGS": 0, "MIKRO_TRACK_LABEL": "", "SUBTITLE": "Tracks 4-7 Scenes 1-4", "TITLE": "Pattern"}
   ],
   "drum TURN": [
     {"MIKRO_CORNER": "Kit-Core 909", "MIKRO_LINE3": "Kick 909 1", "MIKRO_LINE3_VALUE": "C1", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "1", "SUBTITLE": "Kit-Core 909", "TITLE": "1-Drums"},
@@ -92,10 +92,10 @@ var DETENT_SCREENS = {
     {"MIKRO_CORNER": "", "MIKRO_LINE3": "Page 4/4  1/16", "MIKRO_LINE3_VALUE": "C1", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "1", "SUBTITLE": "Step Kick 909 1", "TITLE": "Kick 909 1"}
   ],
   "track TURN": [
-    {"MIKRO_CORNER": "1 - 6 of 6", "MIKRO_LINE3": "1-Drums", "MIKRO_LINE3_VALUE": "", "MIKRO_TRACK_FLAGS": 0, "MIKRO_TRACK_LABEL": "", "SUBTITLE": "1 - 6 of 6", "TITLE": "Tracks"},
-    {"MIKRO_CORNER": "2 - 6 of 6", "MIKRO_LINE3": "1-Drums", "MIKRO_LINE3_VALUE": "", "MIKRO_TRACK_FLAGS": 0, "MIKRO_TRACK_LABEL": "", "SUBTITLE": "2 - 6 of 6", "TITLE": "Tracks"},
-    {"MIKRO_CORNER": "3 - 6 of 6", "MIKRO_LINE3": "1-Drums", "MIKRO_LINE3_VALUE": "", "MIKRO_TRACK_FLAGS": 0, "MIKRO_TRACK_LABEL": "", "SUBTITLE": "3 - 6 of 6", "TITLE": "Tracks"},
-    {"MIKRO_CORNER": "4 - 6 of 6", "MIKRO_LINE3": "1-Drums", "MIKRO_LINE3_VALUE": "", "MIKRO_TRACK_FLAGS": 0, "MIKRO_TRACK_LABEL": "", "SUBTITLE": "4 - 6 of 6", "TITLE": "Tracks"}
+    {"MIKRO_CORNER": "1 - 8 of 8", "MIKRO_LINE3": "1-Drums", "MIKRO_LINE3_VALUE": "", "MIKRO_TRACK_FLAGS": 0, "MIKRO_TRACK_LABEL": "", "SUBTITLE": "1 - 8 of 8", "TITLE": "Tracks"},
+    {"MIKRO_CORNER": "2 - 8 of 8", "MIKRO_LINE3": "1-Drums", "MIKRO_LINE3_VALUE": "", "MIKRO_TRACK_FLAGS": 0, "MIKRO_TRACK_LABEL": "", "SUBTITLE": "2 - 8 of 8", "TITLE": "Tracks"},
+    {"MIKRO_CORNER": "3 - 8 of 8", "MIKRO_LINE3": "1-Drums", "MIKRO_LINE3_VALUE": "", "MIKRO_TRACK_FLAGS": 0, "MIKRO_TRACK_LABEL": "", "SUBTITLE": "3 - 8 of 8", "TITLE": "Tracks"},
+    {"MIKRO_CORNER": "4 - 8 of 8", "MIKRO_LINE3": "1-Drums", "MIKRO_LINE3_VALUE": "", "MIKRO_TRACK_FLAGS": 0, "MIKRO_TRACK_LABEL": "", "SUBTITLE": "4 - 8 of 8", "TITLE": "Tracks"}
   ]
  },
  "mk3": {

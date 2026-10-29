@@ -957,6 +957,27 @@ MM.manual = (function () {
     ]);
   }
 
+  // The reader's computer: the setup's answer, else what the browser tells ('macos' | 'windows' | null:
+  // unknown, e.g. a phone).
+  function readerOs() {
+    var chosen = (MM.storeJSON('setupChoices') || {}).os;
+    if (chosen) return chosen === 'macos' ? 'macos' : 'windows';
+    var ua = navigator.userAgent || '';
+    var platform = (navigator.userAgentData && navigator.userAgentData.platform) || navigator.platform || '';
+    if (/iPhone|iPad|Android/i.test(ua)) return null;
+    if (/Mac/i.test(platform)) return 'macos';
+    if (/Win/i.test(platform)) return 'windows';
+    return null;
+  }
+
+  // A note for one computer only (features.json `os`, e.g. 'macos'): hidden from readers known to be on
+  // another one, shown when unknown.
+  function noteShown(note) {
+    if (!note.os) return true;
+    var os = readerOs();
+    return !os || os === note.os;
+  }
+
   // A section's notes (features.json `notes`: {title, text}) as callouts under its summary, e.g.
   // Getting started's note on NI's MASCHINE plug-in.
   function noteElement(note, terms) {
@@ -1014,7 +1035,7 @@ MM.manual = (function () {
       container.appendChild(h('section', { className: 'card', id: section.id, 'aria-labelledby': 'h-' + section.id }, [
         sectionHeading(section, 'h-' + section.id),
         section.summary ? h('p', { className: 'summary', text: section.summary }) : null
-      ].concat((section.notes || []).map(function (note) { return noteElement(note); }), [
+      ].concat((section.notes || []).filter(noteShown).map(function (note) { return noteElement(note); }), [
         section.id === 'highlights' ? tourLink() : null,
         section.grid ? shiftGrid(section) : null,
         section.swatches && section.swatches.length ? swatchTable(section, section.swatches) : null,
@@ -1153,7 +1174,7 @@ MM.manual = (function () {
       }).map(function (e) { return e.item; });
       var swatches = entry.swatches.filter(function (e) { return matchesAll(e.text, terms); })
         .map(function (e) { return e.swatch; });
-      var notes = entry.notes.filter(function (e) { return matchesAll(e.text, terms); })
+      var notes = entry.notes.filter(function (e) { return noteShown(e.note) && matchesAll(e.text, terms); })
         .map(function (e) { return e.note; });
       if (!items.length && !swatches.length && !notes.length) return;
       groups.push({ section: entry.section, items: items, swatches: swatches, notes: notes });

@@ -151,11 +151,11 @@ var STEP_SCREENS = {
     {"MIKRO_CORNER": "Kit-Core 909", "MIKRO_LINE3": "Kick 909 1", "MIKRO_LINE3_VALUE": "C1", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "1", "SUBTITLE": "Kit-Core 909", "TITLE": "1-Drums"}
   ],
   "shift-pads SHIFT + PAD 3": [
-    {"popup": "Velocity 100\nAll notes"},
+    {"popup": "Step undo\nNothing to undo"},
     {"MIKRO_CORNER": "Kit-Core 909", "MIKRO_LINE3": "Kick 909 1", "MIKRO_LINE3_VALUE": "C1", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "1", "SUBTITLE": "Kit-Core 909", "TITLE": "1-Drums"}
   ],
   "shift-pads SHIFT + PAD 4": [
-    {"popup": "Selected\nAll notes"},
+    {"popup": "Step redo\nNothing to redo"},
     {"MIKRO_CORNER": "Kit-Core 909", "MIKRO_LINE3": "Kick 909 1", "MIKRO_LINE3_VALUE": "C1", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "1", "SUBTITLE": "Kit-Core 909", "TITLE": "1-Drums"}
   ],
   "shift-pads SHIFT + PAD 5": [
@@ -196,23 +196,27 @@ var STEP_SCREENS = {
   "transport SHIFT + STOP": [
     {"popup": "Stop\nAll clips"},
     {"MIKRO_CORNER": "Kit-Core 909", "MIKRO_LINE3": "Kick 909 1", "MIKRO_LINE3_VALUE": "C1", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "1", "SUBTITLE": "Kit-Core 909", "TITLE": "1-Drums"}
+  ],
+  "views SAMPLING": [
+    {"popup": "Sampling\nEmpty Simpler added"},
+    {"MIKRO_CORNER": "Kit-Core 909", "MIKRO_LINE3": "Kick 909 1", "MIKRO_LINE3_VALUE": "C1", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "1", "SUBTITLE": "Kit-Core 909", "TITLE": "1-Drums"}
   ]
  },
  "mk3": {
   "automation AUTO": [
     "press-automation-auto-0",
-    "press-drum-erase-pad-1"
+    "press-drum-mute-pad-1"
   ],
   "chords CHORDS": [
     "press-chords-chords-0"
   ],
   "drum DUPLICATE + PAD + PAD": [
     "press-drum-duplicate-pad-pad-0",
-    "press-drum-erase-pad-1"
+    "press-drum-mute-pad-1"
   ],
   "drum ERASE + PAD": [
     "press-drum-erase-pad-0",
-    "press-drum-erase-pad-1"
+    "press-drum-mute-pad-1"
   ],
   "drum MUTE + PAD": [
     "press-drum-mute-pad-0",
@@ -227,51 +231,51 @@ var STEP_SCREENS = {
   ],
   "drum SHIFT + PAD MODE": [
     "press-drum-shift-pad-mode-0",
-    "press-drum-erase-pad-1"
+    "press-drum-mute-pad-1"
   ],
   "drum SOLO + PAD": [
     "press-drum-solo-pad-0",
-    "press-drum-solo-pad-1"
+    "press-drum-mute-pad-1"
   ],
   "edit DUPLICATE": [
     "press-edit-duplicate-0",
-    "press-drum-erase-pad-1"
+    "press-drum-mute-pad-1"
   ],
   "edit ERASE": [
     "press-edit-erase-0",
-    "press-drum-erase-pad-1"
+    "press-drum-mute-pad-1"
   ],
   "edit MUTE": [
     "press-edit-mute-0",
-    "press-drum-erase-pad-1"
+    "press-drum-mute-pad-1"
   ],
   "edit SHIFT + DUPLICATE": [
     "press-edit-shift-duplicate-0",
-    "press-drum-erase-pad-1"
+    "press-drum-mute-pad-1"
   ],
   "edit SHIFT + LOCK": [
     "press-edit-shift-lock-0",
-    "press-drum-erase-pad-1"
+    "press-drum-mute-pad-1"
   ],
   "edit SHIFT + MUTE": [
     "press-edit-shift-mute-0",
-    "press-drum-erase-pad-1"
+    "press-drum-mute-pad-1"
   ],
   "edit SOLO": [
     "press-edit-solo-0",
-    "press-drum-erase-pad-1"
+    "press-drum-mute-pad-1"
   ],
   "events ERASE + EVENTS": [
     "press-events-erase-events-0",
-    "press-drum-erase-pad-1"
+    "press-drum-mute-pad-1"
   ],
   "events SHIFT + VARIATION": [
     "press-events-shift-variation-0",
-    "press-drum-erase-pad-1"
+    "press-drum-mute-pad-1"
   ],
   "events VARIATION": [
     "press-events-variation-0",
-    "press-drum-erase-pad-1"
+    "press-drum-mute-pad-1"
   ],
   "keyboard SHIFT + KEYBOARD": [
     "press-keyboard-shift-keyboard-0",
@@ -290,87 +294,81 @@ var STEP_SCREENS = {
   "mk3 MACRO": [
     "press-mk3-macro-0"
   ],
-  "mk3 MUTE + GROUP A-H": [
-    "press-mk3-mute-group-a-h-0"
-  ],
   "mk3 SHIFT + FILE": [
     "press-mk3-shift-file-0",
-    "press-mk3-shift-file-1"
+    "press-drum-mute-pad-1"
   ],
   "mk3 SHIFT + GROUP A-H": [
     "press-mk3-shift-group-a-h-0",
-    "press-drum-erase-pad-1"
-  ],
-  "mk3 SOLO (held, with the screens)": [
-    "press-drum-solo-pad-1"
+    "press-drum-mute-pad-1"
   ],
   "playing FIXED VEL": [
     "press-playing-fixed-vel-0",
-    "press-drum-erase-pad-1"
+    "press-drum-mute-pad-1"
   ],
   "playing MOD": [
     "press-playing-mod-0",
-    "press-drum-erase-pad-1"
+    "press-drum-mute-pad-1"
   ],
   "playing PITCH": [
     "press-playing-pitch-0",
-    "press-drum-erase-pad-1"
+    "press-drum-mute-pad-1"
   ],
   "playing SHIFT + NOTE REPEAT": [
     "press-playing-shift-note-repeat-0",
-    "press-drum-erase-pad-1"
+    "press-drum-mute-pad-1"
   ],
   "shift-pads SHIFT + PAD 11": [
     "press-shift-pads-shift-pad-11-0",
-    "press-drum-erase-pad-1"
+    "press-drum-mute-pad-1"
   ],
   "shift-pads SHIFT + PAD 12": [
     "press-shift-pads-shift-pad-12-0",
-    "press-drum-erase-pad-1"
+    "press-drum-mute-pad-1"
   ],
   "shift-pads SHIFT + PAD 13": [
     "press-shift-pads-shift-pad-13-0",
-    "press-drum-erase-pad-1"
+    "press-drum-mute-pad-1"
   ],
   "shift-pads SHIFT + PAD 14": [
     "press-shift-pads-shift-pad-14-0",
-    "press-drum-erase-pad-1"
+    "press-drum-mute-pad-1"
   ],
   "shift-pads SHIFT + PAD 15": [
     "press-shift-pads-shift-pad-15-0",
-    "press-drum-erase-pad-1"
+    "press-drum-mute-pad-1"
   ],
   "shift-pads SHIFT + PAD 16": [
     "press-shift-pads-shift-pad-16-0",
-    "press-drum-erase-pad-1"
+    "press-drum-mute-pad-1"
   ],
   "shift-pads SHIFT + PAD 3": [
     "press-shift-pads-shift-pad-3-0",
-    "press-drum-erase-pad-1"
+    "press-drum-mute-pad-1"
   ],
   "shift-pads SHIFT + PAD 4": [
     "press-shift-pads-shift-pad-4-0",
-    "press-drum-erase-pad-1"
+    "press-drum-mute-pad-1"
   ],
   "shift-pads SHIFT + PAD 5": [
     "press-shift-pads-shift-pad-5-0",
-    "press-drum-erase-pad-1"
+    "press-drum-mute-pad-1"
   ],
   "shift-pads SHIFT + PAD 6": [
     "press-shift-pads-shift-pad-6-0",
-    "press-drum-erase-pad-1"
+    "press-drum-mute-pad-1"
   ],
   "shift-pads SHIFT + PAD 7": [
     "press-shift-pads-shift-pad-7-0",
-    "press-drum-erase-pad-1"
+    "press-drum-mute-pad-1"
   ],
   "shift-pads SHIFT + PAD 8": [
     "press-shift-pads-shift-pad-7-0",
-    "press-drum-erase-pad-1"
+    "press-drum-mute-pad-1"
   ],
   "shift-pads SHIFT + PAD 9": [
     "press-shift-pads-shift-pad-9-0",
-    "press-drum-erase-pad-1"
+    "press-drum-mute-pad-1"
   ],
   "step PUSH + TURN": [
     "press-step-push-turn-0",
@@ -380,15 +378,19 @@ var STEP_SCREENS = {
   ],
   "transport FOLLOW": [
     "press-transport-follow-0",
-    "press-drum-erase-pad-1"
+    "press-drum-mute-pad-1"
   ],
   "transport SHIFT + REC": [
     "press-transport-shift-rec-0",
-    "press-drum-erase-pad-1"
+    "press-drum-mute-pad-1"
   ],
   "transport SHIFT + STOP": [
     "press-transport-shift-stop-0",
-    "press-drum-erase-pad-1"
+    "press-drum-mute-pad-1"
+  ],
+  "views SAMPLING": [
+    "press-views-sampling-0",
+    "press-drum-mute-pad-1"
   ]
  }
 };

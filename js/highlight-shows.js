@@ -382,7 +382,11 @@ var TOUR_SHOWS = (function () {
       var hints = { Soft: 'Soft: more sensitive', Hard: 'Hard: less sensitive' };
       return popupScreen('Velocity curve', hints[value] || value);
     },
-    'Drum colours': function (value) { return popupScreen('Pad colours', value === 'By name' ? 'By name' : 'By chain colour'); }
+    // The pads' colours as the script's popup names them (drum.py set_color_mode).
+    'Drum colours': function (value) {
+      var shown = { 'By chain': 'By chain colour', 'By name': 'By name' };
+      return popupScreen('Pad colours', shown[value] || 'MASCHINE');
+    }
   };
   var EVERY = 600, PER_VALUE = 3;  // a press, the popup's 1.2 s, then a moment on the page
 

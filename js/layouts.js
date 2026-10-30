@@ -350,7 +350,7 @@ function kitsPreparingScreen(percent) {
 // Licence (licence_item.py) is right before About on an activated computer.
 function settingsRows() {
   return ['Screen\t' + MM.screenLines + ' lines', 'Screen saver\t10 min', 'Brightness\tMax', 'Velocity curve\tLinear',
-    'Fixed velocity\t100', 'Pad pressure\tPoly', 'Drum colours\tBy chain', 'Step follows\tOn',
+    'Fixed velocity\t100', 'Pad pressure\tPoly', 'Drum colours\tMASCHINE', 'Step follows\tOn',
     'Record length\tFree', 'Start mode\tPads', 'Covers\tMinimal', 'Licence\tActivated', 'About\t2.0.0'];
 }
 

@@ -30,10 +30,19 @@ MM.manual = (function () {
     return found;
   }
 
-  // The colour of a drum pad name, as the script colours it: drumRule() (layouts.js, the
-  // script's rules ported 1:1) gives the kind, the table in features.json its colour. Names no
-  // rule matches are white, like on the controller; `fallback` only shows before the data loads.
+  // The colour of a drum pad, as the script colours it with Drum colours MASCHINE (the default):
+  // each pad in the colour MASCHINE gives its position, pad 1 orange round to red for pad 16, the
+  // same on every row. The sample kit (SAMPLE_DRUMS) is in pad order. Other names: by name.
   function drumColor(name, fallback) {
+    var position = SAMPLE_DRUMS.indexOf(name);
+    if (position >= 0) return PAD_COLORS[position % 16];
+    return drumColorByName(name, fallback);
+  }
+
+  // Drum colours By name: drumRule() (layouts.js, the script's rules ported 1:1) gives the kind,
+  // the table in features.json its colour. Names no rule matches are white, like on the
+  // controller; `fallback` only shows before the data loads.
+  function drumColorByName(name, fallback) {
     var swatches = drumSwatches();
     if (!swatches.length) return fallback;
     var rule = drumRule(name);

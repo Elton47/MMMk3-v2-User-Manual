@@ -83,8 +83,8 @@ var SAMPLE_MASTER = { name: 'Master', color: '#ebebeb' };
 var SAMPLE_SELECTED = 0;  // index into SAMPLE_TRACKS
 var SAMPLE_ARMED = 1;
 var SAMPLE_SCENE_COLOR = PAD_COLORS[5];  // Green
-// The Drum Rack on 1-Drums, in pad order (pad 1 first). manual.js colours each pad by the drum
-// name rules (drumRule() below), like the script's name colours.
+// The Drum Rack on 1-Drums, in pad order (pad 1 first). manual.js colours each pad by its position
+// (MASCHINE colours, the default), like the script.
 // Kit and pad 1 as in the script's reference drums screen (data/screens.json).
 var SAMPLE_DRUMS = ['Kick 909 1', 'Snare', 'Closed Hat', 'Open Hat', 'Clap', 'Rim', 'Low Tom', 'High Tom',
   'Crash', 'Ride', 'Shaker', 'Cowbell', 'Perc 1', 'Perc 2', 'FX', 'Bass'];

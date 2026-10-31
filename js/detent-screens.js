@@ -15,10 +15,10 @@ var DETENT_SCREENS = {
     {"MIKRO_CORNER": "", "MIKRO_LINE3": "Frequency", "MIKRO_LINE3_VALUE": "1.10 kHz", "MIKRO_TRACK_FLAGS": 0, "MIKRO_TRACK_LABEL": "", "SUBTITLE": "2-Bass", "TITLE": "AUTO"}
   ],
   "chords TURN": [
-    {"MIKRO_CORNER": "C Major", "MIKRO_LINE3": "Octave", "MIKRO_LINE3_VALUE": "C3", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "3", "SUBTITLE": "Triad Close  C Major", "TITLE": "3-Keys"},
-    {"MIKRO_CORNER": "C Major", "MIKRO_LINE3": "Octave", "MIKRO_LINE3_VALUE": "C4", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "3", "SUBTITLE": "Triad Close  C Major", "TITLE": "3-Keys"},
-    {"MIKRO_CORNER": "C Major", "MIKRO_LINE3": "Octave", "MIKRO_LINE3_VALUE": "C5", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "3", "SUBTITLE": "Triad Close  C Major", "TITLE": "3-Keys"},
-    {"MIKRO_CORNER": "C Major", "MIKRO_LINE3": "Octave", "MIKRO_LINE3_VALUE": "C6", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "3", "SUBTITLE": "Triad Close  C Major", "TITLE": "3-Keys"}
+    {"MIKRO_CORNER": "C Major", "MIKRO_LINE3": "Octave", "MIKRO_LINE3_VALUE": "C3", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "3", "SUBTITLE": "Triad Close  C Major", "TITLE": "Keys"},
+    {"MIKRO_CORNER": "C Major", "MIKRO_LINE3": "Octave", "MIKRO_LINE3_VALUE": "C4", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "3", "SUBTITLE": "Triad Close  C Major", "TITLE": "Keys"},
+    {"MIKRO_CORNER": "C Major", "MIKRO_LINE3": "Octave", "MIKRO_LINE3_VALUE": "C5", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "3", "SUBTITLE": "Triad Close  C Major", "TITLE": "Keys"},
+    {"MIKRO_CORNER": "C Major", "MIKRO_LINE3": "Octave", "MIKRO_LINE3_VALUE": "C6", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "3", "SUBTITLE": "Triad Close  C Major", "TITLE": "Keys"}
   ],
   "clip SHIFT + TURN": [
     {"MIKRO_CORNER": "T1-4 S1-4", "MIKRO_LINE3": "Drum Loop", "MIKRO_LINE3_VALUE": "", "MIKRO_TRACK_FLAGS": 0, "MIKRO_TRACK_LABEL": "", "SUBTITLE": "Tracks 1-4 Scenes 1-4", "TITLE": "Pattern"},
@@ -33,7 +33,7 @@ var DETENT_SCREENS = {
     {"MIKRO_CORNER": "T4-7 S1-4", "MIKRO_LINE3": "Drum Loop", "MIKRO_LINE3_VALUE": "", "MIKRO_TRACK_FLAGS": 0, "MIKRO_TRACK_LABEL": "", "SUBTITLE": "Tracks 4-7 Scenes 1-4", "TITLE": "Pattern"}
   ],
   "drum TURN": [
-    {"MIKRO_CORNER": "Kit-Core 909", "MIKRO_LINE3": "Kick 909 1", "MIKRO_LINE3_VALUE": "C1", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "1", "SUBTITLE": "Kit-Core 909", "TITLE": "1-Drums"},
+    {"MIKRO_CORNER": "Kit-Core 909", "MIKRO_LINE3": "Kick 909 1", "MIKRO_LINE3_VALUE": "C1", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "1", "SUBTITLE": "Kit-Core 909", "TITLE": "Drums"},
     {"popup": "Pads\nE1 - G2"},
     {"popup": "Pads\nG#1 - B2"},
     {"popup": "Pads\nC2 - D#3"}
@@ -45,22 +45,22 @@ var DETENT_SCREENS = {
     {"popup": "Pads\nC2 - D#3"}
   ],
   "keyboard PUSH + TURN": [
-    {"MIKRO_CORNER": "C Major", "MIKRO_LINE3": "Octave", "MIKRO_LINE3_VALUE": "C3", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "3", "SUBTITLE": "Keyboard  C Major", "TITLE": "3-Keys"},
-    {"MIKRO_CORNER": "C# Major", "MIKRO_LINE3": "Octave", "MIKRO_LINE3_VALUE": "C#3", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "3", "SUBTITLE": "Keyboard  C# Major", "TITLE": "3-Keys"},
-    {"MIKRO_CORNER": "D Major", "MIKRO_LINE3": "Octave", "MIKRO_LINE3_VALUE": "D3", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "3", "SUBTITLE": "Keyboard  D Major", "TITLE": "3-Keys"},
-    {"MIKRO_CORNER": "D# Major", "MIKRO_LINE3": "Octave", "MIKRO_LINE3_VALUE": "D#3", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "3", "SUBTITLE": "Keyboard  D# Major", "TITLE": "3-Keys"}
+    {"MIKRO_CORNER": "C Major", "MIKRO_LINE3": "Octave", "MIKRO_LINE3_VALUE": "C3", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "3", "SUBTITLE": "Keyboard  C Major", "TITLE": "Keys"},
+    {"MIKRO_CORNER": "C# Major", "MIKRO_LINE3": "Octave", "MIKRO_LINE3_VALUE": "C#3", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "3", "SUBTITLE": "Keyboard  C# Major", "TITLE": "Keys"},
+    {"MIKRO_CORNER": "D Major", "MIKRO_LINE3": "Octave", "MIKRO_LINE3_VALUE": "D3", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "3", "SUBTITLE": "Keyboard  D Major", "TITLE": "Keys"},
+    {"MIKRO_CORNER": "D# Major", "MIKRO_LINE3": "Octave", "MIKRO_LINE3_VALUE": "D#3", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "3", "SUBTITLE": "Keyboard  D# Major", "TITLE": "Keys"}
   ],
   "keyboard SHIFT + TURN": [
-    {"MIKRO_CORNER": "C Major", "MIKRO_LINE3": "Octave", "MIKRO_LINE3_VALUE": "C3", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "3", "SUBTITLE": "Keyboard  C Major", "TITLE": "3-Keys"},
-    {"MIKRO_CORNER": "C Minor", "MIKRO_LINE3": "Octave", "MIKRO_LINE3_VALUE": "C3", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "3", "SUBTITLE": "Keyboard  C Minor", "TITLE": "3-Keys"},
-    {"MIKRO_CORNER": "C Dorian", "MIKRO_LINE3": "Octave", "MIKRO_LINE3_VALUE": "C3", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "3", "SUBTITLE": "Keyboard  C Dorian", "TITLE": "3-Keys"},
-    {"MIKRO_CORNER": "C Mixolydian", "MIKRO_LINE3": "Octave", "MIKRO_LINE3_VALUE": "C3", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "3", "SUBTITLE": "Keyboard  C Mixolydian", "TITLE": "3-Keys"}
+    {"MIKRO_CORNER": "C Major", "MIKRO_LINE3": "Octave", "MIKRO_LINE3_VALUE": "C3", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "3", "SUBTITLE": "Keyboard  C Major", "TITLE": "Keys"},
+    {"MIKRO_CORNER": "C Minor", "MIKRO_LINE3": "Octave", "MIKRO_LINE3_VALUE": "C3", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "3", "SUBTITLE": "Keyboard  C Minor", "TITLE": "Keys"},
+    {"MIKRO_CORNER": "C Dorian", "MIKRO_LINE3": "Octave", "MIKRO_LINE3_VALUE": "C3", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "3", "SUBTITLE": "Keyboard  C Dorian", "TITLE": "Keys"},
+    {"MIKRO_CORNER": "C Mixolydian", "MIKRO_LINE3": "Octave", "MIKRO_LINE3_VALUE": "C3", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "3", "SUBTITLE": "Keyboard  C Mixolydian", "TITLE": "Keys"}
   ],
   "keyboard TURN": [
-    {"MIKRO_CORNER": "C Major", "MIKRO_LINE3": "Octave", "MIKRO_LINE3_VALUE": "C3", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "3", "SUBTITLE": "Keyboard  C Major", "TITLE": "3-Keys"},
-    {"MIKRO_CORNER": "C Major", "MIKRO_LINE3": "Octave", "MIKRO_LINE3_VALUE": "C4", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "3", "SUBTITLE": "Keyboard  C Major", "TITLE": "3-Keys"},
-    {"MIKRO_CORNER": "C Major", "MIKRO_LINE3": "Octave", "MIKRO_LINE3_VALUE": "C5", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "3", "SUBTITLE": "Keyboard  C Major", "TITLE": "3-Keys"},
-    {"MIKRO_CORNER": "C Major", "MIKRO_LINE3": "Octave", "MIKRO_LINE3_VALUE": "C6", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "3", "SUBTITLE": "Keyboard  C Major", "TITLE": "3-Keys"}
+    {"MIKRO_CORNER": "C Major", "MIKRO_LINE3": "Octave", "MIKRO_LINE3_VALUE": "C3", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "3", "SUBTITLE": "Keyboard  C Major", "TITLE": "Keys"},
+    {"MIKRO_CORNER": "C Major", "MIKRO_LINE3": "Octave", "MIKRO_LINE3_VALUE": "C4", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "3", "SUBTITLE": "Keyboard  C Major", "TITLE": "Keys"},
+    {"MIKRO_CORNER": "C Major", "MIKRO_LINE3": "Octave", "MIKRO_LINE3_VALUE": "C5", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "3", "SUBTITLE": "Keyboard  C Major", "TITLE": "Keys"},
+    {"MIKRO_CORNER": "C Major", "MIKRO_LINE3": "Octave", "MIKRO_LINE3_VALUE": "C6", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "3", "SUBTITLE": "Keyboard  C Major", "TITLE": "Keys"}
   ],
   "scene TURN": [
     {"MIKRO_CORNER": "1 - 4 of 4", "MIKRO_LINE3": "Intro", "MIKRO_LINE3_VALUE": "", "MIKRO_TRACK_FLAGS": 0, "MIKRO_TRACK_LABEL": "", "SUBTITLE": "1 - 4 of 4", "TITLE": "Scenes"},
@@ -69,7 +69,7 @@ var DETENT_SCREENS = {
     {"MIKRO_CORNER": "4 - 4 of 4", "MIKRO_LINE3": "Intro", "MIKRO_LINE3_VALUE": "", "MIKRO_TRACK_FLAGS": 0, "MIKRO_TRACK_LABEL": "", "SUBTITLE": "4 - 4 of 4", "TITLE": "Scenes"}
   ],
   "slicing TURN": [
-    {"MIKRO_CORNER": "Break 120 bpm", "MIKRO_LINE3": "Slice 1", "MIKRO_LINE3_VALUE": "C1", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "1", "SUBTITLE": "Break 120 bpm", "TITLE": "1-Drums"},
+    {"MIKRO_CORNER": "Break 120 bpm", "MIKRO_LINE3": "Slice 1", "MIKRO_LINE3_VALUE": "C1", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "1", "SUBTITLE": "Break 120 bpm", "TITLE": "Drums"},
     {"popup": "Slices\n5 - 20"},
     {"popup": "Slices\n9 - 24"},
     {"popup": "Slices\n13 - 28"}

@@ -6,97 +6,97 @@ var STEP_SCREENS = {
  "mikro": {
   "automation AUTO": [
     {"popup": "Automation Arm\nOn"},
-    {"MIKRO_CORNER": "Kit-Core 909", "MIKRO_LINE3": "Kick 909 1", "MIKRO_LINE3_VALUE": "C1", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "1", "SUBTITLE": "Kit-Core 909", "TITLE": "1-Drums"}
+    {"MIKRO_CORNER": "Kit-Core 909", "MIKRO_LINE3": "Kick 909 1", "MIKRO_LINE3_VALUE": "C1", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "1", "SUBTITLE": "Kit-Core 909", "TITLE": "Drums"}
   ],
   "chords CHORDS": [
     {"popup": "Chord\n7th"},
-    {"MIKRO_CORNER": "C Major", "MIKRO_LINE3": "Octave", "MIKRO_LINE3_VALUE": "C3", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "3", "SUBTITLE": "7th Close  C Major", "TITLE": "3-Keys"}
+    {"MIKRO_CORNER": "C Major", "MIKRO_LINE3": "Octave", "MIKRO_LINE3_VALUE": "C3", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "3", "SUBTITLE": "7th Close  C Major", "TITLE": "Keys"}
   ],
   "chords SHIFT + CHORDS": [
     {"popup": "Voicing\nInv 1"},
-    {"MIKRO_CORNER": "C Major", "MIKRO_LINE3": "Octave", "MIKRO_LINE3_VALUE": "C3", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "3", "SUBTITLE": "Triad Inv 1  C Major", "TITLE": "3-Keys"}
+    {"MIKRO_CORNER": "C Major", "MIKRO_LINE3": "Octave", "MIKRO_LINE3_VALUE": "C3", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "3", "SUBTITLE": "Triad Inv 1  C Major", "TITLE": "Keys"}
   ],
   "chords ◀ + ▶": [
-    {"MIKRO_CORNER": "C Major", "MIKRO_LINE3": "Root", "MIKRO_LINE3_VALUE": "C", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "3", "SUBTITLE": "Triad Close  C Major", "TITLE": "3-Keys"}
+    {"MIKRO_CORNER": "C Major", "MIKRO_LINE3": "Root", "MIKRO_LINE3_VALUE": "C", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "3", "SUBTITLE": "Triad Close  C Major", "TITLE": "Keys"}
   ],
   "drum DUPLICATE + PAD + PAD": [
     {"popup": "Copied\nKick 909 1 to C#1"},
-    {"MIKRO_CORNER": "Kit-Core 909", "MIKRO_LINE3": "Kick 909 1", "MIKRO_LINE3_VALUE": "C1", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "1", "SUBTITLE": "Kit-Core 909", "TITLE": "1-Drums"}
+    {"MIKRO_CORNER": "Kit-Core 909", "MIKRO_LINE3": "Kick 909 1", "MIKRO_LINE3_VALUE": "C1", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "1", "SUBTITLE": "Kit-Core 909", "TITLE": "Drums"}
   ],
   "drum ERASE + PAD": [
     {"popup": "Deleted\nKick 909 1"},
-    {"MIKRO_CORNER": "Kit-Core 909", "MIKRO_LINE3": "Kick 909 1", "MIKRO_LINE3_VALUE": "C1", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "1", "SUBTITLE": "Kit-Core 909", "TITLE": "1-Drums"}
+    {"MIKRO_CORNER": "Kit-Core 909", "MIKRO_LINE3": "Kick 909 1", "MIKRO_LINE3_VALUE": "C1", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "1", "SUBTITLE": "Kit-Core 909", "TITLE": "Drums"}
   ],
   "drum MUTE + PAD": [
     {"popup": "Mute\nSnare"},
-    {"MIKRO_CORNER": "Kit-Core 909", "MIKRO_LINE3": "Kick 909 1", "MIKRO_LINE3_VALUE": "C1", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "1", "SUBTITLE": "Kit-Core 909", "TITLE": "1-Drums"}
+    {"MIKRO_CORNER": "Kit-Core 909", "MIKRO_LINE3": "Kick 909 1", "MIKRO_LINE3_VALUE": "C1", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "1", "SUBTITLE": "Kit-Core 909", "TITLE": "Drums"}
   ],
   "drum PAD": [
-    {"MIKRO_CORNER": "Kit-Core 909", "MIKRO_LINE3": "Snare", "MIKRO_LINE3_VALUE": "C#1", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "1", "SUBTITLE": "Kit-Core 909", "TITLE": "1-Drums"}
+    {"MIKRO_CORNER": "Kit-Core 909", "MIKRO_LINE3": "Snare", "MIKRO_LINE3_VALUE": "C#1", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "1", "SUBTITLE": "Kit-Core 909", "TITLE": "Drums"}
   ],
   "drum PAD MODE": [
-    {"popup": "Pad colours\nBy chain colour"},
-    {"MIKRO_CORNER": "Kit-Core 909", "MIKRO_LINE3": "Kick 909 1", "MIKRO_LINE3_VALUE": "C1", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "1", "SUBTITLE": "Kit-Core 909", "TITLE": "1-Drums"}
+    {"popup": "Pad colours\nBy name"},
+    {"MIKRO_CORNER": "Kit-Core 909", "MIKRO_LINE3": "Kick 909 1", "MIKRO_LINE3_VALUE": "C1", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "1", "SUBTITLE": "Kit-Core 909", "TITLE": "Drums"}
   ],
   "drum SELECT + PAD": [
     {"popup": "Snare\nC#1"},
-    {"MIKRO_CORNER": "Kit-Core 909", "MIKRO_LINE3": "Kick 909 1", "MIKRO_LINE3_VALUE": "C1", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "1", "SUBTITLE": "Kit-Core 909", "TITLE": "1-Drums"}
+    {"MIKRO_CORNER": "Kit-Core 909", "MIKRO_LINE3": "Kick 909 1", "MIKRO_LINE3_VALUE": "C1", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "1", "SUBTITLE": "Kit-Core 909", "TITLE": "Drums"}
   ],
   "drum SHIFT + PAD MODE": [
     {"popup": "Velocity curve\nSoft: more sensitive"},
-    {"MIKRO_CORNER": "Kit-Core 909", "MIKRO_LINE3": "Kick 909 1", "MIKRO_LINE3_VALUE": "C1", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "1", "SUBTITLE": "Kit-Core 909", "TITLE": "1-Drums"}
+    {"MIKRO_CORNER": "Kit-Core 909", "MIKRO_LINE3": "Kick 909 1", "MIKRO_LINE3_VALUE": "C1", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "1", "SUBTITLE": "Kit-Core 909", "TITLE": "Drums"}
   ],
   "drum SOLO + PAD": [
     {"popup": "Solo\nSnare"},
-    {"MIKRO_CORNER": "Kit-Core 909", "MIKRO_LINE3": "Kick 909 1", "MIKRO_LINE3_VALUE": "C1", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "1", "SUBTITLE": "Kit-Core 909", "TITLE": "1-Drums"}
+    {"MIKRO_CORNER": "Kit-Core 909", "MIKRO_LINE3": "Kick 909 1", "MIKRO_LINE3_VALUE": "C1", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "1", "SUBTITLE": "Kit-Core 909", "TITLE": "Drums"}
   ],
   "drum ◀ + ▶": [
-    {"MIKRO_CORNER": "Kit-Core 909", "MIKRO_LINE3": "Snare", "MIKRO_LINE3_VALUE": "C#1", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "1", "SUBTITLE": "Kit-Core 909", "TITLE": "1-Drums"}
+    {"MIKRO_CORNER": "Kit-Core 909", "MIKRO_LINE3": "Snare", "MIKRO_LINE3_VALUE": "C#1", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "1", "SUBTITLE": "Kit-Core 909", "TITLE": "Drums"}
   ],
   "edit DUPLICATE": [
     {"popup": "Duplicated\nDrum Loop"},
-    {"MIKRO_CORNER": "Kit-Core 909", "MIKRO_LINE3": "Kick 909 1", "MIKRO_LINE3_VALUE": "C1", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "1", "SUBTITLE": "Kit-Core 909", "TITLE": "1-Drums"}
+    {"MIKRO_CORNER": "Kit-Core 909", "MIKRO_LINE3": "Kick 909 1", "MIKRO_LINE3_VALUE": "C1", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "1", "SUBTITLE": "Kit-Core 909", "TITLE": "Drums"}
   ],
   "edit ERASE": [
     {"popup": "ERASE\nHold + pad to erase"},
-    {"MIKRO_CORNER": "Kit-Core 909", "MIKRO_LINE3": "Kick 909 1", "MIKRO_LINE3_VALUE": "C1", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "1", "SUBTITLE": "Kit-Core 909", "TITLE": "1-Drums"}
+    {"MIKRO_CORNER": "Kit-Core 909", "MIKRO_LINE3": "Kick 909 1", "MIKRO_LINE3_VALUE": "C1", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "1", "SUBTITLE": "Kit-Core 909", "TITLE": "Drums"}
   ],
   "edit MUTE": [
-    {"MIKRO_CORNER": "Kit-Core 909", "MIKRO_LINE3": "Kick 909 1", "MIKRO_LINE3_VALUE": "C1", "MIKRO_TRACK_FLAGS": 5, "MIKRO_TRACK_LABEL": "1", "SUBTITLE": "Kit-Core 909", "TITLE": "1-Drums"}
+    {"MIKRO_CORNER": "Kit-Core 909", "MIKRO_LINE3": "Kick 909 1", "MIKRO_LINE3_VALUE": "C1", "MIKRO_TRACK_FLAGS": 5, "MIKRO_TRACK_LABEL": "1", "SUBTITLE": "Kit-Core 909", "TITLE": "Drums"}
   ],
   "edit SHIFT + DUPLICATE": [
     {"popup": "Doubled\n2 bars"},
-    {"MIKRO_CORNER": "Kit-Core 909", "MIKRO_LINE3": "Kick 909 1", "MIKRO_LINE3_VALUE": "C1", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "1", "SUBTITLE": "Kit-Core 909", "TITLE": "1-Drums"}
+    {"MIKRO_CORNER": "Kit-Core 909", "MIKRO_LINE3": "Kick 909 1", "MIKRO_LINE3_VALUE": "C1", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "1", "SUBTITLE": "Kit-Core 909", "TITLE": "Drums"}
   ],
   "edit SHIFT + MUTE": [
     {"popup": "All tracks\nUnmuted, unsoloed"},
-    {"MIKRO_CORNER": "Kit-Core 909", "MIKRO_LINE3": "Kick 909 1", "MIKRO_LINE3_VALUE": "C1", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "1", "SUBTITLE": "Kit-Core 909", "TITLE": "1-Drums"}
+    {"MIKRO_CORNER": "Kit-Core 909", "MIKRO_LINE3": "Kick 909 1", "MIKRO_LINE3_VALUE": "C1", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "1", "SUBTITLE": "Kit-Core 909", "TITLE": "Drums"}
   ],
   "edit SOLO": [
-    {"MIKRO_CORNER": "Kit-Core 909", "MIKRO_LINE3": "Kick 909 1", "MIKRO_LINE3_VALUE": "C1", "MIKRO_TRACK_FLAGS": 6, "MIKRO_TRACK_LABEL": "1", "SUBTITLE": "Kit-Core 909", "TITLE": "1-Drums"}
+    {"MIKRO_CORNER": "Kit-Core 909", "MIKRO_LINE3": "Kick 909 1", "MIKRO_LINE3_VALUE": "C1", "MIKRO_TRACK_FLAGS": 6, "MIKRO_TRACK_LABEL": "1", "SUBTITLE": "Kit-Core 909", "TITLE": "Drums"}
   ],
   "events ERASE + EVENTS": [
     {"popup": "Cleared\n26 notes"},
-    {"MIKRO_CORNER": "Kit-Core 909", "MIKRO_LINE3": "Kick 909 1", "MIKRO_LINE3_VALUE": "C1", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "1", "SUBTITLE": "Kit-Core 909", "TITLE": "1-Drums"}
+    {"MIKRO_CORNER": "Kit-Core 909", "MIKRO_LINE3": "Kick 909 1", "MIKRO_LINE3_VALUE": "C1", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "1", "SUBTITLE": "Kit-Core 909", "TITLE": "Drums"}
   ],
   "events EVENTS": [
     {"popup": "Selected\nAll notes"},
-    {"MIKRO_CORNER": "Kit-Core 909", "MIKRO_LINE3": "Kick 909 1", "MIKRO_LINE3_VALUE": "C1", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "1", "SUBTITLE": "Kit-Core 909", "TITLE": "1-Drums"}
+    {"MIKRO_CORNER": "Kit-Core 909", "MIKRO_LINE3": "Kick 909 1", "MIKRO_LINE3_VALUE": "C1", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "1", "SUBTITLE": "Kit-Core 909", "TITLE": "Drums"}
   ],
   "events SHIFT + VARIATION": [
     {"popup": "Random velocity\nall notes"},
-    {"MIKRO_CORNER": "Kit-Core 909", "MIKRO_LINE3": "Kick 909 1", "MIKRO_LINE3_VALUE": "C1", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "1", "SUBTITLE": "Kit-Core 909", "TITLE": "1-Drums"}
+    {"MIKRO_CORNER": "Kit-Core 909", "MIKRO_LINE3": "Kick 909 1", "MIKRO_LINE3_VALUE": "C1", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "1", "SUBTITLE": "Kit-Core 909", "TITLE": "Drums"}
   ],
   "events VARIATION": [
     {"popup": "Humanized\nall notes"},
-    {"MIKRO_CORNER": "Kit-Core 909", "MIKRO_LINE3": "Kick 909 1", "MIKRO_LINE3_VALUE": "C1", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "1", "SUBTITLE": "Kit-Core 909", "TITLE": "1-Drums"}
+    {"MIKRO_CORNER": "Kit-Core 909", "MIKRO_LINE3": "Kick 909 1", "MIKRO_LINE3_VALUE": "C1", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "1", "SUBTITLE": "Kit-Core 909", "TITLE": "Drums"}
   ],
   "keyboard SHIFT + KEYBOARD": [
     {"popup": "Layout\nChromatic"},
-    {"MIKRO_CORNER": "C Major", "MIKRO_LINE3": "Octave", "MIKRO_LINE3_VALUE": "C3", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "3", "SUBTITLE": "Keyboard  C Major", "TITLE": "3-Keys"}
+    {"MIKRO_CORNER": "C Major", "MIKRO_LINE3": "Octave", "MIKRO_LINE3_VALUE": "C3", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "3", "SUBTITLE": "Keyboard  C Major", "TITLE": "Keys"}
   ],
   "keyboard ◀ + ▶": [
-    {"MIKRO_CORNER": "C Major", "MIKRO_LINE3": "Root", "MIKRO_LINE3_VALUE": "C", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "3", "SUBTITLE": "Keyboard  C Major", "TITLE": "3-Keys"}
+    {"MIKRO_CORNER": "C Major", "MIKRO_LINE3": "Root", "MIKRO_LINE3_VALUE": "C", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "3", "SUBTITLE": "Keyboard  C Major", "TITLE": "Keys"}
   ],
   "master SWING + TURN": [
     {"MIKRO_CORNER": "", "MIKRO_LINE3": "0 %", "MIKRO_LINE3_VALUE": "", "MIKRO_TRACK_FLAGS": 0, "MIKRO_TRACK_LABEL": "", "SUBTITLE": "1-Drums", "TITLE": "Swing"},
@@ -111,72 +111,72 @@ var STEP_SCREENS = {
     {"MIKRO_CORNER": "", "MIKRO_LINE3": "123.00 BPM", "MIKRO_LINE3_VALUE": "", "MIKRO_TRACK_FLAGS": 0, "MIKRO_TRACK_LABEL": "", "SUBTITLE": "1-Drums", "TITLE": "Tempo"}
   ],
   "master VOLUME + PUSH": [
-    {"MIKRO_CORNER": "", "MIKRO_FILL": 98, "MIKRO_LINE3": "Volume", "MIKRO_LINE3_VALUE": "-3.0 dB", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "1", "SUBTITLE": "1-Drums", "TITLE": "1-Drums"},
-    {"MIKRO_CORNER": "", "MIKRO_FILL": 107, "MIKRO_LINE3": "Volume", "MIKRO_LINE3_VALUE": "0.0 dB", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "1", "SUBTITLE": "1-Drums", "TITLE": "1-Drums"}
+    {"MIKRO_CORNER": "", "MIKRO_FILL": 98, "MIKRO_LINE3": "Volume", "MIKRO_LINE3_VALUE": "-3.0 dB", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "1", "SUBTITLE": "1-Drums", "TITLE": "Drums"},
+    {"MIKRO_CORNER": "", "MIKRO_FILL": 107, "MIKRO_LINE3": "Volume", "MIKRO_LINE3_VALUE": "0.0 dB", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "1", "SUBTITLE": "1-Drums", "TITLE": "Drums"}
   ],
   "playing MOD": [
     {"popup": "Touch strip\nModulation"},
-    {"MIKRO_CORNER": "Kit-Core 909", "MIKRO_LINE3": "Kick 909 1", "MIKRO_LINE3_VALUE": "C1", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "1", "SUBTITLE": "Kit-Core 909", "TITLE": "1-Drums"}
+    {"MIKRO_CORNER": "Kit-Core 909", "MIKRO_LINE3": "Kick 909 1", "MIKRO_LINE3_VALUE": "C1", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "1", "SUBTITLE": "Kit-Core 909", "TITLE": "Drums"}
   ],
   "playing PITCH": [
     {"popup": "Touch strip\nPitch bend"},
-    {"MIKRO_CORNER": "Kit-Core 909", "MIKRO_LINE3": "Kick 909 1", "MIKRO_LINE3_VALUE": "C1", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "1", "SUBTITLE": "Kit-Core 909", "TITLE": "1-Drums"}
+    {"MIKRO_CORNER": "Kit-Core 909", "MIKRO_LINE3": "Kick 909 1", "MIKRO_LINE3_VALUE": "C1", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "1", "SUBTITLE": "Kit-Core 909", "TITLE": "Drums"}
   ],
   "playing SHIFT + NOTE REPEAT": [
     {"popup": "NOTE REPEAT\nArpeggiator"},
-    {"MIKRO_CORNER": "Kit-Core 909", "MIKRO_LINE3": "Kick 909 1", "MIKRO_LINE3_VALUE": "C1", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "1", "SUBTITLE": "Kit-Core 909", "TITLE": "1-Drums"}
+    {"MIKRO_CORNER": "Kit-Core 909", "MIKRO_LINE3": "Kick 909 1", "MIKRO_LINE3_VALUE": "C1", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "1", "SUBTITLE": "Kit-Core 909", "TITLE": "Drums"}
   ],
   "shift-pads SHIFT + PAD 11": [
     {"popup": "Copied\nAll notes"},
-    {"MIKRO_CORNER": "Kit-Core 909", "MIKRO_LINE3": "Kick 909 1", "MIKRO_LINE3_VALUE": "C1", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "1", "SUBTITLE": "Kit-Core 909", "TITLE": "1-Drums"}
+    {"MIKRO_CORNER": "Kit-Core 909", "MIKRO_LINE3": "Kick 909 1", "MIKRO_LINE3_VALUE": "C1", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "1", "SUBTITLE": "Kit-Core 909", "TITLE": "Drums"}
   ],
   "shift-pads SHIFT + PAD 12": [
     {"popup": "Pasted\n26 notes"},
-    {"MIKRO_CORNER": "Kit-Core 909", "MIKRO_LINE3": "Kick 909 1", "MIKRO_LINE3_VALUE": "C1", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "1", "SUBTITLE": "Kit-Core 909", "TITLE": "1-Drums"}
+    {"MIKRO_CORNER": "Kit-Core 909", "MIKRO_LINE3": "Kick 909 1", "MIKRO_LINE3_VALUE": "C1", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "1", "SUBTITLE": "Kit-Core 909", "TITLE": "Drums"}
   ],
   "shift-pads SHIFT + PAD 13": [
     {"popup": "Transpose Down\nAll notes"},
-    {"MIKRO_CORNER": "Kit-Core 909", "MIKRO_LINE3": "Kick 909 1", "MIKRO_LINE3_VALUE": "C1", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "1", "SUBTITLE": "Kit-Core 909", "TITLE": "1-Drums"}
+    {"MIKRO_CORNER": "Kit-Core 909", "MIKRO_LINE3": "Kick 909 1", "MIKRO_LINE3_VALUE": "C1", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "1", "SUBTITLE": "Kit-Core 909", "TITLE": "Drums"}
   ],
   "shift-pads SHIFT + PAD 14": [
     {"popup": "Transpose Up\nAll notes"},
-    {"MIKRO_CORNER": "Kit-Core 909", "MIKRO_LINE3": "Kick 909 1", "MIKRO_LINE3_VALUE": "C1", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "1", "SUBTITLE": "Kit-Core 909", "TITLE": "1-Drums"}
+    {"MIKRO_CORNER": "Kit-Core 909", "MIKRO_LINE3": "Kick 909 1", "MIKRO_LINE3_VALUE": "C1", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "1", "SUBTITLE": "Kit-Core 909", "TITLE": "Drums"}
   ],
   "shift-pads SHIFT + PAD 15": [
     {"popup": "Transpose Octave -\nAll notes"},
-    {"MIKRO_CORNER": "Kit-Core 909", "MIKRO_LINE3": "Kick 909 1", "MIKRO_LINE3_VALUE": "C1", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "1", "SUBTITLE": "Kit-Core 909", "TITLE": "1-Drums"}
+    {"MIKRO_CORNER": "Kit-Core 909", "MIKRO_LINE3": "Kick 909 1", "MIKRO_LINE3_VALUE": "C1", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "1", "SUBTITLE": "Kit-Core 909", "TITLE": "Drums"}
   ],
   "shift-pads SHIFT + PAD 16": [
     {"popup": "Transpose Octave +\nAll notes"},
-    {"MIKRO_CORNER": "Kit-Core 909", "MIKRO_LINE3": "Kick 909 1", "MIKRO_LINE3_VALUE": "C1", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "1", "SUBTITLE": "Kit-Core 909", "TITLE": "1-Drums"}
+    {"MIKRO_CORNER": "Kit-Core 909", "MIKRO_LINE3": "Kick 909 1", "MIKRO_LINE3_VALUE": "C1", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "1", "SUBTITLE": "Kit-Core 909", "TITLE": "Drums"}
   ],
   "shift-pads SHIFT + PAD 3": [
     {"popup": "Step undo\nNothing to undo"},
-    {"MIKRO_CORNER": "Kit-Core 909", "MIKRO_LINE3": "Kick 909 1", "MIKRO_LINE3_VALUE": "C1", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "1", "SUBTITLE": "Kit-Core 909", "TITLE": "1-Drums"}
+    {"MIKRO_CORNER": "Kit-Core 909", "MIKRO_LINE3": "Kick 909 1", "MIKRO_LINE3_VALUE": "C1", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "1", "SUBTITLE": "Kit-Core 909", "TITLE": "Drums"}
   ],
   "shift-pads SHIFT + PAD 4": [
     {"popup": "Step redo\nNothing to redo"},
-    {"MIKRO_CORNER": "Kit-Core 909", "MIKRO_LINE3": "Kick 909 1", "MIKRO_LINE3_VALUE": "C1", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "1", "SUBTITLE": "Kit-Core 909", "TITLE": "1-Drums"}
+    {"MIKRO_CORNER": "Kit-Core 909", "MIKRO_LINE3": "Kick 909 1", "MIKRO_LINE3_VALUE": "C1", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "1", "SUBTITLE": "Kit-Core 909", "TITLE": "Drums"}
   ],
   "shift-pads SHIFT + PAD 5": [
     {"popup": "Quantized 100%\nAll notes"},
-    {"MIKRO_CORNER": "Kit-Core 909", "MIKRO_LINE3": "Kick 909 1", "MIKRO_LINE3_VALUE": "C1", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "1", "SUBTITLE": "Kit-Core 909", "TITLE": "1-Drums"}
+    {"MIKRO_CORNER": "Kit-Core 909", "MIKRO_LINE3": "Kick 909 1", "MIKRO_LINE3_VALUE": "C1", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "1", "SUBTITLE": "Kit-Core 909", "TITLE": "Drums"}
   ],
   "shift-pads SHIFT + PAD 6": [
     {"popup": "Quantized 50%\nAll notes"},
-    {"MIKRO_CORNER": "Kit-Core 909", "MIKRO_LINE3": "Kick 909 1", "MIKRO_LINE3_VALUE": "C1", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "1", "SUBTITLE": "Kit-Core 909", "TITLE": "1-Drums"}
+    {"MIKRO_CORNER": "Kit-Core 909", "MIKRO_LINE3": "Kick 909 1", "MIKRO_LINE3_VALUE": "C1", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "1", "SUBTITLE": "Kit-Core 909", "TITLE": "Drums"}
   ],
   "shift-pads SHIFT + PAD 7": [
     {"popup": "Nudged\nAll notes"},
-    {"MIKRO_CORNER": "Kit-Core 909", "MIKRO_LINE3": "Kick 909 1", "MIKRO_LINE3_VALUE": "C1", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "1", "SUBTITLE": "Kit-Core 909", "TITLE": "1-Drums"}
+    {"MIKRO_CORNER": "Kit-Core 909", "MIKRO_LINE3": "Kick 909 1", "MIKRO_LINE3_VALUE": "C1", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "1", "SUBTITLE": "Kit-Core 909", "TITLE": "Drums"}
   ],
   "shift-pads SHIFT + PAD 8": [
     {"popup": "Nudged\nAll notes"},
-    {"MIKRO_CORNER": "Kit-Core 909", "MIKRO_LINE3": "Kick 909 1", "MIKRO_LINE3_VALUE": "C1", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "1", "SUBTITLE": "Kit-Core 909", "TITLE": "1-Drums"}
+    {"MIKRO_CORNER": "Kit-Core 909", "MIKRO_LINE3": "Kick 909 1", "MIKRO_LINE3_VALUE": "C1", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "1", "SUBTITLE": "Kit-Core 909", "TITLE": "Drums"}
   ],
   "shift-pads SHIFT + PAD 9": [
     {"popup": "Cleared\nAll notes"},
-    {"MIKRO_CORNER": "Kit-Core 909", "MIKRO_LINE3": "Kick 909 1", "MIKRO_LINE3_VALUE": "C1", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "1", "SUBTITLE": "Kit-Core 909", "TITLE": "1-Drums"}
+    {"MIKRO_CORNER": "Kit-Core 909", "MIKRO_LINE3": "Kick 909 1", "MIKRO_LINE3_VALUE": "C1", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "1", "SUBTITLE": "Kit-Core 909", "TITLE": "Drums"}
   ],
   "step SELECT + PAD": [
     {"MIKRO_CORNER": "", "MIKRO_LINE3": "Page 1/2  1/16", "MIKRO_LINE3_VALUE": "C#1", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "1", "SUBTITLE": "Step Snare", "TITLE": "Snare"}
@@ -187,19 +187,19 @@ var STEP_SCREENS = {
   ],
   "transport FOLLOW": [
     {"popup": "Follow\nOn"},
-    {"MIKRO_CORNER": "Kit-Core 909", "MIKRO_LINE3": "Kick 909 1", "MIKRO_LINE3_VALUE": "C1", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "1", "SUBTITLE": "Kit-Core 909", "TITLE": "1-Drums"}
+    {"MIKRO_CORNER": "Kit-Core 909", "MIKRO_LINE3": "Kick 909 1", "MIKRO_LINE3_VALUE": "C1", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "1", "SUBTITLE": "Kit-Core 909", "TITLE": "Drums"}
   ],
   "transport SHIFT + REC": [
     {"popup": "Arrangement\nRecord on"},
-    {"MIKRO_CORNER": "Kit-Core 909", "MIKRO_LINE3": "Kick 909 1", "MIKRO_LINE3_VALUE": "C1", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "1", "SUBTITLE": "Kit-Core 909", "TITLE": "1-Drums"}
+    {"MIKRO_CORNER": "Kit-Core 909", "MIKRO_LINE3": "Kick 909 1", "MIKRO_LINE3_VALUE": "C1", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "1", "SUBTITLE": "Kit-Core 909", "TITLE": "Drums"}
   ],
   "transport SHIFT + STOP": [
     {"popup": "Stop\nAll clips"},
-    {"MIKRO_CORNER": "Kit-Core 909", "MIKRO_LINE3": "Kick 909 1", "MIKRO_LINE3_VALUE": "C1", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "1", "SUBTITLE": "Kit-Core 909", "TITLE": "1-Drums"}
+    {"MIKRO_CORNER": "Kit-Core 909", "MIKRO_LINE3": "Kick 909 1", "MIKRO_LINE3_VALUE": "C1", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "1", "SUBTITLE": "Kit-Core 909", "TITLE": "Drums"}
   ],
   "views SAMPLING": [
     {"popup": "Sampling\nEmpty Simpler added"},
-    {"MIKRO_CORNER": "Kit-Core 909", "MIKRO_LINE3": "Kick 909 1", "MIKRO_LINE3_VALUE": "C1", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "1", "SUBTITLE": "Kit-Core 909", "TITLE": "1-Drums"}
+    {"MIKRO_CORNER": "Kit-Core 909", "MIKRO_LINE3": "Kick 909 1", "MIKRO_LINE3_VALUE": "C1", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "1", "SUBTITLE": "Kit-Core 909", "TITLE": "Drums"}
   ]
  },
  "mk3": {

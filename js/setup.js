@@ -757,7 +757,7 @@ MM.setup = (function () {
       });
       node.appendChild(wrap);
     });
-    // the sections of their own (upgrading to the full edition): once, after every route
+    // the sections of their own (updating, upgrading to the full edition): once, after every route
     state.sections.forEach(function (step) {
       var stepCtx = narrow(step.when, ctx);
       if (!stepCtx) return;
@@ -768,6 +768,8 @@ MM.setup = (function () {
         var n = printBlock(b, stepCtx);
         if (n) body.appendChild(n);
       });
+      var fig = stepFigure(step, stepCtx);  // updating: delete the old folders, then copy the new ones
+      if (fig) body.appendChild(fig.node);
       node.appendChild(h('section', { className: 'pd-section' }, [
         h('h2', { className: 'pd-section-title', text: title }),
         h('article', { className: 'pd-step' }, [body])

@@ -44,7 +44,9 @@ MM.tourShow = (function () {
     var base = (start && start['^']) || (mode && screens[mode]) || spec.screen;
     // a section about no mode of its own (transport, edit ...): the controller as it starts, the
     // drum pads, as its screen shows them
-    var baseDemo = mode ? demos[mode] || null : section ? demos['PAD MODE'] || null : null;
+    // (a section whose pads are its own whatever the combo, SECTION_PADS '*': the slices, the mixer)
+    var own = section && SECTION_PADS[section.id] && SECTION_PADS[section.id]['*'];
+    var baseDemo = own ? demos[own] || null : mode ? demos[mode] || null : section ? demos['PAD MODE'] || null : null;
     var result = section ? MM.manual.sectionScreen(device, combo, section, step.context) : null;
     // a context that names a mode (KNOB in KEYBOARD): that mode's screen, not the token's own
     if (!result && step.context && screens[step.context]) result = screens[step.context];

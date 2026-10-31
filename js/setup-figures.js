@@ -132,8 +132,8 @@ MM.setupFigures = (function () {
       return { node: h('figure', { className: 'sf sf-copy' }, [h('div', { className: 'sf-flow' }, [before, arrow, after])]) };
     } },
 
-    // The controller: its screen while it waits, once connected, and About.
-    check: { make: function (env) {
+    // Start Live: the controller's screen while it waits, once connected, and About.
+    start: { make: function (env) {
       if (env.drawingDevice !== 'mikro') return null;  // the waiting page is drawn for the MIKRO's screen
       var layout = LAYOUTS[env.drawingDevice];
       var drawing = h('div', {}, [

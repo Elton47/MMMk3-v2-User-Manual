@@ -71,3 +71,30 @@ test('mk3: SCENE has its own screens, not PATTERN\'s', () => {
   const screens = ctx.LAYOUTS.mk3.screens;
   assert.notStrictEqual(screens.SCENE.anim, screens.PATTERN.anim);
 });
+
+// Elton, 2026-10-31: the slicing pages showed PAD MODE's drum page and the MASCHINE drum colours on the
+// pads. A sliced Simpler's pads are its slices in the track's colour (drum.py _slice_colors), and the MK3's
+// PAD MODE / PAD pages play the PLUG-IN Slicing showcase.
+for (const device of ['mikro', 'mk3']) {
+  test(device + ': the slicing pages show slices on the pads, never the drum pads', () => {
+    const section = h.DATA.sections.find((s) => s.id === 'slicing');
+    const drums = ctx.SAMPLE_TRACKS[0].color;
+    const failures = [];
+    const demo = ctx.LAYOUTS[device].padDemos.SLICES;
+    if (demo.some((p) => !p || p.drum || p.color !== drums)) failures.push('SLICES: the track colour, no drum names');
+    section.items.filter((item) => !item.devices || item.devices.includes(device)).forEach((item) => {
+      const step = { combo: item.combo, does: item.does, context: item.context || null, values: null, section };
+      const r = h.play(ctx, step, device);
+      r.pads.filter(Boolean).forEach((list) => list.forEach((p) => {
+        if (p && p.drum) failures.push(item.combo.join('+') + ': drum pad ' + p.drum);
+      }));
+      if (device === 'mk3' && ['PAD MODE', 'PAD'].includes(item.combo[0]) &&
+          r.screens.some((s) => s === ctx.LAYOUTS.mk3.screens['PAD MODE'])) failures.push(item.combo.join('+') + ': PAD MODE screen');
+    });
+    assert.deepStrictEqual([...new Set(failures)], []);
+  });
+}
+
+test('the slicing section lights its pads as slices in the full manual', () => {
+  assert.strictEqual(ctx.SECTION_PADS.slicing['*'], 'SLICES');
+});

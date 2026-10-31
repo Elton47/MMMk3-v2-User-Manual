@@ -280,8 +280,8 @@ var STEP_SCREENS = {
     "press-drum-mute-pad-1"
   ],
   "events EVENTS + ERASE + PAD": [
-    "press-events-events-erase-pad-0",
-    "press-mk3-stop-group-a-h-1"
+    "press-drum-erase-pad-0",
+    "press-drum-mute-pad-1"
   ],
   "events KNOB (knobs 5-8, the notes pages)": [
     "press-events-knob-knobs-5-8-the-notes-pages-0"
@@ -310,14 +310,14 @@ var STEP_SCREENS = {
   ],
   "mk3 DUPLICATE + GROUP A-H": [
     "press-mk3-duplicate-group-a-h-0",
-    "press-mk3-stop-group-a-h-1"
+    "press-drum-mute-pad-1"
   ],
   "mk3 MACRO": [
     "press-mk3-macro-0"
   ],
   "mk3 SHIFT + FILE": [
     "press-mk3-shift-file-0",
-    "press-drum-mute-pad-1"
+    "press-mk3-shift-file-1"
   ],
   "mk3 SHIFT + GROUP A-H": [
     "press-mk3-shift-group-a-h-0",
@@ -329,7 +329,7 @@ var STEP_SCREENS = {
   ],
   "mk3 STOP + GROUP A-H": [
     "press-mk3-stop-group-a-h-0",
-    "press-mk3-stop-group-a-h-1"
+    "press-drum-mute-pad-1"
   ],
   "playing FIXED VEL": [
     "press-playing-fixed-vel-0",

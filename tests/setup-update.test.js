@@ -56,10 +56,11 @@ test('no release-day switch, no activation step, no activation button', () => {
   }
 });
 
-test('the setup\'s last step says the controller asks for the key, next to the info icon', () => {
+test('the setup\'s Start Live step says the controller asks for the key, next to the info icon', () => {
   const wizard = INSTALL.steps.filter((s) => (s.place || 'wizard') === 'wizard');
-  const done = wizard.find((s) => s.id === 'done');
-  const notes = done.body.filter((b) => b.note !== undefined && (b.kind || 'info') === 'info');
+  assert.deepStrictEqual(wizard.map((s) => s.id), ['live11', 'before', 'copy', 'start', 'troubleshooting', 'done']);
+  const start = wizard.find((s) => s.id === 'start');
+  const notes = start.body.filter((b) => b.note !== undefined && (b.kind || 'info') === 'info');
   const licence = notes.filter((b) => /licence key/.test(b.note));
   assert.strictEqual(licence.length, 1);
   assert.doesNotMatch(licence[0].note, /;/);
@@ -72,9 +73,9 @@ test('the setup\'s last step says the controller asks for the key, next to the i
 
 test('upgrading to the full edition is a section of its own, always shown', () => {
   const sections = INSTALL.steps.filter((s) => s.place === 'section');
-  assert.deepStrictEqual(sections.map((s) => s.id), ['full_edition']);
-  assert.strictEqual(sections[0].when, undefined);
-  const text = JSON.stringify(sections[0]);
+  assert.deepStrictEqual(sections.map((s) => s.id), ['update', 'full_edition']);
+  sections.forEach((s) => assert.strictEqual(s.when, undefined));
+  const text = JSON.stringify(sections[1]);
   assert.match(text, /\*\*Licence\*\*/);
   assert.doesNotMatch(text, /open the activation page|Connect/);
   const setup = read('js/setup.js');

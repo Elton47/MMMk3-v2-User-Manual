@@ -551,13 +551,13 @@ var TOUR_SHOWS = (function () {
     duration: 6000,
     tick: function (n, api) {
       var hit = n % 16, pads = [];
-      for (var i = 0; i < 16; i++) pads.push(api.lit(keys.color, i === hit ? 'bright' : 'dim'));
+      for (var i = 0; i < 16; i++) pads.push(api.lit(sliced.color, i === hit ? 'bright' : 'dim'));
       api.light(['PAD MODE']);
       api.pads(pads);
       api.show(((api.layout.sectionScreens || {}).slicing || {})['*']);
     }
   };
-  var keys = SAMPLE_TRACKS[2];
+  var keys = SAMPLE_TRACKS[2], sliced = SAMPLE_TRACKS[0];  // the sliced break is on 1-Drums
 
   return {
     'mixer-mk3': {},
@@ -567,9 +567,13 @@ var TOUR_SHOWS = (function () {
     },
     'drum-synths': cueFor('DRUM SYNTHS'),
     'slicing': function (step, device) {
-      // the MK3: PLUG-IN shows Slicing's picture (the showcase); PAD MODE's page has the slices on its
-      // pads (layouts.js sectionScreens: the script's page, TURN detent by detent)
-      if (device === 'mk3') return step.context === 'Slicing' ? cueFor('SLICING', ['PLUG-IN'])(step, device) : null;
+      // the MK3: the slices on the pads and PLUG-IN's Slicing picture following them (the showcase:
+      // Elton 2026-10-31, not the drum page); the knob page and TURN show PAD MODE's page with the
+      // slices on its pads (layouts.js sectionScreens: the script's page, TURN detent by detent)
+      if (device === 'mk3') {
+        var first = step.combo[0];
+        return step.context === 'Slicing' || first === 'PAD MODE' || first === 'PAD' ? cueFor('SLICING', ['PLUG-IN'])(step, device) : null;
+      }
       return step.combo[0] === 'PAD MODE' || step.combo[0] === 'PAD' ? slicesPads : null;
     },
     'kits-mk3': cueFor('KITS', ['BROWSER']),

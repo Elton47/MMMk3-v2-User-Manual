@@ -9,7 +9,7 @@
     "blocks (one type key each, plus an optional 'when'): p, h (sub-heading), ol / ul (list of strings), note + optional kind (info | important | coming), copy (list of {label, value}: exact strings with a copy button), table (list of [label, value]), faq (list of {q, a: [strings], when}), actions (list of {label, href, primary}).",
     "Inline markup in any string: **bold**, `code`, [text](href), [[BUTTON]] (a hardware button), {{var}}. An href starting with # points into the manual site.",
     "guide: the sections of the Markdown guide, one per route, each with the 'when' that picks its steps.",
-    "Activation (Elton, 2026-10-26): no step. The controller asks for the key by itself, and the setup's last step says so in a note. The manual's header has no Licence link: activate.html is reached only by its own link (the controller's encoder press, SETTINGS > Licence).",
+    "Activation (Elton, 2026-10-26): no step. The controller asks for the key by itself, and the Start Live step says so in a note (Elton, 2026-10-31: the setup is only the steps that matter). The manual's header has no Licence link: activate.html is reached only by its own link (the controller's encoder press, SETTINGS > Licence).",
     "Windows: zero install (src/_MaschineCore/zero_install.py). Live loads the script by itself on NI's own port for the controller. The customer sets nothing in Live's MIDI settings. tests/test_install_guide_zero_install.py checks the names and messages against the code."
   ],
   "version": 1,
@@ -143,8 +143,9 @@
         {"ol": [
           "Connect your controller by USB.",
           "Start Live.",
-          "That's it. Live finds the script by itself, and the controller's screen and pads light up."
+          "While Live starts, the controller's screen says **Waiting for Live**. Then it shows Live's screen and the pads light up. Live finds the script by itself."
         ]},
+        {"note": "The first time on this computer, the controller asks for your licence key. Press the encoder and enter the key in the page that opens. You do this only once."},
         {"p": "You don't set anything in Live's MIDI settings. Live picks up the script on the controller's own NI port and remembers it.", "when": {"os": ["win11"]}},
         {"note": "In Live's **Settings → Link, Tempo & MIDI** you can see it: the Control Surface **{{surface}}**, with Input and Output **{{ni_port}}**. Leave that row as it is.", "when": {"os": ["win11"]}},
         {"p": "You don't set anything in Live's MIDI settings. Live selects the control surface by itself.", "when": {"os": ["macos"]}},
@@ -179,6 +180,7 @@
       "id": "screens",
       "title": "Live's pages on the MK3's screens",
       "nav": "MK3 screens",
+      "place": "none",
       "when": {"device": ["mk3", "plus"], "live": ["live12"]},
       "body": [
         {"p": "The screens show Live's pages by themselves. NI's own software draws them for the script, so there is nothing to switch or install.", "when": {"device": ["mk3", "plus"], "os": ["win11"]}},
@@ -191,6 +193,7 @@
       "id": "check",
       "title": "Check that it works",
       "nav": "Check it works",
+      "place": "none",
       "when": {"live": ["live12"]},
       "body": [
         {"p": "While Live starts, the controller's screen says **Waiting for Live**."},
@@ -280,7 +283,6 @@
           "[[PLAY]] starts and stops Live. Hold [[NOTE REPEAT]] and a pad for note repeat."
         ]},
         {"note": "Close the MASCHINE app while you use the controller with Live: both would try to drive it. The MASCHINE plug-in inside Live is fine."},
-        {"note": "The first time, the controller asks for your licence key. Press the encoder and enter it in the page that opens."},
         {"actions": [
           {"label": "Open the manual", "href": "#{{manual}}", "primary": true},
           {"label": "What SHIFT does", "href": "#{{manual}}/SHIFT"}
@@ -291,7 +293,7 @@
       "id": "update",
       "title": "Updating to a newer version",
       "nav": "Updating",
-      "when": {"live": ["live12"]},
+      "place": "section",
       "body": [
         {"ol": [
           "**Close Live.** The bridge closes with it.",

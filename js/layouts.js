@@ -415,6 +415,7 @@ var MIXER_VISITED = 1, MIXER_MUTED = 2;
 // they are (SHIFT + VOLUME: SHIFT's pads while it is held, as everywhere).
 var SECTION_PADS = {
   mixer: { '*': 'VOLUME' },
+  slicing: { '*': 'SLICES' },
   master: { 'VOLUME+TURN': null }
 };
 
@@ -487,6 +488,10 @@ function padDemos(trackMode) {
 
   // PAD MODE: the Drum Rack, the focused drum (pad 1) bright.
   demos['PAD MODE'] = SAMPLE_DRUMS.map(function (name, i) { return lit(drums, i === 0 ? 'bright' : 'dim', name); });
+
+  // A sliced Simpler on 1-Drums (the slicing section): its slices in the track's colour, slice 1 on
+  // pad 1 selected (bright), as drum.py _slice_colors; never the drum pads' colours.
+  demos.SLICES = pads().map(function (_, i) { return lit(drums, i === 0 ? 'bright' : 'dim'); });
 
   // KEYBOARD and CHORDS: C major from the bottom left; 7 notes a scale, so pads 1, 8 and 15 are C.
   demos.KEYBOARD = pads().map(function (_, i) { return lit(keys, i % 7 === 0 ? 'bright' : 'dim'); });

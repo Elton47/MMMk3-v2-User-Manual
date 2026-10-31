@@ -83,6 +83,10 @@ var STEP_SCREENS = {
     {"popup": "Selected\nAll notes"},
     {"MIKRO_CORNER": "Kit-Core 909", "MIKRO_LINE3": "Kick 909 1", "MIKRO_LINE3_VALUE": "C1", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "1", "SUBTITLE": "Kit-Core 909", "TITLE": "Drums"}
   ],
+  "events EVENTS + ERASE + PAD": [
+    {"popup": "Deleted\nKick 909 1"},
+    {"MIKRO_CORNER": "Kit-Core 909", "MIKRO_LINE3": "Kick 909 1", "MIKRO_LINE3_VALUE": "C1", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "1", "SUBTITLE": "Kit-Core 909", "TITLE": "Drums"}
+  ],
   "events SHIFT + VARIATION": [
     {"popup": "Random velocity\nall notes"},
     {"MIKRO_CORNER": "Kit-Core 909", "MIKRO_LINE3": "Kick 909 1", "MIKRO_LINE3_VALUE": "C1", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "1", "SUBTITLE": "Kit-Core 909", "TITLE": "Drums"}
@@ -189,6 +193,9 @@ var STEP_SCREENS = {
     {"popup": "Follow\nOn"},
     {"MIKRO_CORNER": "Kit-Core 909", "MIKRO_LINE3": "Kick 909 1", "MIKRO_LINE3_VALUE": "C1", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "1", "SUBTITLE": "Kit-Core 909", "TITLE": "Drums"}
   ],
+  "transport REC (count-in)": [
+    {"popup": "Count-in\n3  bar 1/2"}
+  ],
   "transport SHIFT + REC": [
     {"popup": "Arrangement\nRecord on"},
     {"MIKRO_CORNER": "Kit-Core 909", "MIKRO_LINE3": "Kick 909 1", "MIKRO_LINE3_VALUE": "C1", "MIKRO_TRACK_FLAGS": 4, "MIKRO_TRACK_LABEL": "1", "SUBTITLE": "Kit-Core 909", "TITLE": "Drums"}
@@ -209,6 +216,9 @@ var STEP_SCREENS = {
   ],
   "chords CHORDS": [
     "press-chords-chords-0"
+  ],
+  "chords CHORDS + PAD (held, with the screens)": [
+    "press-chords-chords-pad-held-with-the-screens-0"
   ],
   "drum DUPLICATE + PAD + PAD": [
     "press-drum-duplicate-pad-pad-0",
@@ -269,6 +279,13 @@ var STEP_SCREENS = {
     "press-events-erase-events-0",
     "press-drum-mute-pad-1"
   ],
+  "events EVENTS + ERASE + PAD": [
+    "press-events-events-erase-pad-0",
+    "press-mk3-stop-group-a-h-1"
+  ],
+  "events KNOB (knobs 5-8, the notes pages)": [
+    "press-events-knob-knobs-5-8-the-notes-pages-0"
+  ],
   "events SHIFT + VARIATION": [
     "press-events-shift-variation-0",
     "press-drum-mute-pad-1"
@@ -291,6 +308,10 @@ var STEP_SCREENS = {
     "press-master-volume-turn-2",
     "press-master-volume-turn-3"
   ],
+  "mk3 DUPLICATE + GROUP A-H": [
+    "press-mk3-duplicate-group-a-h-0",
+    "press-mk3-stop-group-a-h-1"
+  ],
   "mk3 MACRO": [
     "press-mk3-macro-0"
   ],
@@ -302,6 +323,14 @@ var STEP_SCREENS = {
     "press-mk3-shift-group-a-h-0",
     "press-drum-mute-pad-1"
   ],
+  "mk3 SHIFT + SELECT": [
+    "press-mk3-shift-select-0",
+    "press-mk3-shift-select-1"
+  ],
+  "mk3 STOP + GROUP A-H": [
+    "press-mk3-stop-group-a-h-0",
+    "press-mk3-stop-group-a-h-1"
+  ],
   "playing FIXED VEL": [
     "press-playing-fixed-vel-0",
     "press-drum-mute-pad-1"
@@ -309,6 +338,9 @@ var STEP_SCREENS = {
   "playing MOD": [
     "press-playing-mod-0",
     "press-drum-mute-pad-1"
+  ],
+  "playing PERFORM (held)": [
+    "press-playing-perform-held-0"
   ],
   "playing PITCH": [
     "press-playing-pitch-0",
@@ -379,6 +411,9 @@ var STEP_SCREENS = {
   "transport FOLLOW": [
     "press-transport-follow-0",
     "press-drum-mute-pad-1"
+  ],
+  "transport REC (count-in, with the screens)": [
+    "press-transport-rec-count-in-with-the-screens-0"
   ],
   "transport SHIFT + REC": [
     "press-transport-shift-rec-0",

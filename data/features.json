@@ -51,7 +51,7 @@
       "title": "Highlights",
       "summary": "The best of it in a minute. Each one is explained in its own section below.",
       "items": [
-        {"combo": ["SHIFT"], "does": "A real controller, not a template: a real SHIFT key and Live's colours on the pads. No Controller Editor, no MIDI mode, nothing to install and no admin rights asked.", "headline": "A real controller, not a template: drag and drop, open Live, play", "best": 1},
+        {"combo": ["SHIFT"], "does": "A real controller, not a template: a real SHIFT key and Live's colours on the pads, matched to how they look in Live (pink lights pink, lavender violet). No Controller Editor, no MIDI mode, nothing to install and no admin rights asked.", "headline": "A real controller, not a template: drag and drop, open Live, play", "best": 1},
         {"combo": ["TURN"], "does": "The screen shows almost anything: the mode and track, tempo, swing and volume as you change them, and device parameters with their names and values.", "best": 12, "headline": "A screen that shows what you play and turn"},
         {"combo": ["CHORDS"], "does": "A chord on every pad, always in Live's key: triads to 9ths, with voicings.", "best": 10},
         {"combo": ["NOTE REPEAT"], "does": "Note repeat that follows pad pressure: slide the touch strip to set its rate, or touch it while holding pads to repeat them on the spot. Plus an arpeggiator, all recorded exactly on Live's grid.", "best": 6, "headline": "Note repeat and an arpeggiator that follow pad pressure"},
@@ -262,7 +262,7 @@
       "id": "shift-pads",
       "nav": "Clip editing",
       "title": "SHIFT + pads: edit the focused clip",
-      "summary": "Acts on the selected notes, or on all notes when nothing is selected. Works in every mode, TRACK included. A pad only lights when its action can do something.",
+      "summary": "Acts on the selected notes, or on all notes when nothing is selected. Works in every mode, TRACK included. Pads 1-4 (undo, redo, step undo and redo) light white. The clip edits light in the clip's colour, dim when they cannot act (no clip: dim white). CLEAR AUTO lights full red only when the clip has automation.",
       "grid": [
         ["Step -", "Step +", "Octave -", "Octave +"],
         ["Clear notes", "Clear envelopes", "Copy", "Paste"],
@@ -522,7 +522,7 @@
         {"combo": ["MACRO"], "does": "The rack's macros on the knobs, with names and values. Tap: the page stays. Hold: only while held. ◀ ▶: macros 9-16.", "best": 162},
         {"combo": ["SHIFT", "KNOB"], "does": "Fine adjustment.", "best": 168, "headline": "SHIFT + knob: fine adjustment"},
         {"combo": ["KNOB"], "context": "double tap", "does": "Tap a knob twice quickly: its parameter goes back to its default (on CHANNEL, MIXER, PLUG-IN and MACRO).", "best": 169, "headline": "Double tap a knob: back to its default"},
-        {"combo": ["CHANNEL"], "does": "The selected track's channel page: both screens show the track (its name on its colour, INPUT and OUTPUT), and knobs 1-8 are its VOLUME, PAN and SEND A-F. Select another track and the page follows it. CHANNEL again, or another mode button, closes it. Hold CHANNEL: only while held. SHIFT + CHANNEL: NI's MIDI mode, as before.", "best": 163, "headline": "CHANNEL: the selected track's volume, pan and sends"},
+        {"combo": ["CHANNEL"], "does": "The selected track's channel page: both screens show the track (its name on its colour, INPUT and OUTPUT), and knobs 1-8 are its VOLUME, PAN and SEND A-F (in dB with one decimal, as on MIXER). Select another track and the page follows it. CHANNEL again, or another mode button, closes it. Hold CHANNEL: only while held. SHIFT + CHANNEL: NI's MIDI mode, as before.", "best": 163, "headline": "CHANNEL: the selected track's volume, pan and sends"},
         {"combo": ["SETTINGS"], "context": "Brightness", "does": "The Brightness setting dims the two screens too, with the pads and the buttons.", "best": 171},
         {"combo": ["SHIFT", "SELECT"], "does": "The colour page. Pads 1-14 are one row of Live's colours (the current one lit white), pads 15 / 16 or buttons 7 / 8 change the row. Buttons 1-3: TRACK, CLIP or SCENE, a knob turns CLIPS TOO on. A pad colours it and closes. Or turn knob 2 to a colour and press APPLY (button 6, dim when there is nothing to apply). In PATTERN with a clip framed it opens on CLIP.", "headline": "SHIFT + SELECT: colour a track, clip or scene", "best": 174},
         {"combo": ["SETTINGS"], "context": "Notes while recording", "does": "Off (the default) or On: while you record, the right screen shows the notes you play on every page (SETTINGS keeps its own). Turning it on asks first: CANCEL or CONFIRM.", "headline": "Notes while recording, on every page", "best": 175}
